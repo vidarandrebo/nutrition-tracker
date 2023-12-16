@@ -3,6 +3,10 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
+        <Version>0.0.1</Version>
+        <Authors>Vidar André Bø</Authors>
+        <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker-net</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
 </Project>
