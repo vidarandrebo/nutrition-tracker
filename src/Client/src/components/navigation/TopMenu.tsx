@@ -1,0 +1,13 @@
+import {Link} from "react-router-dom";
+
+export default function TopMenu() {
+    return (<>
+        <header className='h-10 flex justify-between'>
+            <p className='p-1'>Nutrition Tracker</p>
+            <nav className='flex justify-end'>
+                <Link to="/login" className='p-1'>Login</Link>
+                <Link to="/register" className='p-1'>Register</Link>
+            </nav>
+        </header>
+    </>)
+}
