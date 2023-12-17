@@ -12,6 +12,7 @@ services:
     volumes:
       - /data/nutrition-tracker/db:/var/lib/postgresql/data
 
+
   server:
     container_name: "nutrition-tracker-api"
     build: .
