@@ -10,7 +10,7 @@ services:
       - '127.0.0.1:5015:5432'
       - '[::1]:5015:5432'
     volumes:
-      - /data/bikeservice/db:/var/lib/postgresql/data
+      - /data/nutrition-tracker/db:/var/lib/postgresql/data
 
   server:
     container_name: "nutrition-tracker-api"
