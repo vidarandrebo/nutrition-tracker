@@ -4,7 +4,7 @@ import Login from "../pages/Login.tsx";
 import Register from "../pages/Register.tsx";
 import Settings from "../pages/Settings.tsx";
 import MealTracking from "../pages/MealTracking.tsx";
-import Food from "../pages/Food.tsx";
+import Food from "../pages/food/Food.tsx";
 
 export default function RouteContainer() {
     return <>
