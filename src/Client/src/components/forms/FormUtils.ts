@@ -10,3 +10,19 @@ export function copyToFormObject<T>(e: ChangeEvent<HTMLInputElement>, dataObject
     console.log(type)
     dataObjectSetter(prevData => ({...prevData, [id]: value}))
 }
+
+export function getFloatField(formData: FormData, fieldName: string): number {
+    const fieldValue = formData.get(fieldName);
+    if (fieldValue != null) {
+        return Number.parseFloat(fieldValue.toString());
+    }
+    return 0.0;
+}
+
+export function getStringField(formData: FormData, fieldName: string): string {
+    const fieldValue = formData.get(fieldName);
+    if (fieldValue != null) {
+        return fieldValue.toString();
+    }
+    return "";
+}

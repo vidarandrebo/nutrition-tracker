@@ -5,7 +5,7 @@
         <Nullable>enable</Nullable>
         <InvariantGlobalization>true</InvariantGlobalization>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-        <Version>0.4.0</Version>
+        <Version>0.5.0</Version>
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker-net</RepositoryUrl>
         <RepositoryType>git</RepositoryType>

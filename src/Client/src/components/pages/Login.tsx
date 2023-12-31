@@ -1,3 +1,6 @@
+import {useUserContext} from "../UseContexts.ts";
+
 export default function Login() {
-    return <h1>Login Page</h1>
+    const [user,] = useUserContext();
+    return <h1>Hello {user}</h1>
 }

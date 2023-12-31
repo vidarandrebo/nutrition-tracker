@@ -9,6 +9,6 @@ export const InputPrimary: FC<InputProps> = props => {
 
     return (
         <input
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" {...attributes}/>
+            className="shadow appearance-none border hover:border-gray-500 rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" {...attributes}/>
     )
 }
