@@ -17,10 +17,10 @@ export default function Food() {
         <ButtonPrimary onClick={() => {
             setShowForm(true);
         }}>Add Food</ButtonPrimary>
-        <div className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4">
             {foodItems.map((foodItem) => {
                 return <FoodItemView key={foodItem.id} foodItem={foodItem}/>
             })}
-        </div>
+        </ul>
     </>
 }

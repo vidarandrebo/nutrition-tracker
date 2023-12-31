@@ -1,6 +1,7 @@
 import {getFloatField, getStringField} from "../components/forms/FormUtils.ts";
+import {IAssignFromForm} from "./IAssignFromForm.ts";
 
-export class FoodItemForm {
+export class FoodItemForm implements IAssignFromForm {
     brand: string;
     productName: string;
     protein: number;
@@ -20,7 +21,7 @@ export class FoodItemForm {
         this.unit = "grams";
     }
 
-    assignFromForm(form: FormData) {
+    assignFromFormData(form: FormData) {
         this.brand = getStringField(form, "brand");
         this.productName = getStringField(form, "productName");
         this.protein = getFloatField(form, "protein");

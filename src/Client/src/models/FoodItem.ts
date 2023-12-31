@@ -19,9 +19,10 @@ export class FoodItem {
 }
 
 export function postFoodItem(foodForm: FoodItemForm): FoodItem {
-    // post stuff goes here
-    const fid = UuidV4();
-    const uid = UuidV4();
+    // TODO
+    // send post request to server
+    const fid = UuidV4(); //TMP
+    const uid = UuidV4(); //TMP
     return new FoodItem(
         fid,
         foodForm.brand,

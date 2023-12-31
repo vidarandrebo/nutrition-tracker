@@ -22,7 +22,7 @@ export function AddFoodForm(props: AddFoodFormProps) {
                 e.preventDefault()
                 const newFoodItemForm = new FoodItemForm();
                 const formData = new FormData(e.target as HTMLFormElement);
-                newFoodItemForm.assignFromForm(formData);
+                newFoodItemForm.assignFromFormData(formData);
                 const foodItem = postFoodItem(newFoodItemForm);
                 setFoodItems([...foodItems, foodItem]);
                 console.log("Added new food")

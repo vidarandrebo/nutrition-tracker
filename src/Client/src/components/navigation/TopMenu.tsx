@@ -1,7 +1,23 @@
 import {Link} from "react-router-dom";
+import {useUserContext} from "../UseContexts.ts";
 
 export default function TopMenu() {
-    return (<>
+    const [user, setUser] = useUserContext();
+    if (user != null) {
+        return (
+            <header className='h-10 flex justify-between sticky top-0 z-50 bg-white'>
+                <p className='p-1 font-bold'>Nutrition Tracker</p>
+                <nav className='flex justify-end'>
+                    <p>{user.email}</p>
+                    <button onClick={() => {
+                        setUser(null)
+                    }}>Log out
+                    </button>
+                </nav>
+            </header>
+        )
+    }
+    return (
         <header className='h-10 flex justify-between sticky top-0 z-50 bg-white'>
             <p className='p-1 font-bold'>Nutrition Tracker</p>
             <nav className='flex justify-end'>
@@ -9,5 +25,5 @@ export default function TopMenu() {
                 <Link to="/register" className='p-1'>Register</Link>
             </nav>
         </header>
-    </>)
+    )
 }
