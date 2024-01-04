@@ -1,5 +1,5 @@
 import {IAssignFromForm} from "./IAssignFromForm.ts";
-import {getStringField} from "../components/forms/FormUtils.ts";
+import {getStringField} from "../Components/FormElements/FormUtils.ts";
 import {User} from "./User.ts";
 import {v4 as UuidV4} from "uuid";
 

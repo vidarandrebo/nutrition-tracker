@@ -1,7 +1,7 @@
 import {Dispatch, SetStateAction, useContext} from "react";
-import {FoodItemContext, UserContext} from "../components/ContextProviders.tsx";
-import {FoodItem} from "../models/FoodItem.ts";
-import {User} from "../models/User.ts";
+import {FoodItemContext, UserContext} from "../Components/ContextProviders.tsx";
+import {FoodItem} from "../Models/FoodItem.ts";
+import {User} from "../Models/User.ts";
 
 export function useUserContext(): [User | null, Dispatch<SetStateAction<User | null>>] {
     const [value, valueSetter] = useContext(UserContext);

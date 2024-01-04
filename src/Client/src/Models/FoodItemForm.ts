@@ -1,4 +1,4 @@
-import {getFloatField, getStringField} from "../components/forms/FormUtils.ts";
+import {getFloatField, getStringField} from "../Components/FormElements/FormUtils.ts";
 import {IAssignFromForm} from "./IAssignFromForm.ts";
 
 export class FoodItemForm implements IAssignFromForm {

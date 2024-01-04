@@ -7,8 +7,8 @@ import {
     SetStateAction,
     useState
 } from 'react';
-import {FoodItem} from "../models/FoodItem.ts";
-import {loadUserFromLocalStorage, User} from "../models/User.ts";
+import {FoodItem} from "../Models/FoodItem.ts";
+import {loadUserFromLocalStorage, User} from "../Models/User.ts";
 
 export interface ContextProvidersProps extends DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>, AriaAttributes {
 

@@ -1,9 +1,9 @@
-import {useUserContext} from "../../hooks/UseContexts.ts";
+import {useUserContext} from "../../../Hooks/UseContexts.ts";
 import {FormEvent} from "react";
-import {LabelPrimary} from "../forms/LabelPrimary.tsx";
-import {InputPrimary} from "../forms/Input.tsx";
-import {ButtonPrimary} from "../forms/Button.tsx";
-import {Credentials} from "../../models/Credentials.ts";
+import {LabelPrimary} from "../../FormElements/LabelPrimary.tsx";
+import {InputPrimary} from "../../FormElements/Input.tsx";
+import {ButtonPrimary} from "../../FormElements/Button.tsx";
+import {Credentials} from "../../../Models/Credentials.ts";
 import {useNavigate} from "react-router-dom"
 
 export default function Register() {

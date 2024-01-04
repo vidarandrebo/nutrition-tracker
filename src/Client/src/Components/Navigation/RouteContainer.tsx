@@ -1,10 +1,10 @@
 import {Route, Routes} from "react-router-dom";
-import Home from "../pages/Home.tsx";
-import Login from "../pages/Login.tsx";
-import Register from "../pages/Register.tsx";
-import Settings from "../pages/Settings.tsx";
-import MealTracking from "../pages/MealTracking.tsx";
-import Food from "../pages/food/Food.tsx";
+import Home from "../Pages/Home/Home.tsx";
+import Login from "../Pages/Auth/Login.tsx";
+import Register from "../Pages/Auth/Register.tsx";
+import Settings from "../Pages/Settings/Settings.tsx";
+import MealTracking from "../Pages/MealTracking/MealTracking.tsx";
+import Food from "../Pages/Food/Food.tsx";
 
 export default function RouteContainer() {
     return <>

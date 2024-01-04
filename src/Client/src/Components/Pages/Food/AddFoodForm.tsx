@@ -1,11 +1,11 @@
-import {LabelPrimary} from "../../forms/LabelPrimary.tsx";
-import {InputPrimary} from "../../forms/Input.tsx";
-import {ButtonPrimary} from "../../forms/Button.tsx";
+import {LabelPrimary} from "../../FormElements/LabelPrimary.tsx";
+import {InputPrimary} from "../../FormElements/Input.tsx";
+import {ButtonPrimary} from "../../FormElements/Button.tsx";
 import {AriaAttributes, DetailedHTMLProps, Dispatch, FormEvent, FormHTMLAttributes, SetStateAction,} from "react";
-import {FoodItemForm} from "../../../models/FoodItemForm.ts";
-import {useFoodItemContext} from "../../../hooks/UseContexts.ts";
-import {postFoodItem} from "../../../models/FoodItem.ts";
-import {SelectPrimary} from "../../forms/Select.tsx";
+import {FoodItemForm} from "../../../Models/FoodItemForm.ts";
+import {useFoodItemContext} from "../../../Hooks/UseContexts.ts";
+import {postFoodItem} from "../../../Models/FoodItem.ts";
+import {SelectPrimary} from "../../FormElements/Select.tsx";
 
 export interface AddFoodFormProps
     extends DetailedHTMLProps<FormHTMLAttributes<HTMLFormElement>, HTMLFormElement>, AriaAttributes {

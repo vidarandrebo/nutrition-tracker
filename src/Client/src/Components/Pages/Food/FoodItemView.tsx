@@ -1,4 +1,4 @@
-import {FoodItem} from "../../models/FoodItem.ts";
+import {FoodItem} from "../../../Models/FoodItem.ts";
 
 type Props = {
     foodItem: FoodItem;

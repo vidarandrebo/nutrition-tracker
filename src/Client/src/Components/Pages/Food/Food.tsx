@@ -1,9 +1,9 @@
-import FoodItemView from "../../views/FoodItemView.tsx";
+import FoodItemView from "./FoodItemView.tsx";
 import {useState} from "react";
-import {ButtonPrimary} from "../../forms/Button.tsx";
+import {ButtonPrimary} from "../../FormElements/Button.tsx";
 import {AddFoodForm} from "./AddFoodForm.tsx";
-import {useFoodItemContext} from "../../../hooks/UseContexts.ts";
-import {useLoggedIn} from "../../../hooks/UseLoggedIn.ts";
+import {useFoodItemContext} from "../../../Hooks/UseContexts.ts";
+import {useLoggedIn} from "../../../Hooks/UseLoggedIn.ts";
 
 
 export default function Food() {
