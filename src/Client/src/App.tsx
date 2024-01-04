@@ -4,8 +4,6 @@ import RouteContainer from "./components/navigation/RouteContainer.tsx";
 import ContextProviders from "./components/ContextProviders.tsx";
 
 function App() {
-    //const [count, setCount] = useState(0)
-
     return (
         <ContextProviders>
             <div className='flex flex-col h-screen'>

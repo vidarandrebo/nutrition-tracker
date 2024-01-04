@@ -3,7 +3,7 @@ import {InputPrimary} from "../../forms/Input.tsx";
 import {ButtonPrimary} from "../../forms/Button.tsx";
 import {AriaAttributes, DetailedHTMLProps, Dispatch, FormEvent, FormHTMLAttributes, SetStateAction,} from "react";
 import {FoodItemForm} from "../../../models/FoodItemForm.ts";
-import {useFoodItemContext} from "../../UseContexts.ts";
+import {useFoodItemContext} from "../../../hooks/UseContexts.ts";
 import {postFoodItem} from "../../../models/FoodItem.ts";
 import {SelectPrimary} from "../../forms/Select.tsx";
 
@@ -22,7 +22,7 @@ export function AddFoodForm(props: AddFoodFormProps) {
                 e.preventDefault()
                 const newFoodItemForm = new FoodItemForm();
                 const formData = new FormData(e.target as HTMLFormElement);
-                newFoodItemForm.assignFromForm(formData);
+                newFoodItemForm.assignFromFormData(formData);
                 const foodItem = postFoodItem(newFoodItemForm);
                 setFoodItems([...foodItems, foodItem]);
                 console.log("Added new food")
