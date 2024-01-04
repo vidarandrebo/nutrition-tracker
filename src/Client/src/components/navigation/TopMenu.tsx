@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import {useUserContext} from "../UseContexts.ts";
+import {useUserContext} from "../../hooks/UseContexts.ts";
 
 export default function TopMenu() {
     const [user, setUser] = useUserContext();
@@ -10,6 +10,7 @@ export default function TopMenu() {
                 <nav className='flex justify-end'>
                     <p>{user.email}</p>
                     <button onClick={() => {
+                        user?.removeFromLocalStorage()
                         setUser(null)
                     }}>Log out
                     </button>

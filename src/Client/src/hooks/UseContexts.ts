@@ -1,5 +1,5 @@
 import {Dispatch, SetStateAction, useContext} from "react";
-import {FoodItemContext, UserContext} from "./ContextProviders.tsx";
+import {FoodItemContext, UserContext} from "../components/ContextProviders.tsx";
 import {FoodItem} from "../models/FoodItem.ts";
 import {User} from "../models/User.ts";
 

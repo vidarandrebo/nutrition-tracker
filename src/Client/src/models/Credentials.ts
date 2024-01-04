@@ -23,6 +23,7 @@ export class Credentials implements IAssignFromForm {
         const user = new User();
         user.userId = UuidV4(); //TMP
         user.email = this.email; //TMP
+        user.writeToLocalStorage()
         return user;
     }
 
@@ -30,6 +31,9 @@ export class Credentials implements IAssignFromForm {
         // TODO
         // send register user request to server
         const user = new User();
+        user.userId = UuidV4(); //TMP
+        user.email = this.email; //TMP
+        user.writeToLocalStorage()
         return user;
     }
 }

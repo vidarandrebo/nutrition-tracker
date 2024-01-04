@@ -8,7 +8,7 @@ import {
     useState
 } from 'react';
 import {FoodItem} from "../models/FoodItem.ts";
-import {User} from "../models/User.ts";
+import {loadUserFromLocalStorage, User} from "../models/User.ts";
 
 export interface ContextProvidersProps extends DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement>, AriaAttributes {
 
@@ -20,7 +20,7 @@ export const UserContext = createContext<[User | null, Dispatch<SetStateAction<U
 export default function ContextProviders(props: ContextProvidersProps) {
     const {children} = props;
     const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
-    const [user, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(loadUserFromLocalStorage());
     return (
         <FoodItemContext.Provider value={[foodItems, setFoodItems]}>
             <UserContext.Provider value={[user, setUser]}>
