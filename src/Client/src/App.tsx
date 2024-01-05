@@ -1,7 +1,7 @@
-import TopMenu from './components/navigation/TopMenu'
-import BottomMenu from './components/navigation/BottomMenu'
-import RouteContainer from "./components/navigation/RouteContainer.tsx";
-import ContextProviders from "./components/ContextProviders.tsx";
+import TopMenu from './Components/Navigation/TopMenu'
+import BottomMenu from './Components/Navigation/BottomMenu'
+import RouteContainer from "./Components/Navigation/RouteContainer.tsx";
+import ContextProviders from "./Components/ContextProviders.tsx";
 
 function App() {
     return (

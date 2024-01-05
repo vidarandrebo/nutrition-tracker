@@ -43,3 +43,6 @@ msbuild.err
 msbuild.wrn
 src/Server/wwwroot/
 log.txt
+
+*.db
+*.env

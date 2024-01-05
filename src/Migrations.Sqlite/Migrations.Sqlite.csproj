@@ -9,8 +9,9 @@
         <RepositoryType>git</RepositoryType>
     </PropertyGroup>
 
+
     <ItemGroup>
-        <PackageReference Include="MediatR" Version="12.2.0" />
+        <ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
     </ItemGroup>
 
 
