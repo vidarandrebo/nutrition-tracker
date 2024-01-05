@@ -1,4 +1,6 @@
-export class User {
+import { ObjectAssignable } from "./ObjectAssignable";
+
+export class User extends ObjectAssignable {
     userId: string;
     email: string;
     bearerToken: string;
@@ -12,20 +14,20 @@ export class User {
     }
 
 
-    constructor(...args: User[]) {
+    constructor() {
+        super();
         this.userId = "";
         this.email = "";
         this.bearerToken = "";
-        if (args.length === 1) {
-            Object.assign(this, args[0]);
-        }
     }
 }
 export function loadUserFromLocalStorage(): User | null {
     const data = localStorage.getItem("user")
     if (data != null) {
         const parsedData = JSON.parse(data)
-        return new User(parsedData);
+        const user = new User()
+        user.assignFromObject(parsedData);
+        return user;
     }
     return null
 }

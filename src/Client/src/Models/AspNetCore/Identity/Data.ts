@@ -1,14 +1,18 @@
-export class ForgotPasswordRequest  {
+import {ObjectAssignable} from "../../ObjectAssignable";
+
+export class ForgotPasswordRequest {
     email: string;
+
     constructor(email: string) {
         this.email = email;
     }
 }
 
-export class InfoRequest  {
+export class InfoRequest {
     newEmail: string | null;
     newPassword: string | null;
     oldPassword: string | null;
+
     constructor(newEmail: string | null, newPassword: string | null, oldPassword: string | null) {
         this.newEmail = newEmail;
         this.newPassword = newPassword;
@@ -16,9 +20,10 @@ export class InfoRequest  {
     }
 }
 
-export class InfoResponse  {
+export class InfoResponse {
     email: string;
     isEmailConfirmed: boolean;
+
     constructor(...args: InfoResponse[]) {
         this.email = "";
         this.isEmailConfirmed = false;
@@ -28,11 +33,12 @@ export class InfoResponse  {
     }
 }
 
-export class LoginRequest  {
+export class LoginRequest {
     email: string;
     password: string;
     twoFactorCode: string | null;
     twoFactorRecoveryCode: string | null;
+
     constructor(email: string, password: string, twoFactorCode: string | null, twoFactorRecoveryCode: string | null) {
         this.email = email;
         this.password = password;
@@ -43,15 +49,17 @@ export class LoginRequest  {
 
 export class RefreshRequest {
     refreshToken: string;
+
     constructor(refreshToken: string) {
         this.refreshToken = refreshToken;
     }
 }
 
-export class RegisterRequest  {
+export class RegisterRequest {
     email: string;
     password: string;
-    constructor(email:string, password: string) {
+
+    constructor(email: string, password: string) {
         this.email = email;
         this.password = password;
     }
@@ -59,15 +67,17 @@ export class RegisterRequest  {
 
 export class ResendConfirmationEmailRequest {
     email: string;
+
     constructor(email: string) {
         this.email = email;
     }
 }
 
 export class ResetPasswordRequest {
-    email:string;
+    email: string;
     newPassword: string;
     resetCode: string;
+
     constructor(email: string, newPassword: string, resetCode: string) {
         this.email = email;
         this.newPassword = newPassword;
@@ -81,6 +91,7 @@ export class TwoFactorRequest {
     resetRecoveryCode: boolean;
     resetSharedKey: boolean;
     twoFactorCode: string | null;
+
     constructor(enable: boolean, forgetMachine: boolean, resetRecoveryCode: boolean, resetSharedKey: boolean, twoFactorCode: string | null) {
         this.enable = enable;
         this.forgetMachine = forgetMachine;
@@ -90,20 +101,19 @@ export class TwoFactorRequest {
     }
 }
 
-export class TwoFactorResponse {
+export class TwoFactorResponse extends ObjectAssignable {
     isMachineRemembered: boolean;
     isTwoFactorEnabled: boolean;
     recoveryCodes: string[] | null;
     recoveryCodesLeft: number;
     sharedKey: string;
-    constructor(...args: TwoFactorResponse[]) {
+
+    constructor() {
+        super();
         this.isMachineRemembered = false;
         this.isTwoFactorEnabled = false;
         this.recoveryCodes = null;
         this.recoveryCodesLeft = 0;
         this.sharedKey = "";
-        if (args.length === 1) {
-            Object.assign(this, args[0]);
-        }
     }
 }
