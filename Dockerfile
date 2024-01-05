@@ -21,6 +21,7 @@ RUN dotnet publish /data/src/Server -c Release -o bin
 FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /data
 COPY --from=dotnet-build-env /data/bin/ .
+COPY docker.env .env
 #COPY --from=dotnet-build-env /data/bin/appsettings.json .
 RUN true
 #COPY docker.env .env

@@ -3,10 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Server.Migrations
+namespace Migrations.Sqlite.Migrations
 {
     /// <inheritdoc />
-    public partial class Init : Migration
+    public partial class Dev : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)

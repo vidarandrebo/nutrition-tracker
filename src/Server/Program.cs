@@ -2,14 +2,16 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Routing;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
-using Server;
+using Server.AddServices;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddApplicationServices();
+builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -33,13 +35,10 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseSqlite($"Data Source=nutrition-tracker.db"));
-
-builder.Services.AddIdentityApiEndpoints<IdentityUser>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
 
 var app = builder.Build();
+
+await app.Services.ApplyMigrations(app.Environment);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -47,8 +46,6 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
-//await app.Services.ApplyMigrations(app.Environment);
 
 
 app.UseRouting();
@@ -73,18 +70,5 @@ app.MapControllers();
 app.MapFallbackToFile("index.html");
 
 app.MapGroup("/auth").MapIdentityApi<IdentityUser>();
-
-using (var scope = app.Services.CreateScope())
-{
-    if (app.Environment.IsProduction())
-    {
-    }
-    else
-    {
-        var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-        Log.Logger.Information("Running migration on database");
-        db.Database.Migrate();
-    }
-}
 
 app.Run();

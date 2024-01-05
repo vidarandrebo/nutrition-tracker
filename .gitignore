@@ -45,3 +45,4 @@ src/Server/wwwroot/
 log.txt
 
 *.db
+*.env
