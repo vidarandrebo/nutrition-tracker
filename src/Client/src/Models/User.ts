@@ -40,9 +40,9 @@ export class User extends ObjectAssignable {
                 refreshResponse.assignFromObject(httpResponse.body as Record<string, never>)
                 this.refreshToken = refreshResponse.refreshToken;
                 this.accessToken = refreshResponse.accessToken;
+                console.log("true")
                 return true;
-            }
-            else {
+            } else {
                 this.removeFromLocalStorage()
             }
         }
@@ -50,15 +50,15 @@ export class User extends ObjectAssignable {
     }
 }
 
-export function loadUserFromLocalStorage(): User | null {
+export async function loadUserFromLocalStorage(): Promise<User | null> {
     const data = localStorage.getItem("user")
     if (data != null) {
         const parsedData = JSON.parse(data)
         const user = new User()
         user.assignFromObject(parsedData);
-        let authenticated = false;
-        user.refresh().then(v => authenticated = v)
+        const authenticated = await user.refresh();
         if (authenticated) {
+            console.log("auth")
             return user;
         }
     }
