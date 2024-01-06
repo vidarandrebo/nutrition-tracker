@@ -35,6 +35,16 @@ Log.Logger = new LoggerConfiguration()
 
 builder.Host.UseSerilog();
 
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(policy =>
+    {
+        policy.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin();
+    });
+});
+
 
 var app = builder.Build();
 
@@ -69,6 +79,6 @@ app.MapControllers();
 
 app.MapFallbackToFile("index.html");
 
-app.MapGroup("/auth").MapIdentityApi<IdentityUser>();
+app.MapGroup("/api/auth").MapIdentityApi<IdentityUser>();
 
 app.Run();
