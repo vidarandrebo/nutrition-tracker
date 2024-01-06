@@ -44,5 +44,5 @@ msbuild.wrn
 src/Server/wwwroot/
 log.txt
 
-*.db
+*.db**
 *.env

@@ -17,14 +17,16 @@ export default function Login() {
     return (
         <>
             <h3>Login</h3>
-            <form onSubmit={(e: FormEvent<HTMLFormElement>) => {
+            <form onSubmit={async (e: FormEvent<HTMLFormElement>) => {
                 e.preventDefault();
                 const formData = new FormData(e.target as HTMLFormElement);
                 const credentials = new Credentials();
                 credentials.assignFromFormData(formData);
-                const loggedInUser = credentials.loginUser();
-                setUser(loggedInUser)
-                navigate("/")
+                const loggedInUser = await credentials.loginUser();
+                if (loggedInUser) {
+                    setUser(loggedInUser)
+                    navigate("/")
+                }
 
 
             }} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
