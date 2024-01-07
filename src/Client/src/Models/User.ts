@@ -24,7 +24,7 @@ export class User extends ObjectAssignable {
         this.refreshToken = "";
     }
 
-    async refresh(): Promise<boolean> {
+    async refresh(): Promise<User | null> {
         const refreshRequest = new RefreshRequest(this.refreshToken);
         const httpRequest = new HttpRequest()
             .setRoute("/api/auth/refresh")
@@ -40,27 +40,23 @@ export class User extends ObjectAssignable {
                 refreshResponse.assignFromObject(httpResponse.body as Record<string, never>)
                 this.refreshToken = refreshResponse.refreshToken;
                 this.accessToken = refreshResponse.accessToken;
-                console.log("true")
-                return true;
+                this.writeToLocalStorage();
+                return this;
             } else {
                 this.removeFromLocalStorage()
             }
         }
-        return false;
+        return null;
     }
 }
 
-export async function loadUserFromLocalStorage(): Promise<User | null> {
+export function loadUser(): User | null {
     const data = localStorage.getItem("user")
     if (data != null) {
         const parsedData = JSON.parse(data)
         const user = new User()
         user.assignFromObject(parsedData);
-        const authenticated = await user.refresh();
-        if (authenticated) {
-            console.log("auth")
-            return user;
-        }
+        return user;
     }
     return null
 }
