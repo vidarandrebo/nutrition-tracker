@@ -7,10 +7,14 @@
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageId>nutrition-tracker-domain</PackageId>
+        <Title>Nutrition Tracker Domain</Title>
+        <Product>Nutrition Tracker</Product>
     </PropertyGroup>
 
     <ItemGroup>
         <PackageReference Include="MediatR" Version="12.2.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
     </ItemGroup>
 
 

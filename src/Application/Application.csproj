@@ -7,6 +7,9 @@
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageId>nutrition-tracker-application</PackageId>
+        <Title>Nutrition Tracker Application</Title>
+        <Product>Nutrition Tracker</Product>
     </PropertyGroup>
 
 
@@ -19,7 +22,7 @@
         <PackageReference Include="FluentResults" Version="3.15.2" />
         <PackageReference Include="MediatR" Version="12.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
     </ItemGroup>
 
 </Project>

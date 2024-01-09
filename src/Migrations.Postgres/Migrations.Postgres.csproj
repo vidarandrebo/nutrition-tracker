@@ -7,6 +7,9 @@
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
+        <PackageId>nutrition-tracker-migrations-postgres</PackageId>
+        <Title>Nutrition Tracker Migrations Prostgres</Title>
+        <Product>Nutrition Tracker</Product>
     </PropertyGroup>
 
 
