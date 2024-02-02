@@ -10,7 +10,12 @@ public class FoodItem : BaseEntity
     public NutritionalContent NutritionalContent { get; set; }
     public Guid OwnerId { get; set; }
 
-    public FoodItem() {}
+
+    // EF Core
+    private FoodItem()
+    {
+    }
+
     public FoodItem(string brand, string productName, NutritionalContent nutritionalContent, Guid ownerId)
     {
         Id = Guid.NewGuid();

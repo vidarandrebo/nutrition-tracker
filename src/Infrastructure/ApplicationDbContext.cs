@@ -17,7 +17,6 @@ public class ApplicationDbContext : IdentityDbContext<IdentityUser>, IApplicatio
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        //builder.Entity<FoodItem>().OwnsOne(f => f.NutritionalContent);
         base.OnModelCreating(builder);
     }
 }

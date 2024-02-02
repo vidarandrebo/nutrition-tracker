@@ -17,10 +17,32 @@ namespace Migrations.Postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.0")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
+
+            modelBuilder.Entity("Domain.FoodItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FoodItems");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -216,6 +238,37 @@ namespace Migrations.Postgres.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.FoodItem", b =>
+                {
+                    b.OwnsOne("Domain.NutritionalContent", "NutritionalContent", b1 =>
+                        {
+                            b1.Property<Guid>("FoodItemId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<double>("Carbohydrate")
+                                .HasColumnType("double precision");
+
+                            b1.Property<double>("Fat")
+                                .HasColumnType("double precision");
+
+                            b1.Property<double>("Kcal")
+                                .HasColumnType("double precision");
+
+                            b1.Property<double>("Protein")
+                                .HasColumnType("double precision");
+
+                            b1.HasKey("FoodItemId");
+
+                            b1.ToTable("FoodItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FoodItemId");
+                        });
+
+                    b.Navigation("NutritionalContent")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

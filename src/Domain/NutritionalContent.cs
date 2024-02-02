@@ -5,14 +5,11 @@ namespace Domain;
 [Owned]
 public class NutritionalContent
 {
-    public double Protein;
-    public double Carbohydrate;
-    public double Fat;
-    public double Kcal;
+    public double Protein { get; set; }
+    public double Carbohydrate { get; set; }
+    public double Fat { get; set; }
+    public double Kcal { get; set; }
 
-    public NutritionalContent()
-    {
-    }
 
     public NutritionalContent(double protein, double carbohydrate, double fat, double kcal)
     {
