@@ -1,7 +1,7 @@
 using System;
 using Domain.Common;
 
-namespace Domain;
+namespace Domain.FoodItems;
 
 public class FoodItem : BaseEntity
 {

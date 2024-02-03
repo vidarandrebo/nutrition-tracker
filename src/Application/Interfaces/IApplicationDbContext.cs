@@ -1,6 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Domain;
+using Domain.FoodItems;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Interfaces;

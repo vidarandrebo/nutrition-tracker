@@ -25,12 +25,6 @@ export class User extends ObjectAssignable {
     }
 
     async refresh(): Promise<User | null> {
-        const httpRequest2 = new HttpRequest()
-            .setRoute("/api/fooditem")
-            .setMethod("GET")
-            .setBearerToken(this.accessToken)
-            .addHeader("Content-Type", "application/json");
-        await httpRequest2.send();
         const refreshRequest = new RefreshRequest(this.refreshToken);
         const httpRequest = new HttpRequest()
             .setRoute("/api/auth/refresh")

@@ -1,5 +1,6 @@
 using Application.Interfaces;
 using Domain;
+using Domain.FoodItems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;

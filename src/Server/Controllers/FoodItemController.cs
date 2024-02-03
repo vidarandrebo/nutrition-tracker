@@ -1,4 +1,8 @@
+using System;
+using System.Threading;
 using System.Threading.Tasks;
+using Application.FoodItems;
+using Domain.FoodItems;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,7 +11,7 @@ namespace Server.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class FoodItemController : Controller
+public class FoodItemController : ControllerBase
 {
     private readonly IMediator _mediator;
     private readonly ILogger<FoodItemController> _logger;
@@ -19,17 +23,38 @@ public class FoodItemController : Controller
     }
 
     [HttpGet]
-    public async Task<ActionResult> Get()
+    public async Task<ActionResult<FoodItem[]>> Get()
     {
-        var getUserIdResult = HttpContext.GetUserName();
-        if (getUserIdResult.IsSuccess)
+        var ctSrc = new CancellationTokenSource(2000);
+        var getFoodItemRequest = new GetFoodItems.Request();
+        var getFoodItemResult = await _mediator.Send(getFoodItemRequest, ctSrc.Token);
+        if (getFoodItemResult.IsFailed)
         {
-            _logger.LogInformation(getUserIdResult.Value.ToString());
+            return BadRequest(getFoodItemResult.Errors);
         }
-        else
+
+        return Ok(getFoodItemResult.Value);
+    }
+
+
+    [HttpPost]
+    public async Task<ActionResult<FoodItem>> PostAsync(FoodItemForm form)
+    {
+        var getUserIdResult = HttpContext.GetUserId();
+        if (getUserIdResult.IsFailed)
         {
-            _logger.LogError(getUserIdResult.Errors.ToString());
+            // Should not happen as user is authorized.
+            return BadRequest();
         }
-        return Ok();
+
+        var createFoodItemRequest = new AddFoodItem.Request(form, getUserIdResult.Value);
+        using var ctSrc = new CancellationTokenSource(2000);
+        var createFoodItemResult = await _mediator.Send(createFoodItemRequest, ctSrc.Token);
+        if (createFoodItemResult.IsFailed)
+        {
+            return BadRequest(createFoodItemResult.Errors);
+        }
+
+        return Created(nameof(PostAsync), createFoodItemResult.Value);
     }
 }

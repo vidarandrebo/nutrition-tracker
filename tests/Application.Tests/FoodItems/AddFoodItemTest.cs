@@ -1,6 +1,7 @@
 using Application.FoodItems;
 using Application.Interfaces;
 using Domain;
+using Domain.FoodItems;
 using Microsoft.EntityFrameworkCore;
 
 namespace Application.Tests.FoodItems;

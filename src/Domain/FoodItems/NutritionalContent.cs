@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace Domain;
+namespace Domain.FoodItems;
 
 [Owned]
 public class NutritionalContent

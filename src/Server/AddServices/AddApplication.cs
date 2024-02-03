@@ -9,7 +9,7 @@ public static class AddApplication
     {
         services.AddMediatR(cfg =>
         {
-            cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly());
+            cfg.RegisterServicesFromAssembly(typeof(Application.AssemblyName).Assembly);
         });
         return services;
     }
