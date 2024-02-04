@@ -1,10 +1,10 @@
 import {NutritionalContent} from "./NutritionalContent.ts";
 import {FoodItemForm} from "./FoodItemForm.ts";
-import {v4 as UuidV4} from "uuid";
 import {HttpRequest} from "./Http.ts";
 import {loadUser} from "./User.ts";
+import {IObjectAssignable} from "./ObjectAssignable.ts";
 
-export class FoodItem {
+export class FoodItem implements IObjectAssignable {
     id: string;
     brand: string;
     productName: string;
@@ -18,26 +18,32 @@ export class FoodItem {
         this.nutritionalContent = nutritionalContent;
         this.ownerId = ownerId;
     }
+
+    assignFromObject(src: Record<string, never>): void {
+        if (Object.prototype.hasOwnProperty.call(src, "id")) {
+            this.id = src["id"]
+        }
+        if (Object.prototype.hasOwnProperty.call(src, "brand")) {
+            this.brand = src["brand"]
+        }
+        if (Object.prototype.hasOwnProperty.call(src, "productName")) {
+            this.productName = src["productName"]
+        }
+        if (Object.prototype.hasOwnProperty.call(src, "ownerId")) {
+            this.id = src["ownerId"]
+        }
+        if (Object.prototype.hasOwnProperty.call(src, "nutritionalContent")) {
+            this.nutritionalContent.assignFromObject(src["nutritionalContent"])
+        }
+    }
 }
 
-export async function postFoodItem(foodForm: FoodItemForm): Promise<FoodItem> {
-    // TODO
+
+export async function postFoodItem(foodForm: FoodItemForm): Promise<FoodItem | null> {
     // send post request to server
-    const fid = UuidV4(); //TMP
-    const uid = UuidV4(); //TMP
     const user = loadUser();
     if (user == null) {
-        return new FoodItem(
-            fid,
-            foodForm.brand,
-            foodForm.productName,
-            new NutritionalContent(
-                foodForm.protein,
-                foodForm.carbohydrate,
-                foodForm.fat,
-                foodForm.kCal,
-                foodForm.unit),
-            uid);
+        return null
     }
     const httpRequest = new HttpRequest()
         .setRoute("api/fooditem")
@@ -47,18 +53,9 @@ export async function postFoodItem(foodForm: FoodItemForm): Promise<FoodItem> {
         .setBearerToken(user.accessToken);
     await httpRequest.send();
     const response = httpRequest.getResponseData();
-    console.log(response)
-    return new FoodItem(
-        fid,
-        foodForm.brand,
-        foodForm.productName,
-        new NutritionalContent(
-            foodForm.protein,
-            foodForm.carbohydrate,
-            foodForm.fat,
-            foodForm.kCal,
-            foodForm.unit),
-        uid);
+    if (response != null)
+        console.log(response)
+    return null
 }
 
 export async function getFoodItems(): Promise<FoodItem[]> {

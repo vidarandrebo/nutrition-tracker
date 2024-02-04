@@ -14,6 +14,9 @@ public class FoodItem : BaseEntity
     // EF Core
     private FoodItem()
     {
+        Brand = "";
+        ProductName = "";
+        NutritionalContent = new NutritionalContent(0.0, 0.0, 0.0, 0.0);
     }
 
     public FoodItem(string brand, string productName, NutritionalContent nutritionalContent, Guid ownerId)
@@ -23,5 +26,10 @@ public class FoodItem : BaseEntity
         ProductName = productName;
         NutritionalContent = nutritionalContent;
         OwnerId = ownerId;
+    }
+
+    public FoodItemDTO ToDTO()
+    {
+        return new FoodItemDTO(Id, Brand, ProductName, NutritionalContent, OwnerId);
     }
 }

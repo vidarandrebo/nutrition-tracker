@@ -8,14 +8,14 @@ public class NutritionalContent
     public double Protein { get; set; }
     public double Carbohydrate { get; set; }
     public double Fat { get; set; }
-    public double Kcal { get; set; }
+    public double KCal { get; set; }
 
 
-    public NutritionalContent(double protein, double carbohydrate, double fat, double kcal)
+    public NutritionalContent(double protein, double carbohydrate, double fat, double kCal)
     {
         Protein = protein;
         Carbohydrate = carbohydrate;
         Fat = fat;
-        Kcal = kcal;
+        KCal = kCal;
     }
 }

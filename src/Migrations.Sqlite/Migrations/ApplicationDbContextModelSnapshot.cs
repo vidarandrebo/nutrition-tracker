@@ -17,7 +17,7 @@ namespace Migrations.Sqlite.Migrations
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
 
-            modelBuilder.Entity("Domain.FoodItem", b =>
+            modelBuilder.Entity("Domain.FoodItems.FoodItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -231,9 +231,9 @@ namespace Migrations.Sqlite.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.FoodItem", b =>
+            modelBuilder.Entity("Domain.FoodItems.FoodItem", b =>
                 {
-                    b.OwnsOne("Domain.NutritionalContent", "NutritionalContent", b1 =>
+                    b.OwnsOne("Domain.FoodItems.NutritionalContent", "NutritionalContent", b1 =>
                         {
                             b1.Property<Guid>("FoodItemId")
                                 .HasColumnType("TEXT");
@@ -244,7 +244,7 @@ namespace Migrations.Sqlite.Migrations
                             b1.Property<double>("Fat")
                                 .HasColumnType("REAL");
 
-                            b1.Property<double>("Kcal")
+                            b1.Property<double>("KCal")
                                 .HasColumnType("REAL");
 
                             b1.Property<double>("Protein")

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Migrations.Sqlite.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentitySqlite : Migration
+    public partial class Sqlite : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -48,6 +48,24 @@ namespace Migrations.Sqlite.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "FoodItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Brand = table.Column<string>(type: "TEXT", nullable: false),
+                    ProductName = table.Column<string>(type: "TEXT", nullable: false),
+                    NutritionalContent_Protein = table.Column<double>(type: "REAL", nullable: false),
+                    NutritionalContent_Carbohydrate = table.Column<double>(type: "REAL", nullable: false),
+                    NutritionalContent_Fat = table.Column<double>(type: "REAL", nullable: false),
+                    NutritionalContent_KCal = table.Column<double>(type: "REAL", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FoodItems", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -211,6 +229,9 @@ namespace Migrations.Sqlite.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "FoodItems");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

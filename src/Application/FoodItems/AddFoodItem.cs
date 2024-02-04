@@ -12,9 +12,9 @@ namespace Application.FoodItems;
 
 public class AddFoodItem
 {
-    public record Request(FoodItemForm Form, Guid OwnerId) : IRequest<Result<FoodItem>>;
+    public record Request(FoodItemForm Form, Guid OwnerId) : IRequest<Result<FoodItemDTO>>;
 
-    public class Handler : IRequestHandler<Request, Result<FoodItem>>
+    public class Handler : IRequestHandler<Request, Result<FoodItemDTO>>
     {
         private readonly IApplicationDbContext _db;
 
@@ -23,7 +23,7 @@ public class AddFoodItem
             _db = db;
         }
 
-        public async Task<Result<FoodItem>> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<FoodItemDTO>> Handle(Request request, CancellationToken cancellationToken)
         {
             var validator = new FoodItemValidator();
             var validationResult = validator.Validate(request.Form);
@@ -54,7 +54,7 @@ public class AddFoodItem
                 return Result.Fail("db operation timed out");
             }
 
-            return Result.Ok(foodItem);
+            return Result.Ok(foodItem.ToDTO());
         }
     }
 }

@@ -4,11 +4,13 @@ using System.Threading.Tasks;
 using Application.FoodItems;
 using Domain.FoodItems;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Server.Controllers;
 
+//[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class FoodItemController : ControllerBase
@@ -23,7 +25,7 @@ public class FoodItemController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<FoodItem[]>> Get()
+    public async Task<ActionResult<FoodItemDTO[]>> Get()
     {
         var ctSrc = new CancellationTokenSource(2000);
         var getFoodItemRequest = new GetFoodItems.Request();
@@ -38,7 +40,7 @@ public class FoodItemController : ControllerBase
 
 
     [HttpPost]
-    public async Task<ActionResult<FoodItem>> PostAsync(FoodItemForm form)
+    public async Task<ActionResult<FoodItemDTO>> PostAsync(FoodItemForm form)
     {
         var getUserIdResult = HttpContext.GetUserId();
         if (getUserIdResult.IsFailed)

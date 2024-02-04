@@ -22,7 +22,7 @@ namespace Migrations.Postgres.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Domain.FoodItem", b =>
+            modelBuilder.Entity("Domain.FoodItems.FoodItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -240,9 +240,9 @@ namespace Migrations.Postgres.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Domain.FoodItem", b =>
+            modelBuilder.Entity("Domain.FoodItems.FoodItem", b =>
                 {
-                    b.OwnsOne("Domain.NutritionalContent", "NutritionalContent", b1 =>
+                    b.OwnsOne("Domain.FoodItems.NutritionalContent", "NutritionalContent", b1 =>
                         {
                             b1.Property<Guid>("FoodItemId")
                                 .HasColumnType("uuid");
@@ -253,7 +253,7 @@ namespace Migrations.Postgres.Migrations
                             b1.Property<double>("Fat")
                                 .HasColumnType("double precision");
 
-                            b1.Property<double>("Kcal")
+                            b1.Property<double>("KCal")
                                 .HasColumnType("double precision");
 
                             b1.Property<double>("Protein")
