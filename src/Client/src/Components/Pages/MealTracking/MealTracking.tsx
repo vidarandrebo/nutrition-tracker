@@ -1,6 +1,6 @@
-import {useLoggedIn} from "../../../Hooks/UseLoggedIn.ts";
+import { useLoggedIn } from "../../../Hooks/UseLoggedIn.ts";
 
 export default function MealTracking() {
     useLoggedIn();
-    return <h1>Meal Tracking Page</h1>
+    return <h1>Meal Tracking Page</h1>;
 }

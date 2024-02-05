@@ -1,4 +1,4 @@
-import {ObjectAssignable} from "../../ObjectAssignable";
+import { ObjectAssignable } from "../../ObjectAssignable";
 
 export class ForgotPasswordRequest {
     email: string;
@@ -92,7 +92,13 @@ export class TwoFactorRequest {
     resetSharedKey: boolean;
     twoFactorCode: string | null;
 
-    constructor(enable: boolean, forgetMachine: boolean, resetRecoveryCode: boolean, resetSharedKey: boolean, twoFactorCode: string | null) {
+    constructor(
+        enable: boolean,
+        forgetMachine: boolean,
+        resetRecoveryCode: boolean,
+        resetSharedKey: boolean,
+        twoFactorCode: string | null
+    ) {
         this.enable = enable;
         this.forgetMachine = forgetMachine;
         this.resetRecoveryCode = resetRecoveryCode;

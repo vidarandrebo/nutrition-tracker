@@ -1,0 +1,21 @@
+name: React
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install npm packages
+        working-directory: src/Client
+        run: npm install
+      - name: Build
+        working-directory: src/Client
+        run: npm run build
+      - name: Test
+        working-directory: src/Client
+        run: npm run test

@@ -15,7 +15,29 @@ namespace Migrations.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.0");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.1");
+
+            modelBuilder.Entity("Domain.FoodItems.FoodItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("OwnerId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FoodItems");
+                });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
@@ -207,6 +229,37 @@ namespace Migrations.Sqlite.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
+                });
+
+            modelBuilder.Entity("Domain.FoodItems.FoodItem", b =>
+                {
+                    b.OwnsOne("Domain.FoodItems.NutritionalContent", "NutritionalContent", b1 =>
+                        {
+                            b1.Property<Guid>("FoodItemId")
+                                .HasColumnType("TEXT");
+
+                            b1.Property<double>("Carbohydrate")
+                                .HasColumnType("REAL");
+
+                            b1.Property<double>("Fat")
+                                .HasColumnType("REAL");
+
+                            b1.Property<double>("KCal")
+                                .HasColumnType("REAL");
+
+                            b1.Property<double>("Protein")
+                                .HasColumnType("REAL");
+
+                            b1.HasKey("FoodItemId");
+
+                            b1.ToTable("FoodItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("FoodItemId");
+                        });
+
+                    b.Navigation("NutritionalContent")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

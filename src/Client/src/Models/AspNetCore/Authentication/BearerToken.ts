@@ -1,5 +1,4 @@
-import {ObjectAssignable} from "../../ObjectAssignable.ts";
-
+import { ObjectAssignable } from "../../ObjectAssignable.ts";
 
 export class AccessTokenResponse extends ObjectAssignable {
     accessToken: string;

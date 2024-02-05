@@ -1,5 +1,5 @@
-import {getFloatField, getStringField} from "../Components/FormElements/FormUtils.ts";
-import {IAssignFromForm} from "./IAssignFromForm.ts";
+import { getFloatField, getStringField } from "../Components/FormElements/FormUtils.ts";
+import { IAssignFromForm } from "./IAssignFromForm.ts";
 
 export class FoodItemForm implements IAssignFromForm {
     brand: string;
@@ -8,8 +8,7 @@ export class FoodItemForm implements IAssignFromForm {
     carbohydrate: number;
     fat: number;
     kCal: number;
-    unit: "grams" | "ml"
-
+    unit: "grams" | "ml";
 
     constructor() {
         this.brand = "";

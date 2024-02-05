@@ -9,8 +9,8 @@ export class HttpResponse {
 }
 
 export class HttpRequest {
-    route: string | null
-    method: "GET" | "POST" | "DELETE" | "PUT" | undefined
+    route: string | null;
+    method: "GET" | "POST" | "DELETE" | "PUT" | undefined;
     headers: Record<string, string>;
     urlParams: Record<string, string> | undefined;
     requestData: object | undefined;
@@ -30,7 +30,7 @@ export class HttpRequest {
 
     addHeader(key: string, value: string): HttpRequest {
         this.headers[key] = value;
-        return this
+        return this;
     }
 
     setBearerToken(token: string): HttpRequest {
@@ -48,7 +48,7 @@ export class HttpRequest {
 
     setMethod(method: "GET" | "POST" | "DELETE" | "PUT") {
         this.method = method;
-        return this
+        return this;
     }
 
     setRequestData(data: object): HttpRequest {
@@ -61,56 +61,47 @@ export class HttpRequest {
             throw new Error("Route is not set");
         }
         if (this.method == undefined) {
-            throw new Error("Method is not set")
+            throw new Error("Method is not set");
         }
 
         // body set if present
-        const request =
-            this.requestData
-                ? {
-                    method: this.method,
-                    headers: this.headers,
-                    body: JSON.stringify(this.requestData)
-                }
-                : {
-                    method: this.method,
-                    headers: this.headers,
-                }
+        const request = this.requestData
+            ? {
+                  method: this.method,
+                  headers: this.headers,
+                  body: JSON.stringify(this.requestData)
+              }
+            : {
+                  method: this.method,
+                  headers: this.headers
+              };
 
         const searchParams = new URLSearchParams();
         if (this.urlParams) {
             Object.keys(this.urlParams).forEach((key) => {
-                searchParams.append(key, (this.urlParams as never)[key])
-            })
+                searchParams.append(key, (this.urlParams as never)[key]);
+            });
         }
 
         // add params to URL if they are present
-        const url =
-            this.urlParams
-                ? this.route + "?" + searchParams
-                : this.route;
+        const url = this.urlParams ? this.route + "?" + searchParams : this.route;
 
-        const response = await fetch(
-            url,
-            request as RequestInit
-        );
+        const response = await fetch(url, request as RequestInit);
         this.responseStatus = response.status;
         try {
             this.responseBody = await response.json();
         } catch {
             this.responseBody = undefined;
         }
-
     }
 
     getResponseData(): HttpResponse | null {
         if (this.responseBody != undefined && this.responseStatus != undefined) {
-            return new HttpResponse(this.responseBody, this.responseStatus)
+            return new HttpResponse(this.responseBody, this.responseStatus);
         }
         if (this.responseStatus != undefined) {
             return new HttpResponse(null, this.responseStatus);
         }
-        return null
+        return null;
     }
-
 }
