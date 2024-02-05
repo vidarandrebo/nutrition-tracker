@@ -1,4 +1,4 @@
-import {ObjectAssignable} from "../../ObjectAssignable";
+import { ObjectAssignable } from "../../ObjectAssignable";
 
 export class HttpValidationProblemDetails extends ObjectAssignable {
     type: string;

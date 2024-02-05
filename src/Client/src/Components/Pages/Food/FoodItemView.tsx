@@ -1,8 +1,8 @@
-import {FoodItem} from "../../../Models/FoodItem.ts";
+import { FoodItem } from "../../../Models/FoodItem.ts";
 
 type Props = {
     foodItem: FoodItem;
-}
+};
 export default function FoodItemView(props: Props) {
     return (
         <li className="bg-gray-300">
@@ -15,5 +15,6 @@ export default function FoodItemView(props: Props) {
                 <p>Fat: {props.foodItem.nutritionalContent.fat}</p>
                 <p>Calories: {props.foodItem.nutritionalContent.kCal}</p>
             </div>
-        </li>)
+        </li>
+    );
 }

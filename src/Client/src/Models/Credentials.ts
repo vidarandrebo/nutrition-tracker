@@ -1,10 +1,10 @@
-import {IAssignFromForm} from "./IAssignFromForm.ts";
-import {getStringField} from "../Components/FormElements/FormUtils.ts";
-import {User} from "./User.ts";
-import {HttpRequest} from "./Http.ts";
-import {LoginRequest, RegisterRequest} from "./AspNetCore/Identity/Data.ts";
-import {AccessTokenResponse} from "./AspNetCore/Authentication/BearerToken.ts";
-import {HttpValidationProblemDetails} from "./AspNetCore/Http/Abstractions.ts";
+import { IAssignFromForm } from "./IAssignFromForm.ts";
+import { getStringField } from "../Components/FormElements/FormUtils.ts";
+import { User } from "./User.ts";
+import { HttpRequest } from "./Http.ts";
+import { LoginRequest, RegisterRequest } from "./AspNetCore/Identity/Data.ts";
+import { AccessTokenResponse } from "./AspNetCore/Authentication/BearerToken.ts";
+import { HttpValidationProblemDetails } from "./AspNetCore/Http/Abstractions.ts";
 
 export class Credentials implements IAssignFromForm {
     email: string;
@@ -25,12 +25,7 @@ export class Credentials implements IAssignFromForm {
      */
     async loginUser(): Promise<User | null> {
         // send login user request to server
-        const loginRequest = new LoginRequest(
-            this.email,
-            this.password,
-            null,
-            null
-        );
+        const loginRequest = new LoginRequest(this.email, this.password, null, null);
         const httpRequest = new HttpRequest()
             .setRoute("/api/auth/login")
             .setMethod("POST")
@@ -42,12 +37,12 @@ export class Credentials implements IAssignFromForm {
 
         if (httpResponse) {
             if (httpResponse?.status == 200) {
-                loginResponse.assignFromObject(httpResponse.body as Record<string, never>)
+                loginResponse.assignFromObject(httpResponse.body as Record<string, never>);
                 const user = new User();
                 user.refreshToken = loginResponse.refreshToken;
                 user.accessToken = loginResponse.accessToken;
                 user.email = this.email;
-                user.writeToLocalStorage()
+                user.writeToLocalStorage();
                 return user;
             }
         }
@@ -55,8 +50,8 @@ export class Credentials implements IAssignFromForm {
         return null;
     }
 
-    async registerUser() : Promise<HttpValidationProblemDetails | null>{
-        const registerRequest = new RegisterRequest(this.email,this.password);
+    async registerUser(): Promise<HttpValidationProblemDetails | null> {
+        const registerRequest = new RegisterRequest(this.email, this.password);
         const httpRequest = new HttpRequest()
             .setRoute("/api/auth/register")
             .setMethod("POST")
@@ -68,7 +63,7 @@ export class Credentials implements IAssignFromForm {
 
         if (httpResponse) {
             if (httpResponse?.status == 400) {
-                registerErrors.assignFromObject(httpResponse.body as Record<string, never>)
+                registerErrors.assignFromObject(httpResponse.body as Record<string, never>);
                 return registerErrors;
             }
         }

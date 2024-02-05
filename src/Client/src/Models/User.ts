@@ -1,7 +1,7 @@
-import {ObjectAssignable} from "./ObjectAssignable";
-import {RefreshRequest} from "./AspNetCore/Identity/Data.ts";
-import {HttpRequest} from "./Http.ts";
-import {AccessTokenResponse} from "./AspNetCore/Authentication/BearerToken.ts";
+import { ObjectAssignable } from "./ObjectAssignable";
+import { RefreshRequest } from "./AspNetCore/Identity/Data.ts";
+import { HttpRequest } from "./Http.ts";
+import { AccessTokenResponse } from "./AspNetCore/Authentication/BearerToken.ts";
 
 export class User extends ObjectAssignable {
     email: string;
@@ -9,13 +9,12 @@ export class User extends ObjectAssignable {
     refreshToken: string;
 
     writeToLocalStorage() {
-        localStorage.setItem("user", JSON.stringify(this))
+        localStorage.setItem("user", JSON.stringify(this));
     }
 
     removeFromLocalStorage() {
-        localStorage.removeItem("user")
+        localStorage.removeItem("user");
     }
-
 
     constructor() {
         super();
@@ -37,13 +36,13 @@ export class User extends ObjectAssignable {
 
         if (httpResponse) {
             if (httpResponse.status == 200) {
-                refreshResponse.assignFromObject(httpResponse.body as Record<string, never>)
+                refreshResponse.assignFromObject(httpResponse.body as Record<string, never>);
                 this.refreshToken = refreshResponse.refreshToken;
                 this.accessToken = refreshResponse.accessToken;
                 this.writeToLocalStorage();
                 return this;
             } else {
-                this.removeFromLocalStorage()
+                this.removeFromLocalStorage();
             }
         }
         return null;
@@ -51,12 +50,12 @@ export class User extends ObjectAssignable {
 }
 
 export function loadUser(): User | null {
-    const data = localStorage.getItem("user")
+    const data = localStorage.getItem("user");
     if (data != null) {
-        const parsedData = JSON.parse(data)
-        const user = new User()
+        const parsedData = JSON.parse(data);
+        const user = new User();
         user.assignFromObject(parsedData);
         return user;
     }
-    return null
+    return null;
 }
