@@ -1,43 +1,44 @@
 {
-  "name": "nutrition-tracker-client",
-  "private": true,
-  "version": "0.9.0",
-  "author": {
-    "name": "Vidar André Bø"
-  },
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "rimraf --glob ../Server/wwwroot/* && tsc && vite build --mode development && cp -r dist/* ../Server/wwwroot/",
-    "buildRelease": "tsc && vite build",
-    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "test": "vitest run",
-    "format": "prettier --config .prettierrc src//**/*.{ts,tsx} --write"
-  },
-  "dependencies": {
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.22.0",
-    "uuid": "^9.0.1"
-  },
-  "devDependencies": {
-    "@types/react": "^18.2.54",
-    "@types/react-dom": "^18.2.18",
-    "@types/uuid": "^9.0.8",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
-    "@vitejs/plugin-react": "^4.2.1",
-    "autoprefixer": "^10.4.17",
-    "eslint": "^8.56.0",
-    "eslint-plugin-react-hooks": "^4.6.0",
-    "eslint-plugin-react-refresh": "^0.4.5",
-    "postcss": "^8.4.34",
-    "prettier": "^3.2.5",
-    "rimraf": "^5.0.5",
-    "tailwindcss": "^3.4.1",
-    "typescript": "^5.3.3",
-    "vite": "^5.0.12",
-    "vitest": "^1.2.2"
-  }
+    "name": "nutrition-tracker-client",
+    "private": true,
+    "version": "0.9.1",
+    "author": {
+        "name": "Vidar André Bø"
+    },
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "rimraf --glob ../Server/wwwroot/* && tsc && vite build --mode development && cp -r dist/* ../Server/wwwroot/",
+        "buildRelease": "tsc && vite build",
+        "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+        "preview": "vite preview",
+        "test": "vitest run",
+        "format": "prettier --config .prettierrc --write src/* *.*js* .eslintrc.cjs .prettierrc"
+    },
+    "dependencies": {
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.22.0",
+        "uuid": "^9.0.1"
+    },
+    "devDependencies": {
+        "@types/react": "^18.2.55",
+        "@types/react-dom": "^18.2.19",
+        "@types/uuid": "^9.0.8",
+        "@typescript-eslint/eslint-plugin": "^6.21.0",
+        "@typescript-eslint/parser": "^6.21.0",
+        "@vitejs/plugin-react": "^4.2.1",
+        "autoprefixer": "^10.4.17",
+        "eslint": "^8.56.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-react-hooks": "^4.6.0",
+        "eslint-plugin-react-refresh": "^0.4.5",
+        "postcss": "^8.4.35",
+        "prettier": "^3.2.5",
+        "rimraf": "^5.0.5",
+        "tailwindcss": "^3.4.1",
+        "typescript": "^5.3.3",
+        "vite": "^5.1.1",
+        "vitest": "^1.2.2"
+    }
 }
