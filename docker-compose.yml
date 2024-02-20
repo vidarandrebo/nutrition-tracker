@@ -1,7 +1,7 @@
 services:
   database:
     image: postgres:15-alpine
-    container_name: nutrition-tracker-db
+    container_name: "nutrition-tracker-db"
     restart: unless-stopped
     environment:
       - POSTGRES_USER=nutrition-tracker
@@ -11,11 +11,17 @@ services:
       - '[::1]:5015:5432'
     volumes:
       - /data/nutrition-tracker/db:/var/lib/postgresql/data
+    labels:
+      - "nutrition-tracker-db"
 
 
   server:
-    container_name: "nutrition-tracker-api"
-    build: .
+    container_name: "nutrition-tracker-server"
+    build:
+      context: .
+      labels: 
+        - "nutrition-tracker-server"
+
     ports:
       - "127.0.0.1:5014:80"
       - "[::1]:5014:80"

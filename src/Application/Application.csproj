@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>0.9.1</Version>
+        <Version>0.9.2</Version>
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -20,8 +20,8 @@
 
     <ItemGroup>
         <PackageReference Include="MediatR" Version="12.2.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.2" />
     </ItemGroup>
 
 </Project>
