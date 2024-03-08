@@ -1,7 +1,7 @@
 import { ObjectAssignable } from "./ObjectAssignable";
-import { RefreshRequest } from "./AspNetCore/Identity/Data.ts";
-import { HttpRequest } from "./Http.ts";
-import { AccessTokenResponse } from "./AspNetCore/Authentication/BearerToken.ts";
+import { RefreshRequest } from "aspnetcore-ts/Identity/Data";
+import { HttpRequest } from "http-methods-ts";
+import { AccessTokenResponse } from "aspnetcore-ts/Authentication/BearerToken";
 
 export class User extends ObjectAssignable {
     email: string;
