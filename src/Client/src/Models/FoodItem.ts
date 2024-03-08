@@ -1,6 +1,6 @@
 import { NutritionalContent } from "./NutritionalContent.ts";
 import { FoodItemForm } from "./FoodItemForm.ts";
-import { HttpRequest } from "./Http.ts";
+import { HttpRequest } from "http-methods-ts"
 import { loadUser } from "./User.ts";
 import { IObjectAssignable } from "./ObjectAssignable.ts";
 

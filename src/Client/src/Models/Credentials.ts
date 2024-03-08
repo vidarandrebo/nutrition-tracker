@@ -1,10 +1,10 @@
 import { IAssignFromForm } from "./IAssignFromForm.ts";
 import { getStringField } from "../Components/FormElements/FormUtils.ts";
 import { User } from "./User.ts";
-import { HttpRequest } from "./Http.ts";
-import { LoginRequest, RegisterRequest } from "./AspNetCore/Identity/Data.ts";
-import { AccessTokenResponse } from "./AspNetCore/Authentication/BearerToken.ts";
-import { HttpValidationProblemDetails } from "./AspNetCore/Http/Abstractions.ts";
+import { HttpRequest } from "http-methods-ts";
+import { LoginRequest, RegisterRequest } from "aspnetcore-ts/Identity/Data";
+import { AccessTokenResponse } from "aspnetcore-ts/Authentication/BearerToken";
+import { HttpValidationProblemDetails } from "aspnetcore-ts/Http";
 
 export class Credentials implements IAssignFromForm {
     email: string;
