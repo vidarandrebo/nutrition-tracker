@@ -15,3 +15,7 @@ migration:
 	dotnet ef migrations add $(name)Postgres --project src/Migrations.Postgres --startup-project src/Server -v -- --environment Production
 	dotnet ef migrations add $(name)Sqlite --project src/Migrations.Sqlite --startup-project src/Server
 	rm src/Server/.env
+
+rm-migrations:
+	rm -rf ./src/Migrations.Sqlite/Migrations/*
+	rm -rf ./src/Migrations.Postgres/Migrations/*

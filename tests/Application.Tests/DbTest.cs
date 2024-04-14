@@ -11,6 +11,7 @@ public class DbTest
     {
         _db = DatabaseHelper.NewContext();
     }
+
     [Fact]
     public void NotNullTest()
     {
