@@ -12,9 +12,7 @@ public static class DatabaseHelper
         conn.Open();
 
         var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(conn, options => {
-                options.MigrationsAssembly(Migrations.Sqlite.Provider.Assembly);
-            })
+            .UseSqlite(conn, options => { options.MigrationsAssembly(Migrations.Sqlite.Provider.Assembly); })
             .Options;
 
         var ctx = new ApplicationDbContext(contextOptions);

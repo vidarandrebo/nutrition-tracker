@@ -29,7 +29,7 @@ public class FoodItemValidator : AbstractValidator<FoodItemForm>
 {
     public FoodItemValidator()
     {
-        var allowedUnits = new List<string>() {"ml", "grams"};
+        var allowedUnits = new List<string>() { "ml", "grams" };
         RuleFor(f => f.Unit)
             .Must(f => allowedUnits.Contains(f))
             .WithMessage("unit must be either grams or ml");

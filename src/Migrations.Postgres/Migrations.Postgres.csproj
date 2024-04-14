@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>0.10.0</Version>
+        <Version>0.11.0</Version>
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -20,6 +20,11 @@
 
     <ItemGroup>
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <Folder Include="Migrations\" />
     </ItemGroup>
 
 </Project>
