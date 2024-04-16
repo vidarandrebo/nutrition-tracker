@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>0.11.0</Version>
+        <Version>0.11.1</Version>
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -13,21 +13,17 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Application\Application.csproj" />
-        <ProjectReference Include="..\Domain\Domain.csproj" />
+        <ProjectReference Include="..\Application\Application.csproj"/>
+        <ProjectReference Include="..\Domain\Domain.csproj"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2" />
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    </ItemGroup>
-
-    <ItemGroup>
-        <Reference Include="Microsoft.AspNetCore.Extensions.Hosting" />
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.2"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.2"/>
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
     </ItemGroup>
 
 </Project>
