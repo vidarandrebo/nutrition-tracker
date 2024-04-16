@@ -1,7 +1,7 @@
 {
     "name": "nutrition-tracker-client",
     "private": true,
-    "version": "0.11.0",
+    "version": "0.11.1",
     "author": {
         "name": "Vidar André Bø"
     },
