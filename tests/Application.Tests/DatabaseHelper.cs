@@ -1,8 +1,8 @@
-using Infrastructure;
+using NutritionTracker.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Data.Sqlite;
 
-namespace Application.Tests;
+namespace NutritionTracker.Application.Tests;
 
 public static class DatabaseHelper
 {
@@ -12,7 +12,7 @@ public static class DatabaseHelper
         conn.Open();
 
         var contextOptions = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseSqlite(conn, options => { options.MigrationsAssembly(Migrations.Sqlite.Provider.Assembly); })
+            .UseSqlite(conn, options => { options.MigrationsAssembly("NutritionTracker.Migrations.Sqlite"); })
             .Options;
 
         var ctx = new ApplicationDbContext(contextOptions);

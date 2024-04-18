@@ -1,7 +1,7 @@
 using System.Linq;
-using Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems;
 
-namespace Domain.Tests.FoodItems;
+namespace NutritionTracker.Domain.Tests.FoodItems;
 
 public class FoodItemFormTest
 {

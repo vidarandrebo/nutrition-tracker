@@ -1,10 +1,8 @@
-using Application.FoodItems;
-using Application.Interfaces;
-using Domain;
-using Domain.FoodItems;
-using Microsoft.EntityFrameworkCore;
+using NutritionTracker.Application.FoodItems;
+using NutritionTracker.Application.Interfaces;
+using NutritionTracker.Domain.FoodItems;
 
-namespace Application.Tests.FoodItems;
+namespace NutritionTracker.Application.Tests.FoodItems;
 
 public class AddFoodItemTest
 {

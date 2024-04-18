@@ -1,6 +1,5 @@
 using System;
-using Application.Interfaces;
-using Infrastructure.Interceptors;
+using NutritionTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +7,11 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NutritionTracker.Infrastructure.Interceptors;
 
-namespace Infrastructure;
+namespace NutritionTracker.Infrastructure;
 
-public static class AddInfrastructure
+public static class DependencyInjection
 {
     public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
         IConfiguration configuration,
@@ -32,7 +32,7 @@ public static class AddInfrastructure
             {
                 options.AddInterceptors(serviceProvider.GetServices<ISaveChangesInterceptor>());
                 options.UseNpgsql(dbConnectionString,
-                    postgresOptions => { postgresOptions.MigrationsAssembly("Migrations.Postgres"); });
+                    postgresOptions => { postgresOptions.MigrationsAssembly("NutritionTracker.Migrations.Postgres"); });
             });
         }
         else
@@ -42,7 +42,7 @@ public static class AddInfrastructure
                 var folder = configuration.GetValue<string>("Database:Folder");
                 var filename = configuration.GetValue<string>("Database:File");
                 options.UseSqlite($"Data Source=nutrition-tracker.db",
-                    sqliteOptions => { sqliteOptions.MigrationsAssembly("Migrations.Sqlite"); });
+                    sqliteOptions => { sqliteOptions.MigrationsAssembly("NutritionTracker.Migrations.Sqlite"); });
                 options.AddInterceptors(serviceProvider.GetServices<ISaveChangesInterceptor>());
             });
         }

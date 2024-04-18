@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Migrations.Postgres.Migrations
+namespace NutritionTracker.Migrations.Postgres.Migrations
 {
     /// <inheritdoc />
     public partial class InitPostgres : Migration

@@ -1,6 +1,6 @@
 using MediatR;
 
-namespace Domain.Common;
+namespace NutritionTracker.Domain.Common;
 
 public abstract class BaseEvent : INotification
 {

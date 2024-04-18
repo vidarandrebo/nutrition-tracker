@@ -3,7 +3,7 @@ using System.Security.Claims;
 using FluentResults;
 using Microsoft.AspNetCore.Http;
 
-namespace Server;
+namespace NutritionTracker.Server;
 
 public static class HttpContextExtensions
 {

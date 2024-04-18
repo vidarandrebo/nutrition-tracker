@@ -30,9 +30,9 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Application\Application.csproj"/>
-        <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj"/>
-        <ProjectReference Include="..\..\src\Migrations.Sqlite\Migrations.Sqlite.csproj"/>
+        <ProjectReference Include="..\..\src\Application\NutritionTracker.Application.csproj"/>
+        <ProjectReference Include="..\..\src\Infrastructure\NutritionTracker.Infrastructure.csproj"/>
     </ItemGroup>
+
 
 </Project>

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Domain.Common;
+namespace NutritionTracker.Domain.Common;
 
 public abstract class BaseEntity
 {

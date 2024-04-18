@@ -1,7 +1,6 @@
-using Application.Interfaces;
-using Infrastructure;
+using NutritionTracker.Application.Interfaces;
 
-namespace Application.Tests;
+namespace NutritionTracker.Application.Tests;
 
 public class DbTest
 {

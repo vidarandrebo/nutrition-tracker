@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Domain.FoodItems
+namespace NutritionTracker.Domain.FoodItems
 {
     public record FoodItemDTO(
         Guid Id,

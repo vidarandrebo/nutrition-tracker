@@ -27,7 +27,7 @@
         </PackageReference>
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\src\Domain\Domain.csproj"/>
+        <ProjectReference Include="..\..\src\Domain\NutritionTracker.Domain.csproj"/>
     </ItemGroup>
 
 </Project>

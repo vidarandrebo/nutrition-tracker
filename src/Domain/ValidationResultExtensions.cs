@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using FluentResults;
 using FluentValidation.Results;
 
-namespace Domain;
+namespace NutritionTracker.Domain;
 
 public static class ValidationResultExtensions
 {

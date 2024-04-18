@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace Infrastructure;
+namespace NutritionTracker.Infrastructure;
 
 public static class DotEnv
 {

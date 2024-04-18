@@ -1,13 +1,13 @@
-using Application.Interfaces;
-using Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using NutritionTracker.Application.Interfaces;
 
-namespace Application.FoodItems;
+namespace NutritionTracker.Application.FoodItems;
 
 public class GetFoodItems
 

@@ -26,4 +26,4 @@ COPY docker.env .env
 RUN true
 #COPY docker.env .env
 RUN true
-ENTRYPOINT ["dotnet","Server.dll"]
+ENTRYPOINT ["dotnet","NutritionTracker.Server.dll"]
