@@ -3,7 +3,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <Version>0.11.1</Version>
+        <Version>0.12.0</Version>
         <Authors>Vidar André Bø</Authors>
         <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
@@ -14,12 +14,12 @@
 
 
     <ItemGroup>
-        <PackageReference Include="MediatR" Version="12.2.0"/>
+        <PackageReference Include="MediatR" Version="12.2.0" />
     </ItemGroup>
 
 
     <ItemGroup>
-        <ProjectReference Include="..\Domain\NutritionTracker.Domain.csproj"/>
+        <ProjectReference Include="..\Domain\NutritionTracker.Domain.csproj" />
     </ItemGroup>
 
 </Project>
