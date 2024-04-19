@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace Migrations.Sqlite.Migrations
+namespace NutritionTracker.Migrations.Sqlite.Migrations
 {
     /// <inheritdoc />
     public partial class InitSqlite : Migration

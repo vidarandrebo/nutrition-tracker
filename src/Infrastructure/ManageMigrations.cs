@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Npgsql;
 using Serilog;
 
-namespace Infrastructure;
+namespace NutritionTracker.Infrastructure;
 
 public static class ManageMigrations
 {

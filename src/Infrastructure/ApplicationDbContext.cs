@@ -1,11 +1,11 @@
-using Application.Interfaces;
-using Domain;
-using Domain.FoodItems;
+using NutritionTracker.Application.Interfaces;
+using NutritionTracker.Domain;
+using NutritionTracker.Domain.FoodItems;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Infrastructure;
+namespace NutritionTracker.Infrastructure;
 
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>, IApplicationDbContext
 {

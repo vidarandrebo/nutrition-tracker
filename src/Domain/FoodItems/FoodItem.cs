@@ -1,7 +1,7 @@
 using System;
-using Domain.Common;
+using NutritionTracker.Domain.Common;
 
-namespace Domain.FoodItems;
+namespace NutritionTracker.Domain.FoodItems;
 
 public class FoodItem : BaseEntity
 {

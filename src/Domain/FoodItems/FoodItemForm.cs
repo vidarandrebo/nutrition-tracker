@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using FluentValidation;
 
-namespace Domain.FoodItems;
+namespace NutritionTracker.Domain.FoodItems;
 
 public class FoodItemForm
 {

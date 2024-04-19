@@ -1,9 +1,9 @@
 using System.Threading;
 using System.Threading.Tasks;
-using Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems;
 using Microsoft.EntityFrameworkCore;
 
-namespace Application.Interfaces;
+namespace NutritionTracker.Application.Interfaces;
 
 public interface IApplicationDbContext
 {

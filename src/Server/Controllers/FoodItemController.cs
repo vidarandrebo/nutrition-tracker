@@ -1,14 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.FoodItems;
-using Domain.FoodItems;
+using NutritionTracker.Application.FoodItems;
+using NutritionTracker.Domain.FoodItems;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace Server.Controllers;
+namespace NutritionTracker.Server.Controllers;
 
 //[Authorize]
 [ApiController]

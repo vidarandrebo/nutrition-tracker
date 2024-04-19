@@ -1,14 +1,14 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Application.Interfaces;
-using Domain;
-using Domain.FoodItems;
+using NutritionTracker.Domain;
+using NutritionTracker.Domain.FoodItems;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using NutritionTracker.Application.Interfaces;
 
-namespace Application.FoodItems;
+namespace NutritionTracker.Application.FoodItems;
 
 public class AddFoodItem
 {
