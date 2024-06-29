@@ -32,7 +32,7 @@ public class AddFoodItemTest
 
         var foodItem = _db.FoodItems.FirstOrDefault();
         Assert.NotNull(foodItem);
-        Assert.NotNull(foodItem.NutritionalContent);
-        Assert.Equal(25, foodItem.NutritionalContent.Carbohydrate);
+        Assert.NotNull(foodItem.Macronutrients);
+        Assert.Equal(25, foodItem.Macronutrients.Carbohydrate);
     }
 }

@@ -52,21 +52,18 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FoodItems",
+                name: "Macronutrients",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Brand = table.Column<string>(type: "text", nullable: false),
-                    ProductName = table.Column<string>(type: "text", nullable: false),
-                    NutritionalContent_Protein = table.Column<double>(type: "double precision", nullable: false),
-                    NutritionalContent_Carbohydrate = table.Column<double>(type: "double precision", nullable: false),
-                    NutritionalContent_Fat = table.Column<double>(type: "double precision", nullable: false),
-                    NutritionalContent_KCal = table.Column<double>(type: "double precision", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Protein = table.Column<double>(type: "double precision", nullable: false),
+                    Carbohydrate = table.Column<double>(type: "double precision", nullable: false),
+                    Fat = table.Column<double>(type: "double precision", nullable: false),
+                    KCal = table.Column<double>(type: "double precision", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FoodItems", x => x.Id);
+                    table.PrimaryKey("PK_Macronutrients", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -175,6 +172,47 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FoodItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Brand = table.Column<string>(type: "text", nullable: false),
+                    ProductName = table.Column<string>(type: "text", nullable: false),
+                    MacronutrientsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FoodItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FoodItems_Macronutrients_MacronutrientsId",
+                        column: x => x.MacronutrientsId,
+                        principalTable: "Macronutrients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Micronutrient",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "text", nullable: false),
+                    Amount = table.Column<decimal>(type: "numeric", nullable: false),
+                    MassUnit = table.Column<int>(type: "integer", nullable: false),
+                    FoodItemId = table.Column<Guid>(type: "uuid", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Micronutrient", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Micronutrient_FoodItems_FoodItemId",
+                        column: x => x.FoodItemId,
+                        principalTable: "FoodItems",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -211,6 +249,16 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FoodItems_MacronutrientsId",
+                table: "FoodItems",
+                column: "MacronutrientsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Micronutrient_FoodItemId",
+                table: "Micronutrient",
+                column: "FoodItemId");
         }
 
         /// <inheritdoc />
@@ -232,13 +280,19 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "FoodItems");
+                name: "Micronutrient");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "FoodItems");
+
+            migrationBuilder.DropTable(
+                name: "Macronutrients");
         }
     }
 }

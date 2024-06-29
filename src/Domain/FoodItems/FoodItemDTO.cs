@@ -6,6 +6,6 @@ namespace NutritionTracker.Domain.FoodItems
         Guid Id,
         string Brand,
         string ProductName,
-        NutritionalContent NutritionalContent,
+        Macronutrients Macronutrients,
         Guid OwnerId);
 }

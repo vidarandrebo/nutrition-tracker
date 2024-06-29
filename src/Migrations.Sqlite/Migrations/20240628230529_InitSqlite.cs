@@ -51,21 +51,18 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "FoodItems",
+                name: "Macronutrients",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
-                    Brand = table.Column<string>(type: "TEXT", nullable: false),
-                    ProductName = table.Column<string>(type: "TEXT", nullable: false),
-                    NutritionalContent_Protein = table.Column<double>(type: "REAL", nullable: false),
-                    NutritionalContent_Carbohydrate = table.Column<double>(type: "REAL", nullable: false),
-                    NutritionalContent_Fat = table.Column<double>(type: "REAL", nullable: false),
-                    NutritionalContent_KCal = table.Column<double>(type: "REAL", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "TEXT", nullable: false)
+                    Protein = table.Column<double>(type: "REAL", nullable: false),
+                    Carbohydrate = table.Column<double>(type: "REAL", nullable: false),
+                    Fat = table.Column<double>(type: "REAL", nullable: false),
+                    KCal = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_FoodItems", x => x.Id);
+                    table.PrimaryKey("PK_Macronutrients", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -174,6 +171,47 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "FoodItems",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Brand = table.Column<string>(type: "TEXT", nullable: false),
+                    ProductName = table.Column<string>(type: "TEXT", nullable: false),
+                    MacronutrientsId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FoodItems", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_FoodItems_Macronutrients_MacronutrientsId",
+                        column: x => x.MacronutrientsId,
+                        principalTable: "Macronutrients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Micronutrient",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Amount = table.Column<decimal>(type: "TEXT", nullable: false),
+                    MassUnit = table.Column<int>(type: "INTEGER", nullable: false),
+                    FoodItemId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Micronutrient", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Micronutrient_FoodItems_FoodItemId",
+                        column: x => x.FoodItemId,
+                        principalTable: "FoodItems",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -210,6 +248,16 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FoodItems_MacronutrientsId",
+                table: "FoodItems",
+                column: "MacronutrientsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Micronutrient_FoodItemId",
+                table: "Micronutrient",
+                column: "FoodItemId");
         }
 
         /// <inheritdoc />
@@ -231,13 +279,19 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "FoodItems");
+                name: "Micronutrient");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "FoodItems");
+
+            migrationBuilder.DropTable(
+                name: "Macronutrients");
         }
     }
 }

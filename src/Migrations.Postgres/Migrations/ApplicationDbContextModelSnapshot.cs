@@ -17,7 +17,7 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.6")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -228,6 +228,9 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("MacronutrientsId")
+                        .HasColumnType("uuid");
+
                     b.Property<Guid>("OwnerId")
                         .HasColumnType("uuid");
 
@@ -237,7 +240,58 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("MacronutrientsId");
+
                     b.ToTable("FoodItems");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Macronutrients", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<double>("Carbohydrate")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Fat")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("KCal")
+                        .HasColumnType("double precision");
+
+                    b.Property<double>("Protein")
+                        .HasColumnType("double precision");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Macronutrients");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Micronutrient", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("numeric");
+
+                    b.Property<Guid?>("FoodItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("MassUnit")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FoodItemId");
+
+                    b.ToTable("Micronutrient");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -293,33 +347,25 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
 
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.FoodItem", b =>
                 {
-                    b.OwnsOne("NutritionTracker.Domain.FoodItems.NutritionalContent", "NutritionalContent", b1 =>
-                        {
-                            b1.Property<Guid>("FoodItemId")
-                                .HasColumnType("uuid");
-
-                            b1.Property<double>("Carbohydrate")
-                                .HasColumnType("double precision");
-
-                            b1.Property<double>("Fat")
-                                .HasColumnType("double precision");
-
-                            b1.Property<double>("KCal")
-                                .HasColumnType("double precision");
-
-                            b1.Property<double>("Protein")
-                                .HasColumnType("double precision");
-
-                            b1.HasKey("FoodItemId");
-
-                            b1.ToTable("FoodItems");
-
-                            b1.WithOwner()
-                                .HasForeignKey("FoodItemId");
-                        });
-
-                    b.Navigation("NutritionalContent")
+                    b.HasOne("NutritionTracker.Domain.FoodItems.Macronutrients", "Macronutrients")
+                        .WithMany()
+                        .HasForeignKey("MacronutrientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Macronutrients");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Micronutrient", b =>
+                {
+                    b.HasOne("NutritionTracker.Domain.FoodItems.FoodItem", null)
+                        .WithMany("Micronutrients")
+                        .HasForeignKey("FoodItemId");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.FoodItem", b =>
+                {
+                    b.Navigation("Micronutrients");
                 });
 #pragma warning restore 612, 618
         }

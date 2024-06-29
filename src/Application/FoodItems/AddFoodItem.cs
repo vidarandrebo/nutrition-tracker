@@ -1,12 +1,12 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NutritionTracker.Domain;
-using NutritionTracker.Domain.FoodItems;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NutritionTracker.Application.Interfaces;
+using NutritionTracker.Domain;
+using NutritionTracker.Domain.FoodItems;
 
 namespace NutritionTracker.Application.FoodItems;
 
@@ -34,8 +34,8 @@ public class AddFoodItem
 
             var foodForm = request.Form;
             var nutritionalContent =
-                new NutritionalContent(foodForm.Protein, foodForm.Carbohydrate, foodForm.Fat, foodForm.KCal);
-            var foodItem = new FoodItem(foodForm.Brand, foodForm.ProductName, nutritionalContent, request.OwnerId);
+                new Macronutrients(foodForm.Protein, foodForm.Carbohydrate, foodForm.Fat, foodForm.KCal);
+            var foodItem = new FoodItem(foodForm.Brand, foodForm.ProductName, nutritionalContent, request.OwnerId, []);
             _db.FoodItems.Add(foodItem);
             try
             {
