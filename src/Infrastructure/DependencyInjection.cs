@@ -1,5 +1,4 @@
 using System;
-using NutritionTracker.Application.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using NutritionTracker.Application.Interfaces;
+using NutritionTracker.Infrastructure.Identity;
 using NutritionTracker.Infrastructure.Interceptors;
 
 namespace NutritionTracker.Infrastructure;
@@ -48,9 +49,8 @@ public static class DependencyInjection
         }
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
-        services.AddIdentityApiEndpoints<IdentityUser>()
-            .AddEntityFrameworkStores<ApplicationDbContext>();
 
+        services.RegisterIdentity();
         return services;
     }
 }

@@ -57,6 +57,6 @@ public class FoodItemController : ControllerBase
             return BadRequest(createFoodItemResult.Errors);
         }
 
-        return Created(nameof(PostAsync), createFoodItemResult.Value);
+        return Created(nameof(Get), createFoodItemResult.Value);
     }
 }

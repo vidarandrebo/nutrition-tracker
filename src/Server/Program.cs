@@ -7,7 +7,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NutritionTracker.Application;
-using NutritionTracker.Domain.Users;
 using NutritionTracker.Infrastructure;
 using Serilog;
 
@@ -87,8 +86,9 @@ public class Program
         app.MapControllers();
 
         app.MapFallbackToFile("index.html");
+        
 
-        app.MapGroup("/api/auth").MapIdentityApi<User>();
+        //app.MapGroup("/api/auth").MapIdentityApi<Account>();
 
         app.Run();
     }
