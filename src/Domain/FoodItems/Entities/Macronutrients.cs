@@ -1,9 +1,10 @@
 using NutritionTracker.Domain.Common;
+using NutritionTracker.Domain.FoodItems.Dtos;
 
-namespace NutritionTracker.Domain.FoodItems;
+namespace NutritionTracker.Domain.FoodItems.Entities;
 
 /// <summary>
-/// Macronutrients stores the amount of protein, carbohydrate and fat per 100grams of 
+/// Macronutrients stores the amount of protein, carbohydrate and fat per 100grams of the item
 /// </summary>
 public class Macronutrients : BaseEntity
 {
@@ -19,5 +20,10 @@ public class Macronutrients : BaseEntity
         Carbohydrate = carbohydrate;
         Fat = fat;
         KCal = kCal;
+    }
+
+    public MacronutrientsDto ToDto()
+    {
+        return new MacronutrientsDto(Protein, Carbohydrate, Fat, KCal);
     }
 }

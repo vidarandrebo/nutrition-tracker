@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using NutritionTracker.Domain.Accounts;
 using NutritionTracker.Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems.Entities;
 using NutritionTracker.Domain.Meals;
 using NutritionTracker.Domain.Recipes;
+using NutritionTracker.Domain.Recipes.Entities;
 
 namespace NutritionTracker.Application.Interfaces;
 

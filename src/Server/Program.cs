@@ -86,9 +86,8 @@ public class Program
         app.MapControllers();
 
         app.MapFallbackToFile("index.html");
-        
 
-        //app.MapGroup("/api/auth").MapIdentityApi<Account>();
+        app.MapGroup("/api/auth").MapIdentityApi<IdentityUser>();
 
         app.Run();
     }

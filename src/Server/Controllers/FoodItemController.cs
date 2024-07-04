@@ -7,6 +7,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using NutritionTracker.Domain.FoodItems.Dtos;
 
 namespace NutritionTracker.Server.Controllers;
 
@@ -25,7 +26,7 @@ public class FoodItemController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<FoodItemDTO[]>> Get()
+    public async Task<ActionResult<FoodItemDto[]>> Get()
     {
         var ctSrc = new CancellationTokenSource(2000);
         var getFoodItemRequest = new GetFoodItems.Request();
@@ -40,7 +41,7 @@ public class FoodItemController : ControllerBase
 
 
     [HttpPost]
-    public async Task<ActionResult<FoodItemDTO>> PostAsync(FoodItemForm form)
+    public async Task<ActionResult<FoodItemDto>> PostAsync(FoodItemForm form)
     {
         var getUserIdResult = HttpContext.GetUserId();
         if (getUserIdResult.IsFailed)

@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore;
 using NutritionTracker.Application.Interfaces;
 using NutritionTracker.Domain.Accounts;
 using NutritionTracker.Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems.Entities;
 using NutritionTracker.Domain.Meals;
 using NutritionTracker.Domain.Recipes;
+using NutritionTracker.Domain.Recipes.Entities;
 using NutritionTracker.Infrastructure.Identity;
 
 namespace NutritionTracker.Infrastructure;

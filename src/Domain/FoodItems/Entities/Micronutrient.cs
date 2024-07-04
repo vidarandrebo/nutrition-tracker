@@ -1,6 +1,6 @@
 using NutritionTracker.Domain.Common;
 
-namespace NutritionTracker.Domain.FoodItems;
+namespace NutritionTracker.Domain.FoodItems.Entities;
 
 public class Micronutrient : BaseEntity
 {
