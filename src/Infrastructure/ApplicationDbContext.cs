@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NutritionTracker.Application.Interfaces;
 using NutritionTracker.Domain.Accounts;
-using NutritionTracker.Domain.FoodItems;
+using NutritionTracker.Domain.Diary.Entities;
 using NutritionTracker.Domain.FoodItems.Entities;
-using NutritionTracker.Domain.Meals;
-using NutritionTracker.Domain.Recipes;
 using NutritionTracker.Domain.Recipes.Entities;
 using NutritionTracker.Infrastructure.Identity;
 
@@ -17,7 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityR
 {
     public DbSet<FoodItem> FoodItems { get; set; }
     public DbSet<Recipe> Recipes { get; set; }
-    public DbSet<Meal> Meals { get; set; }
+    public DbSet<Day> Days { get; set; }
     public DbSet<Account> Accounts { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :

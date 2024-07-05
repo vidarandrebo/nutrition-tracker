@@ -23,6 +23,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionTracker.Applicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionTracker.Domain.Tests", "tests\Domain.Tests\NutritionTracker.Domain.Tests.csproj", "{73D6B5B6-9598-4775-9C82-4C9C654150A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NutritionTracker.DataImporter", "src\DataImporter\NutritionTracker.DataImporter.csproj", "{0C5AC974-B5F6-4DAC-8B17-A526F310D27F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,10 @@ Global
 		{73D6B5B6-9598-4775-9C82-4C9C654150A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73D6B5B6-9598-4775-9C82-4C9C654150A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{73D6B5B6-9598-4775-9C82-4C9C654150A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0C5AC974-B5F6-4DAC-8B17-A526F310D27F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0C5AC974-B5F6-4DAC-8B17-A526F310D27F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0C5AC974-B5F6-4DAC-8B17-A526F310D27F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0C5AC974-B5F6-4DAC-8B17-A526F310D27F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F61553A6-D26B-4FAF-ABAD-349E7D18E6BD} = {923ABE64-82F1-47A1-854E-5ADC71E89A51}
@@ -74,5 +80,6 @@ Global
 		{9F98A7CA-F0A6-457B-8102-D71BD019585A} = {923ABE64-82F1-47A1-854E-5ADC71E89A51}
 		{62EE8F1C-8209-4B84-8F48-3745F4A5AE56} = {AD97D384-08C1-43BF-AAB5-778036087570}
 		{73D6B5B6-9598-4775-9C82-4C9C654150A5} = {AD97D384-08C1-43BF-AAB5-778036087570}
+		{0C5AC974-B5F6-4DAC-8B17-A526F310D27F} = {923ABE64-82F1-47A1-854E-5ADC71E89A51}
 	EndGlobalSection
 EndGlobal
