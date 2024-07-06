@@ -1,7 +1,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using NutritionTracker.Domain.Accounts;
+using NutritionTracker.Domain.Accounts.Entities;
 using NutritionTracker.Domain.Diary.Entities;
 using NutritionTracker.Domain.FoodItems.Entities;
 using NutritionTracker.Domain.Recipes.Entities;

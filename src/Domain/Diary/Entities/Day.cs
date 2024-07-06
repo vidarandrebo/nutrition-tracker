@@ -2,10 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using FluentResults;
+using NutritionTracker.Domain.Common;
 
 namespace NutritionTracker.Domain.Diary.Entities;
 
-public class Day
+public class Day : BaseEntity
 {
     public DateOnly Date { get; set; }
     public double ActivityCalories { get; set; }

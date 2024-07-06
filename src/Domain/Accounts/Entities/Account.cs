@@ -1,10 +1,8 @@
-using System;
 using System.Collections.Generic;
 using NutritionTracker.Domain.Common;
-using NutritionTracker.Domain.FoodItems;
 using NutritionTracker.Domain.FoodItems.Entities;
 
-namespace NutritionTracker.Domain.Accounts;
+namespace NutritionTracker.Domain.Accounts.Entities;
 
 public class Account : BaseEntity
 {

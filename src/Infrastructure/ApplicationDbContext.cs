@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using NutritionTracker.Application.Interfaces;
-using NutritionTracker.Domain.Accounts;
+using NutritionTracker.Domain.Accounts.Entities;
 using NutritionTracker.Domain.Diary.Entities;
 using NutritionTracker.Domain.FoodItems.Entities;
 using NutritionTracker.Domain.Recipes.Entities;
