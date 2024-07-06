@@ -1,13 +1,10 @@
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-using NutritionTracker.Application.FoodItems;
-using NutritionTracker.Domain.FoodItems;
 using MediatR;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using NutritionTracker.Domain.FoodItems.Dtos;
+using NutritionTracker.Application.FoodItems;
+using NutritionTracker.Domain.FoodItems.Contracts;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace NutritionTracker.Server.Controllers;
 
@@ -26,7 +23,7 @@ public class FoodItemController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<FoodItemDto[]>> Get()
+    public async Task<ActionResult<FoodItemResponse[]>> Get()
     {
         var ctSrc = new CancellationTokenSource(2000);
         var getFoodItemRequest = new GetFoodItems.Request();
@@ -35,13 +32,14 @@ public class FoodItemController : ControllerBase
         {
             return BadRequest(getFoodItemResult.Errors);
         }
+        var response = FoodItemResponse.FromDtos(getFoodItemResult.Value);
 
         return Ok(getFoodItemResult.Value);
     }
 
 
     [HttpPost]
-    public async Task<ActionResult<FoodItemDto>> PostAsync(FoodItemForm form)
+    public async Task<ActionResult<FoodItemResponse>> PostAsync(PostFoodItemRequest form)
     {
         var getUserIdResult = HttpContext.GetUserId();
         if (getUserIdResult.IsFailed)
@@ -57,7 +55,8 @@ public class FoodItemController : ControllerBase
         {
             return BadRequest(createFoodItemResult.Errors);
         }
+        var response = FoodItemResponse.FromDto(createFoodItemResult.Value);
 
-        return Created(nameof(Get), createFoodItemResult.Value);
+        return Created(nameof(Get), response);
     }
 }

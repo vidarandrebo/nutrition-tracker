@@ -1,10 +1,10 @@
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using NutritionTracker.Application.Interfaces;
+using System.Threading.Tasks;
 
 namespace NutritionTracker.Server.Controllers.Identity;
 
@@ -34,7 +34,6 @@ public class LoginController : ControllerBase
         };
         await Task.CompletedTask;
         return Ok(response);
-    } 
-    
+    }
+
 }
-    

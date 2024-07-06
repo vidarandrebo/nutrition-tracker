@@ -1,10 +1,9 @@
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.BearerToken;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace NutritionTracker.Server.Controllers.Identity;
 
@@ -35,7 +34,6 @@ public class RefreshController : ControllerBase
         await Task.CompletedTask;
 
         return Ok(response);
-    } 
-    
+    }
+
 }
-    

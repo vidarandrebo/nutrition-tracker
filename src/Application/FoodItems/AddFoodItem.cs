@@ -6,7 +6,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NutritionTracker.Application.Interfaces;
 using NutritionTracker.Domain;
-using NutritionTracker.Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems.Contracts;
 using NutritionTracker.Domain.FoodItems.Dtos;
 using NutritionTracker.Domain.FoodItems.Entities;
 
@@ -14,7 +14,7 @@ namespace NutritionTracker.Application.FoodItems;
 
 public class AddFoodItem
 {
-    public record Request(FoodItemForm Form, Guid OwnerId) : IRequest<Result<FoodItemDto>>;
+    public record Request(PostFoodItemRequest Form, Guid OwnerId) : IRequest<Result<FoodItemDto>>;
 
     public class Handler : IRequestHandler<Request, Result<FoodItemDto>>
     {

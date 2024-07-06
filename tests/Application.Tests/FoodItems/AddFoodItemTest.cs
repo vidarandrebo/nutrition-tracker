@@ -1,6 +1,6 @@
 using NutritionTracker.Application.FoodItems;
 using NutritionTracker.Application.Interfaces;
-using NutritionTracker.Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems.Contracts;
 
 namespace NutritionTracker.Application.Tests.FoodItems;
 
@@ -17,7 +17,7 @@ public class AddFoodItemTest
     public async Task AddOneFoodItem()
     {
         var ownerId = Guid.NewGuid();
-        var foodForm = new FoodItemForm();
+        var foodForm = new PostFoodItemRequest();
         foodForm.Brand = "Brand";
         foodForm.ProductName = "ProductName";
         foodForm.Protein = 20;
