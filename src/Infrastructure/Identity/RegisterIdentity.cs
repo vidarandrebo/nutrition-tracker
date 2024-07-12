@@ -16,7 +16,8 @@ public static class Register
                 }
             )
             .AddEntityFrameworkStores<ApplicationDbContext>()
-            .AddUserManager<UserManager<ApplicationUser>>();
+            .AddUserManager<UserManager<ApplicationUser>>()
+            .AddDefaultTokenProviders();
         services.AddTransient<IIdentityService, IdentityService>();
         return services;
     }

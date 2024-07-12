@@ -1,14 +1,16 @@
+using System;
+using System.Text;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using NutritionTracker.Application;
 using NutritionTracker.Infrastructure;
 using Serilog;
-using System.Threading.Tasks;
 
 namespace NutritionTracker.Server;
 
@@ -17,7 +19,6 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
-
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 
@@ -31,7 +32,24 @@ public class Program
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddAuthentication();
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+                    ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
+                };
+            });
         builder.Services.AddAuthorization();
 
         Log.Logger = new LoggerConfiguration()
@@ -42,6 +60,7 @@ public class Program
             .CreateLogger();
 
         builder.Host.UseSerilog();
+        Console.WriteLine(builder.Configuration["Jwt:Secret"]);
 
         builder.Services.AddCors(options =>
         {
@@ -87,7 +106,7 @@ public class Program
 
         app.MapFallbackToFile("index.html");
 
-        app.MapGroup("/api/auth").MapIdentityApi<IdentityUser>();
+        //app.MapGroup("/api/auth").MapIdentityApi<IdentityUser>();
 
         app.Run();
     }

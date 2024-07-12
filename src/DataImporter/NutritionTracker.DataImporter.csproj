@@ -11,10 +11,11 @@
         <PackageId>nutrition-tracker-data-importer</PackageId>
         <Title>Nutrition Tracker Data Importer</Title>
         <Product>Nutrition Tracker</Product>
+        <PublishAot>true</PublishAot>
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Application\NutritionTracker.Application.csproj" />
+        <ProjectReference Include="..\Application\NutritionTracker.Application.csproj"/>
     </ItemGroup>
 
 </Project>

@@ -5,10 +5,11 @@ using NutritionTracker.Application.FoodItems;
 using NutritionTracker.Domain.FoodItems.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NutritionTracker.Server.Controllers;
 
-//[Authorize]
+[Authorize]
 [ApiController]
 [Route("api/[controller]")]
 public class FoodItemController : ControllerBase
