@@ -31,18 +31,12 @@ public class LoginController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<AccessTokenResponse>> Post(LoginRequest loginRequest)
     {
-        var response = new AccessTokenResponse()
+        var response = await _identityService.LoginUser(loginRequest.Email, loginRequest.Password);
+        if (response.IsFailed)
         {
-            AccessToken = "",
-            RefreshToken = "",
-            ExpiresIn = 0,
-        };
-        var token = _identityService.CreateToken(Guid.NewGuid(), "test@mail.com");
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var serializedToken = tokenHandler.WriteToken(token);
-        Console.WriteLine(serializedToken);
-        await Task.CompletedTask;
-        return Created();
+            return BadRequest();
+        }
+        return Created(nameof(Post), response);
     }
 
 }

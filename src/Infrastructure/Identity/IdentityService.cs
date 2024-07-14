@@ -6,10 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using FluentResults;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.BearerToken;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
-using NutritionTracker.Application.Identity;
 using NutritionTracker.Application.Interfaces;
 
 namespace NutritionTracker.Infrastructure.Identity;
@@ -27,7 +27,7 @@ public class IdentityService : IIdentityService
         _configuration = configuration;
     }
 
-    public async Task<Result<ApplicationUserDto>> LoginUser(string email, string password)
+    public async Task<Result<AccessTokenResponse>> LoginUser(string email, string password)
     {
         var user = await _userManager.FindByEmailAsync(email);
         if (user is null)
@@ -46,12 +46,22 @@ public class IdentityService : IIdentityService
             return Result.Fail(new Error("Username is null"));
         }
 
-        var signInResult = await _signInManager.PasswordSignInAsync(user, "", false, false);
+        var tokenHandler = new JwtSecurityTokenHandler();
+
+        var accessToken = AccessToken(user.Id, user.Email);
+        var refreshToken = RefreshToken(user.Id, user.Email);
         
 
-        return Result.Ok(new ApplicationUserDto());
+
+        return Result.Ok(new AccessTokenResponse()
+        {
+            AccessToken = accessToken,
+            RefreshToken = refreshToken,
+            ExpiresIn = 60*60*24,
+        });
         
     }
+
 
     public async Task<Unit> LogoutUser()
     {
@@ -79,12 +89,28 @@ public class IdentityService : IIdentityService
         return Result.Ok(user.Id);
     }
 
-    public JwtSecurityToken CreateToken(Guid id, string email)
+    public string RefreshToken(Guid id, string email)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = CreateToken(id, email, DateTime.Now.AddDays(30));
+        return tokenHandler.WriteToken(token);
+    }
+    public string AccessToken(Guid id, string email)
+    {
+        var tokenHandler = new JwtSecurityTokenHandler();
+        var token = CreateToken(id, email, DateTime.Now.AddDays(1));
+        return tokenHandler.WriteToken(token);
+    }
+    private JwtSecurityToken CreateToken(Guid id, string email, DateTime expires)
     {
         var claimList = new List<Claim>();
         claimList.Add(new Claim(ClaimTypes.Email, email));
         claimList.Add(new Claim(ClaimTypes.NameIdentifier, id.ToString()));
         var signKey = _configuration["Jwt:Secret"];
+        if (signKey is null)
+        {
+            throw new Exception("Jwt secret key not set");
+        }
         var token = new JwtSecurityToken(
             claims: claimList,
             expires: DateTime.Now.AddDays(30),
