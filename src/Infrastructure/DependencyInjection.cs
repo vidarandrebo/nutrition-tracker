@@ -1,6 +1,6 @@
 using System;
+using System.IO;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Configuration;
@@ -22,12 +22,11 @@ public static class DependencyInjection
         if (environment.IsProduction())
         {
             Console.WriteLine("Production");
-            DotEnv.Load(".env");
-            var dbConnectionString = $"User ID={Environment.GetEnvironmentVariable("DB_USER")};" +
-                                     $"Password={Environment.GetEnvironmentVariable("DB_PASSWD")};" +
-                                     $"Server={Environment.GetEnvironmentVariable("DB_SERVER")};" +
-                                     $"Port={Environment.GetEnvironmentVariable("DB_PORT")};" +
-                                     $"Database={Environment.GetEnvironmentVariable("DB_NAME")};";
+            var dbConnectionString = $"User ID={configuration.GetValue<string>("Database:User")};" +
+                                     $"Password={configuration.GetValue<string>("Database:Password")};" +
+                                     $"Server={configuration.GetValue<string>("Database:Server")};" +
+                                     $"Port={configuration.GetValue<string>("Database:Port")};" +
+                                     $"Database={configuration.GetValue<string>("Database:Name")};";
 
             services.AddDbContext<ApplicationDbContext>((serviceProvider, options) =>
             {
@@ -42,7 +41,7 @@ public static class DependencyInjection
             {
                 var folder = configuration.GetValue<string>("Database:Folder");
                 var filename = configuration.GetValue<string>("Database:File");
-                options.UseSqlite($"Data Source=nutrition-tracker.db",
+                options.UseSqlite($"Data Source={Path.Join(folder, filename)}",
                     sqliteOptions => { sqliteOptions.MigrationsAssembly("NutritionTracker.Migrations.Sqlite"); });
                 options.AddInterceptors(serviceProvider.GetServices<ISaveChangesInterceptor>());
             });

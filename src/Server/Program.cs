@@ -19,6 +19,12 @@ public class Program
     public static async Task Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+
+        
+        //DotEnv.LoadEnvToAppsettings(".env");
+        builder.Configuration.LoadEnvToConfiguration(".env");
+        
+        
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 
@@ -27,11 +33,11 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-
         builder.Services.AddRouting();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
+        
         builder.Services.AddAuthentication(options =>
             {
                 options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -47,7 +53,7 @@ public class Program
                     ValidateAudience = true,
                     ValidAudience = builder.Configuration["Jwt:ValidAudience"],
                     ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Secret"])),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:Secret"))),
                 };
             });
         builder.Services.AddAuthorization();
@@ -60,7 +66,6 @@ public class Program
             .CreateLogger();
 
         builder.Host.UseSerilog();
-        Console.WriteLine(builder.Configuration["Jwt:Secret"]);
 
         builder.Services.AddCors(options =>
         {
@@ -90,6 +95,7 @@ public class Program
         app.UseAuthentication();
 
         app.UseDefaultFiles();
+        
 
         app.UseStaticFiles(new StaticFileOptions
         {
@@ -107,6 +113,13 @@ public class Program
         app.MapFallbackToFile("index.html");
 
         //app.MapGroup("/api/auth").MapIdentityApi<IdentityUser>();
+
+        Console.WriteLine(app.Configuration.GetValue<string>("Jwt:Secret"));
+
+        foreach (var value in app.Configuration.AsEnumerable())
+        {
+            Console.WriteLine(value);
+        }
 
         app.Run();
     }
