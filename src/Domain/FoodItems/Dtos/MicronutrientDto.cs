@@ -15,6 +15,13 @@ public class MicronutrientDto : ValueObject
         yield return Amount;
         yield return MassUnit;
     }
+    public MicronutrientDto(string name , double amount, MassUnit massUnit)
+    {
+        Name = name;
+        Amount = amount;
+        MassUnit = massUnit;
+    }
+
 }
 
 public static class MicronutrientDtoIEnumerable
