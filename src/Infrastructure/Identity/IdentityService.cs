@@ -80,6 +80,7 @@ public class IdentityService : IIdentityService
     {
         var user = new ApplicationUser();
         user.Email = email;
+        user.UserName = email;
         
         var registerResult = await _userManager.CreateAsync(user, password);
         var errors = new List<Error>();
@@ -93,7 +94,7 @@ public class IdentityService : IIdentityService
             return Result.Fail(errors);
         }
 
-        return Result.Ok(user.Id);
+        return Result.Ok(user.AccountId);
     }
 
     public Result<Guid> GetUserIdFromRequest(HttpContext context)

@@ -36,7 +36,7 @@ public class LoginController : ControllerBase
         {
             return BadRequest();
         }
-        return Created(nameof(Post), response);
+        return Ok(response.Value);
     }
 
 }

@@ -1,6 +1,6 @@
-import { NutritionalContent } from "./NutritionalContent.ts";
+import { Macronutrients } from "./Macronutrients.ts";
 import { FoodItemForm } from "./FoodItemForm.ts";
-import { HttpRequest } from "http-methods-ts"
+import { HttpRequest } from "http-methods-ts";
 import { loadUser } from "./User.ts";
 import { IObjectAssignable } from "./ObjectAssignable.ts";
 
@@ -8,7 +8,7 @@ export class FoodItem implements IObjectAssignable {
     id: string;
     brand: string;
     productName: string;
-    nutritionalContent: NutritionalContent;
+    macronutrients: Macronutrients;
     ownerId: string;
 
     constructor() {
@@ -16,7 +16,7 @@ export class FoodItem implements IObjectAssignable {
         this.brand = "";
         this.productName = "";
         this.ownerId = "";
-        this.nutritionalContent = new NutritionalContent();
+        this.macronutrients = new Macronutrients();
     }
 
     assignFromObject(src: Record<string, never>): void {
@@ -32,8 +32,8 @@ export class FoodItem implements IObjectAssignable {
         if (Object.prototype.hasOwnProperty.call(src, "ownerId")) {
             this.ownerId = src["ownerId"];
         }
-        if (Object.prototype.hasOwnProperty.call(src, "nutritionalContent")) {
-            this.nutritionalContent.assignFromObject(src["nutritionalContent"]);
+        if (Object.prototype.hasOwnProperty.call(src, "macronutrients")) {
+            this.macronutrients.assignFromObject(src["macronutrients"]);
         }
     }
 }
@@ -76,6 +76,7 @@ export async function getFoodItems(): Promise<FoodItem[]> {
     const foodItems = response.body as Record<string, never>[];
     return foodItems.map((x) => fromObject(x));
 }
+
 function fromObject(src: Record<string, never>): FoodItem {
     const item = new FoodItem();
     item.assignFromObject(src);

@@ -17,12 +17,14 @@ namespace NutritionTracker.Domain.FoodItems.Contracts
             public double Carbohydrate { get; set; }
             public double Fat { get; set; }
             public double KCal { get; set; }
+            public string Unit {get;set;}
             public MacronutrientsResponse(double protein, double carbohydrate, double fat, double kCal)
             {
                 Protein = protein;
                 Carbohydrate = carbohydrate;
                 Fat = fat;
                 KCal = kCal;
+                Unit = "grams";
             }
         }
         public FoodItemResponse(Guid id, string brand, string productName, MacronutrientsResponse macronutrients, Guid owner)

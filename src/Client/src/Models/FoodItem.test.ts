@@ -22,9 +22,9 @@ test("assigns props from a food object to this", () => {
     expect(foodItem.productName).toBe("food product");
     expect(foodItem.ownerId).toBe("id2");
     expect(Object.keys(foodItem).length).toBe(5);
-    expect(foodItem.nutritionalContent.protein).toBe(5);
-    expect(foodItem.nutritionalContent.carbohydrate).toBe(7);
-    expect(foodItem.nutritionalContent.fat).toBe(6);
-    expect(foodItem.nutritionalContent.kCal).toBe(30);
-    expect(foodItem.nutritionalContent.unit).toBe("ml");
+    expect(foodItem.macronutrients.protein).toBe(5);
+    expect(foodItem.macronutrients.carbohydrate).toBe(7);
+    expect(foodItem.macronutrients.fat).toBe(6);
+    expect(foodItem.macronutrients.kCal).toBe(30);
+    expect(foodItem.macronutrients.unit).toBe("ml");
 });
