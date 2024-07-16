@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FluentResults;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.BearerToken;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
@@ -19,12 +21,14 @@ public class IdentityService : IIdentityService
     private readonly UserManager<ApplicationUser> _userManager;
     private readonly SignInManager<ApplicationUser> _signInManager;
     private readonly IConfiguration _configuration;
+    private readonly ITokenHandler _tokenHandler;
 
-    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration)
+    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration, ITokenHandler tokenHandler)
     {
         _userManager = userManager;
         _signInManager = signInManager;
         _configuration = configuration;
+        _tokenHandler = tokenHandler;
     }
 
     public async Task<Result<AccessTokenResponse>> LoginUser(string email, string password)
@@ -34,6 +38,7 @@ public class IdentityService : IIdentityService
         {
             return Result.Fail((new Error("User not found")));
         }
+        
 
         var correctPasswd = await _userManager.CheckPasswordAsync(user, password);
         if (!correctPasswd)
@@ -46,12 +51,14 @@ public class IdentityService : IIdentityService
             return Result.Fail(new Error("Username is null"));
         }
 
-        var tokenHandler = new JwtSecurityTokenHandler();
+        // This should not happen as user is resolved by email...
+        if (user.Email is null)
+        {
+            return Result.Fail("Email is null");
+        }
 
-        var accessToken = AccessToken(user.Id, user.Email);
-        var refreshToken = RefreshToken(user.Id, user.Email);
-        
-
+        var accessToken = _tokenHandler.AccessToken(user.Id, user.Email);
+        var refreshToken = _tokenHandler.RefreshToken(user.Id, user.Email);
 
         return Result.Ok(new AccessTokenResponse()
         {
@@ -89,35 +96,52 @@ public class IdentityService : IIdentityService
         return Result.Ok(user.Id);
     }
 
-    public string RefreshToken(Guid id, string email)
+    public Result<Guid> GetUserIdFromRequest(HttpContext context)
     {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = CreateToken(id, email, DateTime.Now.AddDays(30));
-        return tokenHandler.WriteToken(token);
-    }
-    public string AccessToken(Guid id, string email)
-    {
-        var tokenHandler = new JwtSecurityTokenHandler();
-        var token = CreateToken(id, email, DateTime.Now.AddDays(1));
-        return tokenHandler.WriteToken(token);
-    }
-    private JwtSecurityToken CreateToken(Guid id, string email, DateTime expires)
-    {
-        var claimList = new List<Claim>();
-        claimList.Add(new Claim(ClaimTypes.Email, email));
-        claimList.Add(new Claim(ClaimTypes.NameIdentifier, id.ToString()));
-        var signKey = _configuration["Jwt:Secret"];
-        if (signKey is null)
+        var claimsResponse = GetJwtClaimsFromRequest(context);
+        if (claimsResponse.IsFailed)
         {
-            throw new Exception("Jwt secret key not set");
+            return Result.Fail("Token not provided");
         }
-        var token = new JwtSecurityToken(
-            claims: claimList,
-            expires: DateTime.Now.AddDays(30),
-            signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signKey)),
-                SecurityAlgorithms.HmacSha256)
-            , audience: _configuration["Jwt:ValidAudience"], issuer:_configuration["Jwt:ValidIssuer"]
-        );
-        return token;
+        var id = claimsResponse.Value.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
+        var parsedGuid = GuidHelper.GuidOrEmpty(id);
+        if (parsedGuid == Guid.Empty)
+        {
+            return Result.Fail(new Error("Id not found in claims"));
+        }
+
+        return Result.Ok(parsedGuid);
+    }
+    private Result<ClaimsPrincipal> GetJwtClaimsFromRequest(HttpContext context)
+    {
+        var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
+        if (token is null)
+        {
+            return Result.Fail("Token not provided");
+        }
+
+        var validatedTokenResult = _tokenHandler.ValidateToken(token);
+        if (validatedTokenResult.IsSuccess)
+        {
+            return Result.Ok(validatedTokenResult.Value);
+        }
+
+        return Result.Fail(validatedTokenResult.Errors.ToString());
+    }
+    public  Result<string> GetUserNameFromRequest(HttpContext context)
+    {
+        var claimsResult = GetJwtClaimsFromRequest(context);
+        if (claimsResult.IsSuccess)
+        {
+            var username =  claimsResult.Value.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            if (username is not null)
+            {
+                return Result.Ok(username);
+            }
+
+            return Result.Fail("username not found in claims");
+        }
+
+        return Result.Fail(claimsResult.Errors.ToString());
     }
 }

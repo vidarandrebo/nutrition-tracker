@@ -53,7 +53,7 @@ public class Program
                     ValidateAudience = true,
                     ValidAudience = builder.Configuration["Jwt:ValidAudience"],
                     ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
-                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:Secret"))),
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:Secret") ?? throw new Exception("No Jwt Secret provided"))),
                 };
             });
         builder.Services.AddAuthorization();

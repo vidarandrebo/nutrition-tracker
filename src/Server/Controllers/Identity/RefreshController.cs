@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace NutritionTracker.Server.Controllers.Identity;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth/[controller]")]
 public class RefreshController : ControllerBase
 {
     private readonly IMediator _mediator;

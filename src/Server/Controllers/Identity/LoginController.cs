@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Http;
 namespace NutritionTracker.Server.Controllers.Identity;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/auth/[controller]")]
 public class LoginController : ControllerBase
 {
     private readonly IMediator _mediator;

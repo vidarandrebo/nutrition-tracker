@@ -49,6 +49,8 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
+        services.AddSingleton<ITokenHandler, TokenHandler>();
+
         services.RegisterIdentity();
         return services;
     }

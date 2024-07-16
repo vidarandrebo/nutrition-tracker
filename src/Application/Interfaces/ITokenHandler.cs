@@ -1,4 +1,6 @@
 using System;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using FluentResults;
 using Microsoft.AspNetCore.Http;
 
@@ -7,7 +9,7 @@ namespace NutritionTracker.Application.Interfaces;
 public interface ITokenHandler
 {
     
-    string CreateToken(Guid id, string userName);
-    Result<Guid> GetUserIdFromRequest(HttpContext context);
-    string? GetUserNameFromRequest(HttpContext context);
+    string AccessToken(Guid id, string email);
+    string RefreshToken(Guid id, string email);
+    Result<ClaimsPrincipal> ValidateToken(string token);
 }
