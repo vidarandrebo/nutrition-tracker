@@ -1,9 +1,9 @@
 import { ObjectAssignable } from "./ObjectAssignable.ts";
 
 /**
- * Represents the nutritional content in 100 grams of the food item.
+ * Represents the macronutrients in 100 grams or ml of the food item.
  */
-export class NutritionalContent extends ObjectAssignable {
+export class Macronutrients extends ObjectAssignable {
     protein: number;
     carbohydrate: number;
     fat: number;

@@ -6,6 +6,7 @@ using NutritionTracker.Domain.FoodItems.Contracts;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Configuration;
 
 namespace NutritionTracker.Server.Controllers;
 
@@ -14,19 +15,21 @@ namespace NutritionTracker.Server.Controllers;
 [Route("api/[controller]")]
 public class FoodItemController : ControllerBase
 {
+    private readonly IConfiguration _cfg;
     private readonly IMediator _mediator;
     private readonly ILogger<FoodItemController> _logger;
 
-    public FoodItemController(IMediator mediator, ILogger<FoodItemController> logger)
+    public FoodItemController(IMediator mediator, ILogger<FoodItemController> logger, IConfiguration cfg)
     {
         _mediator = mediator;
         _logger = logger;
+        _cfg = cfg;
     }
 
     [HttpGet]
     public async Task<ActionResult<FoodItemResponse[]>> Get()
     {
-        var ctSrc = new CancellationTokenSource(2000);
+        var ctSrc = new CancellationTokenSource(_cfg.GetValue<int>("CancellationToken:Delay"));
         var getFoodItemRequest = new GetFoodItems.Request();
         var getFoodItemResult = await _mediator.Send(getFoodItemRequest, ctSrc.Token);
         if (getFoodItemResult.IsFailed)
@@ -35,7 +38,7 @@ public class FoodItemController : ControllerBase
         }
         var response = FoodItemResponse.FromDtos(getFoodItemResult.Value);
 
-        return Ok(getFoodItemResult.Value);
+        return Ok(response);
     }
 
 

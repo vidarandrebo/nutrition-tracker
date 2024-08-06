@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
 using NutritionTracker.Domain.Common;
 using NutritionTracker.Domain.FoodItems.Dtos;
+using System;
+using System.Collections.Generic;
 
 namespace NutritionTracker.Domain.Recipes.Entities;
 
@@ -10,26 +10,26 @@ public class Recipe : BaseEntity
     public List<Ingredient> Ingredients { get; set; }
     public Recipe()
     {
-        
+
     }
 
-    public MicronutrientDto Micronutrients()
+    public List<MicronutrientDto> Micronutrients()
     {
-        return new MicronutrientDto();
+        return new List<MicronutrientDto>();
     }
 
     public MacronutrientsDto Macronutrients()
     {
-        var macroNutrients = new MacronutrientsDto(0.0,0.0,0.0,0.0);
+        var macronutrients = new MacronutrientsDto(0.0, 0.0, 0.0, 0.0);
         foreach (var ingredient in Ingredients)
         {
             //macroNutrients += ingredient.Macronutrients();
         }
 
-        return macroNutrients;
+        return macronutrients;
     }
 
-    public void ResolveDepenencyCycles()
+    public void ResolveDependencyCycles()
     {
         throw new NotImplementedException();
     }

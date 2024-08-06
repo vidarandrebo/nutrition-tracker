@@ -94,7 +94,7 @@ public class IdentityService : IIdentityService
             return Result.Fail(errors);
         }
 
-        return Result.Ok(user.Id);
+        return Result.Ok(user.AccountId);
     }
 
     public Result<Guid> GetUserIdFromRequest(HttpContext context)
