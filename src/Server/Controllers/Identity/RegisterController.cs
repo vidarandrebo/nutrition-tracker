@@ -31,19 +31,10 @@ public class RegisterController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<HttpValidationProblemDetails>> Post(RegisterRequest registerRequest)
     {
-<<<<<<< HEAD
-        var result = await _identityService.RegisterUser(registerRequest.Email, registerRequest.Password);
-        if (result.IsFailed) {
-            foreach(var err in result.Errors) {
-                _logger.LogInformation(err.Message);
-            }
-        }
-=======
         var ctSource = new CancellationTokenSource(_cfg.GetValue<int>("CancellationToken:Delay"));
         var userId = await _identityService.RegisterUser(registerRequest.Email, registerRequest.Password);
         await _mediator.Send(
             new AddAccount.Request(userId.Value), ctSource.Token);
->>>>>>> 010a6ecc7c4e1aeeb31fbbffbec764f276364857
         var response = new HttpValidationProblemDetails();
         await Task.CompletedTask;
         return response;
