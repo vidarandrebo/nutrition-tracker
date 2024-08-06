@@ -34,9 +34,12 @@ public class LoginController : ControllerBase
         var response = await _identityService.LoginUser(loginRequest.Email, loginRequest.Password);
         if (response.IsFailed)
         {
+            foreach(var err in response.Errors) {
+                _logger.LogInformation(err.Message);
+            }
             return BadRequest();
         }
-        return Created(nameof(Post), response);
+        return Ok(response.Value);
     }
 
 }

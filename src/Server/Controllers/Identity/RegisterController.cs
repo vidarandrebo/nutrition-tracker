@@ -27,7 +27,12 @@ public class RegisterController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<HttpValidationProblemDetails>> Post(RegisterRequest registerRequest)
     {
-        var userId = await _identityService.RegisterUser(registerRequest.Email, registerRequest.Password);
+        var result = await _identityService.RegisterUser(registerRequest.Email, registerRequest.Password);
+        if (result.IsFailed) {
+            foreach(var err in result.Errors) {
+                _logger.LogInformation(err.Message);
+            }
+        }
         var response = new HttpValidationProblemDetails();
         await Task.CompletedTask;
         return response;

@@ -80,6 +80,7 @@ public class IdentityService : IIdentityService
     {
         var user = new ApplicationUser();
         user.Email = email;
+        user.UserName = email;
         
         var registerResult = await _userManager.CreateAsync(user, password);
         var errors = new List<Error>();
