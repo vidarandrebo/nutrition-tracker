@@ -1,5 +1,11 @@
+using System.Reflection;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Routing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using NutritionTracker.Application;
 using NutritionTracker.Infrastructure;
 using NutritionTracker.Infrastructure.Identity;
@@ -40,7 +46,7 @@ public class Program
 
         builder.Services.AddDatabase(builder.Configuration, builder.Environment);
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-        
+
 
         builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
             .AddEntityFrameworkStores<ApplicationDbContext>()

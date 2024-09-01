@@ -1,18 +1,8 @@
-﻿FROM node:20-alpine as node-build-env
-WORKDIR /data
-
-COPY ./src/Client/ /data/
-
-RUN npm ci
-
-RUN npm run buildRelease
-
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dotnet-build-env
+﻿FROM mcr.microsoft.com/dotnet/sdk:8.0 AS dotnet-build-env
 WORKDIR /data
 
 # Copy everything
 COPY . .
-COPY --from=node-build-env /data/dist/ /data/src/Server/wwwroot/
 # Build and publish a release
 
 RUN dotnet publish /data/src/Server -c Release -o bin
@@ -26,4 +16,4 @@ COPY docker.env .env
 RUN true
 #COPY docker.env .env
 RUN true
-ENTRYPOINT ["dotnet","NutritionTracker.Server.dll"]
+ENTRYPOINT ["dotnet","NutritionTracker.Web.dll"]

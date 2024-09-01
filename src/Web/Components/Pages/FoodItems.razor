@@ -1,6 +1,28 @@
 ﻿@page "/fooditems"
+@using MediatR
+@using NutritionTracker.Application.FoodItems
+@using NutritionTracker.Domain.FoodItems.Dtos
+@inject IMediator Mediator;
+<PageTitle>Fooditems</PageTitle>
 <h3>FoodItems</h3>
+@foreach (var item in Items)
+{
+    <p>@item.ProductName</p>
+}
 
 @code {
+
+    public FoodItemDto[] Items { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var getFoodItemsResult = await Mediator.Send(new GetFoodItems.Request());
+        if (getFoodItemsResult.IsSuccess)
+        {
+            Items = getFoodItemsResult.Value;
+        }
+
+        await base.OnInitializedAsync();
+    }
 
 }

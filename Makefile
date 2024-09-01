@@ -10,8 +10,8 @@ clean:
 
 migration:
 	cp docker.env src/Server/.env
-	dotnet ef migrations add $(name)Postgres --project src/Migrations.Postgres --startup-project src/Server -v -- --environment Production
-	dotnet ef migrations add $(name)Sqlite --project src/Migrations.Sqlite --startup-project src/Server
+	dotnet ef migrations add $(name)Postgres --project src/Migrations.Postgres --startup-project src/Web -v -- --environment Production
+	dotnet ef migrations add $(name)Sqlite --project src/Migrations.Sqlite --startup-project src/Web
 	rm src/Server/.env
 
 rm-migrations:

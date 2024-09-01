@@ -11,8 +11,8 @@ using NutritionTracker.Infrastructure;
 namespace NutritionTracker.Migrations.Sqlite.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240901121240_Init")]
-    partial class Init
+    [Migration("20240901163907_InitSqlite")]
+    partial class InitSqlite
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
