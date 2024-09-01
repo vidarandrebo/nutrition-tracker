@@ -14,7 +14,7 @@ namespace NutritionTracker.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddInfrastructureServices(this IServiceCollection services,
+    public static IServiceCollection AddDatabase(this IServiceCollection services,
         IConfiguration configuration,
         IWebHostEnvironment environment)
     {
@@ -49,9 +49,6 @@ public static class DependencyInjection
 
         services.AddScoped<IApplicationDbContext>(provider => provider.GetRequiredService<ApplicationDbContext>());
 
-        services.AddSingleton<ITokenHandler, TokenHandler>();
-
-        services.RegisterIdentity();
         return services;
     }
 }

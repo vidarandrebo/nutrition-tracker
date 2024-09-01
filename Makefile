@@ -1,6 +1,4 @@
 clean:
-	rm -rf src/Client/node_modules
-	rm -rf src/Client/dist
 	rm -rf src/Server/wwwroot/*
 	rm -rf src/Server/Data
 	find ./src/Infrastructure -type d \( -name "bin" -o -name "obj" \) -exec rm -rf {} +
