@@ -1,0 +1,20 @@
+@page "/fooditems/create"
+@inject ILogger<Create> Logger
+@using Microsoft.Extensions.Logging
+@using NutritionTracker.Domain.FoodItems.Contracts
+<h1>New Fooditem</h1>
+<EditForm Model="FoodItemRequest" method="post" OnValidSubmit="CreateFoodItem" FormName="create">
+    <InputText @bind-Value="FoodItemRequest.Brand" class="form-control"></InputText>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm] 
+    private PostFoodItemRequest FoodItemRequest { get; set; } = new();
+
+    private void CreateFoodItem()
+    {
+        
+        Logger.LogInformation("Create fooditem");
+    }
+}

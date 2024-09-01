@@ -4,7 +4,8 @@
 @using NutritionTracker.Domain.FoodItems.Dtos
 @inject IMediator Mediator;
 <PageTitle>Fooditems</PageTitle>
-<h3>FoodItems</h3>
+<h1>FoodItems</h1>
+<NavLink href="/fooditems/create" class="nav-link">Create</NavLink>
 @foreach (var item in Items)
 {
     <p>@item.ProductName</p>
