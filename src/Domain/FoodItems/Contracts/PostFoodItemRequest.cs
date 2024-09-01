@@ -1,9 +1,12 @@
 using System.Collections.Generic;
 using FluentValidation;
 
-namespace NutritionTracker.Domain.FoodItems;
+namespace NutritionTracker.Domain.FoodItems.Contracts;
 
-public class FoodItemForm
+/// <summary>
+/// Class representing the request data for a POST to endpoint /api/fooditem
+/// </summary>
+public class PostFoodItemRequest
 {
     public string Brand { get; set; } = "";
     public string ProductName { get; set; } = "";
@@ -25,7 +28,7 @@ public class FoodItemForm
     }
 }
 
-public class FoodItemValidator : AbstractValidator<FoodItemForm>
+public class FoodItemValidator : AbstractValidator<PostFoodItemRequest>
 {
     public FoodItemValidator()
     {

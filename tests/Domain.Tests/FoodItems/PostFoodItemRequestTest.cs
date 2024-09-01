@@ -1,20 +1,20 @@
 using System.Linq;
-using NutritionTracker.Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems.Contracts;
 
 namespace NutritionTracker.Domain.Tests.FoodItems;
 
-public class FoodItemFormTest
+public class PostFoodItemRequestTest
 {
     public FoodItemValidator FoodItemFormFoodItemValidator;
 
-    public FoodItemFormTest()
+    public PostFoodItemRequestTest()
     {
         FoodItemFormFoodItemValidator = new FoodItemValidator();
     }
 
-    public FoodItemForm DefaultForm()
+    public PostFoodItemRequest DefaultForm()
     {
-        var form = new FoodItemForm();
+        var form = new PostFoodItemRequest();
         form.Brand = "TestBrand";
         form.ProductName = "ProductName";
         form.Protein = 20;

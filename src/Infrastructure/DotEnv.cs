@@ -1,11 +1,13 @@
 using System;
+using System.Globalization;
 using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace NutritionTracker.Infrastructure;
 
 public static class DotEnv
 {
-    public static void Load(string filePath)
+    public static void LoadEnvToConfiguration(this ConfigurationManager cfg, string filePath)
     {
         if (!File.Exists(filePath))
         {
@@ -22,7 +24,14 @@ public static class DotEnv
             if (parts.Length != 2)
                 continue;
 
-            Environment.SetEnvironmentVariable(parts[0], parts[1]);
+            var key = parts[0];
+            var value = parts[1];
+
+            key = key.ToLower().Replace("_", " ");
+            var info = CultureInfo.CurrentCulture.TextInfo;
+            key = info.ToTitleCase(key).Replace(" ", ":");
+
+            cfg[key] = value;
         }
     }
 }

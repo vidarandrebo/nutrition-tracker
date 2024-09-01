@@ -1,15 +1,22 @@
-using NutritionTracker.Application.Interfaces;
-using NutritionTracker.Domain;
-using NutritionTracker.Domain.FoodItems;
+using System;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using NutritionTracker.Application.Interfaces;
+using NutritionTracker.Domain.Accounts.Entities;
+using NutritionTracker.Domain.Diary.Entities;
+using NutritionTracker.Domain.FoodItems.Entities;
+using NutritionTracker.Domain.Recipes.Entities;
+using NutritionTracker.Infrastructure.Identity;
 
 namespace NutritionTracker.Infrastructure;
 
-public class ApplicationDbContext : IdentityDbContext<IdentityUser>, IApplicationDbContext
+public class ApplicationDbContext : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>, IApplicationDbContext
 {
     public DbSet<FoodItem> FoodItems { get; set; }
+    public DbSet<Recipe> Recipes { get; set; }
+    public DbSet<Day> Days { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) :
         base(options)

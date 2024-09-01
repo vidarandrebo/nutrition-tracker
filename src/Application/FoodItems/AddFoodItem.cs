@@ -1,20 +1,22 @@
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using NutritionTracker.Domain;
-using NutritionTracker.Domain.FoodItems;
 using FluentResults;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using NutritionTracker.Application.Interfaces;
+using NutritionTracker.Domain;
+using NutritionTracker.Domain.FoodItems.Contracts;
+using NutritionTracker.Domain.FoodItems.Dtos;
+using NutritionTracker.Domain.FoodItems.Entities;
 
 namespace NutritionTracker.Application.FoodItems;
 
 public class AddFoodItem
 {
-    public record Request(FoodItemForm Form, Guid OwnerId) : IRequest<Result<FoodItemDTO>>;
+    public record Request(PostFoodItemRequest Form, Guid OwnerId) : IRequest<Result<FoodItemDto>>;
 
-    public class Handler : IRequestHandler<Request, Result<FoodItemDTO>>
+    public class Handler : IRequestHandler<Request, Result<FoodItemDto>>
     {
         private readonly IApplicationDbContext _db;
 
@@ -23,7 +25,7 @@ public class AddFoodItem
             _db = db;
         }
 
-        public async Task<Result<FoodItemDTO>> Handle(Request request, CancellationToken cancellationToken)
+        public async Task<Result<FoodItemDto>> Handle(Request request, CancellationToken cancellationToken)
         {
             var validator = new FoodItemValidator();
             var validationResult = validator.Validate(request.Form);
@@ -34,8 +36,8 @@ public class AddFoodItem
 
             var foodForm = request.Form;
             var nutritionalContent =
-                new NutritionalContent(foodForm.Protein, foodForm.Carbohydrate, foodForm.Fat, foodForm.KCal);
-            var foodItem = new FoodItem(foodForm.Brand, foodForm.ProductName, nutritionalContent, request.OwnerId);
+                new Macronutrients(foodForm.Protein, foodForm.Carbohydrate, foodForm.Fat, foodForm.KCal);
+            var foodItem = new FoodItem(foodForm.Brand, foodForm.ProductName, nutritionalContent, request.OwnerId, []);
             _db.FoodItems.Add(foodItem);
             try
             {

@@ -1,11 +1,13 @@
+using System;
+using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using NutritionTracker.Application;
 using NutritionTracker.Infrastructure;
 using Serilog;
@@ -18,20 +20,42 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        
+        //DotEnv.LoadEnvToAppsettings(".env");
+        builder.Configuration.LoadEnvToConfiguration(".env");
+        
+        
         builder.Services.AddApplicationServices();
         builder.Services.AddInfrastructureServices(builder.Configuration, builder.Environment);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        // Add services to the container.
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-
 
         builder.Services.AddRouting();
         builder.Services.AddControllers();
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
-        builder.Services.AddAuthentication();
+        
+        builder.Services.AddAuthentication(options =>
+            {
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(options =>
+            {
+                options.SaveToken = true;
+                options.TokenValidationParameters = new TokenValidationParameters()
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidAudience = builder.Configuration["Jwt:ValidAudience"],
+                    ValidIssuer = builder.Configuration["Jwt:ValidIssuer"],
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetValue<string>("Jwt:Secret") ?? throw new Exception("No Jwt Secret provided"))),
+                };
+            });
         builder.Services.AddAuthorization();
 
         Log.Logger = new LoggerConfiguration()
@@ -58,7 +82,7 @@ public class Program
 
         await app.Services.ApplyMigrations(app.Environment);
 
-// Configure the HTTP request pipeline.
+        // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
@@ -71,6 +95,7 @@ public class Program
         app.UseAuthentication();
 
         app.UseDefaultFiles();
+        
 
         app.UseStaticFiles(new StaticFileOptions
         {
@@ -87,7 +112,14 @@ public class Program
 
         app.MapFallbackToFile("index.html");
 
-        app.MapGroup("/api/auth").MapIdentityApi<IdentityUser>();
+        //app.MapGroup("/api/auth").MapIdentityApi<IdentityUser>();
+
+        Console.WriteLine(app.Configuration.GetValue<string>("Jwt:Secret"));
+
+        foreach (var value in app.Configuration.AsEnumerable())
+        {
+            Console.WriteLine(value);
+        }
 
         app.Run();
     }
