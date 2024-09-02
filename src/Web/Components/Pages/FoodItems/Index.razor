@@ -13,7 +13,7 @@
 
 @code {
 
-    public FoodItemDto[] Items { get; set; }
+    public FoodItemDto[] Items { get; set; } = Array.Empty<FoodItemDto>();
 
     protected override async Task OnInitializedAsync()
     {

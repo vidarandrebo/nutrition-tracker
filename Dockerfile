@@ -5,7 +5,7 @@ WORKDIR /data
 COPY . .
 # Build and publish a release
 
-RUN dotnet publish /data/src/Server -c Release -o bin
+RUN dotnet publish /data/src/Web -c Release -o bin
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:8.0

@@ -3,9 +3,11 @@
 @using System.Text
 @using System.Text.Encodings.Web
 @using System.Threading
+@using MediatR
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using Microsoft.Extensions.Logging
+@using NutritionTracker.Application.Accounts
 @using NutritionTracker.Infrastructure.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -15,6 +17,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IMediator Mediator
 
 <PageTitle>Register</PageTitle>
 
@@ -80,6 +83,8 @@
             identityErrors = result.Errors;
             return;
         }
+
+        await Mediator.Send(new AddAccount.Request(user.AccountId));
 
         Logger.LogInformation("User created a new account with password.");
 

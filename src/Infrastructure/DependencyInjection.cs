@@ -22,6 +22,7 @@ public static class DependencyInjection
         if (environment.IsProduction())
         {
             Console.WriteLine("Production");
+            Console.WriteLine(configuration.GetValue<string>("Database:Server"));
             var dbConnectionString = $"User ID={configuration.GetValue<string>("Database:User")};" +
                                      $"Password={configuration.GetValue<string>("Database:Password")};" +
                                      $"Server={configuration.GetValue<string>("Database:Server")};" +
