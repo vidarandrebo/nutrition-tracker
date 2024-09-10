@@ -1,10 +1,22 @@
 @page "/fooditems/create"
-@inject ILogger<Create> Logger
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Domain.FoodItems.Contracts
+@inject ILogger<Create> Logger
+<PageTitle>New Fooditem</PageTitle>
 <h1>New Fooditem</h1>
 <EditForm Model="FoodItemRequest" method="post" OnValidSubmit="CreateFoodItem" FormName="create">
-    <InputText @bind-Value="FoodItemRequest.Brand" class="form-control"></InputText>
+    <label for="fooditem-brand" class="form-label">Brand</label>
+    <InputText @bind-Value="FoodItemRequest.Brand" class="form-control" id="fooditem-brand"></InputText>
+    <label for="fooditem-productname" class="form-label">Product name</label>
+    <InputText @bind-Value="FoodItemRequest.ProductName" class="form-control" id="fooditem-productname"></InputText>
+    <label for="fooditem-protein" class="form-label">Protein</label>
+    <InputNumber @bind-Value="FoodItemRequest.Protein" class="form-control" id="fooditem-protein"></InputNumber>
+    <label for="fooditem-carbohydrate" class="form-label">Carbohydrate</label>
+    <InputNumber @bind-Value="FoodItemRequest.Carbohydrate" class="form-control" id="fooditem-carbohydrate"></InputNumber>
+    <label for="fooditem-fat" class="form-label">Fat</label>
+    <InputNumber @bind-Value="FoodItemRequest.Fat" class="form-control" id="fooditem-fat"></InputNumber>
+    <label for="fooditem-kcal" class="form-label">kCal</label>
+    <InputNumber @bind-Value="FoodItemRequest.KCal" class="form-control" id="fooditem-kcal"></InputNumber>
     <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
 </EditForm>
 
@@ -14,7 +26,6 @@
 
     private void CreateFoodItem()
     {
-        
-        Logger.LogInformation("Create fooditem");
+        Logger.LogInformation("Create fooditem with brand {brand}", FoodItemRequest.Brand);
     }
 }
