@@ -1,0 +1,35 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net8.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UserSecretsId>aspnet-NutritionTracker.Web-2a7b4f72-d71c-4923-a673-89d4d818c9af</UserSecretsId>
+        <Version>0.12.0</Version>
+        <Authors>Vidar André Bø</Authors>
+        <RepositoryUrl>https://github.com/vidarandrebo/nutrition-tracker</RepositoryUrl>
+        <RepositoryType>git</RepositoryType>
+        <Title>Nutrition Tracker Web</Title>
+        <Product>Nutrition Tracker</Product>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1"/>
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.2"/>
+        <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0"/>
+        <PackageReference Include="Serilog.Sinks.File" Version="6.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Application\NutritionTracker.Application.csproj"/>
+        <ProjectReference Include="..\Infrastructure\NutritionTracker.Infrastructure.csproj"/>
+        <ProjectReference Include="..\Migrations.Postgres\NutritionTracker.Migrations.Postgres.csproj"/>
+        <ProjectReference Include="..\Migrations.Sqlite\NutritionTracker.Migrations.Sqlite.csproj"/>
+    </ItemGroup>
+
+</Project>

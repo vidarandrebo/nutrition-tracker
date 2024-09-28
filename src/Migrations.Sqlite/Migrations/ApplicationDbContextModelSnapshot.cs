@@ -15,7 +15,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.6");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
@@ -143,7 +143,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.Accounts.Account", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Accounts.Entities.Account", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -430,7 +430,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.Accounts.Account", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Accounts.Entities.Account", b =>
                 {
                     b.HasOne("NutritionTracker.Domain.FoodItems.Entities.Macronutrients", "MacronutrientGoal")
                         .WithMany()
@@ -461,7 +461,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
 
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.Micronutrient", b =>
                 {
-                    b.HasOne("NutritionTracker.Domain.Accounts.Account", null)
+                    b.HasOne("NutritionTracker.Domain.Accounts.Entities.Account", null)
                         .WithMany("MicronutrientGoals")
                         .HasForeignKey("AccountId");
 
@@ -485,7 +485,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.Navigation("Recipe");
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.Accounts.Account", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Accounts.Entities.Account", b =>
                 {
                     b.Navigation("MicronutrientGoals");
                 });

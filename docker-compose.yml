@@ -8,8 +8,8 @@ services:
     networks:
       - nt-net
     ports:
-      - "127.0.0.1:5014:80"
-      - "[::1]:5014:80"
+      - "127.0.0.1:5014:8080"
+      - "[::1]:5014:8080"
     restart: unless-stopped
     volumes:
       - /data/nutrition-tracker/log:/var/log/nutrition-tracker/
