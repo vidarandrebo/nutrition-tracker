@@ -1,4 +1,6 @@
 ﻿@page "/counter"
+@using Microsoft.Extensions.Logging
+@inject ILogger<Counter> Logger;
 @rendermode InteractiveServer
 
 <PageTitle>Counter</PageTitle>
@@ -8,9 +10,24 @@
 <p role="status">Current count: @currentCount</p>
 
 <button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<InputText @bind-Value="TextValue" class="form-check-input w-50"></InputText>
 
 @code {
     private int currentCount = 0;
+
+    private string? _textValue;
+    public string? TextValue
+    {
+        get
+        {
+            return _textValue;
+        }
+        set
+        {
+            _textValue = value;
+            Logger.LogInformation(TextValue);
+        }
+    }
 
     private void IncrementCount()
     {

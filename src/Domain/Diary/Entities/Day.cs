@@ -14,6 +14,8 @@ public class Day : BaseEntity
 
     public Day()
     {
+        Date = DateOnly.FromDateTime(DateTime.Now);
+        Meals = new List<Meal>();
     }
 
     public void AddMeal(Meal meal)

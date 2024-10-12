@@ -1,33 +1,19 @@
-﻿@page "/fooditems"
+﻿@page "/recipes"
 @using MediatR
 @using NutritionTracker.Application.FoodItems
 @using NutritionTracker.Domain.FoodItems.Dtos
 @inject IMediator Mediator;
-<PageTitle>Fooditems</PageTitle>
-<h1>FoodItems</h1>
+<PageTitle>Recipes</PageTitle>
+<h1>Recipes</h1>
 <NavLink href="/fooditems/create" class="nav-link">Create</NavLink>
-<InputText ></InputText>
 @foreach (var item in Items)
 {
     <p>@item.ProductName</p>
 }
 
 @code {
-    private string? _searchTerm;
-
-    public string? SearchTerm
-    {
-        get
-        {
-            return _searchTerm;
-        }
-        set
-        {
-            _searchTerm = value;
-            
-        }
-    }
     public FoodItemDto[] Items { get; set; } = Array.Empty<FoodItemDto>();
+
     protected override async Task OnInitializedAsync()
     {
         var getFoodItemsResult = await Mediator.Send(new GetFoodItems.Request());

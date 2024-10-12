@@ -1,0 +1,34 @@
+﻿@page "/diary"
+@using MediatR
+@using Microsoft.EntityFrameworkCore
+@using NutritionTracker.Application.FoodItems
+@using NutritionTracker.Application.Interfaces
+@using NutritionTracker.Domain.Diary.Entities
+@using NutritionTracker.Domain.FoodItems.Dtos
+@inject IMediator Mediator;
+@inject IApplicationDbContext Db;
+<PageTitle>Diary</PageTitle>
+<h1>Diary</h1>
+<NavLink href="/fooditems/create" class="nav-link">Create</NavLink>
+<p>@Day.Date</p>
+
+@code {
+    public Day Day { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var day = await Db.Days.FirstOrDefaultAsync();
+        if (day is not null)
+        {
+            Day = day;
+
+        }
+        else
+        {
+            Day = new Day();
+        }
+
+        await base.OnInitializedAsync();
+    }
+
+}

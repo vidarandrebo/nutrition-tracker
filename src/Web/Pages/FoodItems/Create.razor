@@ -1,5 +1,6 @@
 @page "/fooditems/create"
 @using MediatR
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Http
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Application.FoodItems
@@ -7,6 +8,7 @@
 @using NutritionTracker.Web.Components.Account
 @using NutritionTracker.Web.Identity
 @using NutritionTracker.Web.Pages.Account
+@attribute [Authorize]
 @inject IdentityUserAccessor UserAccessor
 @inject ILogger<Create> Logger
 @inject IMediator Mediator

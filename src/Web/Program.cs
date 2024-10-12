@@ -1,19 +1,14 @@
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using NutritionTracker.Application;
 using NutritionTracker.Infrastructure;
 using NutritionTracker.Infrastructure.Identity;
-using NutritionTracker.Web.Components;
-using NutritionTracker.Web.Components.Account;
 using NutritionTracker.Web.Identity;
 using NutritionTracker.Web.Pages;
-using NutritionTracker.Web.Pages.Account;
 
 namespace NutritionTracker.Web;
 
