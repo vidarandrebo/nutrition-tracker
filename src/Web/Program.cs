@@ -11,6 +11,9 @@ using NutritionTracker.Infrastructure;
 using NutritionTracker.Infrastructure.Identity;
 using NutritionTracker.Web.Components;
 using NutritionTracker.Web.Components.Account;
+using NutritionTracker.Web.Identity;
+using NutritionTracker.Web.Pages;
+using NutritionTracker.Web.Pages.Account;
 
 namespace NutritionTracker.Web;
 

@@ -14,7 +14,7 @@ public class PostFoodItemRequest
     public double Carbohydrate { get; set; }
     public double Fat { get; set; }
     public double KCal { get; set; }
-    public string Unit { get; set; } = "";
+    public string Unit { get; set; } = "grams";
 
     public override string ToString()
     {

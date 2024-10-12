@@ -1,0 +1,56 @@
+@page "/fooditems/create"
+@using MediatR
+@using Microsoft.AspNetCore.Http
+@using Microsoft.Extensions.Logging
+@using NutritionTracker.Application.FoodItems
+@using NutritionTracker.Domain.FoodItems.Contracts
+@using NutritionTracker.Web.Components.Account
+@using NutritionTracker.Web.Identity
+@using NutritionTracker.Web.Pages.Account
+@inject IdentityUserAccessor UserAccessor
+@inject ILogger<Create> Logger
+@inject IMediator Mediator
+@inject NavigationManager NavigationManager
+<PageTitle>New Fooditem</PageTitle>
+<h1>New Fooditem</h1>
+<EditForm Model="FoodItemRequest" method="post" OnValidSubmit="CreateFoodItem" FormName="create">
+    <label for="fooditem-brand" class="form-label">Brand</label>
+    <InputText @bind-Value="FoodItemRequest.Brand" class="form-control" id="fooditem-brand"></InputText>
+    <label for="fooditem-productname" class="form-label">Product name</label>
+    <InputText @bind-Value="FoodItemRequest.ProductName" class="form-control" id="fooditem-productname"></InputText>
+    <label for="fooditem-protein" class="form-label">Protein</label>
+    <InputNumber @bind-Value="FoodItemRequest.Protein" class="form-control" id="fooditem-protein"></InputNumber>
+    <label for="fooditem-carbohydrate" class="form-label">Carbohydrate</label>
+    <InputNumber @bind-Value="FoodItemRequest.Carbohydrate" class="form-control" id="fooditem-carbohydrate"></InputNumber>
+    <label for="fooditem-fat" class="form-label">Fat</label>
+    <InputNumber @bind-Value="FoodItemRequest.Fat" class="form-control" id="fooditem-fat"></InputNumber>
+    <label for="fooditem-kcal" class="form-label">kCal</label>
+    <InputNumber @bind-Value="FoodItemRequest.KCal" class="form-control" id="fooditem-kcal"></InputNumber>
+    <label for="fooditem-unit" class="form-label">Unit</label>
+    <InputSelect @bind-Value="FoodItemRequest.Unit" class="form-control" id="fooditem-unit">
+        <option value="grams">Grams</option>
+        <option value="ml">Milliliters</option>
+    </InputSelect>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm] private PostFoodItemRequest FoodItemRequest { get; set; } = new();
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
+
+    private async Task CreateFoodItem()
+    {
+        var user = await UserAccessor.GetRequiredUserAsync(HttpContext);
+        var response = await Mediator.Send(new AddFoodItem.Request(FoodItemRequest, user.AccountId));
+        if (response.IsSuccess)
+        {
+            Logger.LogInformation("Created fooditem with brand {brand}", FoodItemRequest.Brand);
+            NavigationManager.NavigateTo("/fooditems");
+        }
+        else
+        {
+            Logger.LogError(response.Errors.FirstOrDefault().ToString());
+        }
+    }
+
+}
