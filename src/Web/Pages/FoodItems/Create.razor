@@ -1,15 +1,16 @@
 @page "/fooditems/create"
 @using MediatR
 @using Microsoft.AspNetCore.Authorization
-@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Application.FoodItems
 @using NutritionTracker.Domain.FoodItems.Contracts
-@using NutritionTracker.Web.Components.Account
+@using NutritionTracker.Infrastructure.Identity
 @using NutritionTracker.Web.Identity
-@using NutritionTracker.Web.Pages.Account
+@rendermode InteractiveServer
 @attribute [Authorize]
 @inject IdentityUserAccessor UserAccessor
+@inject SignInManager<ApplicationUser> SignInManager;
 @inject ILogger<Create> Logger
 @inject IMediator Mediator
 @inject NavigationManager NavigationManager
@@ -35,24 +36,3 @@
     </InputSelect>
     <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
 </EditForm>
-
-@code {
-    [SupplyParameterFromForm] private PostFoodItemRequest FoodItemRequest { get; set; } = new();
-    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
-
-    private async Task CreateFoodItem()
-    {
-        var user = await UserAccessor.GetRequiredUserAsync(HttpContext);
-        var response = await Mediator.Send(new AddFoodItem.Request(FoodItemRequest, user.AccountId));
-        if (response.IsSuccess)
-        {
-            Logger.LogInformation("Created fooditem with brand {brand}", FoodItemRequest.Brand);
-            NavigationManager.NavigateTo("/fooditems");
-        }
-        else
-        {
-            Logger.LogError(response.Errors.FirstOrDefault().ToString());
-        }
-    }
-
-}
