@@ -1,0 +1,23 @@
+@using NutritionTracker.Web.Components.Forms
+@rendermode InteractiveServer
+<h3>PostFoodItemForm</h3>
+<EditForm Model="@Model" method="post" OnValidSubmit="@OnValidSubmit" FormName="create">
+    <label for="fooditem-brand" class="form-label">Brand</label>
+    <InputText @bind-Value="Model.Brand" class="form-control" id="fooditem-brand"></InputText>
+    <label for="fooditem-productname" class="form-label">Product name</label>
+    <InputText @bind-Value="Model.ProductName" class="form-control" id="fooditem-productname"></InputText>
+    <label for="fooditem-protein" class="form-label">Protein</label>
+    <InputNumber @bind-Value="Model.Protein" class="form-control" id="fooditem-protein"></InputNumber>
+    <label for="fooditem-carbohydrate" class="form-label">Carbohydrate</label>
+    <InputNumber @bind-Value="Model.Carbohydrate" class="form-control" id="fooditem-carbohydrate"></InputNumber>
+    <label for="fooditem-fat" class="form-label">Fat</label>
+    <InputNumberPrimary Value="Model.Fat" id="fooditem-fat" ></InputNumberPrimary>
+    <label for="fooditem-kcal" class="form-label">kCal</label>
+    <InputNumber @bind-Value="Model.KCal" class="form-control" id="fooditem-kcal"></InputNumber>
+    <label for="fooditem-unit" class="form-label">Unit</label>
+    <InputSelect @bind-Value="Model.Unit" class="form-control" id="fooditem-unit">
+        <option value="grams">Grams</option>
+        <option value="ml">Milliliters</option>
+    </InputSelect>
+    <button type="submit" class="w-100 btn btn-lg btn-primary">Create</button>
+</EditForm>

@@ -10,10 +10,7 @@ public static class Register
     public static IServiceCollection RegisterIdentity(this IServiceCollection services)
     {
         services.AddIdentity<ApplicationUser, IdentityRole<Guid>>(
-                options =>
-                {
-                    options.User.RequireUniqueEmail = true;
-                }
+                options => { options.User.RequireUniqueEmail = true; }
             )
             .AddEntityFrameworkStores<ApplicationDbContext>()
             .AddUserManager<UserManager<ApplicationUser>>()

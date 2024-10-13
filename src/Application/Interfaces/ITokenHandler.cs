@@ -8,7 +8,6 @@ namespace NutritionTracker.Application.Interfaces;
 
 public interface ITokenHandler
 {
-    
     string AccessToken(Guid id, string email);
     string RefreshToken(Guid id, string email);
     Result<ClaimsPrincipal> ValidateToken(string token);

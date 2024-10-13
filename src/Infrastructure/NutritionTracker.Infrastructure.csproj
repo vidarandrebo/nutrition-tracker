@@ -14,18 +14,18 @@
 
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7" />
-        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7" />
-        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4" />
-        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.7"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.7"/>
+        <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="8.0.4"/>
+        <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0"/>
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.7.0"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0"/>
     </ItemGroup>
 
 
     <ItemGroup>
-        <ProjectReference Include="..\Application\NutritionTracker.Application.csproj" />
+        <ProjectReference Include="..\Application\NutritionTracker.Application.csproj"/>
     </ItemGroup>
 
 </Project>

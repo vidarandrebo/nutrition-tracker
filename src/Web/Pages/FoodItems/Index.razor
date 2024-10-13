@@ -1,14 +1,13 @@
 ﻿@page "/fooditems"
-@using MediatR
-@using NutritionTracker.Application.FoodItems
-@using NutritionTracker.Domain.FoodItems.Dtos
-@inject IMediator Mediator;
 @rendermode InteractiveServer
 <PageTitle>Fooditems</PageTitle>
 <h1>FoodItems</h1>
 <NavLink href="/fooditems/create" class="nav-link">Create</NavLink>
 <InputText @bind-Value="SearchTerm"></InputText>
-@foreach (var item in Items)
+@if (FilteredItems is not null)
 {
-    <p>@item.ProductName</p>
+    @foreach (var item in FilteredItems)
+    {
+        <p>@item.ProductName - @item.Owner</p>
+    }
 }

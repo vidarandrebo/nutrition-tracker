@@ -17,6 +17,7 @@ public class Account : BaseEntity
         MacronutrientGoal = new Macronutrients(0.0, 0.0, 0.0, 0.0);
         MicronutrientGoals = new List<Micronutrient>();
     }
+
     public AccountDto ToDto()
     {
         var dto = new AccountDto(

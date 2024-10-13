@@ -8,9 +8,9 @@ namespace NutritionTracker.Domain.Recipes.Entities;
 public class Recipe : BaseEntity
 {
     public List<Ingredient> Ingredients { get; set; }
+
     public Recipe()
     {
-
     }
 
     public List<MicronutrientDto> Micronutrients()
