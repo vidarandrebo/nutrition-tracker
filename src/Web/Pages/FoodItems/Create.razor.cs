@@ -13,9 +13,9 @@ namespace NutritionTracker.Web.Pages.FoodItems;
 
 public partial class Create
 {
-    public PostFoodItemRequest FoodItemRequest { get; set; } = new();
     [CascadingParameter] private HttpContext? HttpContext { get; set; }
     [Inject] private ILogger<Create> Logger { get; set; }
+    public PostFoodItemRequest FoodItemRequest { get; set; } = new();
     [Inject] private NavigationManager NavigationManager { get; set; } = null!;
     [Inject] private IdentityUserAccessor UserAccessor { get; set; } = null!;
     [Inject] private IMediator Mediator { get; set; } = null!;

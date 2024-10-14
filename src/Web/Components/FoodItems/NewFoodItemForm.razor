@@ -7,13 +7,13 @@
     <label for="fooditem-productname" class="form-label">Product name</label>
     <InputText @bind-Value="Model.ProductName" class="form-control" id="fooditem-productname"></InputText>
     <label for="fooditem-protein" class="form-label">Protein</label>
-    <InputNumber @bind-Value="Model.Protein" class="form-control" id="fooditem-protein"></InputNumber>
+    <InputNumberPrimary @bind-Value="Model.Protein" id="fooditem-protein"></InputNumberPrimary>
     <label for="fooditem-carbohydrate" class="form-label">Carbohydrate</label>
-    <InputNumber @bind-Value="Model.Carbohydrate" class="form-control" id="fooditem-carbohydrate"></InputNumber>
+    <InputNumberPrimary @bind-Value="Model.Carbohydrate" id="fooditem-carbohydrate"></InputNumberPrimary>
     <label for="fooditem-fat" class="form-label">Fat</label>
-    <InputNumberPrimary Value="Model.Fat" id="fooditem-fat" ></InputNumberPrimary>
+    <InputNumberPrimary @bind-Value="Model.Fat" id="fooditem-fat"></InputNumberPrimary>
     <label for="fooditem-kcal" class="form-label">kCal</label>
-    <InputNumber @bind-Value="Model.KCal" class="form-control" id="fooditem-kcal"></InputNumber>
+    <InputNumberPrimary @bind-Value="Model.KCal" id="fooditem-kcal"></InputNumberPrimary>
     <label for="fooditem-unit" class="form-label">Unit</label>
     <InputSelect @bind-Value="Model.Unit" class="form-control" id="fooditem-unit">
         <option value="grams">Grams</option>

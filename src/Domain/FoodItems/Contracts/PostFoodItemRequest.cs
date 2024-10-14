@@ -46,17 +46,12 @@ public class PostFoodItemRequest
         }
     }
 
-    private bool _manualKCal = false;
     private double _kCal;
 
     public double KCal
     {
         get { return _kCal; }
-        set
-        {
-            _kCal = value;
-            _manualKCal = true;
-        }
+        set { _kCal = value; }
     }
 
     public string Unit { get; set; } = "grams";
@@ -74,10 +69,7 @@ public class PostFoodItemRequest
 
     private void CalculateKCal()
     {
-        if (!_manualKCal)
-        {
-            _kCal = 4.0 * Protein + 4.0 * Carbohydrate + 9.0 * Fat;
-        }
+        _kCal = 4.0 * Protein + 4.0 * Carbohydrate + 9.0 * Fat;
     }
 }
 
