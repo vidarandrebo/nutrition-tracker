@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using NutritionTracker.Application.FoodItems;
+using NutritionTracker.Application.FoodItems.Commands;
 using NutritionTracker.Domain.FoodItems.Dtos;
 
 namespace NutritionTracker.Web.Pages.Recipes;

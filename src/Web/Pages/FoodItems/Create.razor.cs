@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using NutritionTracker.Application.FoodItems;
+using NutritionTracker.Application.FoodItems.Commands;
 using NutritionTracker.Domain.FoodItems.Contracts;
 using NutritionTracker.Web.Identity;
 

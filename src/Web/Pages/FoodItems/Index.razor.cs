@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Components;
 using NutritionTracker.Application.FoodItems;
+using NutritionTracker.Application.FoodItems.Commands;
 using NutritionTracker.Domain.FoodItems.Dtos;
 
 namespace NutritionTracker.Web.Pages.FoodItems;

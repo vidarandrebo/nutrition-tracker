@@ -10,7 +10,7 @@ using NutritionTracker.Domain.FoodItems.Contracts;
 using NutritionTracker.Domain.FoodItems.Dtos;
 using NutritionTracker.Domain.FoodItems.Entities;
 
-namespace NutritionTracker.Application.FoodItems;
+namespace NutritionTracker.Application.FoodItems.Commands;
 
 public class AddFoodItem
 {

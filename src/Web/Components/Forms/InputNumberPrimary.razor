@@ -1,31 +1,19 @@
 @using System.Linq.Expressions
-@using Microsoft.Extensions.Logging
 @typeparam TValue
-@inject ILogger<InputNumberPrimary<TValue>> Logger
-<InputNumber @bind-Value="Value" class="form-control" @attributes="AdditionalAttributes"></InputNumber>
+<InputNumber @bind-Value="DisplayedValue" class="form-control" @attributes="AdditionalAttributes"></InputNumber>
 
 @code {
 
-    private TValue _value;
+    [Parameter] public TValue Value { get; set; }
 
-    [Parameter]
-    public TValue Value
+    protected TValue DisplayedValue
     {
-        get { return _value; }
+        get { return Value; }
         set
         {
-            if (AdditionalAttributes is not null)
+            if (!EqualityComparer<TValue>.Default.Equals(Value, value))
             {
-                foreach (var item in AdditionalAttributes)
-                {
-                    Logger.LogInformation("{key} {value}", item.Key, item.Value);
-                }
-            }
-
-
-            if (!EqualityComparer<TValue>.Default.Equals(_value, value))
-            {
-                _value = value;
+                Value = value;
                 ValueChanged.InvokeAsync(value);
             }
         }

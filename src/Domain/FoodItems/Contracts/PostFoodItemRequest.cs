@@ -4,7 +4,7 @@ using FluentValidation;
 namespace NutritionTracker.Domain.FoodItems.Contracts;
 
 /// <summary>
-/// Class representing the request data for a POST to endpoint /api/fooditem
+/// Class representing the request data for adding a new fooditem
 /// </summary>
 public class PostFoodItemRequest
 {

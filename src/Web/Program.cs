@@ -2,13 +2,16 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NutritionTracker.Application;
 using NutritionTracker.Infrastructure;
 using NutritionTracker.Infrastructure.Identity;
 using NutritionTracker.Web.Identity;
 using NutritionTracker.Web.Pages;
+using Serilog.Core;
 
 namespace NutritionTracker.Web;
 
@@ -69,12 +72,19 @@ public class Program
 
         app.UseStaticFiles();
         app.UseAntiforgery();
+        
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
 
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
+
+        foreach (var item in app.Configuration.AsEnumerable())
+        {
+            logger.LogInformation("{key} - {value}", item.Key, item.Value);
+        }
 
         app.Run();
     }
