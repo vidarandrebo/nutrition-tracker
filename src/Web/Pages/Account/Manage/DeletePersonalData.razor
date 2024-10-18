@@ -1,10 +1,8 @@
 ﻿@page "/Account/Manage/DeletePersonalData"
-@using System.ComponentModel.DataAnnotations
-@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Account
+@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -37,6 +35,6 @@
                 <ValidationMessage For="() => Input.Password" class="text-danger"/>
             </div>
         }
-        <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close my account</button>
+        <ButtonDanger class="w-100" type="submit">Delete data and close my account</ButtonDanger>
     </EditForm>
 </div>

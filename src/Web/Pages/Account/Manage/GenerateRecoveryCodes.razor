@@ -5,6 +5,7 @@
 @using NutritionTracker.Infrastructure.Identity
 @using NutritionTracker.Web.Components.Account
 @using NutritionTracker.Web.Identity
+@using NutritionTracker.Web.Components.Forms
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IdentityUserAccessor UserAccessor
@@ -36,7 +37,7 @@ else
     <div>
         <form @formname="generate-recovery-codes" @onsubmit="OnSubmitAsync" method="post">
             <AntiforgeryToken/>
-            <button class="btn btn-danger" type="submit">Generate Recovery Codes</button>
+            <ButtonDanger type="submit">Generate Recovery Codes</ButtonDanger>
         </form>
     </div>
 }

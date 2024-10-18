@@ -5,6 +5,7 @@
 @using NutritionTracker.Infrastructure.Identity
 @using NutritionTracker.Web.Components.Account
 @using NutritionTracker.Web.Identity
+@using NutritionTracker.Web.Components.Forms
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -30,7 +31,7 @@
                 <label for="recovery-code" class="form-label">Recovery Code</label>
                 <ValidationMessage For="() => Input.RecoveryCode" class="text-danger"/>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+            <ButtonPrimary type="submit" class="w-100">Log in</ButtonPrimary>
         </EditForm>
     </div>
 </div>

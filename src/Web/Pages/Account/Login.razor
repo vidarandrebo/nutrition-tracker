@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Infrastructure.Identity
+@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject SignInManager<ApplicationUser> SignInManager
@@ -38,7 +39,7 @@
                     </label>
                 </div>
                 <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                    <ButtonPrimary type="submit" class="w-100 ">Log in</ButtonPrimary>
                 </div>
                 <div>
                     <p>

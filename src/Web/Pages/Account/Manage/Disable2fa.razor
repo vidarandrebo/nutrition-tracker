@@ -1,9 +1,8 @@
 ﻿@page "/Account/Manage/Disable2fa"
-@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Account
+@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -29,6 +28,6 @@
 <div>
     <form @formname="disable-2fa" @onsubmit="OnSubmitAsync" method="post">
         <AntiforgeryToken/>
-        <button class="btn btn-danger" type="submit">Disable 2FA</button>
+        <ButtonDanger type="submit">Disable 2FA</ButtonDanger>
     </form>
 </div>

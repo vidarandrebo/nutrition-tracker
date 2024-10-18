@@ -1,9 +1,8 @@
 ﻿@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Account
+@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
-@using NutritionTracker.Web.Pages.Account
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
 
@@ -28,7 +27,7 @@ else
             <p>
                 @foreach (var provider in externalLogins)
                 {
-                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">@provider.DisplayName</button>
+                    <ButtonPrimary type="submit" name="provider" value="@provider.Name" title="@($"Log in using your {provider.DisplayName} account")">@provider.DisplayName</ButtonPrimary>
                 }
             </p>
         </div>

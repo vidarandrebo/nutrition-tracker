@@ -1,12 +1,7 @@
 ﻿@page "/Account/Manage/Email"
-@using System.ComponentModel.DataAnnotations
-@using System.Text
-@using System.Text.Encodings.Web
-@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.WebUtilities
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Account
+@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -50,7 +45,7 @@
                 <label for="new-email" class="form-label">New email</label>
                 <ValidationMessage For="() => Input.NewEmail" class="text-danger"/>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Change email</button>
+            <ButtonPrimary type="submit" class="w-100">Change email</ButtonPrimary>
         </EditForm>
     </div>
 </div>

@@ -1,9 +1,7 @@
 ﻿@page "/Account/Manage/ExternalLogins"
-@using Microsoft.AspNetCore.Authentication
-@using Microsoft.AspNetCore.Http
 @using Microsoft.AspNetCore.Identity
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Account
+@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -32,7 +30,7 @@
                             <div>
                                 <input type="hidden" name="@nameof(LoginProvider)" value="@login.LoginProvider"/>
                                 <input type="hidden" name="@nameof(ProviderKey)" value="@login.ProviderKey"/>
-                                <button type="submit" class="btn btn-primary" title="Remove this @login.ProviderDisplayName login from your account">Remove</button>
+                                <ButtonPrimary type="submit" title="@($"Remove this {login.ProviderDisplayName} login from your account")">Remove</ButtonPrimary>
                             </div>
                         </form>
                     }
@@ -56,9 +54,9 @@
             <p>
                 @foreach (var provider in otherLogins)
                 {
-                    <button type="submit" class="btn btn-primary" name="Provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                    <ButtonPrimary type="submit"  name="Provider" value="@provider.Name" title="@($"Log in using your {provider.DisplayName} account")">
                         @provider.DisplayName
-                    </button>
+                    </ButtonPrimary>
                 }
             </p>
         </div>

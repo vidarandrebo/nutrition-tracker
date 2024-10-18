@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Http
 @using NutritionTracker.Web.Components.Account
 @using NutritionTracker.Web.Identity
+@using NutritionTracker.Web.Components.Forms
 
 @inject IdentityUserAccessor UserAccessor
 
@@ -18,7 +19,7 @@
         </p>
         <form action="Account/Manage/DownloadPersonalData" method="post">
             <AntiforgeryToken/>
-            <button class="btn btn-primary" type="submit">Download</button>
+            <ButtonPrimary  type="submit">Download</ButtonPrimary>
         </form>
         <p>
             <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Delete</a>

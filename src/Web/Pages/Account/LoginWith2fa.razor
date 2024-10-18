@@ -3,6 +3,7 @@
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Infrastructure.Identity
 @using NutritionTracker.Web.Identity
+@using NutritionTracker.Web.Components.Forms
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -34,7 +35,7 @@
                 </label>
             </div>
             <div>
-                <button type="submit" class="w-100 btn btn-lg btn-primary">Log in</button>
+                <ButtonPrimary type="submit" class="w-100">Log in</ButtonPrimary>
             </div>
         </EditForm>
     </div>

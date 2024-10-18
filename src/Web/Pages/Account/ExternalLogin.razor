@@ -11,6 +11,7 @@
 @using NutritionTracker.Infrastructure.Identity
 @using NutritionTracker.Web.Components.Account
 @using NutritionTracker.Web.Identity
+@using NutritionTracker.Web.Components.Forms
 
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
@@ -43,7 +44,7 @@
                 <label for="email" class="form-label">Email</label>
                 <ValidationMessage For="() => Input.Email"/>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Register</button>
+            <ButtonPrimary type="submit" class="w-100">Register</ButtonPrimary>
         </EditForm>
     </div>
 </div>

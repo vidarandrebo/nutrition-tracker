@@ -5,6 +5,7 @@
 @using NutritionTracker.Infrastructure.Identity
 @using NutritionTracker.Web.Components.Account
 @using NutritionTracker.Web.Identity
+@using NutritionTracker.Web.Components.Forms
 
 @inject UserManager<ApplicationUser> UserManager
 @inject SignInManager<ApplicationUser> SignInManager
@@ -30,7 +31,7 @@
                 <label for="phone-number" class="form-label">Phone number</label>
                 <ValidationMessage For="() => Input.PhoneNumber" class="text-danger"/>
             </div>
-            <button type="submit" class="w-100 btn btn-lg btn-primary">Save</button>
+            <ButtonPrimary type="submit" class="w-100">Save</ButtonPrimary>
         </EditForm>
     </div>
 </div>
