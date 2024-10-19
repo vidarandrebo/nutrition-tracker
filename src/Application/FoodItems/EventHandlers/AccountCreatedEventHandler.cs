@@ -23,7 +23,7 @@ public class AccountCreatedEventHandler : INotificationHandler<AccountCreatedEve
 
     public async Task Handle(AccountCreatedEvent notification, CancellationToken cancellationToken)
     {
-        if (_cfg.GetValue<string>("ENVIRONMENT") == "Production")
+        if (!_cfg.GetValue<bool>("Mock:FoodItems"))
         {
             return;
         }
