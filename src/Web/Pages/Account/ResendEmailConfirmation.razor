@@ -1,13 +1,7 @@
 ﻿@page "/Account/ResendEmailConfirmation"
-@using System.ComponentModel.DataAnnotations
-@using System.Text
-@using System.Text.Encodings.Web
 @using Microsoft.AspNetCore.Identity
-@using Microsoft.AspNetCore.WebUtilities
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Account
 @using NutritionTracker.Web.Identity
-@using NutritionTracker.Web.Components.Forms
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IEmailSender<ApplicationUser> EmailSender
@@ -20,17 +14,17 @@
 <h2>Enter your email.</h2>
 <hr/>
 <StatusMessage Message="@message"/>
-<div class="row">
-    <div class="col-md-4">
+<div >
+    <div >
         <EditForm Model="Input" FormName="resend-email-confirmation" OnValidSubmit="OnValidSubmitAsync" method="post">
             <DataAnnotationsValidator/>
-            <ValidationSummary class="text-danger" role="alert"/>
-            <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" aria-required="true" placeholder="name@example.com"/>
-                <label for="email" class="form-label">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger"/>
+            <ValidationSummary role="alert"/>
+            <div >
+                <InputText @bind-Value="Input.Email" aria-required="true" placeholder="name@example.com"/>
+                <label for="email">Email</label>
+                <ValidationMessage For="() => Input.Email"/>
             </div>
-            <ButtonPrimary type="submit" class="w-100">Resend</ButtonPrimary>
+            <button type="submit">Resend</button>
         </EditForm>
     </div>
 </div>

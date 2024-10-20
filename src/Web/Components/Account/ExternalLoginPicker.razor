@@ -1,7 +1,6 @@
 ﻿@using Microsoft.AspNetCore.Authentication
 @using Microsoft.AspNetCore.Identity
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 @inject SignInManager<ApplicationUser> SignInManager
 @inject IdentityRedirectManager RedirectManager
@@ -20,14 +19,14 @@
 }
 else
 {
-    <form class="form-horizontal" action="Account/PerformExternalLogin" method="post">
+    <form action="Account/PerformExternalLogin" method="post">
         <div>
             <AntiforgeryToken/>
             <input type="hidden" name="ReturnUrl" value="@ReturnUrl"/>
             <p>
                 @foreach (var provider in externalLogins)
                 {
-                    <ButtonPrimary type="submit" name="provider" value="@provider.Name" title="@($"Log in using your {provider.DisplayName} account")">@provider.DisplayName</ButtonPrimary>
+                    <button type="submit" name="provider" value="@provider.Name" title="@($"Log in using your {provider.DisplayName} account")">@provider.DisplayName</button>
                 }
             </p>
         </div>

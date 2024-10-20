@@ -31,7 +31,8 @@ public partial class Create
             Logger.LogError("Failed to get user response");
             return;
         }
-        var user  = userResponse.Value;
+
+        var user = userResponse.Value;
         Logger.LogInformation(user.AccountId.ToString());
         var response = await Mediator.Send(new AddFoodItem.Request(FoodItemRequest, user.AccountId));
         if (response.IsSuccess)

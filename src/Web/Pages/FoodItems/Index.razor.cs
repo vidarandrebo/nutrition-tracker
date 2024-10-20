@@ -29,7 +29,26 @@ public partial class Index
     }
 
 
-    private IEnumerable<FoodItemDto>? FilteredItems { get; set; }
+    private IEnumerable<FoodItemDto>? _filteredItems;
+
+    public IEnumerable<FoodItemDto>? FilteredItems
+    {
+        get
+        {
+            if (_filteredItems is not null)
+            {
+                return _filteredItems.Take(100);
+            }
+
+            return null;
+        }
+        set
+        {
+            _filteredItems = value;
+        }
+    }
+
+
     private FoodItemDto[] _items { get; set; } = Array.Empty<FoodItemDto>();
 
     protected override async Task OnInitializedAsync()
@@ -39,6 +58,7 @@ public partial class Index
         {
             _items = getFoodItemsResult.Value;
         }
+
         FilteredItems = _items;
 
         await base.OnInitializedAsync();

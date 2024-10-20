@@ -45,7 +45,9 @@ public class AccountCreatedEventHandler : INotificationHandler<AccountCreatedEve
 
             nutritionFaker.Populate(foodItem.Macronutrients);
 
-            foodItem.Macronutrients.KCal = 4.0 * foodItem.Macronutrients.Protein + 4.0 * foodItem.Macronutrients.Carbohydrate + 9.0 * foodItem.Macronutrients.Fat;
+            foodItem.Macronutrients.KCal = 4.0 * foodItem.Macronutrients.Protein +
+                                           4.0 * foodItem.Macronutrients.Carbohydrate +
+                                           9.0 * foodItem.Macronutrients.Fat;
 
             foodItem.Micronutrients = new List<Micronutrient>();
 

@@ -1,23 +1,22 @@
-@using NutritionTracker.Web.Components.Forms
 @rendermode InteractiveServer
 <h3>PostFoodItemForm</h3>
 <EditForm Model="@Model" method="post" OnValidSubmit="@OnValidSubmit" FormName="create">
-    <label for="fooditem-brand" class="form-label">Brand</label>
-    <InputText @bind-Value="Model.Brand" class="form-control" id="fooditem-brand"></InputText>
-    <label for="fooditem-productname" class="form-label">Product name</label>
-    <InputText @bind-Value="Model.ProductName" class="form-control" id="fooditem-productname"></InputText>
-    <label for="fooditem-protein" class="form-label">Protein</label>
-    <InputNumberPrimary @bind-Value="Model.Protein" id="fooditem-protein"></InputNumberPrimary>
-    <label for="fooditem-carbohydrate" class="form-label">Carbohydrate</label>
-    <InputNumberPrimary @bind-Value="Model.Carbohydrate" id="fooditem-carbohydrate"></InputNumberPrimary>
-    <label for="fooditem-fat" class="form-label">Fat</label>
-    <InputNumberPrimary @bind-Value="Model.Fat" id="fooditem-fat"></InputNumberPrimary>
-    <label for="fooditem-kcal" class="form-label">kCal</label>
-    <InputNumberPrimary @bind-Value="Model.KCal" id="fooditem-kcal"></InputNumberPrimary>
-    <label for="fooditem-unit" class="form-label">Unit</label>
-    <InputSelect @bind-Value="Model.Unit" class="form-control" id="fooditem-unit">
+    <label for="fooditem-brand">Brand</label>
+    <InputText @bind-Value="Model.Brand" id="fooditem-brand"></InputText>
+    <label for="fooditem-productname">Product name</label>
+    <InputText @bind-Value="Model.ProductName" id="fooditem-productname"></InputText>
+    <label for="fooditem-protein">Protein</label>
+    <InputNumber @bind-Value="Model.Protein" id="fooditem-protein"></InputNumber>
+    <label for="fooditem-carbohydrate">Carbohydrate</label>
+    <InputNumber @bind-Value="Model.Carbohydrate" id="fooditem-carbohydrate"></InputNumber>
+    <label for="fooditem-fat">Fat</label>
+    <InputNumber @bind-Value="Model.Fat" id="fooditem-fat"></InputNumber>
+    <label for="fooditem-kcal">kCal</label>
+    <InputNumber @bind-Value="Model.KCal" id="fooditem-kcal"></InputNumber>
+    <label for="fooditem-unit">Unit</label>
+    <InputSelect @bind-Value="Model.Unit" id="fooditem-unit">
         <option value="grams">Grams</option>
         <option value="ml">Milliliters</option>
     </InputSelect>
-    <ButtonPrimary type="submit" class="w-100">Create</ButtonPrimary>
+    <button type="submit">Create</button>
 </EditForm>

@@ -2,7 +2,6 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -17,7 +16,7 @@
 
 <h3>Delete Personal Data</h3>
 
-<div class="alert alert-warning" role="alert">
+<div role="alert">
     <p>
         <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
     </p>
@@ -26,15 +25,15 @@
 <div>
     <EditForm Model="Input" FormName="delete-user" OnValidSubmit="OnValidSubmitAsync" method="post">
         <DataAnnotationsValidator/>
-        <ValidationSummary class="text-danger" role="alert"/>
+        <ValidationSummary role="alert"/>
         @if (requirePassword)
         {
-            <div class="form-floating mb-3">
-                <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your password."/>
-                <label for="password" class="form-label">Password</label>
-                <ValidationMessage For="() => Input.Password" class="text-danger"/>
+            <div >
+                <InputText type="password" @bind-Value="Input.Password" autocomplete="current-password" aria-required="true" placeholder="Please enter your password."/>
+                <label for="password">Password</label>
+                <ValidationMessage For="() => Input.Password"/>
             </div>
         }
-        <ButtonDanger class="w-100" type="submit">Delete data and close my account</ButtonDanger>
+        <button type="submit">Delete data and close my account</button>
     </EditForm>
 </div>

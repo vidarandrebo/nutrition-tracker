@@ -2,7 +2,6 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.Extensions.Logging
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -15,7 +14,7 @@
 <StatusMessage/>
 <h3>Disable two-factor authentication (2FA)</h3>
 
-<div class="alert alert-warning" role="alert">
+<div role="alert">
     <p>
         <strong>This action only disables 2FA.</strong>
     </p>
@@ -28,6 +27,6 @@
 <div>
     <form @formname="disable-2fa" @onsubmit="OnSubmitAsync" method="post">
         <AntiforgeryToken/>
-        <ButtonDanger type="submit">Disable 2FA</ButtonDanger>
+        <button type="submit">Disable 2FA</button>
     </form>
 </div>

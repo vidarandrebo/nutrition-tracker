@@ -1,6 +1,5 @@
 ﻿@page "/counter"
 @using Microsoft.Extensions.Logging
-@using NutritionTracker.Web.Components.Forms
 @inject ILogger<Counter> Logger;
 @rendermode InteractiveServer
 
@@ -10,5 +9,5 @@
 
 <p role="status">Current count: @currentCount</p>
 
-<ButtonPrimary @onclick="IncrementCount">Click me</ButtonPrimary>
-<InputText @bind-Value="TextValue" class="form-check-input w-50"></InputText>
+<button @onclick="IncrementCount">Click me</button>
+<InputText @bind-Value="TextValue"></InputText>

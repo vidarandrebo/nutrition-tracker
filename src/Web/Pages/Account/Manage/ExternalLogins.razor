@@ -1,7 +1,6 @@
 ﻿@page "/Account/Manage/ExternalLogins"
 @using Microsoft.AspNetCore.Identity
 @using NutritionTracker.Infrastructure.Identity
-@using NutritionTracker.Web.Components.Forms
 @using NutritionTracker.Web.Identity
 
 @inject UserManager<ApplicationUser> UserManager
@@ -16,7 +15,7 @@
 @if (currentLogins?.Count > 0)
 {
     <h3>Registered Logins</h3>
-    <table class="table">
+    <table >
         <tbody>
         @foreach (var login in currentLogins)
         {
@@ -30,7 +29,7 @@
                             <div>
                                 <input type="hidden" name="@nameof(LoginProvider)" value="@login.LoginProvider"/>
                                 <input type="hidden" name="@nameof(ProviderKey)" value="@login.ProviderKey"/>
-                                <ButtonPrimary type="submit" title="@($"Remove this {login.ProviderDisplayName} login from your account")">Remove</ButtonPrimary>
+                                <button type="submit" title="@($"Remove this {login.ProviderDisplayName} login from your account")">Remove</button>
                             </div>
                         </form>
                     }
@@ -48,13 +47,13 @@
 {
     <h4>Add another service to log in.</h4>
     <hr/>
-    <form class="form-horizontal" action="Account/Manage/LinkExternalLogin" method="post">
+    <form action="Account/Manage/LinkExternalLogin" method="post">
         <AntiforgeryToken/>
         <div>
             <p>
                 @foreach (var provider in otherLogins)
                 {
-                    <ButtonPrimary type="submit"  name="Provider" value="@provider.Name" title="@($"Log in using your {provider.DisplayName} account")">
+                    <ButtonPrimary type="submit" name="Provider" value="@provider.Name" title="@($"Log in using your {provider.DisplayName} account")">
                         @provider.DisplayName
                     </ButtonPrimary>
                 }

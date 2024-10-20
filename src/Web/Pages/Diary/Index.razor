@@ -1,10 +1,9 @@
 ﻿@page "/diary"
-@using NutritionTracker.Web.Components.Forms
 @rendermode InteractiveServer
 
 <PageTitle>Diary</PageTitle>
 <h1>Diary</h1>
-<NavLink href="/fooditems/create" class="nav-link">Create</NavLink>
+<NavLink href="/fooditems/create">Create</NavLink>
 <p>@Day.Date</p>
 <InputDate @bind-Value="SelectedDate"></InputDate>
-<ButtonPrimary @onclick="Hello" >This is a button</ButtonPrimary>
+<button @onclick="Hello">This is a button</button>

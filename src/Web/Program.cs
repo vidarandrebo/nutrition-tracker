@@ -72,7 +72,7 @@ public class Program
 
         app.UseStaticFiles();
         app.UseAntiforgery();
-        
+
         var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
         app.MapRazorComponents<App>()
