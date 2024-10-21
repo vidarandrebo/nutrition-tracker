@@ -1,26 +1,32 @@
 * {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
 }
+
 html {
     font-size: 16px;
     font-family: "BlexMono Nerd Font", serif;
     box-sizing: border-box;
     margin: 0;
 }
+
 body {
     display: flex;
     flex-direction: column;
     align-items: center;
     width: 100%;
 }
+
 header {
     width: 100%;
 }
+
 main {
     width: 100%;
     max-width: 80rem;
 }
+
 footer {
     width: 100%;
 }
@@ -28,12 +34,15 @@ footer {
 .flex {
     display: flex;
 }
+
 .flex-column {
     flex-direction: column;
 }
+
 .flex-row {
     flex-direction: row;
 }
+
 .space-between {
     justify-content: space-between;
 }
@@ -45,8 +54,9 @@ footer {
     font-weight: 700;
     color: #ffffff;
     background-color: #3B82F6;
+    border: none;
 
-    :hover {
+    &:hover {
         background-color: #1D4ED8;
     }
 }
@@ -54,16 +64,16 @@ footer {
 .input-primary {
     padding: 0.5rem 0.75rem;
     border-radius: 0.25rem;
-    border-width: 1px;
+    border: 1px solid lightgray;
     width: 100%;
     line-height: 1.25;
     color: #374151;
-    appearance: none;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 
-    :hover {
-        border-color: #6B7280;
+    &:hover {
+        border-color: darkgray;
     }
+
 }
 
 th {
@@ -74,18 +84,26 @@ th {
     padding: 1rem;
 }
 
+.padding-2 {
+    padding: 2rem;
+}
+
 .w-20 {
     width: 20rem;
 }
+
 .w-15 {
     width: 15rem;
 }
+
 .w-10 {
     width: 10rem;
 }
+
 .w-5 {
     width: 5rem;
 }
+
 .w-full {
     width: 100%;
 }
