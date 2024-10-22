@@ -21,14 +21,14 @@
                 <h2>Use a local account to log in.</h2>
                 <hr/>
                 <ValidationSummary role="alert"/>
-                <div class="padding-1">
+                <div class="pd-1">
                     <label>
                         Email
                         <InputText class="input-primary" @bind-Value="Input.Email" autocomplete="username" aria-required="true" placeholder="name@example.com"/>
                     </label>
                     <ValidationMessage For="() => Input.Email"/>
                 </div>
-                <div class="padding-1">
+                <div class="pd-1">
                     <label>
                         Password
                         <InputText class="input-primary" type="password" @bind-Value="Input.Password" autocomplete="current-password" aria-required="true" placeholder="password"/>
