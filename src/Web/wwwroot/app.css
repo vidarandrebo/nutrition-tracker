@@ -31,17 +31,21 @@ body {
 
 a {
     text-decoration: none;
+
     &:link {
-        
+
     }
+
     &:visited {
         color: inherit;
     }
+
     &:active {
-        
+
     }
+
     &:hover {
-        
+
     }
 }
 
@@ -64,6 +68,7 @@ footer {
     flex-grow: 0;
     flex-shrink: 0;
     height: 3rem;
+    text-align: center;
     background-color: var(--cerulean)
 }
 
@@ -114,6 +119,32 @@ footer {
 
 th {
     text-align: left;
+}
+
+.pd-h-1 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.pd-v-1 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.pd-t-1 {
+    padding-top: 1rem;
+}
+
+.pd-b-1 {
+    padding-bottom: 1rem;
+}
+
+.pd-l-1 {
+    padding-left: 1rem;
+}
+
+.pd-r-1 {
+    padding-right: 1rem;
 }
 
 .pd-1 {
