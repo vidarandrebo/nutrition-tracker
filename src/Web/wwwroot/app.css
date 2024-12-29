@@ -84,10 +84,27 @@ footer {
     flex-direction: row;
 }
 
+
 .space-between {
     justify-content: space-between;
 }
 
+
+.navlink-primary {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: var(--verdigris);
+    border: none;
+
+    &:hover {
+        background-color: var(--cerulean)
+    }
+    &:visited {
+        color: #ffffff;
+    }
+}
 
 .button-primary {
     padding: 0.5rem 1rem;

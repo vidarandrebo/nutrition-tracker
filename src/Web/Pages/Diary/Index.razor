@@ -3,7 +3,16 @@
 
 <PageTitle>Diary</PageTitle>
 <h1>Diary</h1>
-<NavLink href="/fooditems/create">Create</NavLink>
-<p>@Day.Date</p>
-<InputDate @bind-Value="SelectedDate"></InputDate>
-<button class="button-primary" @onclick="Hello">This is a button</button>
+<div class="flex flex-row space-between">
+    <div>
+        <button @onclick="DecrementDay">←</button>
+        <InputDate Value="@SelectedDate" ValueChanged="async (DateOnly d) => await SetDate(d)"
+                   ValueExpression="() => SelectedDate"></InputDate>
+        <button @onclick="IncrementDay">→</button>
+    </div>
+    <button class="button-primary" @onclick="AddMeal">Add meal</button>
+</div>
+@foreach (var meal in Day.Meals)
+{
+    <p>@meal.SequenceNumber</p>
+}

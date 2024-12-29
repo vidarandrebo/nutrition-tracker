@@ -1,6 +1,11 @@
 using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Runtime.InteropServices.JavaScript;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NutritionTracker.Application.Interfaces;
@@ -10,29 +15,47 @@ namespace NutritionTracker.Web.Pages.Diary;
 
 public partial class Index
 {
-    [Inject] private ILogger<Index> _logger { get; init; }
-    [Inject] private IApplicationDbContext _db { get; init; }
+    [Inject] private ILogger<Index> Logger { get; init; }
+    [Inject] private IApplicationDbContext Db { get; init; }
     public Day Day { get; set; }
-    private DateOnly _selectedDate = DateOnly.FromDateTime(DateTime.Now);
 
-    public void Hello()
+    public async Task AddMeal()
     {
-        _logger.LogInformation("hello there");
+        Logger.LogInformation("hello there");
+        var ctSrc = new CancellationTokenSource(5000);
+        var meal = new Meal();
+        Day.AddMeal(meal);
+        await Db.SaveChangesAsync(ctSrc.Token);
+        ;
     }
 
-    public DateOnly SelectedDate
+    public async Task DecrementDay()
     {
-        get { return _selectedDate; }
-        set
-        {
-            _selectedDate = value;
-            _logger.LogInformation("Set date to {date}", _selectedDate);
-        }
+        var date = SelectedDate.AddDays(-1);
+        await SetDate(date);
+    }
+    public async Task IncrementDay()
+    {
+        var date = SelectedDate.AddDays(1);
+        await SetDate(date);
+    }
+    public async Task SetDate(DateOnly date)
+    {
+        Logger.LogError("hello from value changed");
+        SelectedDate = date;
+        Logger.LogInformation("Set date to {date}", SelectedDate);
+        await GetDay();
     }
 
-    protected override async Task OnInitializedAsync()
+    public DateOnly SelectedDate { get; set; } = DateOnly.FromDateTime(DateTime.Now);
+
+    public async Task GetDay()
     {
-        var day = await _db.Days.FirstOrDefaultAsync();
+        var ctSrc = new CancellationTokenSource(5000);
+        var day = await Db.Days
+            .Where(d => d.Date == SelectedDate)
+            .Include(d => d.Meals)
+            .FirstOrDefaultAsync(ctSrc.Token);
         if (day is not null)
         {
             Day = day;
@@ -40,8 +63,15 @@ public partial class Index
         else
         {
             Day = new Day();
+            Day.Date = SelectedDate;
+            Db.Days.Add(Day);
+            await Db.SaveChangesAsync(ctSrc.Token);
         }
+    }
 
+    protected override async Task OnInitializedAsync()
+    {
+        await GetDay();
         await base.OnInitializedAsync();
     }
 }
