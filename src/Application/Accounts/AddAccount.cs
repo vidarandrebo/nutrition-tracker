@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using NutritionTracker.Application.Interfaces;
 using NutritionTracker.Domain.Accounts.Entities;
+using NutritionTracker.Domain.Accounts.Events;
 
 namespace NutritionTracker.Application.Accounts;
 
@@ -26,6 +27,7 @@ public class AddAccount
         public async Task<Unit> Handle(Request request, CancellationToken ct)
         {
             var account = new Account(request.Id);
+            account.AddDomainEvent(new AccountCreatedEvent(account.Id));
             _db.Accounts.Add(account);
             await _db.SaveChangesAsync(ct);
             _logger.LogInformation("Account {AccountId} added", account.Id);

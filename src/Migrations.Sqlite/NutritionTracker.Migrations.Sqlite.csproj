@@ -14,7 +14,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Infrastructure\NutritionTracker.Infrastructure.csproj" />
+        <ProjectReference Include="..\Infrastructure\NutritionTracker.Infrastructure.csproj"/>
     </ItemGroup>
 
 </Project>

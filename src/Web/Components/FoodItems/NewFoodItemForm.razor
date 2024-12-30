@@ -1,0 +1,38 @@
+@rendermode InteractiveServer
+<h3>PostFoodItemForm</h3>
+<EditForm Model="@Model" method="post" OnValidSubmit="@OnValidSubmit" FormName="create" class="flex flex-column">
+    <label>
+
+        Brand
+        <InputText @bind-Value="Model.Brand" id="fooditem-brand" class="input-primary"></InputText>
+    </label>
+    <label >
+        Product name
+        <InputText @bind-Value="Model.ProductName" id="fooditem-productname" class="input-primary"></InputText>
+    </label>
+    <label >
+        Protein
+        <InputNumber @bind-Value="Model.Protein" id="fooditem-protein" class="input-primary"></InputNumber>
+    </label>
+    <label >
+        Carbohydrate
+        <InputNumber @bind-Value="Model.Carbohydrate" id="fooditem-carbohydrate" class="input-primary"></InputNumber>
+    </label>
+    <label >
+        Fat
+
+        <InputNumber @bind-Value="Model.Fat" id="fooditem-fat" class="input-primary"></InputNumber>
+    </label>
+    <label >
+        kCal
+        <InputNumber @bind-Value="Model.KCal" id="fooditem-kcal" class="input-primary"></InputNumber>
+    </label>
+    <label >
+        Unit
+        <InputSelect @bind-Value="Model.Unit" id="fooditem-unit" class="input-primary">
+            <option value="grams">Grams</option>
+            <option value="ml">Milliliters</option>
+        </InputSelect>
+    </label>
+    <button type="submit">Create</button>
+</EditForm>

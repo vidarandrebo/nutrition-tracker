@@ -20,20 +20,20 @@ public class TokenHandler : ITokenHandler
     }
 
 
-
-
     public string RefreshToken(Guid id, string email)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = CreateToken(id, email, DateTime.Now.AddDays(30));
         return tokenHandler.WriteToken(token);
     }
+
     public string AccessToken(Guid id, string email)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = CreateToken(id, email, DateTime.Now.AddDays(1));
         return tokenHandler.WriteToken(token);
     }
+
     private JwtSecurityToken CreateToken(Guid id, string email, DateTime expires)
     {
         var claimList = new List<Claim>();
@@ -44,12 +44,13 @@ public class TokenHandler : ITokenHandler
         {
             throw new Exception("Jwt secret key not set");
         }
+
         var token = new JwtSecurityToken(
             claims: claimList,
             expires: DateTime.Now.AddDays(30),
             signingCredentials: new SigningCredentials(new SymmetricSecurityKey(Encoding.UTF8.GetBytes(signKey)),
                 SecurityAlgorithms.HmacSha256)
-            , audience: _configuration["Jwt:ValidAudience"], issuer:_configuration["Jwt:ValidIssuer"]
+            , audience: _configuration["Jwt:ValidAudience"], issuer: _configuration["Jwt:ValidIssuer"]
         );
         return token;
     }

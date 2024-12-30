@@ -1,16 +1,15 @@
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using NutritionTracker.Application;
 using NutritionTracker.Infrastructure;
 using NutritionTracker.Infrastructure.Identity;
-using NutritionTracker.Web.Components;
-using NutritionTracker.Web.Components.Account;
+using NutritionTracker.Web.Identity;
+using NutritionTracker.Web.Pages;
 
 namespace NutritionTracker.Web;
 
@@ -38,13 +37,6 @@ public class Program
             })
             .AddIdentityCookies();
 
-        //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-        //throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-
-//        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//            options.UseSqlServer(connectionString));
-
         builder.Services.AddDatabase(builder.Configuration, builder.Environment);
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -71,6 +63,8 @@ public class Program
 
         app.UseStaticFiles();
         app.UseAntiforgery();
+
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
 
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();

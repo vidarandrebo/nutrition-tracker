@@ -24,7 +24,8 @@ public class FoodItem : BaseEntity
         Micronutrients = new List<Micronutrient>();
     }
 
-    public FoodItem(string brand, string productName, Macronutrients macronutrients, Guid ownerId, IEnumerable<Micronutrient> micronutrients)
+    public FoodItem(string brand, string productName, Macronutrients macronutrients, Guid ownerId,
+        IEnumerable<Micronutrient> micronutrients)
     {
         Id = Guid.NewGuid();
         Brand = brand;

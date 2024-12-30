@@ -17,14 +17,18 @@ public static class Program
         var foodItems = JsonConvert.DeserializeObject<Root>(json);
 
         Console.WriteLine($"Found {foodItems.Foods.Count} items");
-        foreach(var item in foodItems.Foods) {
+        foreach (var item in foodItems.Foods)
+        {
             Console.WriteLine(item.FoodName);
-            foreach(var constituent in item.Constituents) {
+            foreach (var constituent in item.Constituents)
+            {
                 Console.WriteLine($"{constituent.NutrientId}: {constituent.Quantity}{constituent.Unit}");
             }
+
             Console.Write("Add to storage Y/n");
             var input = Console.ReadLine();
-            switch (input) {
+            switch (input)
+            {
                 case "n":
                 case "N":
                     Console.WriteLine("discard");

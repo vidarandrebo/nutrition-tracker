@@ -4,17 +4,57 @@ using FluentValidation;
 namespace NutritionTracker.Domain.FoodItems.Contracts;
 
 /// <summary>
-/// Class representing the request data for a POST to endpoint /api/fooditem
+/// Class representing the request data for adding a new fooditem
 /// </summary>
 public class PostFoodItemRequest
 {
     public string Brand { get; set; } = "";
     public string ProductName { get; set; } = "";
-    public double Protein { get; set; }
-    public double Carbohydrate { get; set; }
-    public double Fat { get; set; }
-    public double KCal { get; set; }
-    public string Unit { get; set; } = "";
+    private double _protein;
+
+    public double Protein
+    {
+        get { return _protein; }
+        set
+        {
+            _protein = value;
+            CalculateKCal();
+        }
+    }
+
+    private double _carbohydrate;
+
+    public double Carbohydrate
+    {
+        get { return _carbohydrate; }
+        set
+        {
+            _carbohydrate = value;
+            CalculateKCal();
+        }
+    }
+
+    private double _fat;
+
+    public double Fat
+    {
+        get { return _fat; }
+        set
+        {
+            _fat = value;
+            CalculateKCal();
+        }
+    }
+
+    private double _kCal;
+
+    public double KCal
+    {
+        get { return _kCal; }
+        set { _kCal = value; }
+    }
+
+    public string Unit { get; set; } = "grams";
 
     public override string ToString()
     {
@@ -25,6 +65,11 @@ public class PostFoodItemRequest
                $"Fat {Fat}\n" +
                $"KCal {KCal}\n" +
                $"Unit {Unit}";
+    }
+
+    private void CalculateKCal()
+    {
+        _kCal = 4.0 * Protein + 4.0 * Carbohydrate + 9.0 * Fat;
     }
 }
 

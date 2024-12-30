@@ -1,4 +1,5 @@
 using NutritionTracker.Application.FoodItems;
+using NutritionTracker.Application.FoodItems.Commands;
 using NutritionTracker.Application.Interfaces;
 using NutritionTracker.Domain.FoodItems.Contracts;
 

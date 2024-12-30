@@ -28,5 +28,4 @@ public class MacronutrientsDto(double protein, double carbohydrate, double fat, 
             a.KCal + b.KCal
         );
     }
-
 }

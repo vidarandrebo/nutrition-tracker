@@ -8,7 +8,6 @@ namespace NutritionTracker.Application.Interfaces;
 
 public interface IIdentityService
 {
-
     Task<Result<Guid>> RegisterUser(string email, string password);
     Task<Result<AccessTokenResponse>> LoginUser(string email, string password);
     Result<Guid> GetUserIdFromRequest(HttpContext context);

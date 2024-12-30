@@ -3,7 +3,7 @@ services:
     container_name: "nutrition-tracker-server"
     build:
       context: .
-      labels: 
+      labels:
         - "nutrition-tracker-server"
     networks:
       - nt-net

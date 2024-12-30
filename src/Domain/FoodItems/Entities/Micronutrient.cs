@@ -16,6 +16,7 @@ public class Micronutrient : BaseEntity
         Amount = amount;
         MassUnit = massUnit;
     }
+
     public MicronutrientDto ToDto()
     {
         return new MicronutrientDto(Name, Amount, MassUnit);
@@ -31,6 +32,7 @@ public static class MicronutrientIEnumerable
         {
             dtos.Add(micronutrient.ToDto());
         }
+
         return dtos;
     }
 }

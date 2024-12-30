@@ -1,0 +1,8 @@
+@page "/fooditems/create"
+@using Microsoft.AspNetCore.Authorization
+@using NutritionTracker.Web.Components.FoodItems
+@rendermode InteractiveServer
+@attribute [Authorize]
+<PageTitle>New Fooditem</PageTitle>
+<h1>New Fooditem</h1>
+<NewFoodItemForm OnValidSubmit="CreateFoodItem" Model="FoodItemRequest"></NewFoodItemForm>

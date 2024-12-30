@@ -1,0 +1,37 @@
+﻿@page "/fooditems"
+@rendermode InteractiveServer
+<PageTitle>Fooditems</PageTitle>
+<h1>FoodItems</h1>
+<div class="flex-row flex space-between">
+    <InputText @bind-Value="SearchTerm"></InputText>
+    <NavLink class="navlink-primary" href="/fooditems/create">Create</NavLink>
+</div>
+<table class="w-full">
+    <thead class="">
+    <tr class="">
+        <th>Brand</th>
+        <th>Product</th>
+        <th>Protein</th>
+        <th>Carbohydrate</th>
+        <th>Fat</th>
+        <th>Calories</th>
+    </tr>
+    </thead>
+    @if (FilteredItems is not null)
+    {
+        <tbody>
+        @foreach (var item in FilteredItems)
+        {
+            <tr>
+                <td>@item.Brand</td>
+                <td>@item.ProductName</td>
+                <td>@double.Round(item.Macronutrients.Protein, 2) g</td>
+                <td>@double.Round(item.Macronutrients.Carbohydrate, 2) g</td>
+                <td>@double.Round(item.Macronutrients.Fat, 2) g</td>
+                <td>@double.Round(item.Macronutrients.KCal, 2) kcal</td>
+            </tr>
+        }
+        </tbody>
+    }
+
+</table>

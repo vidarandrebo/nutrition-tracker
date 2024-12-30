@@ -11,13 +11,15 @@ namespace NutritionTracker.Domain.FoodItems.Contracts
         public string ProductName { get; set; }
         public MacronutrientsResponse Macronutrients { get; set; }
         public Guid Owner { get; set; }
+
         public class MacronutrientsResponse
         {
             public double Protein { get; set; }
             public double Carbohydrate { get; set; }
             public double Fat { get; set; }
             public double KCal { get; set; }
-            public string Unit {get;set;}
+            public string Unit { get; set; }
+
             public MacronutrientsResponse(double protein, double carbohydrate, double fat, double kCal)
             {
                 Protein = protein;
@@ -27,7 +29,9 @@ namespace NutritionTracker.Domain.FoodItems.Contracts
                 Unit = "grams";
             }
         }
-        public FoodItemResponse(Guid id, string brand, string productName, MacronutrientsResponse macronutrients, Guid owner)
+
+        public FoodItemResponse(Guid id, string brand, string productName, MacronutrientsResponse macronutrients,
+            Guid owner)
         {
             Id = id;
             Brand = brand;
@@ -35,6 +39,7 @@ namespace NutritionTracker.Domain.FoodItems.Contracts
             Macronutrients = macronutrients;
             Owner = owner;
         }
+
         public static FoodItemResponse[] FromDtos(FoodItemDto[] dtos)
         {
             var responses = new List<FoodItemResponse>();
@@ -42,8 +47,10 @@ namespace NutritionTracker.Domain.FoodItems.Contracts
             {
                 responses.Add(FromDto(dto));
             }
+
             return responses.ToArray();
         }
+
         public static FoodItemResponse FromDto(FoodItemDto dto)
         {
             var response = new FoodItemResponse(
@@ -55,9 +62,9 @@ namespace NutritionTracker.Domain.FoodItems.Contracts
                     dto.Macronutrients.Carbohydrate,
                     dto.Macronutrients.Fat,
                     dto.Macronutrients.KCal
-                    ),
+                ),
                 dto.Owner
-                );
+            );
             return response;
         }
     }

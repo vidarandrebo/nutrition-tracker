@@ -1,3 +1,4 @@
+using System;
 using NutritionTracker.Domain.Common;
 using NutritionTracker.Domain.FoodItems.Dtos;
 
@@ -16,6 +17,7 @@ public class Macronutrients : BaseEntity
 
     public Macronutrients(double protein, double carbohydrate, double fat, double kCal)
     {
+        Id = Guid.NewGuid();
         Protein = protein;
         Carbohydrate = carbohydrate;
         Fat = fat;

@@ -23,7 +23,8 @@ public class IdentityService : IIdentityService
     private readonly IConfiguration _configuration;
     private readonly ITokenHandler _tokenHandler;
 
-    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager, IConfiguration configuration, ITokenHandler tokenHandler)
+    public IdentityService(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager,
+        IConfiguration configuration, ITokenHandler tokenHandler)
     {
         _userManager = userManager;
         _signInManager = signInManager;
@@ -38,7 +39,7 @@ public class IdentityService : IIdentityService
         {
             return Result.Fail((new Error("User not found")));
         }
-        
+
 
         var correctPasswd = await _userManager.CheckPasswordAsync(user, password);
         if (!correctPasswd)
@@ -64,9 +65,8 @@ public class IdentityService : IIdentityService
         {
             AccessToken = accessToken,
             RefreshToken = refreshToken,
-            ExpiresIn = 60*60*24,
+            ExpiresIn = 60 * 60 * 24,
         });
-        
     }
 
 
@@ -81,7 +81,7 @@ public class IdentityService : IIdentityService
         var user = new ApplicationUser();
         user.Email = email;
         user.UserName = email;
-        
+
         var registerResult = await _userManager.CreateAsync(user, password);
         var errors = new List<Error>();
         foreach (var err in registerResult.Errors)
@@ -104,6 +104,7 @@ public class IdentityService : IIdentityService
         {
             return Result.Fail("Token not provided");
         }
+
         var id = claimsResponse.Value.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value ?? "";
         var parsedGuid = GuidHelper.GuidOrEmpty(id);
         if (parsedGuid == Guid.Empty)
@@ -113,6 +114,7 @@ public class IdentityService : IIdentityService
 
         return Result.Ok(parsedGuid);
     }
+
     private Result<ClaimsPrincipal> GetJwtClaimsFromRequest(HttpContext context)
     {
         var token = context.Request.Headers["Authorization"].FirstOrDefault()?.Split(" ").Last();
@@ -129,12 +131,13 @@ public class IdentityService : IIdentityService
 
         return Result.Fail(validatedTokenResult.Errors.ToString());
     }
-    public  Result<string> GetUserNameFromRequest(HttpContext context)
+
+    public Result<string> GetUserNameFromRequest(HttpContext context)
     {
         var claimsResult = GetJwtClaimsFromRequest(context);
         if (claimsResult.IsSuccess)
         {
-            var username =  claimsResult.Value.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var username = claimsResult.Value.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
             if (username is not null)
             {
                 return Result.Ok(username);

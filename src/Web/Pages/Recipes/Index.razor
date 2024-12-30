@@ -1,0 +1,12 @@
+﻿@page "/recipes"
+@using MediatR
+@using NutritionTracker.Application.FoodItems
+@using NutritionTracker.Domain.FoodItems.Dtos
+@inject IMediator Mediator;
+<PageTitle>Recipes</PageTitle>
+<h1>Recipes</h1>
+<NavLink href="/fooditems/create">Create</NavLink>
+@foreach (var item in Items)
+{
+    <p>@item.ProductName</p>
+}
