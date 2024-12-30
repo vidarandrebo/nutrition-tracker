@@ -3,59 +3,53 @@
 @inject NavigationManager NavigationManager
 
 <nav class="flex flex-row space-between h-full">
-    <div >
-        <NavLink href="" Match="NavLinkMatch.All">
+    <div>
+        <NavLink href="" Match="NavLinkMatch.All" ActiveClass="navbar-link-active" class="navbar-link-primary">
             <span aria-hidden="true"></span> Home
         </NavLink>
     </div>
 
-    <div >
-        <NavLink href="diary">
-            <span aria-hidden="true"></span> Diary
-        </NavLink>
-    </div>
-    <div >
-        <NavLink href="fooditems">
+
+    <div>
+        <NavLink href="fooditems" ActiveClass="navbar-link-active" class="navbar-link-primary">
             <span aria-hidden="true"></span> FoodItems
         </NavLink>
     </div>
-    <div >
-        <NavLink href="recipes">
-            <span aria-hidden="true"></span> Recipes
-        </NavLink>
-    </div>
-
-    <div >
-        <NavLink href="auth">
-            <span aria-hidden="true"></span> Auth Required
-        </NavLink>
-    </div>
-
     <AuthorizeView>
         <Authorized>
-            <div >
-                <NavLink href="Account/Manage">
+            <div>
+                <NavLink href="diary" ActiveClass="navbar-link-active" class="navbar-link-primary">
+                    <span aria-hidden="true"></span> Diary
+                </NavLink>
+            </div>
+            <div>
+                <NavLink href="recipes" ActiveClass="navbar-link-active" class="navbar-link-primary">
+                    <span aria-hidden="true"></span> Recipes
+                </NavLink>
+            </div>
+            <div>
+                <NavLink href="Account/Manage" ActiveClass="navbar-link-active" class="navbar-link-primary">
                     <span aria-hidden="true"></span> @context.User.Identity?.Name
                 </NavLink>
             </div>
-            <div >
+            <div>
                 <form action="Account/Logout" method="post">
                     <AntiforgeryToken/>
                     <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
-                    <button type="submit" class="button-primary">
+                    <button type="submit" class="btn-no-style navbar-link-primary">
                         <span aria-hidden="true"></span> Logout
                     </button>
                 </form>
             </div>
         </Authorized>
         <NotAuthorized>
-            <div >
-                <NavLink href="Account/Register">
+            <div>
+                <NavLink href="Account/Register" ActiveClass="navbar-link-active" class="navbar-link-primary">
                     <span aria-hidden="true"></span> Register
                 </NavLink>
             </div>
-            <div >
-                <NavLink href="Account/Login">
+            <div>
+                <NavLink href="Account/Login" ActiveClass="navbar-link-active" class="navbar-link-primary">
                     <span aria-hidden="true"></span> Login
                 </NavLink>
             </div>

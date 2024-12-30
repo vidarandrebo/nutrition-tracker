@@ -13,9 +13,10 @@
 <h3>Manage email</h3>
 
 <StatusMessage Message="@message"/>
-<div >
-    <div >
-        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form" method="post">
+<div>
+    <div>
+        <form @onsubmit="OnSendEmailVerificationAsync" @formname="send-verification" id="send-verification-form"
+              method="post">
             <AntiforgeryToken/>
         </form>
         <EditForm Model="Input" FormName="change-email" OnValidSubmit="OnValidSubmitAsync" method="post">
@@ -23,28 +24,35 @@
             <ValidationSummary role="alert"/>
             @if (isEmailConfirmed)
             {
-                <div >
-                    <input type="text" value="@email" placeholder="Please enter your email." disabled/>
-                    <div >
-                        <span >✓</span>
+                <div>
+                    <label for="email">Email
+                        <input type="text" value="@email" placeholder="Please enter your email." disabled
+                               class="input-primary"/>
+                    </label>
+                    <div>
+                        <span>✓</span>
                     </div>
-                    <label for="email">Email</label>
                 </div>
             }
             else
             {
-                <div >
-                    <input type="text" value="@email" placeholder="Please enter your email." disabled/>
-                    <label for="email">Email</label>
-                    <button type="submit" form="send-verification-form">Send verification email</button>
+                <div>
+                    <label for="email">Email
+                        <input type="text" value="@email" placeholder="Please enter your email." disabled
+                               class="input-primary"/>
+                    </label>
+                    <button type="submit" form="send-verification-form" class="button-primary">Send verification email
+                    </button>
                 </div>
             }
-            <div >
-                <InputText @bind-Value="Input.NewEmail" autocomplete="email" aria-required="true" placeholder="Please enter new email."/>
-                <label for="new-email">New email</label>
+            <div>
+                <label>New email
+                    <InputText @bind-Value="Input.NewEmail" autocomplete="email" aria-required="true"
+                               placeholder="Please enter new email." class="input-primary"/>
+                </label>
                 <ValidationMessage For="() => Input.NewEmail"/>
             </div>
-            <button type="submit">Change email</button>
+            <button type="submit" class="button-primary">Change email</button>
         </EditForm>
     </div>
 </div>

@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -11,7 +10,6 @@ using NutritionTracker.Infrastructure;
 using NutritionTracker.Infrastructure.Identity;
 using NutritionTracker.Web.Identity;
 using NutritionTracker.Web.Pages;
-using Serilog.Core;
 
 namespace NutritionTracker.Web;
 
@@ -38,13 +36,6 @@ public class Program
                 options.DefaultSignInScheme = IdentityConstants.ExternalScheme;
             })
             .AddIdentityCookies();
-
-        //var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ??
-        //throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-
-
-//        builder.Services.AddDbContext<ApplicationDbContext>(options =>
-//            options.UseSqlServer(connectionString));
 
         builder.Services.AddDatabase(builder.Configuration, builder.Environment);
         builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -80,11 +71,6 @@ public class Program
 
         // Add additional endpoints required by the Identity /Account Razor components.
         app.MapAdditionalIdentityEndpoints();
-
-        foreach (var item in app.Configuration.AsEnumerable())
-        {
-            logger.LogInformation("{key} - {value}", item.Key, item.Value);
-        }
 
         app.Run();
     }

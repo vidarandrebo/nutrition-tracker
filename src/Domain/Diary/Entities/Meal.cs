@@ -9,4 +9,12 @@ public class Meal : BaseEntity
     public Meal()
     {
     }
+
+    public string MealTitle
+    {
+        get
+        {
+            return $"Meal {SequenceNumber + 1}";
+        }
+    }
 }

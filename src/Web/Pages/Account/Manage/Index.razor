@@ -13,21 +13,24 @@
 <h3>Profile</h3>
 <StatusMessage/>
 
-<div >
-    <div >
+<div>
+    <div>
         <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
             <DataAnnotationsValidator/>
             <ValidationSummary role="alert"/>
-            <div >
-                <input type="text" value="@username" placeholder="Please choose your username." disabled/>
-                <label for="username">Username</label>
+            <div>
+                <label>Username
+                    <input type="text" value="@username" placeholder="Please choose your username." disabled class="input-primary"/>
+                </label>
             </div>
-            <div >
-                <InputText @bind-Value="Input.PhoneNumber" placeholder="Please enter your phone number."/>
-                <label for="phone-number">Phone number</label>
+            <div>
+                <label>Phone number
+                    <InputText @bind-Value="Input.PhoneNumber" placeholder="Please enter your phone number."
+                               class="input-primary"/>
+                </label>
                 <ValidationMessage For="() => Input.PhoneNumber"/>
             </div>
-            <button type="submit">Save</button>
+            <button type="submit" class="button-primary">Save</button>
         </EditForm>
     </div>
 </div>

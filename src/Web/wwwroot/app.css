@@ -89,6 +89,31 @@ footer {
     justify-content: space-between;
 }
 
+.navbar-link-primary{
+    padding: 0.5rem 1rem;
+    /*border-radius: 0.25rem;*/
+    /*font-weight: 700;*/
+    border: none;
+
+    &:hover {
+        background-color: var(--timberwolf);
+    }
+    &:visited {
+        /*color: #ffffff;*/
+    }
+    
+}
+.navbar-link-active {
+    font-weight: 700;
+}
+
+button {
+    background-color: unset;
+    padding: unset;
+    font-family: inherit;
+    font-size: inherit;
+    text-align: left;
+}
 
 .navlink-primary {
     padding: 0.5rem 1rem;
@@ -112,6 +137,19 @@ footer {
     font-weight: 700;
     color: #ffffff;
     background-color: var(--verdigris);
+    border: none;
+
+    &:hover {
+        background-color: var(--cerulean)
+    }
+}
+
+.button-danger {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 700;
+    color: #ffffff;
+    background-color: var(--indian-red);
     border: none;
 
     &:hover {

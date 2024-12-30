@@ -4,6 +4,7 @@ using System.Linq.Expressions;
 using System.Runtime.InteropServices.JavaScript;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
@@ -13,6 +14,7 @@ using NutritionTracker.Domain.Diary.Entities;
 
 namespace NutritionTracker.Web.Pages.Diary;
 
+[Authorize]
 public partial class Index
 {
     [Inject] private ILogger<Index> Logger { get; init; }

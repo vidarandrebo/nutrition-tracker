@@ -2,8 +2,10 @@
 @rendermode InteractiveServer
 <PageTitle>Fooditems</PageTitle>
 <h1>FoodItems</h1>
-<NavLink class="navlink-primary" href="/fooditems/create">Create</NavLink>
-<InputText @bind-Value="SearchTerm"></InputText>
+<div class="flex-row flex space-between">
+    <InputText @bind-Value="SearchTerm"></InputText>
+    <NavLink class="navlink-primary" href="/fooditems/create">Create</NavLink>
+</div>
 <table class="w-full">
     <thead class="">
     <tr class="">
