@@ -15,7 +15,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
+            modelBuilder.HasAnnotation("ProductVersion", "8.0.10");
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
@@ -195,6 +195,33 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.ToTable("Meal");
                 });
 
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.MealItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("FoodItemId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("MacronutrientsId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid?>("MealId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MacronutrientsId");
+
+                    b.HasIndex("MealId");
+
+                    b.ToTable("MealItem");
+                });
+
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.FoodItem", b =>
                 {
                     b.Property<Guid>("Id")
@@ -222,7 +249,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.ToTable("FoodItems");
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.Macronutrients", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Nutrients.Macronutrients", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -245,7 +272,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.ToTable("Macronutrients");
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.Micronutrient", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Nutrients.Micronutrient", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -263,6 +290,9 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.Property<int>("MassUnit")
                         .HasColumnType("INTEGER");
 
+                    b.Property<Guid?>("MealItemId")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("TEXT");
@@ -272,6 +302,8 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.HasIndex("AccountId");
 
                     b.HasIndex("FoodItemId");
+
+                    b.HasIndex("MealItemId");
 
                     b.ToTable("Micronutrient");
                 });
@@ -432,7 +464,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
 
             modelBuilder.Entity("NutritionTracker.Domain.Accounts.Entities.Account", b =>
                 {
-                    b.HasOne("NutritionTracker.Domain.FoodItems.Entities.Macronutrients", "MacronutrientGoal")
+                    b.HasOne("NutritionTracker.Domain.Nutrients.Macronutrients", "MacronutrientGoal")
                         .WithMany()
                         .HasForeignKey("MacronutrientGoalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -448,9 +480,24 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                         .HasForeignKey("DayId");
                 });
 
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.MealItem", b =>
+                {
+                    b.HasOne("NutritionTracker.Domain.Nutrients.Macronutrients", "Macronutrients")
+                        .WithMany()
+                        .HasForeignKey("MacronutrientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NutritionTracker.Domain.Diary.Entities.Meal", null)
+                        .WithMany("MealItems")
+                        .HasForeignKey("MealId");
+
+                    b.Navigation("Macronutrients");
+                });
+
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.FoodItem", b =>
                 {
-                    b.HasOne("NutritionTracker.Domain.FoodItems.Entities.Macronutrients", "Macronutrients")
+                    b.HasOne("NutritionTracker.Domain.Nutrients.Macronutrients", "Macronutrients")
                         .WithMany()
                         .HasForeignKey("MacronutrientsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -459,7 +506,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.Navigation("Macronutrients");
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.Micronutrient", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Nutrients.Micronutrient", b =>
                 {
                     b.HasOne("NutritionTracker.Domain.Accounts.Entities.Account", null)
                         .WithMany("MicronutrientGoals")
@@ -468,6 +515,10 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.HasOne("NutritionTracker.Domain.FoodItems.Entities.FoodItem", null)
                         .WithMany("Micronutrients")
                         .HasForeignKey("FoodItemId");
+
+                    b.HasOne("NutritionTracker.Domain.Diary.Entities.MealItem", null)
+                        .WithMany("Micronutrients")
+                        .HasForeignKey("MealItemId");
                 });
 
             modelBuilder.Entity("NutritionTracker.Domain.Recipes.Entities.Ingredient", b =>
@@ -493,6 +544,16 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
             modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.Day", b =>
                 {
                     b.Navigation("Meals");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.Meal", b =>
+                {
+                    b.Navigation("MealItems");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.MealItem", b =>
+                {
+                    b.Navigation("Micronutrients");
                 });
 
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.FoodItem", b =>

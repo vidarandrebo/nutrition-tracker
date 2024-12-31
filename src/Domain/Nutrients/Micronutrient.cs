@@ -1,8 +1,9 @@
-using NutritionTracker.Domain.Common;
-using NutritionTracker.Domain.FoodItems.Dtos;
 using System.Collections.Generic;
+using NutritionTracker.Domain.Common;
+using NutritionTracker.Domain.FoodItems;
+using NutritionTracker.Domain.FoodItems.Dtos;
 
-namespace NutritionTracker.Domain.FoodItems.Entities;
+namespace NutritionTracker.Domain.Nutrients;
 
 public class Micronutrient : BaseEntity
 {

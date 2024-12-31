@@ -7,6 +7,7 @@ using Microsoft.Extensions.Configuration;
 using NutritionTracker.Application.Interfaces;
 using NutritionTracker.Domain.Accounts.Events;
 using NutritionTracker.Domain.FoodItems.Entities;
+using NutritionTracker.Domain.Nutrients;
 
 namespace NutritionTracker.Application.FoodItems.EventHandlers;
 

@@ -1,13 +1,12 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
-using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace NutritionTracker.Migrations.Postgres.Migrations
+namespace NutritionTracker.Migrations.Sqlite.Migrations
 {
     /// <inheritdoc />
-    public partial class InitPostgres : Migration
+    public partial class InitSqlite : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -16,10 +15,10 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetRoles",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -30,22 +29,22 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetUsers",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    AccountId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    Email = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    NormalizedEmail = table.Column<string>(type: "character varying(256)", maxLength: 256, nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    PasswordHash = table.Column<string>(type: "text", nullable: true),
-                    SecurityStamp = table.Column<string>(type: "text", nullable: true),
-                    ConcurrencyStamp = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
-                    PhoneNumberConfirmed = table.Column<bool>(type: "boolean", nullable: false),
-                    TwoFactorEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    LockoutEnd = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: true),
-                    LockoutEnabled = table.Column<bool>(type: "boolean", nullable: false),
-                    AccessFailedCount = table.Column<int>(type: "integer", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    AccountId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    UserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    Email = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(type: "TEXT", maxLength: 256, nullable: true),
+                    EmailConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: true),
+                    SecurityStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    ConcurrencyStamp = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    PhoneNumberConfirmed = table.Column<bool>(type: "INTEGER", nullable: false),
+                    TwoFactorEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    LockoutEnd = table.Column<DateTimeOffset>(type: "TEXT", nullable: true),
+                    LockoutEnabled = table.Column<bool>(type: "INTEGER", nullable: false),
+                    AccessFailedCount = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -56,9 +55,9 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Days",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Date = table.Column<DateOnly>(type: "date", nullable: false),
-                    ActivityCalories = table.Column<double>(type: "double precision", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Date = table.Column<DateOnly>(type: "TEXT", nullable: false),
+                    ActivityCalories = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -69,11 +68,11 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Macronutrients",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Protein = table.Column<double>(type: "double precision", nullable: false),
-                    Carbohydrate = table.Column<double>(type: "double precision", nullable: false),
-                    Fat = table.Column<double>(type: "double precision", nullable: false),
-                    KCal = table.Column<double>(type: "double precision", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Protein = table.Column<double>(type: "REAL", nullable: false),
+                    Carbohydrate = table.Column<double>(type: "REAL", nullable: false),
+                    Fat = table.Column<double>(type: "REAL", nullable: false),
+                    KCal = table.Column<double>(type: "REAL", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -84,7 +83,7 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Recipes",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -95,11 +94,11 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -116,11 +115,11 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetUserClaims",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    ClaimType = table.Column<string>(type: "text", nullable: true),
-                    ClaimValue = table.Column<string>(type: "text", nullable: true)
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    ClaimType = table.Column<string>(type: "TEXT", nullable: true),
+                    ClaimValue = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -137,10 +136,10 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetUserLogins",
                 columns: table => new
                 {
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    ProviderKey = table.Column<string>(type: "text", nullable: false),
-                    ProviderDisplayName = table.Column<string>(type: "text", nullable: true),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderKey = table.Column<string>(type: "TEXT", nullable: false),
+                    ProviderDisplayName = table.Column<string>(type: "TEXT", nullable: true),
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -157,8 +156,8 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetUserRoles",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    RoleId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RoleId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -181,10 +180,10 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "AspNetUserTokens",
                 columns: table => new
                 {
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
-                    LoginProvider = table.Column<string>(type: "text", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: true)
+                    UserId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    LoginProvider = table.Column<string>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Value = table.Column<string>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -201,9 +200,9 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Meal",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    SequenceNumber = table.Column<long>(type: "bigint", nullable: false),
-                    DayId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    SequenceNumber = table.Column<long>(type: "INTEGER", nullable: false),
+                    DayId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -219,8 +218,8 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Accounts",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    MacronutrientGoalId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MacronutrientGoalId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -237,11 +236,11 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "FoodItems",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Brand = table.Column<string>(type: "text", nullable: false),
-                    ProductName = table.Column<string>(type: "text", nullable: false),
-                    MacronutrientsId = table.Column<Guid>(type: "uuid", nullable: false),
-                    OwnerId = table.Column<Guid>(type: "uuid", nullable: false)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Brand = table.Column<string>(type: "TEXT", nullable: false),
+                    ProductName = table.Column<string>(type: "TEXT", nullable: false),
+                    MacronutrientsId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    OwnerId = table.Column<Guid>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -255,13 +254,39 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "MealItem",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    RecipeId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    FoodItemId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MacronutrientsId = table.Column<Guid>(type: "TEXT", nullable: false),
+                    MealId = table.Column<Guid>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MealItem", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_MealItem_Macronutrients_MacronutrientsId",
+                        column: x => x.MacronutrientsId,
+                        principalTable: "Macronutrients",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_MealItem_Meal_MealId",
+                        column: x => x.MealId,
+                        principalTable: "Meal",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Ingredient",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Amount = table.Column<double>(type: "double precision", nullable: false),
-                    FoodItemId = table.Column<Guid>(type: "uuid", nullable: true),
-                    RecipeId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Amount = table.Column<double>(type: "REAL", nullable: false),
+                    FoodItemId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    RecipeId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -282,12 +307,13 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Micronutrient",
                 columns: table => new
                 {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Amount = table.Column<double>(type: "double precision", nullable: false),
-                    MassUnit = table.Column<int>(type: "integer", nullable: false),
-                    AccountId = table.Column<Guid>(type: "uuid", nullable: true),
-                    FoodItemId = table.Column<Guid>(type: "uuid", nullable: true)
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    Amount = table.Column<double>(type: "REAL", nullable: false),
+                    MassUnit = table.Column<int>(type: "INTEGER", nullable: false),
+                    AccountId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    FoodItemId = table.Column<Guid>(type: "TEXT", nullable: true),
+                    MealItemId = table.Column<Guid>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -301,6 +327,11 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                         name: "FK_Micronutrient_FoodItems_FoodItemId",
                         column: x => x.FoodItemId,
                         principalTable: "FoodItems",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_Micronutrient_MealItem_MealItemId",
+                        column: x => x.MealItemId,
+                        principalTable: "MealItem",
                         principalColumn: "Id");
                 });
 
@@ -367,6 +398,16 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 column: "DayId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_MealItem_MacronutrientsId",
+                table: "MealItem",
+                column: "MacronutrientsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_MealItem_MealId",
+                table: "MealItem",
+                column: "MealId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Micronutrient_AccountId",
                 table: "Micronutrient",
                 column: "AccountId");
@@ -375,6 +416,11 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "IX_Micronutrient_FoodItemId",
                 table: "Micronutrient",
                 column: "FoodItemId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Micronutrient_MealItemId",
+                table: "Micronutrient",
+                column: "MealItemId");
         }
 
         /// <inheritdoc />
@@ -399,9 +445,6 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Ingredient");
 
             migrationBuilder.DropTable(
-                name: "Meal");
-
-            migrationBuilder.DropTable(
                 name: "Micronutrient");
 
             migrationBuilder.DropTable(
@@ -414,16 +457,22 @@ namespace NutritionTracker.Migrations.Postgres.Migrations
                 name: "Recipes");
 
             migrationBuilder.DropTable(
-                name: "Days");
-
-            migrationBuilder.DropTable(
                 name: "Accounts");
 
             migrationBuilder.DropTable(
                 name: "FoodItems");
 
             migrationBuilder.DropTable(
+                name: "MealItem");
+
+            migrationBuilder.DropTable(
                 name: "Macronutrients");
+
+            migrationBuilder.DropTable(
+                name: "Meal");
+
+            migrationBuilder.DropTable(
+                name: "Days");
         }
     }
 }

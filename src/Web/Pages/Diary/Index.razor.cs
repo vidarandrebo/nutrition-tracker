@@ -1,12 +1,9 @@
 using System;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Runtime.InteropServices.JavaScript;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using NutritionTracker.Application.Interfaces;
@@ -69,6 +66,19 @@ public partial class Index
             Db.Days.Add(Day);
             await Db.SaveChangesAsync(ctSrc.Token);
         }
+    }
+
+    public async Task DeleteMeal(Guid id)
+    {
+        var ctSrc = new CancellationTokenSource(5000);
+        var meal = Day.Meals.Find(m => m.Id == id);
+        if (meal is not null)
+        {
+            Day.Meals.Remove(meal);
+            
+        }
+
+        await Db.SaveChangesAsync(ctSrc.Token);
     }
 
     protected override async Task OnInitializedAsync()

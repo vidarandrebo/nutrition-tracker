@@ -2,7 +2,7 @@ using System;
 using NutritionTracker.Domain.Common;
 using NutritionTracker.Domain.FoodItems.Dtos;
 
-namespace NutritionTracker.Domain.FoodItems.Entities;
+namespace NutritionTracker.Domain.Nutrients;
 
 /// <summary>
 /// Macronutrients stores the amount of protein, carbohydrate and fat per 100grams of the item

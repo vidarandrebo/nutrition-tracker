@@ -1,4 +1,5 @@
 using NutritionTracker.Domain.FoodItems.Entities;
+using NutritionTracker.Domain.Nutrients;
 using NutritionTracker.Domain.Recipes.Entities;
 using NutritionTracker.Domain.Recipes.Exceptions;
 

@@ -16,5 +16,9 @@
 </div>
 @foreach (var meal in Day.Meals)
 {
-    <p>@meal.MealTitle</p>
+    <div>
+        <NavLink href=@($"/diary/meal/{meal.Id}")>@meal.MealTitle</NavLink>
+        <NavLink href=@($"/diary/meal/{meal.Id}/add-item")>Add food</NavLink>
+        <button @onclick="(async () => await DeleteMeal(meal.Id))">Delete</button>
+    </div>
 }

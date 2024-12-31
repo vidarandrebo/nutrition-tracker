@@ -9,6 +9,7 @@ using NutritionTracker.Domain;
 using NutritionTracker.Domain.FoodItems.Contracts;
 using NutritionTracker.Domain.FoodItems.Dtos;
 using NutritionTracker.Domain.FoodItems.Entities;
+using NutritionTracker.Domain.Nutrients;
 
 namespace NutritionTracker.Application.FoodItems.Commands;
 

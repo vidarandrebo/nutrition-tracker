@@ -4,39 +4,44 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using NutritionTracker.Infrastructure;
 
 #nullable disable
 
-namespace NutritionTracker.Migrations.Sqlite.Migrations
+namespace NutritionTracker.Migrations.Postgres.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240901163907_InitSqlite")]
-    partial class InitSqlite
+    [Migration("20241231130503_InitPostgres")]
+    partial class InitPostgres
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "8.0.7");
+            modelBuilder
+                .HasAnnotation("ProductVersion", "8.0.10")
+                .HasAnnotation("Relational:MaxIdentifierLength", 63);
+
+            NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -51,16 +56,18 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -73,16 +80,18 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ClaimType")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ClaimValue")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -94,16 +103,16 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<System.Guid>", b =>
                 {
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderKey")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
@@ -115,10 +124,10 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("RoleId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("UserId", "RoleId");
 
@@ -130,16 +139,16 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<System.Guid>", b =>
                 {
                     b.Property<Guid>("UserId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Value")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
@@ -150,10 +159,10 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("MacronutrientGoalId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -166,13 +175,13 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<double>("ActivityCalories")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("date");
 
                     b.HasKey("Id");
 
@@ -183,13 +192,13 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("DayId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<long>("SequenceNumber")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("bigint");
 
                     b.HasKey("Id");
 
@@ -198,25 +207,52 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.ToTable("Meal");
                 });
 
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.MealItem", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("FoodItemId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("MacronutrientsId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("MealId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("RecipeId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MacronutrientsId");
+
+                    b.HasIndex("MealId");
+
+                    b.ToTable("MealItem");
+                });
+
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.FoodItem", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Brand")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<Guid>("MacronutrientsId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("OwnerId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
@@ -225,56 +261,61 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.ToTable("FoodItems");
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.Macronutrients", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Nutrients.Macronutrients", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<double>("Carbohydrate")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double>("Fat")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double>("KCal")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<double>("Protein")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.HasKey("Id");
 
                     b.ToTable("Macronutrients");
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.Micronutrient", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Nutrients.Micronutrient", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("AccountId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<double>("Amount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<Guid?>("FoodItemId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("MassUnit")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
+
+                    b.Property<Guid?>("MealItemId")
+                        .HasColumnType("uuid");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.HasKey("Id");
 
                     b.HasIndex("AccountId");
 
                     b.HasIndex("FoodItemId");
+
+                    b.HasIndex("MealItemId");
 
                     b.ToTable("Micronutrient");
                 });
@@ -283,16 +324,16 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<double>("Amount")
-                        .HasColumnType("REAL");
+                        .HasColumnType("double precision");
 
                     b.Property<Guid?>("FoodItemId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("RecipeId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -307,7 +348,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -318,57 +359,57 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<int>("AccessFailedCount")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("integer");
 
                     b.Property<Guid>("AccountId")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("uuid");
 
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("NormalizedUserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.Property<string>("PasswordHash")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
-                        .HasColumnType("TEXT");
+                        .HasColumnType("text");
 
                     b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("INTEGER");
+                        .HasColumnType("boolean");
 
                     b.Property<string>("UserName")
                         .HasMaxLength(256)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("character varying(256)");
 
                     b.HasKey("Id");
 
@@ -435,7 +476,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
 
             modelBuilder.Entity("NutritionTracker.Domain.Accounts.Entities.Account", b =>
                 {
-                    b.HasOne("NutritionTracker.Domain.FoodItems.Entities.Macronutrients", "MacronutrientGoal")
+                    b.HasOne("NutritionTracker.Domain.Nutrients.Macronutrients", "MacronutrientGoal")
                         .WithMany()
                         .HasForeignKey("MacronutrientGoalId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -451,9 +492,24 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                         .HasForeignKey("DayId");
                 });
 
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.MealItem", b =>
+                {
+                    b.HasOne("NutritionTracker.Domain.Nutrients.Macronutrients", "Macronutrients")
+                        .WithMany()
+                        .HasForeignKey("MacronutrientsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("NutritionTracker.Domain.Diary.Entities.Meal", null)
+                        .WithMany("MealItems")
+                        .HasForeignKey("MealId");
+
+                    b.Navigation("Macronutrients");
+                });
+
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.FoodItem", b =>
                 {
-                    b.HasOne("NutritionTracker.Domain.FoodItems.Entities.Macronutrients", "Macronutrients")
+                    b.HasOne("NutritionTracker.Domain.Nutrients.Macronutrients", "Macronutrients")
                         .WithMany()
                         .HasForeignKey("MacronutrientsId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -462,7 +518,7 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.Navigation("Macronutrients");
                 });
 
-            modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.Micronutrient", b =>
+            modelBuilder.Entity("NutritionTracker.Domain.Nutrients.Micronutrient", b =>
                 {
                     b.HasOne("NutritionTracker.Domain.Accounts.Entities.Account", null)
                         .WithMany("MicronutrientGoals")
@@ -471,6 +527,10 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
                     b.HasOne("NutritionTracker.Domain.FoodItems.Entities.FoodItem", null)
                         .WithMany("Micronutrients")
                         .HasForeignKey("FoodItemId");
+
+                    b.HasOne("NutritionTracker.Domain.Diary.Entities.MealItem", null)
+                        .WithMany("Micronutrients")
+                        .HasForeignKey("MealItemId");
                 });
 
             modelBuilder.Entity("NutritionTracker.Domain.Recipes.Entities.Ingredient", b =>
@@ -496,6 +556,16 @@ namespace NutritionTracker.Migrations.Sqlite.Migrations
             modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.Day", b =>
                 {
                     b.Navigation("Meals");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.Meal", b =>
+                {
+                    b.Navigation("MealItems");
+                });
+
+            modelBuilder.Entity("NutritionTracker.Domain.Diary.Entities.MealItem", b =>
+                {
+                    b.Navigation("Micronutrients");
                 });
 
             modelBuilder.Entity("NutritionTracker.Domain.FoodItems.Entities.FoodItem", b =>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NutritionTracker.Domain.Common;
 using NutritionTracker.Domain.FoodItems.Dtos;
+using NutritionTracker.Domain.Nutrients;
 
 namespace NutritionTracker.Domain.FoodItems.Entities;
 
