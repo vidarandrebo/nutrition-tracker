@@ -5,6 +5,7 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/vidarandrebo/nutrition-tracker/api"
 	"github.com/vidarandrebo/nutrition-tracker/api/fooditem"
+	"github.com/vidarandrebo/nutrition-tracker/api/user"
 	"log"
 	"net/http"
 )
@@ -13,20 +14,33 @@ func main() {
 	app := api.NewApplication()
 	defer app.CloseDB()
 
-	store := fooditem.NewStore(app.DB)
+	app.FoodItemStore = fooditem.NewStore(app.DB)
 
-	foodItem := store.GetFoodItem()
+	app.UserStore = user.NewStore(app.DB)
 
-	fmt.Println(foodItem)
+	for i := 0; i < 100; i++ {
+		u := user.User{
+			ID:           0,
+			Name:         "",
+			PasswordHash: nil,
+		}
+		app.UserStore.AddUser(&u)
+	}
 
-	//	fs := http.FileServer(http.Dir("./static"))
-	//
-	//	mux := http.NewServeMux()
-	//	mux.Handle("/", fs)
-	//
-	//	mux.Handle("/home", &homeHandler{})
-	//
-	//	log.Print("Listening on localhost:8080")
+	users := app.UserStore.ListUsers()
+
+	for _, u := range users {
+		fmt.Println(u)
+	}
+
+	fs := http.FileServer(http.Dir("./static"))
+
+	mux := http.NewServeMux()
+	mux.Handle("/", fs)
+
+	mux.Handle("/home", &homeHandler{})
+	log.Print("Listening on localhost:8080")
+
 	//	err = http.ListenAndServe("localhost:8080", mux)
 	//	if err != nil {
 	//		log.Fatal(err)

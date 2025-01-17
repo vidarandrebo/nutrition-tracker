@@ -12,7 +12,7 @@ func NewStore(db *sql.DB) *Store {
 
 func (s *Store) GetFoodItem() *FoodItem {
 	item := FoodItem{}
-	err := s.db.QueryRow("select id, name from fooditem").Scan(&item.ID, &item.Name)
+	err := s.db.QueryRow("select id, name from food_items").Scan(&item.ID, &item.Name)
 	if err != nil {
 		panic(err)
 	}
