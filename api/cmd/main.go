@@ -36,24 +36,30 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 
 	mux := http.NewServeMux()
+	foodItemController := fooditem.NewFoodItemController(app.FoodItemStore)
 	mux.Handle("/", fs)
 
 	mux.Handle("/home", &homeHandler{})
+
+	mux.HandleFunc("GET /api/fooditems", foodItemController.Get)
 	log.Print("Listening on localhost:8080")
 
-	//	err = http.ListenAndServe("localhost:8080", mux)
-	//	if err != nil {
-	//		log.Fatal(err)
-	//	}
+	err := http.ListenAndServe("localhost:8080", mux)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
 
 type homeHandler struct {
+	numRequests int
 }
 
 func (hh *homeHandler) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
+	hh.numRequests++
 	numBytes, err := fmt.Fprintf(rw, "hello from this side of the app")
 	if err != nil {
 		log.Println("something went wrong")
 	}
 	log.Println("Wrote ", numBytes, " bytes")
+	log.Println(hh.numRequests)
 }
