@@ -2,18 +2,16 @@ package user
 
 import (
 	"database/sql"
-	"github.com/vidarandrebo/nutrition-tracker/api/auth"
 )
 
 type Store struct {
-	db          *sql.DB
-	authService *auth.AuthService
+	db *sql.DB
 }
 
 func NewStore(db *sql.DB) *Store {
 	return &Store{
-		db:          db,
-		authService: &auth.AuthService{}}
+		db: db,
+	}
 }
 
 func (s *Store) AddUser(user *User) {
@@ -25,7 +23,7 @@ func (s *Store) AddUser(user *User) {
 
 func (s *Store) ListUsers() []*User {
 	users := make([]*User, 0)
-	rows, err := s.db.Query("SELECT id, name, users.passwordhash FROM users")
+	rows, err := s.db.Query("SELECT id, name, passwordhash FROM users")
 
 	if err != nil {
 		panic(err)
@@ -38,4 +36,16 @@ func (s *Store) ListUsers() []*User {
 	}
 
 	return users
+}
+func (s *Store) GetUser(email string) *User {
+	row := s.db.QueryRow("SELECT id, name, passwordhash FROM users")
+
+	user := User{}
+	err := row.Scan(&user.ID, &user.Name, &user.PasswordHash)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return &user
 }

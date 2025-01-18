@@ -36,12 +36,15 @@ func main() {
 	fs := http.FileServer(http.Dir("./static"))
 
 	mux := http.NewServeMux()
-	foodItemController := fooditem.NewFoodItemController(app.FoodItemStore)
+	foodItemController := fooditem.NewController(app.FoodItemStore)
+	userController := user.NewController(app.UserStore)
 	mux.Handle("/", fs)
 
 	mux.Handle("/home", &homeHandler{})
 
-	mux.HandleFunc("GET /api/fooditems", foodItemController.Get)
+	mux.HandleFunc("GET /api/fooditems", foodItemController.ListFoodItems)
+	mux.HandleFunc("POST /api/login", userController.Login)
+	mux.HandleFunc("POST /api/register", userController.Register)
 	log.Print("Listening on localhost:8080")
 
 	err := http.ListenAndServe("localhost:8080", mux)
