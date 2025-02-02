@@ -2,8 +2,14 @@ package user
 
 import (
 	"database/sql"
+	"log/slog"
 )
 
+type IStore interface {
+	AddUser(user *User)
+	ListUsers() []*User
+	GetUserByEmail(string) *User
+}
 type Store struct {
 	db *sql.DB
 }
@@ -15,7 +21,7 @@ func NewStore(db *sql.DB) *Store {
 }
 
 func (s *Store) AddUser(user *User) {
-	_, err := s.db.Exec("INSERT INTO users(name, passwordhash) VALUES ($1, $2)", user.Name, user.PasswordHash)
+	_, err := s.db.Exec("INSERT INTO users(name, email, passwordhash) VALUES ($1, $2, $3)", user.Name, user.Email, user.PasswordHash)
 	if err != nil {
 		panic(err)
 	}
@@ -37,14 +43,15 @@ func (s *Store) ListUsers() []*User {
 
 	return users
 }
-func (s *Store) GetUser(email string) *User {
-	row := s.db.QueryRow("SELECT id, name, passwordhash FROM users")
+func (s *Store) GetUserByEmail(email string) *User {
+	row := s.db.QueryRow("SELECT id, name, email, passwordhash FROM users as u WHERE u.email=$1", email)
 
 	user := User{}
-	err := row.Scan(&user.ID, &user.Name, &user.PasswordHash)
+	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash)
 
 	if err != nil {
-		panic(err)
+		slog.Info("no user matching the credentials", slog.String("email", email))
+		return nil
 	}
 
 	return &user
