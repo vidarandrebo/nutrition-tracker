@@ -45,7 +45,7 @@ func main() {
 	mux.HandleFunc("GET /api/fooditems", foodItemController.ListFoodItems)
 	mux.HandleFunc("POST /api/login", userController.Login)
 	mux.HandleFunc("POST /api/register", userController.Register)
-	log.Print("Listening on localhost:8080")
+	log.Print("Listening on http://localhost:8080")
 
 	err := http.ListenAndServe("localhost:8080", mux)
 	if err != nil {
