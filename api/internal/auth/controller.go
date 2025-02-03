@@ -10,10 +10,11 @@ import (
 
 type Controller struct {
 	AuthService *Service
+	Logger      *slog.Logger
 }
 
-func NewController(as *Service) *Controller {
-	return &Controller{AuthService: as}
+func NewController(as *Service, log *slog.Logger) *Controller {
+	return &Controller{AuthService: as, Logger: log.With(slog.String("module", "auth.Controller"))}
 }
 
 func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
@@ -38,10 +39,10 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		slog.Error("deserializing failed", slog.Any("err", err))
+		c.Logger.Error("deserializing failed", slog.Any("err", err))
 	}
 
-	slog.Info("registering user", slog.Any("request", regRequest))
+	c.Logger.Info("registering user", slog.Any("request", regRequest))
 
 	err = c.AuthService.RegisterUser(regRequest)
 

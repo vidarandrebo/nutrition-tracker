@@ -11,12 +11,14 @@ type IStore interface {
 	GetUserByEmail(string) *User
 }
 type Store struct {
-	db *sql.DB
+	db  *sql.DB
+	log *slog.Logger
 }
 
-func NewStore(db *sql.DB) *Store {
+func NewStore(db *sql.DB, log *slog.Logger) *Store {
 	return &Store{
-		db: db,
+		db:  db,
+		log: log.With(slog.String("module", "user.Store")),
 	}
 }
 
@@ -50,7 +52,7 @@ func (s *Store) GetUserByEmail(email string) *User {
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash)
 
 	if err != nil {
-		slog.Info("no user matching the credentials", slog.String("email", email))
+		s.log.Info("no user matching the credentials", slog.String("email", email))
 		return nil
 	}
 
