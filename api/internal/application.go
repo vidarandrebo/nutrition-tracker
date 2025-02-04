@@ -2,6 +2,7 @@ package internal
 
 import (
 	"database/sql"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 )
