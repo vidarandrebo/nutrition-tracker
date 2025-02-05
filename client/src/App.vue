@@ -1,11 +1,13 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import MenuBar from "./components/MenuBar.vue";
+</script>
 
 <template>
-    <header>
-        <nav>
-            <RouterLink to="/">Home</RouterLink>
-            <RouterLink to="/login">Login</RouterLink>
-        </nav>
-    </header>
-    <RouterView></RouterView>
+    <MenuBar></MenuBar>
+    <main>
+        <RouterView></RouterView>
+    </main>
+    <footer>
+
+    </footer>
 </template>

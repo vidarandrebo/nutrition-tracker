@@ -40,14 +40,21 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		c.Logger.Error("deserializing failed", slog.Any("err", err))
+		return
 	}
-
-	c.Logger.Info("registering user", slog.Any("request", regRequest))
+	if !regRequest.Validate() {
+		w.WriteHeader(http.StatusBadRequest)
+		c.Logger.Error("credential validation failed")
+		return
+	}
 
 	err = c.AuthService.RegisterUser(regRequest)
 
 	if err != nil {
 		w.WriteHeader(http.StatusConflict)
 		fmt.Fprintln(w, err.Error())
+	} else {
+		w.WriteHeader(http.StatusCreated)
 	}
+
 }

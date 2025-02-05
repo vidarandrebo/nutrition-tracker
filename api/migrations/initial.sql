@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS users
     id           bigserial primary key,
     name         varchar(128),
     email        varchar(128),
-    passwordhash bytea
+    password_hash bytea
 );
 
 CREATE TABLE IF NOT EXISTS food_items
