@@ -1,12 +1,14 @@
 package main
 
 import (
+	"fmt"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	. "github.com/vidarandrebo/nutrition-tracker/api/internal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/middleware"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"io"
 	"log/slog"
 	"net/http"
@@ -15,6 +17,12 @@ import (
 )
 
 func main() {
+	envFile, err := os.Open("./local.env")
+	env := utils.ReadEnv(envFile)
+	for key, value := range env {
+		fmt.Println("Key:", key, "Value:", value)
+	}
+	envFile.Close()
 	fileName := filepath.Join("./", "server.log")
 	logFile, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 	if err != nil {
@@ -29,7 +37,7 @@ func main() {
 
 	logger := slog.New(logHandler)
 
-	app := NewApplication()
+	app := NewApplication(env)
 	defer app.CloseDB()
 
 	app.FoodItemStore = fooditem.NewStore(app.DB)

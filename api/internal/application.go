@@ -11,14 +11,17 @@ type Application struct {
 	DB            *sql.DB
 	FoodItemStore *fooditem.Store
 	AuthService   *auth.Service
+	Env           map[string]string
 }
 
 func (a *Application) CloseDB() {
 	a.DB.Close()
 }
 
-func NewApplication() *Application {
-	db, err := sql.Open("pgx", "postgresql://postgres@localhost:5432/nutritiontracker")
+func NewApplication(env map[string]string) *Application {
+	connString := env["DB_CONN_STRING"]
+	//db, err := sql.Open("pgx", "postgresql://postgres@localhost:5432/nutritiontracker")
+	db, err := sql.Open(databaseDriverName, connString)
 	if err != nil {
 		panic(err)
 	}
