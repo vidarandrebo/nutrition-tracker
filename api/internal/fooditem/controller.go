@@ -1,7 +1,7 @@
 package fooditem
 
 import (
-	"fmt"
+	"encoding/json"
 	"net/http"
 )
 
@@ -14,5 +14,22 @@ func NewController(store *Store) *Controller {
 }
 
 func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "hello there")
+	responses := make([]GetFoodItemResponse, 0)
+
+	for i := 0; i < 10; i++ {
+		responses = append(responses, GetFoodItemResponse{
+			ID:           int64(i + 1),
+			Manufacturer: "bogus",
+			Product:      "aaa",
+			Macronutrients: GetMacronutrientResponse{
+				Protein:      float64(i + 1),
+				Carbohydrate: float64(i + 2),
+				Fat:          float64(i + 3),
+				KCal:         float64(i + 4),
+			},
+		})
+	}
+	enc := json.NewEncoder(w)
+	enc.Encode(responses)
+	w.WriteHeader(http.StatusOK)
 }

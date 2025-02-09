@@ -1,13 +1,15 @@
 package fooditem
 
 type FoodItem struct {
-	Name string
-	ID   int
+	ID             int
+	Manufacturer   string
+	Product        string
+	Macronutrients Macronutrients
 }
 
-func New(name string, id int) *FoodItem {
-	return &FoodItem{
-		Name: "",
-		ID:   0,
-	}
+type Macronutrients struct {
+	Protein      float64
+	Carbohydrate float64
+	Fat          float64
+	KCal         float64
 }
