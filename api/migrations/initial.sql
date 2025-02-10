@@ -20,7 +20,7 @@ CREATE TABLE IF NOT EXISTS macronutrients
     protein      double precision,
     carbohydrate double precision,
     fat          double precision,
-    kcal         double precision,
+    kcal         double precision
 );
 
 CREATE TABLE IF NOT EXISTS micronutrients

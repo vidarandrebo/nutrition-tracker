@@ -20,7 +20,7 @@ func NewAuthService(store user.IStore, hs IHashingService) *Service {
 }
 
 func (s *Service) RegisterUser(rr *RegisterRequest) error {
-	existingUser := s.userStore.GetUserByEmail(rr.Email)
+	existingUser, _ := s.userStore.GetUserByEmail(rr.Email)
 	if existingUser != nil {
 		return errors.New("user already exists")
 	}
@@ -39,7 +39,10 @@ func (s *Service) RegisterUser(rr *RegisterRequest) error {
 }
 
 func (s *Service) LoginUser(lr *LoginRequest) (string, error) {
-	user := s.userStore.GetUserByEmail(lr.Email)
+	user, err := s.userStore.GetUserByEmail(lr.Email)
+	if err != nil {
+		return "", errors.New("incorrect credentials")
+	}
 	if s.hashingService.CheckPassword(lr.Password, user.PasswordHash) {
 		token, err := s.jwtService.CreateToken(user.ID)
 		return token, err

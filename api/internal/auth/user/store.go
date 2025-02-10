@@ -2,13 +2,14 @@ package user
 
 import (
 	"database/sql"
+	"errors"
 	"log/slog"
 )
 
 type IStore interface {
 	AddUser(user *User)
 	ListUsers() []*User
-	GetUserByEmail(string) *User
+	GetUserByEmail(string) (*User, error)
 }
 type Store struct {
 	db  *sql.DB
@@ -45,7 +46,7 @@ func (s *Store) ListUsers() []*User {
 
 	return users
 }
-func (s *Store) GetUserByEmail(email string) *User {
+func (s *Store) GetUserByEmail(email string) (*User, error) {
 	row := s.db.QueryRow("SELECT id, name, email, password_hash FROM users as u WHERE u.email=$1", email)
 
 	user := User{}
@@ -53,8 +54,8 @@ func (s *Store) GetUserByEmail(email string) *User {
 
 	if err != nil {
 		s.log.Info("no user matching the credentials", slog.String("email", email))
-		return nil
+		return nil, errors.New("no user matching the email")
 	}
 
-	return &user
+	return &user, nil
 }

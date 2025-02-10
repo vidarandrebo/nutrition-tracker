@@ -1,12 +1,9 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
+import { readFromLocalStorage, type User } from "../models/User.ts";
 
 export const useUserStore = defineStore("user", () => {
-    const token = ref<string>("")
-    const id = ref<number>(0)
+    const user = ref<User | null>(readFromLocalStorage());
 
-    function load() {
-    }
-
-    return {id, token, load}
-})
+    return { user };
+});

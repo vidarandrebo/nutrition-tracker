@@ -3,12 +3,14 @@ import { reactive } from "vue";
 import type { LoginForm } from "../models/LoginForm.ts";
 import InputText from "../components/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
+import type { AccessTokenResponse } from "../models/AccessTokenResponse.ts";
+import { type User, writeToLocalStorage } from "../models/User.ts";
+import { useUserStore } from "../stores/UseUserStore.ts";
+import router from "../router.ts";
 
+const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
 
-type AccessTokenResponse = {
-    token: string;
-}
 async function login() {
     const httpRequest = new HttpRequest()
         .setRoute("/api/login")
@@ -18,14 +20,17 @@ async function login() {
 
     await httpRequest.send();
     const httpResponse = httpRequest.getResponseData();
-    let loginResponse: AccessTokenResponse | undefined = undefined
+    let loginResponse: AccessTokenResponse | undefined = undefined;
 
     if (httpResponse) {
         if (httpResponse?.status == 200) {
-            loginResponse = httpResponse.body as AccessTokenResponse
+            loginResponse = httpResponse.body as AccessTokenResponse;
+            const user: User = { email: loginForm.email, accessToken: loginResponse.token };
+            writeToLocalStorage(user);
+            userStore.user = user;
         }
     }
-    console.log(loginResponse?.token)
+    await router.push("/");
 }
 </script>
 <template>
