@@ -58,7 +58,8 @@ func main() {
 	userController := auth.NewController(app.AuthService, logger)
 
 	mux.Handle("/", fs)
-	mux.HandleFunc("GET /api/fooditems", foodItemController.ListFoodItems)
+	mux.HandleFunc("GET /api/food-items", foodItemController.ListFoodItems)
+	mux.HandleFunc("POST /api/food-items", foodItemController.PostFoodItem)
 	mux.HandleFunc("POST /api/login", userController.Login)
 	mux.HandleFunc("POST /api/register", userController.Register)
 

@@ -1,7 +1,7 @@
 package fooditem
 
 type FoodItem struct {
-	ID             int
+	ID             int64
 	Manufacturer   string
 	Product        string
 	Macronutrients Macronutrients

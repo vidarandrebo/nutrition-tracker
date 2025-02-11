@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { reactive } from "vue";
-import InputText from "../components/InputText.vue";
+import InputText from "../Components/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
-import type { RegisterForm } from "../models/RegisterForm.ts";
+import type { RegisterForm } from "../Models/RegisterForm.ts";
 
 const registerForm = reactive<RegisterForm>({ email: "", password: "" });
 

@@ -244,3 +244,8 @@ th {
 .h-full {
     height: 100%;
 }
+
+.menubar-router-link {
+    padding-left: 1em;
+    padding-right: 1em;
+}

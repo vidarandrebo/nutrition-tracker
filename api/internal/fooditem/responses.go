@@ -7,6 +7,8 @@ type GetFoodItemResponse struct {
 	Macronutrients GetMacronutrientResponse `json:"macronutrients"`
 }
 
+type PostFoodItemResponse GetFoodItemResponse
+
 type GetMacronutrientResponse struct {
 	Protein      float64 `json:"protein"`
 	Carbohydrate float64 `json:"carbohydrate"`
