@@ -1,0 +1,22 @@
+meta {
+  name: post-fooditems
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/food-items
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "manufacturer": "hjemmelaget",
+    "product": "meksikansk gryte"
+  }
+}

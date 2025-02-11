@@ -1,7 +1,7 @@
 meta {
   name: login
   type: http
-  seq: 2
+  seq: 3
 }
 
 post {
@@ -12,10 +12,7 @@ post {
 
 body:json {
   {
-    "email": "hello",
-    "password": "there",
-    "bool": true,
-    "double": 12.5,
-    "int": 55
+    "email": "{{email}}",
+    "password": "{{password}}"
   }
 }

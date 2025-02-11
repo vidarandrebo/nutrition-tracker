@@ -3,66 +3,86 @@ package main
 import (
 	"fmt"
 	_ "github.com/jackc/pgx/v5/stdlib"
-	"github.com/vidarandrebo/nutrition-tracker/api"
-	"github.com/vidarandrebo/nutrition-tracker/api/fooditem"
-	"github.com/vidarandrebo/nutrition-tracker/api/user"
-	"log"
+	. "github.com/vidarandrebo/nutrition-tracker/api/internal"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/middleware"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
+	"io"
+	"log/slog"
 	"net/http"
+	"os"
+	"path/filepath"
 )
 
 func main() {
-	app := api.NewApplication()
+	envFile, err := os.Open("./local.env")
+	env := utils.ReadEnv(envFile)
+	for key, value := range env {
+		fmt.Println("Key:", key, "Value:", value)
+	}
+	envFile.Close()
+	fileName := filepath.Join("./", "server.log")
+	logFile, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
+	if err != nil {
+		panic(err)
+	}
+	defer logFile.Close()
+	logHandlerOpts := slog.HandlerOptions{
+		Level: slog.LevelInfo,
+	}
+	logWriter := io.MultiWriter(logFile, os.Stderr)
+	logHandler := slog.NewTextHandler(logWriter, &logHandlerOpts)
+
+	logger := slog.New(logHandler)
+
+	app := NewApplication(env)
 	defer app.CloseDB()
 
 	app.FoodItemStore = fooditem.NewStore(app.DB)
+	userStore := user.NewStore(app.DB, logger)
+	hashingService := auth.NewHashingService()
+	app.AuthService = auth.NewAuthService(userStore, hashingService)
+	requestTimerMW := middleware.NewRequestTimer(logger)
 
-	app.UserStore = user.NewStore(app.DB)
-
-	for i := 0; i < 100; i++ {
-		u := user.User{
-			ID:           0,
-			Name:         "",
-			PasswordHash: nil,
-		}
-		app.UserStore.AddUser(&u)
-	}
-
-	users := app.UserStore.ListUsers()
-
-	for _, u := range users {
-		fmt.Println(u)
-	}
-
-	fs := http.FileServer(http.Dir("./static"))
+	mwBuilder := middleware.NewMiddlewareBuilder()
+	mwBuilder.AddMiddleware(requestTimerMW.Time)
+	mw := mwBuilder.Build()
 
 	mux := http.NewServeMux()
+
+	// Create controller instances
+	fs := http.FileServer(http.Dir("./static"))
 	foodItemController := fooditem.NewController(app.FoodItemStore)
-	userController := user.NewController(app.UserStore)
+	userController := auth.NewController(app.AuthService, logger)
+
 	mux.Handle("/", fs)
-
-	mux.Handle("/home", &homeHandler{})
-
-	mux.HandleFunc("GET /api/fooditems", foodItemController.ListFoodItems)
+	mux.HandleFunc("GET /api/food-items", foodItemController.ListFoodItems)
+	mux.HandleFunc("POST /api/food-items", foodItemController.PostFoodItem)
 	mux.HandleFunc("POST /api/login", userController.Login)
 	mux.HandleFunc("POST /api/register", userController.Register)
-	log.Print("Listening on localhost:8080")
 
-	err := http.ListenAndServe("localhost:8080", mux)
-	if err != nil {
-		log.Fatal(err)
+	server := http.Server{
+		Addr:                         ":8080",
+		Handler:                      mw(mux),
+		DisableGeneralOptionsHandler: false,
+		TLSConfig:                    nil,
+		ReadTimeout:                  0,
+		ReadHeaderTimeout:            0,
+		WriteTimeout:                 0,
+		IdleTimeout:                  0,
+		MaxHeaderBytes:               0,
+		TLSNextProto:                 nil,
+		ConnState:                    nil,
+		ErrorLog:                     nil,
+		BaseContext:                  nil,
+		ConnContext:                  nil,
 	}
-}
 
-type homeHandler struct {
-	numRequests int
-}
-
-func (hh *homeHandler) ServeHTTP(rw http.ResponseWriter, request *http.Request) {
-	hh.numRequests++
-	numBytes, err := fmt.Fprintf(rw, "hello from this side of the app")
+	logger.Info("Listening on http://localhost:8080")
+	err = server.ListenAndServe()
 	if err != nil {
-		log.Println("something went wrong")
+		logger.Error("failure to listen and serve", slog.Any("err", err))
 	}
-	log.Println("Wrote ", numBytes, " bytes")
-	log.Println(hh.numRequests)
 }

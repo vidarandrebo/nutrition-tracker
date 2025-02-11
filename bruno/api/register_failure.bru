@@ -1,0 +1,18 @@
+meta {
+  name: register_failure
+  type: http
+  seq: 5
+}
+
+post {
+  url: http://localhost:8080/api/register
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "email": "bogusemail.com",
+    "password": "somelongerpassword"
+  }
+}

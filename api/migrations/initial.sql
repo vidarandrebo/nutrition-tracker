@@ -1,16 +1,17 @@
 CREATE TABLE IF NOT EXISTS users
 (
-    id           bigserial primary key,
-    name         varchar(128),
-    email        varchar(128),
-    passwordhash bytea
+    id            bigserial primary key,
+    name          varchar(128),
+    email         varchar(128),
+    password_hash bytea
 );
 
 CREATE TABLE IF NOT EXISTS food_items
 (
-    id    bigserial primary key,
-    name  varchar(128),
-    owner bigint REFERENCES users (id)
+    id           bigserial primary key,
+    manufacturer varchar(128),
+    product      varchar(128),
+    owner        bigint REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS macronutrients
