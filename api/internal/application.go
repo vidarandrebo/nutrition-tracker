@@ -2,6 +2,7 @@ package internal
 
 import (
 	"database/sql"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/consts"
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
@@ -21,7 +22,7 @@ func (a *Application) CloseDB() {
 func NewApplication(env map[string]string) *Application {
 	connString := env["DB_CONN_STRING"]
 	//db, err := sql.Open("pgx", "postgresql://postgres@localhost:5432/nutritiontracker")
-	db, err := sql.Open(databaseDriverName, connString)
+	db, err := sql.Open(consts.DatabaseDriverName, connString)
 	if err != nil {
 		panic(err)
 	}

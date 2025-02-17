@@ -3,7 +3,6 @@ package fooditem
 import (
 	"encoding/json"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
-	"log/slog"
 	"net/http"
 )
 
@@ -27,7 +26,7 @@ func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	newItem := fc.store.AddFoodItem(request, id)
+	newItem := fc.store.AddFoodItem(request, int64(id))
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)
@@ -36,22 +35,10 @@ func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
 
 func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
 	items := fc.store.GetFoodItems()
-	responses := make([]GetFoodItemResponse, 0)
+	responses := make([]FoodItemResponse, 0)
 
-	for i, item := range items {
-
-		slog.Info("hello")
-		responses = append(responses, GetFoodItemResponse{
-			ID:           item.ID,
-			Manufacturer: item.Manufacturer,
-			Product:      item.Product,
-			Macronutrients: GetMacronutrientResponse{
-				Protein:      float64(i + 1),
-				Carbohydrate: float64(i + 2),
-				Fat:          float64(i + 3),
-				KCal:         float64(i + 4),
-			},
-		})
+	for _, item := range items {
+		responses = append(responses, item.ToFoodItemResponse())
 	}
 	enc := json.NewEncoder(w)
 	enc.Encode(responses)

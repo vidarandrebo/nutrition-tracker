@@ -2,7 +2,6 @@ package fooditem
 
 import (
 	"database/sql"
-	"log/slog"
 )
 
 type Store struct {
@@ -13,22 +12,36 @@ func NewStore(db *sql.DB) *Store {
 	return &Store{db: db}
 }
 
-func (s *Store) AddFoodItem(request *PostFoodItemRequest, userID int) *FoodItem {
-	item := FoodItem{
-		ID:             0,
-		Manufacturer:   "",
-		Product:        "",
-		Macronutrients: Macronutrients{},
-	}
-	err := s.db.QueryRow("insert into food_items as fi (manufacturer, product) values ($1, $2) returning fi.id, fi.manufacturer, fi.product", request.Manufacturer, request.Product).Scan(&item.ID, &item.Manufacturer, &item.Product)
+func (s *Store) AddFoodItem(request *PostFoodItemRequest, userID int64) *FoodItem {
+	item := request.ToFoodItem()
+	item.OwnerID = userID
+
+	err := s.db.QueryRow("insert into food_items as fi (manufacturer, product, protein, carbohydrate, fat, kcal) values ($1, $2, $3, $4, $5, $6, $7) returning fi.id",
+		item.Manufacturer,
+		item.Product,
+		item.Protein,
+		item.Carbohydrate,
+		item.Fat,
+		item.KCal,
+		item.OwnerID,
+	).Scan(&item.ID)
 	if err != nil {
 		panic(err)
 	}
 	return &item
 }
-func (s *Store) GetFoodItem() *FoodItem {
+func (s *Store) GetFoodItem(id int64) *FoodItem {
 	item := FoodItem{}
-	err := s.db.QueryRow("select id, manufacturer, product from food_items").Scan(&item.ID, &item.Manufacturer)
+	err := s.db.QueryRow("select id, manufacturer, product, protein, carbohydrate, fat, kcal, owner_id from food_items where id = $1", id).Scan(
+		&item.ID,
+		&item.Manufacturer,
+		&item.Product,
+		&item.Protein,
+		&item.Carbohydrate,
+		&item.Fat,
+		&item.KCal,
+		&item.OwnerID,
+	)
 	if err != nil {
 		panic(err)
 	}
@@ -36,11 +49,19 @@ func (s *Store) GetFoodItem() *FoodItem {
 }
 func (s *Store) GetFoodItems() []FoodItem {
 	items := make([]FoodItem, 0)
-	rows, err := s.db.Query("select fi.id, fi.manufacturer,fi.product, m.protein, m.carbohydrate, m.fat, m.kcal from food_items as fi left join food_items_macronutrients as junction on fi.id = junction.food_item_id left join macronutrients m on junction.macronutrient_id = m.id")
+	rows, err := s.db.Query("select id, manufacturer, product, protein, carbohydrate, fat, kcal , owner_id from food_items")
 	for rows.Next() {
-		slog.Info("hello")
 		item := FoodItem{}
-		rows.Scan(&item.ID, &item.Manufacturer, &item.Product, &item.Macronutrients.Protein, &item.Macronutrients.Carbohydrate, &item.Macronutrients.Fat, &item.Macronutrients.KCal)
+		rows.Scan(
+			&item.ID,
+			&item.Manufacturer,
+			&item.Product,
+			&item.Protein,
+			&item.Carbohydrate,
+			&item.Fat,
+			&item.KCal,
+			&item.OwnerID,
+		)
 		items = append(items, item)
 	}
 	if err != nil {
