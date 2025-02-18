@@ -71,15 +71,39 @@ func (jc *JwtClaims) Validate() bool {
 		jc.validateNotBefore()
 }
 
+func stripNil(a []error) []error {
+	b := make([]error, 0)
+	for _, item := range a {
+		if item != nil {
+			b = append(b, item)
+		}
+	}
+	return b
+}
+
 func ParseClaims(claims jwt.Claims) (*JwtClaims, error) {
+	errs := make([]error, 0)
 	jwtClaims := &JwtClaims{}
 	subject, err := claims.GetSubject()
+	errs = append(errs, err)
 	issuer, err := claims.GetIssuer()
+	errs = append(errs, err)
 	audience, err := claims.GetAudience()
+	errs = append(errs, err)
 	expirationTime, err := claims.GetExpirationTime()
+	errs = append(errs, err)
 	issuedAt, err := claims.GetIssuedAt()
+	errs = append(errs, err)
 	notBefore, err := claims.GetNotBefore()
+	errs = append(errs, err)
 	id, err := strconv.ParseInt(subject, 10, 64)
+	errs = append(errs, err)
+
+	errs = stripNil(errs)
+
+	if len(errs) > 0 {
+		return nil, errors.New("jwt validation failed")
+	}
 
 	jwtClaims.Subject = id
 	jwtClaims.Issuer = issuer
