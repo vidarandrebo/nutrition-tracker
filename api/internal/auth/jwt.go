@@ -1,6 +1,7 @@
 package auth
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
@@ -33,8 +34,8 @@ func NewJwtClaims(userID int64) *JwtClaims {
 	now := time.Now()
 	return &JwtClaims{
 		Subject:        userID,
-		Issuer:         "nt.vidarboe.com",
-		Audience:       []string{"nt.vidarboe.com"},
+		Issuer:         consts.JwtIssuer,
+		Audience:       []string{consts.JwtAudience},
 		ExpirationTime: jwt.NewNumericDate(now.Add(1 * time.Hour)),
 		IssuedAt:       jwt.NewNumericDate(now),
 		NotBefore:      jwt.NewNumericDate(now.Add(-5 * time.Minute)),
@@ -43,7 +44,7 @@ func NewJwtClaims(userID int64) *JwtClaims {
 
 func (jc *JwtClaims) ToClaimsMap() jwt.MapClaims {
 	return jwt.MapClaims{
-		"sub": jc.Subject,
+		"sub": strconv.FormatInt(jc.Subject, 10),
 		"iss": jc.Issuer,
 		"aud": jc.Audience,
 		"exp": jc.ExpirationTime,
@@ -102,6 +103,9 @@ func ParseClaims(claims jwt.Claims) (*JwtClaims, error) {
 	errs = stripNil(errs)
 
 	if len(errs) > 0 {
+		for _, e := range errs {
+			fmt.Println(e)
+		}
 		return nil, errors.New("jwt validation failed")
 	}
 
@@ -136,4 +140,13 @@ func (js *JwtService) ValidateToken(tokenString string) (*JwtClaims, error) {
 		return nil, errors.New("failed to validate token")
 	}
 	return ParseClaims(extractedToken.Claims)
+}
+
+func UserIDFromCtx(ctx context.Context) (int64, error) {
+	claims, ok := ctx.Value("user").(*JwtClaims)
+	fmt.Println("claims: ", claims)
+	if !ok {
+		return 0, errors.New("no userID in context")
+	}
+	return claims.Subject, nil
 }

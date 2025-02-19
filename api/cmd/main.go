@@ -44,10 +44,13 @@ func main() {
 	userStore := user.NewStore(app.DB, logger)
 	hashingService := auth.NewHashingService()
 	app.AuthService = auth.NewAuthService(userStore, hashingService)
+	jwtService := auth.NewJwtService()
 	requestTimerMW := middleware.NewRequestTimer(logger)
+	authMiddleWare := middleware.NewAuth(logger, jwtService)
 
 	mwBuilder := middleware.NewMiddlewareBuilder()
 	mwBuilder.AddMiddleware(requestTimerMW.Time)
+	mwBuilder.AddMiddleware(authMiddleWare.TokenToContext)
 	mw := mwBuilder.Build()
 
 	mux := http.NewServeMux()

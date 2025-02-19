@@ -16,7 +16,7 @@ func (s *Store) AddFoodItem(request *PostFoodItemRequest, userID int64) *FoodIte
 	item := request.ToFoodItem()
 	item.OwnerID = userID
 
-	err := s.db.QueryRow("insert into food_items as fi (manufacturer, product, protein, carbohydrate, fat, kcal) values ($1, $2, $3, $4, $5, $6, $7) returning fi.id",
+	err := s.db.QueryRow("insert into food_items as fi (manufacturer, product, protein, carbohydrate, fat, kcal, owner_id) values ($1, $2, $3, $4, $5, $6, $7) returning fi.id",
 		item.Manufacturer,
 		item.Product,
 		item.Protein,
