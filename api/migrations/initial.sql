@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS food_items
     carbohydrate double precision,
     fat          double precision,
     kcal         double precision,
+    source       varchar(128),
     owner_id     bigint REFERENCES users (id)
 );
 

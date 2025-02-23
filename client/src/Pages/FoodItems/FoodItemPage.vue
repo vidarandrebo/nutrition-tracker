@@ -2,6 +2,7 @@
 import HeaderH1 from "../../Components/HeaderH1.vue";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import { onMounted } from "vue";
+import FoodItemDisplay from "./FoodItemDisplay.vue";
 
 const foodItemStore = useFoodItemStore();
 
@@ -12,22 +13,10 @@ onMounted(async () => {
 
 <template>
     <HeaderH1>Food Items</HeaderH1>
-    <table>
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Manufacturer</th>
-                <th>Product</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr v-for="item in foodItemStore.collection" :key="item.id">
-                <td>{{ item.id }}</td>
-                <td>{{ item.manufacturer }}</td>
-                <td>{{ item.product }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <RouterLink to="/food-items/add">Add</RouterLink>
+    <ul>
+        <FoodItemDisplay v-for="foodItem in foodItemStore.collection" :item="foodItem"></FoodItemDisplay>
+    </ul>
 </template>
 
 <style scoped></style>

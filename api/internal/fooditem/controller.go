@@ -26,7 +26,9 @@ func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	newItem := fc.store.AddFoodItem(request, userID)
+	item := request.ToFoodItem()
+	item.OwnerID = userID
+	newItem := fc.store.AddFoodItem(item)
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)

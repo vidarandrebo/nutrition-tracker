@@ -26,6 +26,6 @@ bin
 
 logs/
 
-/server.log
+/*.log
 /*.env
 /api/static/

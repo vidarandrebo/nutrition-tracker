@@ -8,4 +8,5 @@ type FoodItemResponse struct {
 	Carbohydrate float64 `json:"carbohydrate"`
 	Fat          float64 `json:"fat"`
 	KCal         float64 `json:"kCal"`
+	Source       string  `json:"source,omitempty"`
 }
