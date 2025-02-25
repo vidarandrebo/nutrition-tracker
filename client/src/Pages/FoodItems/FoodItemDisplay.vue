@@ -15,7 +15,8 @@ const props = defineProps<FoodItemDisplayProps>();
         <p>Product {{ props.item.product }}</p>
         <p>Protein {{ props.item.protein }}</p>
         <p>Carbohydrate {{ props.item.carbohydrate }}</p>
-        <p>Kcal {{ props.item.kCal }}</p>
+        <p>Fat {{ props.item.fat }}</p>
+        <p>KCal {{ props.item.kCal }}</p>
     </li>
 </template>
 

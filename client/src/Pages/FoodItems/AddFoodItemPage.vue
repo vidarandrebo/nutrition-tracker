@@ -7,8 +7,12 @@ import { HttpRequest } from "http-methods-ts";
 import { readFromLocalStorage } from "../../Models/User.ts";
 import InputText from "../../Components/InputText.vue";
 import InputNumber from "../../Components/InputNumber.vue";
+import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
+import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 
 const formModel = reactive<PostFoodItemRequest>(new PostFoodItemRequest());
+
+const foodItemStore = useFoodItemStore();
 
 async function postFoodItem() {
     const user = readFromLocalStorage()
@@ -23,11 +27,13 @@ async function postFoodItem() {
         .setRequestData(formModel);
 
     await httpRequest.send();
-    //const httpResponse = httpRequest.getResponseData();
-    // if (httpResponse) {
-    //        if (httpResponse?.status == 201) {
-    //        }
-    //}
+    const httpResponse = httpRequest.getResponseData();
+     if (httpResponse) {
+            if (httpResponse?.status == 201) {
+                const foodItem = FoodItem.assignFromObject(httpResponse.body as Record<string, never>)
+                foodItemStore.collection.push(foodItem)
+            }
+    }
     await router.push("/food-items");
 }
 const estKCal = computed(() => {
