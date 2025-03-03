@@ -5,11 +5,21 @@ export class FoodItem {
     id: string;
     manufacturer: string;
     product: string;
+    protein: number;
+    carbohydrate: number;
+    fat: number;
+    kCal: number
+    source: string;
 
     constructor() {
         this.id = "";
         this.manufacturer = "";
         this.product = "";
+        this.protein = 0.0;
+        this.carbohydrate = 0.0;
+        this.fat = 0.0;
+        this.kCal = 0.0;
+        this.source = "";
     }
 
     static assignFromObject(obj: Record<string, never>): FoodItem {
@@ -17,6 +27,11 @@ export class FoodItem {
         foodItem.id = obj["id"];
         foodItem.manufacturer = obj["manufacturer"];
         foodItem.product = obj["product"];
+        foodItem.protein = obj["protein"];
+        foodItem.carbohydrate = obj["carbohydrate"];
+        foodItem.fat = obj["fat"];
+        foodItem.kCal = obj["kCal"]
+        foodItem.source = obj["source"];
         return foodItem;
     }
 }

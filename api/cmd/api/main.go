@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	. "github.com/vidarandrebo/nutrition-tracker/api/internal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
@@ -19,9 +18,6 @@ import (
 func main() {
 	envFile, err := os.Open("./local.env")
 	env := utils.ReadEnv(envFile)
-	for key, value := range env {
-		fmt.Println("Key:", key, "Value:", value)
-	}
 	envFile.Close()
 	fileName := filepath.Join("./", "server.log")
 	logFile, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
@@ -44,10 +40,13 @@ func main() {
 	userStore := user.NewStore(app.DB, logger)
 	hashingService := auth.NewHashingService()
 	app.AuthService = auth.NewAuthService(userStore, hashingService)
+	jwtService := auth.NewJwtService()
 	requestTimerMW := middleware.NewRequestTimer(logger)
+	authMiddleWare := middleware.NewAuth(logger, jwtService)
 
 	mwBuilder := middleware.NewMiddlewareBuilder()
 	mwBuilder.AddMiddleware(requestTimerMW.Time)
+	mwBuilder.AddMiddleware(authMiddleWare.TokenToContext)
 	mw := mwBuilder.Build()
 
 	mux := http.NewServeMux()

@@ -2,8 +2,8 @@ package fooditem
 
 import (
 	"encoding/json"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
-	"log/slog"
 	"net/http"
 )
 
@@ -15,45 +15,34 @@ func NewController(store *Store) *Controller {
 	return &Controller{store: store}
 }
 func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
-	request, err := utils.ParseJson[PostFoodItemRequest](r.Body)
-	token := r.Header.Get("Authorization")
-	if token == "" {
+	userID, err := auth.UserIDFromCtx(r.Context())
+	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
 	}
-	id := 0
 
+	request, err := utils.ParseJson[PostFoodItemRequest](r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	newItem := fc.store.AddFoodItem(request, id)
+	item := request.ToFoodItem()
+	item.OwnerID = userID
+	newItem := fc.store.AddFoodItem(item)
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)
-	enc.Encode(newItem)
+	enc.Encode(newItem.ToFoodItemResponse())
 }
 
 func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
+
 	items := fc.store.GetFoodItems()
-	responses := make([]GetFoodItemResponse, 0)
+	responses := make([]FoodItemResponse, 0)
 
-	for i, item := range items {
-
-		slog.Info("hello")
-		responses = append(responses, GetFoodItemResponse{
-			ID:           item.ID,
-			Manufacturer: item.Manufacturer,
-			Product:      item.Product,
-			Macronutrients: GetMacronutrientResponse{
-				Protein:      float64(i + 1),
-				Carbohydrate: float64(i + 2),
-				Fat:          float64(i + 3),
-				KCal:         float64(i + 4),
-			},
-		})
+	for _, item := range items {
+		responses = append(responses, item.ToFoodItemResponse())
 	}
 	enc := json.NewEncoder(w)
 	enc.Encode(responses)
-	w.WriteHeader(http.StatusOK)
 }
