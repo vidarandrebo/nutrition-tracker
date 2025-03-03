@@ -1,0 +1,12 @@
+name: "On PR Changed"
+
+on: 
+  pull-request:
+    branches:
+      - main
+
+jobs:
+  go:
+    name: "Go"
+    uses: "./.github/workflows/go.yml"
+
