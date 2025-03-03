@@ -1,0 +1,18 @@
+name: "On PR Merged"
+
+on: 
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  go:
+    name: "Go"
+    uses: "./.github/workflows/go.yml"
+
+  vue:
+    name: "Vue"
+    uses: "./.github/workflows/vue.yml"
+
