@@ -10,3 +10,7 @@ jobs:
     name: "Go"
     uses: "./.github/workflows/go.yml"
 
+  vue:
+    name: "Vue"
+    uses: "./.github/workflows/vue.yml"
+

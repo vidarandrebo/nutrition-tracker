@@ -4,6 +4,7 @@ on: workflow_call
 
 jobs:
   build:
+    name: "Build and test"
     defaults:
       run:
         working-directory: "./api/"
