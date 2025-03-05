@@ -10,7 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - uses: "./.github/workflows/ssh.yml"
+    - uses: "./.github/actions/ssh"
 
     - name: Cmd
       run: |
