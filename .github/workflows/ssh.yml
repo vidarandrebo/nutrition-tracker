@@ -2,6 +2,7 @@ name: Setup SSH
 
 runs:
   steps:
+    - uses: actions/checkout@v4
     - name: Create SSH directory
       run: |
         echo "Creating ~/.ssh"
