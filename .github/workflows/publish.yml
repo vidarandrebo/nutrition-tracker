@@ -44,7 +44,7 @@ jobs:
 
     - name: Cmd
       run: |
-        ssh ${{ secrets.SSH_USERNAME }}@vidarboe.com cat test
+        ssh ${{ secrets.SSH_USERNAME }}@vidarboe.com -i ~/.ssh/key cat test
       shell: bash
 
     - name: Cleanup
