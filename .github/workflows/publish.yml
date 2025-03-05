@@ -10,8 +10,7 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: "Setup SSH"
-      uses: "./.github/workflows/ssh.yml"
+    - uses: "./.github/workflows/ssh.yml"
 
     #    - name: Create SSH directory
     #      run: |
