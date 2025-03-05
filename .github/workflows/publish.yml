@@ -10,7 +10,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - uses: "./.github/actions/ssh"
+    - name: Setup SSH
+      uses: "./.github/actions/ssh"
       with:
         known-hosts: ${{secrets.KNOWN_HOSTS}}
         ssh-key: ${{secrets.SSH_KEY}}
@@ -27,36 +28,3 @@ jobs:
         echo "Cleaning up"
         rm -f ~/.ssh/{config,key,known_hosts} || true        
       shell: bash
-
-    #    - name: Create SSH directory
-    #      run: |
-    #        echo "Creating ~/.ssh"
-    #        mkdir -p ~/.ssh        
-    #      shell: bash
-    #
-    #    - name: Install SSH config
-    #      run: |
-    #        echo "Installing SSH config"
-    #        cat <<EOF > ~/.ssh/config
-    #        Host ${{ secrets.SSH_HOST }}
-    #          User ${{ secrets.SSH_USERNAME }}
-    #          IdentityFile ~/.ssh/key
-    #          PasswordAuthentication no
-    #        EOF
-    #        chmod 600 ~/.ssh/config        
-    #      shell: bash
-    #
-    #    - name: Install SSH known_hosts
-    #      run: |
-    #        echo "Installing known_hosts"
-    #        echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
-    #        echo "  StrictHostKeyChecking yes" >> ~/.ssh/config        
-    #      shell: bash
-    #
-    #    - name: Install SSH key
-    #      run: |
-    #        echo "Installing SSH key"
-    #        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
-    #        chmod 600 ~/.ssh/key        
-    #      shell: bash
-    #      
