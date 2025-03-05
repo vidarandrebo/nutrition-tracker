@@ -11,6 +11,11 @@ jobs:
     - uses: actions/checkout@v4
     
     - uses: "./.github/actions/ssh"
+      with:
+        known-hosts: ${{secrets.KNOWN_HOSTS}}
+        ssh-key: ${{secrets.SSH_KEY}}
+        host: ${{secrets.SSH_HOST}}
+        user: ${{secrets.SSH_USERNAME}}
 
     - name: Cmd
       run: |
