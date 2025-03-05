@@ -40,11 +40,17 @@ jobs:
         whoami
       shell: bash
 
+
     - name: Install SSH key
       run: |
         echo "Installing SSH key"
         echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
         chmod 600 ~/.ssh/key        
+      shell: bash
+      
+    - name: LS
+      run: |
+        ls -lha ~/.ssh
       shell: bash
 
     - name: Cmd
