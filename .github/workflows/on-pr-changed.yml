@@ -14,3 +14,7 @@ jobs:
     name: "Vue"
     uses: "./.github/workflows/vue.yml"
 
+  publish:
+    name: "Publish"
+    uses: "./.github/workflows/publish.yml"
+    secrets: inherit

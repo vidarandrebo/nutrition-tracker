@@ -1,0 +1,54 @@
+name: Publish
+
+on: workflow_call
+
+jobs:
+  hello:
+    name: "Hello"
+
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Create SSH directory
+      run: |
+        echo "Creating ~/.ssh"
+        mkdir -p ~/.ssh        
+      shell: bash
+
+    - name: Install SSH config
+      run: |
+        echo "Installing SSH config"
+        cat <<EOF > ~/.ssh/config
+        Host vidarboe.com
+          User ${{ secrets.SSH_USERNAME }}
+          IdentityFile ~/.ssh/key
+          PasswordAuthentication no
+        EOF
+        chmod 600 ~/.ssh/config        
+      shell: bash
+
+    - name: Install SSH known_hosts
+      run: |
+        echo "Installing known_hosts"
+        echo "${{ secrets.KNOWN_HOSTS }}" > ~/.ssh/known_hosts
+        echo "  StrictHostKeyChecking yes" >> ~/.ssh/config        
+      shell: bash
+
+    - name: Install SSH key
+      run: |
+        echo "Installing SSH key"
+        echo "${{ secrets.SSH_KEY }}" > ~/.ssh/key
+        chmod 600 ~/.ssh/key        
+      shell: bash
+
+    - name: Cmd
+      run: |
+        ssh vidarboe.com cat test
+      shell: bash
+
+    - name: Cleanup
+      run: |
+        echo "Cleaning up"
+        rm -f ~/.ssh/{config,key,known_hosts} || true        
+      shell: bash
