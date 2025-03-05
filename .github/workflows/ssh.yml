@@ -2,8 +2,8 @@ name: Setup SSH
 
 on: workflow_call
 
-runs:
-  steps:
+jobs:
+  setup:
     - uses: actions/checkout@v4
     - name: Create SSH directory
       run: |
