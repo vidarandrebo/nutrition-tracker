@@ -5,7 +5,6 @@ on: workflow_call
 runs:
   using: "composite"
   steps:
-    - uses: actions/checkout@v4
     - name: Create SSH directory
       run: |
         echo "Creating ~/.ssh"
