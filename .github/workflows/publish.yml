@@ -12,7 +12,6 @@ jobs:
     
     - name: "Setup SSH"
       uses: "./.github/workflows/ssh.yml"
-      secrets: inherit
 
     #    - name: Create SSH directory
     #      run: |
