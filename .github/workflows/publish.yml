@@ -12,6 +12,17 @@ jobs:
     
     - uses: "./.github/workflows/ssh.yml"
 
+    - name: Cmd
+      run: |
+        ssh ${{ secrets.SSH_HOST }} cat test
+      shell: bash
+
+    - name: Cleanup
+      run: |
+        echo "Cleaning up"
+        rm -f ~/.ssh/{config,key,known_hosts} || true        
+      shell: bash
+
     #    - name: Create SSH directory
     #      run: |
     #        echo "Creating ~/.ssh"
@@ -44,13 +55,3 @@ jobs:
     #        chmod 600 ~/.ssh/key        
     #      shell: bash
     #      
-    - name: Cmd
-      run: |
-        ssh ${{ secrets.SSH_HOST }} cat test
-      shell: bash
-
-    - name: Cleanup
-      run: |
-        echo "Cleaning up"
-        rm -f ~/.ssh/{config,key,known_hosts} || true        
-      shell: bash
