@@ -23,8 +23,16 @@ jobs:
         ssh ${{ secrets.SSH_HOST }} cat test
       shell: bash
 
-    - name: Cleanup
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.24'
+
+    - name: Go Build
+      run: go build -v -o ../bin/ cmd/api/main.go
+      working-directory: "./api"
+
+    - name: Rsync
       run: |
-        echo "Cleaning up"
-        rm -f ~/.ssh/{config,key,known_hosts} || true        
-      shell: bash
+        whereis rsync
+        whereis scp
