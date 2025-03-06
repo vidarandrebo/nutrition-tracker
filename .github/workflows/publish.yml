@@ -50,3 +50,8 @@ jobs:
       run: |
         whereis rsync
         whereis scp
+
+    - name: Cmd
+      run: |
+        rsync -r bin/ ${{ secrets.SSH_HOST }}:nutrition-tracker/
+      shell: bash
