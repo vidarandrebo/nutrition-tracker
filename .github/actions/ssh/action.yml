@@ -1,4 +1,5 @@
 name: Setup SSH
+description: Initializes SSH
 
 inputs:
   known-hosts:
