@@ -44,4 +44,4 @@ jobs:
       shell: bash
 
     - name: SHA
-      run: echo ${{ github.sha }}
+      run: echo ${{ github.event.pull_request.pull_request.head.sha }}
