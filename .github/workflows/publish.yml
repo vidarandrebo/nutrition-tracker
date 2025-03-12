@@ -38,6 +38,9 @@ jobs:
     - name: Copy frontend dist to output dir
       run: cp -R ./client/dist bin/static
 
+    - name: Remove previous version
+      run: ssh ${{ secrets.SSH_HOST }} rm -r nutrition-tracker
+
     - name: Transfer
       run: |
         rsync -r bin/ ${{ secrets.SSH_HOST }}:nutrition-tracker/
