@@ -42,3 +42,6 @@ jobs:
       run: |
         rsync -r bin/ ${{ secrets.SSH_HOST }}:nutrition-tracker/
       shell: bash
+
+    - name: SHA
+      run: echo ${{ github.sha }}
