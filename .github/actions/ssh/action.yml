@@ -1,0 +1,52 @@
+name: Setup SSH
+description: Initializes SSH
+
+inputs:
+  known-hosts:
+    description: "Known hosts file"
+    required: true
+  ssh-key:
+    description: "SSH-key"
+    required: true
+  host:
+    description: "Host to log in at"
+    required: true
+  user:
+    description: "SSH user"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Create SSH directory
+      run: |
+        echo "Creating ~/.ssh"
+        mkdir -p ~/.ssh        
+      shell: bash
+
+    - name: Install SSH config
+      run: |
+        echo "Installing SSH config"
+        cat <<EOF > ~/.ssh/config
+        Host ${{ inputs.host }}
+          User ${{ inputs.user }}
+          IdentityFile ~/.ssh/key
+          PasswordAuthentication no
+        EOF
+        chmod 600 ~/.ssh/config        
+      shell: bash
+
+    - name: Install SSH known_hosts
+      run: |
+        echo "Installing known_hosts"
+        echo "${{ inputs.known-hosts }}" > ~/.ssh/known_hosts
+        echo "  StrictHostKeyChecking yes" >> ~/.ssh/config        
+      shell: bash
+
+    - name: Install SSH key
+      run: |
+        echo "Installing SSH key"
+        echo "${{ inputs.ssh-key }}" > ~/.ssh/key
+        chmod 600 ~/.ssh/key        
+      shell: bash
+      

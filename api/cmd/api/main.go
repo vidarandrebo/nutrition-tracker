@@ -1,6 +1,12 @@
 package main
 
 import (
+	"io"
+	"log/slog"
+	"net/http"
+	"os"
+	"path/filepath"
+
 	_ "github.com/jackc/pgx/v5/stdlib"
 	. "github.com/vidarandrebo/nutrition-tracker/api/internal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
@@ -8,18 +14,13 @@ import (
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/middleware"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
-	"io"
-	"log/slog"
-	"net/http"
-	"os"
-	"path/filepath"
 )
 
 func main() {
-	envFile, err := os.Open("./local.env")
+	envFile, err := os.Open("./.env")
 	env := utils.ReadEnv(envFile)
 	envFile.Close()
-	fileName := filepath.Join("./", "server.log")
+	fileName := filepath.Join("/var/log/nutrition-tracker/server.log")
 	logFile, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 	if err != nil {
 		panic(err)
@@ -63,7 +64,7 @@ func main() {
 	mux.HandleFunc("POST /api/register", userController.Register)
 
 	server := http.Server{
-		Addr:                         ":8080",
+		Addr:                         ":8081",
 		Handler:                      mw(mux),
 		DisableGeneralOptionsHandler: false,
 		TLSConfig:                    nil,
@@ -79,7 +80,7 @@ func main() {
 		ConnContext:                  nil,
 	}
 
-	logger.Info("Listening on http://localhost:8080")
+	logger.Info("Listening on http://localhost:8081")
 	err = server.ListenAndServe()
 	if err != nil {
 		logger.Error("failure to listen and serve", slog.Any("err", err))
