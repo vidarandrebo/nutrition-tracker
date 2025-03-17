@@ -17,7 +17,7 @@ import (
 )
 
 func main() {
-	envFile, err := os.Open("./local.env")
+	envFile, err := os.Open("./.env")
 	env := utils.ReadEnv(envFile)
 	envFile.Close()
 	fileName := filepath.Join("/var/log/nutrition-tracker/server.log")

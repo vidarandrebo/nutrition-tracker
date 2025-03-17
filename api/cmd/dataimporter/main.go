@@ -40,7 +40,7 @@ func main() {
 	logWriter := io.MultiWriter(logFile, os.Stderr)
 	logHandler := slog.NewTextHandler(logWriter, &logHandlerOpts)
 	logger := slog.New(logHandler)
-	envFile, err := os.Open("./local.env")
+	envFile, err := os.Open("./.env")
 	env := utils.ReadEnv(envFile)
 	envFile.Close()
 
