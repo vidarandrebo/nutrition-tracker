@@ -54,10 +54,12 @@ func main() {
 
 	// Create controller instances
 	fs := http.FileServer(http.Dir("./static"))
+
+	notFoundInterceptor := middleware.NewFileNotFoundInterceptor(logger)
 	foodItemController := fooditem.NewController(app.FoodItemStore)
 	userController := auth.NewController(app.AuthService, logger)
 
-	mux.Handle("/", fs)
+	mux.Handle("/", notFoundInterceptor.RespondWithFallback(fs, "/"))
 	mux.HandleFunc("GET /api/food-items", foodItemController.ListFoodItems)
 	mux.HandleFunc("POST /api/food-items", foodItemController.PostFoodItem)
 	mux.HandleFunc("POST /api/login", userController.Login)
