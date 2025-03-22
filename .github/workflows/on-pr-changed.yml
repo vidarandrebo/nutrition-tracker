@@ -13,6 +13,8 @@ jobs:
   vue:
     name: "Vue"
     uses: "./.github/workflows/vue.yml"
+    with:
+      upload-artifact: true
 
   art:
     needs: [vue]

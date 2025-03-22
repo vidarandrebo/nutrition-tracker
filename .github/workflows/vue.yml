@@ -1,6 +1,10 @@
 name: Vue
 
-on: workflow_call
+on: 
+  workflow_call:
+    inputs: 
+      upload-artifact:
+        type: boolean
 
 jobs:
   build:
@@ -8,6 +12,7 @@ jobs:
     defaults:
       run:
         working-directory: "./client/"
+
 
     runs-on: ubuntu-latest
     steps:
@@ -19,6 +24,7 @@ jobs:
         working-directory: "./client"
         
     - name: Store artifact
+      if: inputs.upload-artifact
       uses: actions/upload-artifact@v4
       with:
         name: "client"
