@@ -1,0 +1,20 @@
+name: Vue Build
+description: Build vue project
+
+inputs: 
+  working-directory:
+    required: true
+    description: "Location of package.json file"
+
+runs: 
+  using: composite
+  steps:
+    - name: Install
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: npm ci
+
+    - name: Build
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: npm run build

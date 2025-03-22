@@ -1,6 +1,12 @@
 name: Vue
 
-on: workflow_call
+on: 
+  workflow_call:
+    inputs: 
+      upload-artifact:
+        default: false
+        type: boolean
+
 
 jobs:
   build:
@@ -9,12 +15,21 @@ jobs:
       run:
         working-directory: "./client/"
 
+
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
 
-    - name: Install
-      run: npm ci
+    - name: Build Vue
+      uses: "./.github/actions/vue-build"
+      with: 
+        working-directory: "./client"
+        
+    - name: Store artifact
+      if: inputs.upload-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: "client"
+        path: "./client/dist"
 
-    - name: Build
-      run: npm run build
+

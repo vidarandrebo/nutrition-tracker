@@ -1,6 +1,11 @@
 name: Go
 
-on: workflow_call
+on: 
+  workflow_call:
+    inputs: 
+      upload-artifact:
+        default: false
+        type: boolean
 
 jobs:
   build:
@@ -18,8 +23,16 @@ jobs:
       with:
         go-version: '1.24'
 
-    - name: Build
-      run: go build -v ./...
+    - name: Go
+      uses: "./.github/actions/go-build"
+      with: 
+        working-directory: "./api"
 
-    - name: Test
-      run: go test -v ./...
+    - name: Store artifact
+      if: inputs.upload-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: "api"
+        path: "./api/bin"
+
+

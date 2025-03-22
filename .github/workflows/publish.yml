@@ -18,25 +18,23 @@ jobs:
         host: ${{secrets.SSH_HOST}}
         user: ${{secrets.SSH_USERNAME}}
 
-    - name: Set up Go
-      uses: actions/setup-go@v4
+    - name: Vue artifact
+      uses: actions/download-artifact@v4
       with:
-        go-version: '1.24'
+        name: "client"
+        path: "./static"
 
-    - name: Go Build
-      run: go build -o ../bin/nutrition-tracker cmd/api/main.go
-      working-directory: "./api"
+    - name: Go artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: "api"
+        path: "./bin"
 
-    - name: NPM Install
-      run: npm ci
-      working-directory: "./client"
-
-    - name: Vue Build
-      run: npm run build
-      working-directory: "./client"
+    - name: Make binary executable
+      run: chmod +x ./bin/nutrition-tracker
 
     - name: Copy frontend dist to output dir
-      run: cp -R ./client/dist bin/static
+      run: cp -R ./static bin/static
 
     - name: Remove previous version
       run: ssh ${{ secrets.SSH_HOST }} rm -r nutrition-tracker

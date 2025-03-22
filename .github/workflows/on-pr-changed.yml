@@ -13,4 +13,3 @@ jobs:
   vue:
     name: "Vue"
     uses: "./.github/workflows/vue.yml"
-
