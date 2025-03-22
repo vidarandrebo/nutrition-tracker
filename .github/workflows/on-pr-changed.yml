@@ -9,17 +9,19 @@ jobs:
   go:
     name: "Go"
     uses: "./.github/workflows/go.yml"
+    with:
+      upload-artifact: true
 
   vue:
     name: "Vue"
     uses: "./.github/workflows/vue.yml"
     with:
-      upload-artifact: false
+      upload-artifact: true
 
-  art:
+  art-vue:
     needs: [vue]
     runs-on: ubuntu-latest
-    name: "Art"
+    name: "Art-vue"
     steps:
     - name: Store artifact
       uses: actions/download-artifact@v4
@@ -30,3 +32,17 @@ jobs:
     - name: LS
       run: ls static
 
+
+  art-go:
+    needs: [go]
+    runs-on: ubuntu-latest
+    name: "Art-go"
+    steps:
+    - name: Store artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: "api"
+        path: "./bin"
+
+    - name: LS
+      run: ls bin

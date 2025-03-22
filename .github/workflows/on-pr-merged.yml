@@ -11,10 +11,14 @@ jobs:
   go:
     name: "Go"
     uses: "./.github/workflows/go.yml"
+    with:
+      upload-artifact: true
 
   vue:
     name: "Vue"
     uses: "./.github/workflows/vue.yml"
+    with:
+      upload-artifact: true
 
 
   publish:

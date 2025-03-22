@@ -1,0 +1,20 @@
+name: Go Build
+description: Build go project
+
+inputs: 
+  working-directory:
+    required: true
+    description: "Location of go.mod file"
+
+runs: 
+  using: composite
+  steps:
+    - name: Go Test
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: go test -v ./...
+
+    - name: Go Build
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: go build -o ./bin/nutrition-tracker cmd/api/main.go
