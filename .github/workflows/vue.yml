@@ -4,7 +4,9 @@ on:
   workflow_call:
     inputs: 
       upload-artifact:
+        default: false
         type: boolean
+
 
 jobs:
   build:
