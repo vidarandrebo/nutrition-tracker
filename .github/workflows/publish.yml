@@ -30,6 +30,9 @@ jobs:
         name: "api"
         path: "./bin"
 
+    - name: CHMOD
+      run: chmod +x ./bin/nutrition-tracker
+
     - name: Copy frontend dist to output dir
       run: cp -R ./static bin/static
 
