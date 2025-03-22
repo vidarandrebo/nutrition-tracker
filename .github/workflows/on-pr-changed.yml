@@ -14,3 +14,17 @@ jobs:
     name: "Vue"
     uses: "./.github/workflows/vue.yml"
 
+  art:
+    needs: [vue]
+    runs-on: ubuntu-latest
+    name: "Art"
+    steps:
+    - name: Store artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: "client"
+        path: "./static"
+
+    - name: LS
+      run: ls static
+
