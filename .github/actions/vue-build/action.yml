@@ -1,0 +1,28 @@
+name: Go Build
+description: Build vue project
+
+inputs:
+  artifact-name:
+    description: Store build output
+
+  
+runs: 
+  using: composite
+  steps:
+    - name: Install
+      working-directory: "./client"
+      run: npm ci
+      shell: bash
+
+    - name: Build
+      working-directory: "./client"
+      run: npm run build
+      shell: bash
+
+    - name: Store artifact
+      if: inputs.artifact-name != ''
+      working-directory: "./client"
+      uses: actions/upload-artifact@v4
+      with:
+        name: inputs.artifact-name
+        path: dist
