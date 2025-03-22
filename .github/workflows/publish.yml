@@ -30,7 +30,7 @@ jobs:
         name: "api"
         path: "./bin"
 
-    - name: CHMOD
+    - name: Make binary executable
       run: chmod +x ./bin/nutrition-tracker
 
     - name: Copy frontend dist to output dir

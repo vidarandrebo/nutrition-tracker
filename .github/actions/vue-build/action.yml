@@ -11,10 +11,10 @@ runs:
   steps:
     - name: Install
       working-directory: ${{ inputs.working-directory }}
-      run: npm ci
       shell: bash
+      run: npm ci
 
     - name: Build
       working-directory: ${{ inputs.working-directory }}
-      run: npm run build
       shell: bash
+      run: npm run build
