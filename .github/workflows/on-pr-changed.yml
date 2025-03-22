@@ -18,31 +18,9 @@ jobs:
     with:
       upload-artifact: true
 
-  art-vue:
-    needs: [vue]
-    runs-on: ubuntu-latest
-    name: "Art-vue"
-    steps:
-    - name: Store artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: "client"
-        path: "./static"
 
-    - name: LS
-      run: ls static
-
-
-  art-go:
-    needs: [go]
-    runs-on: ubuntu-latest
-    name: "Art-go"
-    steps:
-    - name: Store artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: "api"
-        path: "./bin"
-
-    - name: LS
-      run: ls bin
+  publish:
+    needs: [go, vue]
+    name: "Publish"
+    uses: "./.github/workflows/publish.yml"
+    secrets: inherit

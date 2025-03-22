@@ -18,9 +18,20 @@ jobs:
         host: ${{secrets.SSH_HOST}}
         user: ${{secrets.SSH_USERNAME}}
 
+    - name: Vue artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: "client"
+        path: "./static"
+
+    - name: Go artifact
+      uses: actions/download-artifact@v4
+      with:
+        name: "api"
+        path: "./bin"
 
     - name: Copy frontend dist to output dir
-      run: cp -R ./client/dist bin/static
+      run: cp -R ./static bin/static
 
     - name: Remove previous version
       run: ssh ${{ secrets.SSH_HOST }} rm -r nutrition-tracker
