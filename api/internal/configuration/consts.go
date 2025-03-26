@@ -1,4 +1,4 @@
-package consts
+package configuration
 
 const (
 	DatabaseDriverName = "pgx"

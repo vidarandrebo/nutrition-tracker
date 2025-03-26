@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/consts"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
 	"slices"
 	"strconv"
 	"time"
@@ -34,8 +34,8 @@ func NewJwtClaims(userID int64) *JwtClaims {
 	now := time.Now()
 	return &JwtClaims{
 		Subject:        userID,
-		Issuer:         consts.JwtIssuer,
-		Audience:       []string{consts.JwtAudience},
+		Issuer:         configuration.JwtIssuer,
+		Audience:       []string{configuration.JwtAudience},
 		ExpirationTime: jwt.NewNumericDate(now.Add(1 * time.Hour)),
 		IssuedAt:       jwt.NewNumericDate(now),
 		NotBefore:      jwt.NewNumericDate(now.Add(-5 * time.Minute)),
@@ -54,10 +54,10 @@ func (jc *JwtClaims) ToClaimsMap() jwt.MapClaims {
 }
 
 func (jc *JwtClaims) validateIssuer() bool {
-	return jc.Issuer == consts.JwtIssuer
+	return jc.Issuer == configuration.JwtIssuer
 }
 func (jc *JwtClaims) validateAudience() bool {
-	return slices.Contains(jc.Audience, consts.JwtAudience)
+	return slices.Contains(jc.Audience, configuration.JwtAudience)
 }
 func (jc *JwtClaims) validateExpirationTime() bool {
 	return jc.ExpirationTime.Time.After(time.Now())
