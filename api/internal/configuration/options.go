@@ -6,17 +6,19 @@ import (
 )
 
 type Options struct {
-	JwtIssuer            string
-	JwtAudience          string
-	ListenAddress        string
-	StaticFilesDirectory string
-	LogFile              string
-	DBConnectionString   string
-	SystemUsers          map[string]SystemUserCredentials
+	JwtSecret            string                           `json:"JwtSecret"`
+	JwtIssuer            string                           `json:"JwtIssuer"`
+	JwtAudience          string                           `json:"JwtAudience"`
+	ListenAddress        string                           `json:"ListenAddress"`
+	StaticFilesDirectory string                           `json:"StaticFilesDirectory"`
+	LogFile              string                           `json:"LogFile"`
+	DBConnectionString   string                           `json:"DBConnectionString"`
+	SystemUsers          map[string]SystemUserCredentials `json:"SystemUsers"`
 }
 
 func ParseOptions(fileName string) (*Options, error) {
-	file, err := os.Open("./appsettings.json")
+	file, err := os.Open(fileName)
+	defer file.Close()
 	if err != nil {
 		return nil, err
 	}
@@ -29,6 +31,6 @@ func ParseOptions(fileName string) (*Options, error) {
 }
 
 type SystemUserCredentials struct {
-	Email    string
-	Password string
+	Email    string `json:"Email"`
+	Password string `json:"Password"`
 }

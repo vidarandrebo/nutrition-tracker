@@ -2,28 +2,40 @@ package internal
 
 import (
 	"database/sql"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/middleware"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"io"
 	"log/slog"
 	"net/http"
 	"os"
-	"path/filepath"
-
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 )
 
 type Application struct {
-	Server        http.Server
-	DB            *sql.DB
+	Server      http.Server
+	DB          *sql.DB
+	Options     *configuration.Options
+	Logger      *slog.Logger
+	Services    *Services
+	Stores      *Stores
+	Controllers *Controllers
+}
+
+type Services struct {
+	JwtService     *auth.JwtService
+	AuthService    *auth.Service
+	HashingService *auth.HashingService
+}
+type Stores struct {
 	FoodItemStore *fooditem.Store
-	AuthService   *auth.Service
-	Env           map[string]string
-	Options       *configuration.Options
-	Logger        *slog.Logger
+	UserStore     *user.Store
+}
+
+type Controllers struct {
+	FoodItemController *fooditem.Controller
+	AuthController     *auth.Controller
 }
 
 func (a *Application) CloseDB() {
@@ -31,42 +43,63 @@ func (a *Application) CloseDB() {
 }
 
 func NewApplication() *Application {
-
 	return &Application{}
 }
-func (a *Application) Setup() {
-	envFile, err := os.Open("./.env")
-	env := utils.ReadEnv(envFile)
-	envFile.Close()
-	connString := env["DB_CONN_STRING"]
-	//db, err := sql.Open("pgx", "postgresql://postgres@localhost:5432/nutritiontracker")
-	a.DB, err = sql.Open(configuration.DatabaseDriverName, connString)
+func (a *Application) configureLogger() {
+	logFile, err := os.OpenFile(a.Options.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 	if err != nil {
 		panic(err)
 	}
-	fileName := filepath.Join("/var/log/nutrition-tracker/server.log")
-	logFile, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
-	if err != nil {
-		panic(err)
-	}
-	defer logFile.Close()
 	logHandlerOpts := slog.HandlerOptions{
 		Level: slog.LevelInfo,
 	}
 	logWriter := io.MultiWriter(logFile, os.Stderr)
 	logHandler := slog.NewTextHandler(logWriter, &logHandlerOpts)
 
-	logger := slog.New(logHandler)
+	a.Logger = slog.New(logHandler)
+}
 
-	defer a.CloseDB()
+func (a *Application) configureDB() {
+	db, err := sql.Open("pgx", a.Options.DBConnectionString)
+	if err != nil {
+		panic(err)
+	}
+	a.DB = db
+}
+func (a *Application) readConfiguration() {
+	opt, err := configuration.ParseOptions("appsettings.json")
+	if err != nil {
+		panic("read of config failed")
+	}
+	a.Options = opt
+}
+func (a *Application) configureServices() {
+	a.Services = &Services{}
+	a.Services.JwtService = auth.NewJwtService()
+	a.Services.HashingService = auth.NewHashingService()
+	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService)
+}
+func (a *Application) configureStores() {
+	a.Stores = &Stores{}
+	a.Stores.FoodItemStore = fooditem.NewStore(a.DB)
+	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
+}
 
-	a.FoodItemStore = fooditem.NewStore(a.DB)
-	userStore := user.NewStore(a.DB, logger)
-	hashingService := auth.NewHashingService()
-	a.AuthService = auth.NewAuthService(userStore, hashingService)
-	jwtService := auth.NewJwtService()
-	requestTimerMW := middleware.NewRequestTimer(logger)
-	authMiddleWare := middleware.NewAuth(logger, jwtService)
+func (a *Application) configureControllers() {
+	a.Controllers = &Controllers{}
+	a.Controllers.FoodItemController = fooditem.NewController(a.Stores.FoodItemStore)
+	a.Controllers.AuthController = auth.NewController(a.Services.AuthService, a.Logger)
+}
+func (a *Application) Setup() {
+	a.readConfiguration()
+	a.configureLogger()
+	a.configureDB()
+	a.configureStores()
+	a.configureServices()
+	a.configureControllers()
+
+	requestTimerMW := middleware.NewRequestTimer(a.Logger)
+	authMiddleWare := middleware.NewAuth(a.Logger, a.Services.JwtService)
 
 	mwBuilder := middleware.NewMiddlewareBuilder()
 	mwBuilder.AddMiddleware(requestTimerMW.Time)
@@ -76,20 +109,18 @@ func (a *Application) Setup() {
 	mux := http.NewServeMux()
 
 	// Create controller instances
-	fs := http.FileServer(http.Dir("./static"))
+	fs := http.FileServer(http.Dir(a.Options.StaticFilesDirectory))
 
-	notFoundInterceptor := middleware.NewFileNotFoundInterceptor(logger)
-	foodItemController := fooditem.NewController(a.FoodItemStore)
-	userController := auth.NewController(a.AuthService, logger)
+	notFoundInterceptor := middleware.NewFileNotFoundInterceptor(a.Logger)
 
 	mux.Handle("/", notFoundInterceptor.RespondWithFallback(fs, "/"))
-	mux.HandleFunc("GET /api/food-items", foodItemController.ListFoodItems)
-	mux.HandleFunc("POST /api/food-items", foodItemController.PostFoodItem)
-	mux.HandleFunc("POST /api/login", userController.Login)
-	mux.HandleFunc("POST /api/register", userController.Register)
+	mux.HandleFunc("GET /api/food-items", a.Controllers.FoodItemController.ListFoodItems)
+	mux.HandleFunc("POST /api/food-items", a.Controllers.FoodItemController.PostFoodItem)
+	mux.HandleFunc("POST /api/login", a.Controllers.AuthController.Login)
+	mux.HandleFunc("POST /api/register", a.Controllers.AuthController.Register)
 
 	a.Server = http.Server{
-		Addr:                         ":8081",
+		Addr:                         a.Options.ListenAddress,
 		Handler:                      mw(mux),
 		DisableGeneralOptionsHandler: false,
 		TLSConfig:                    nil,
@@ -106,7 +137,7 @@ func (a *Application) Setup() {
 	}
 }
 func (a *Application) Run() {
-	a.Logger.Info("Listening on http://localhost:8081")
+	a.Logger.Info("Listening", slog.String("address", "http://localhost"), slog.String("port", a.Options.ListenAddress))
 	err := a.Server.ListenAndServe()
 	if err != nil {
 		a.Logger.Error("failure to listen and serve", slog.Any("err", err))
