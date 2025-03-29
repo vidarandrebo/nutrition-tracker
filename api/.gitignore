@@ -28,6 +28,6 @@ logs/
 
 /*.log
 /*.env
-/api/static/
+/static/
 
 appsettings.json

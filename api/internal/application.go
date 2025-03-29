@@ -103,8 +103,11 @@ func (a *Application) Setup() {
 
 	mwBuilder := middleware.NewMiddlewareBuilder()
 	mwBuilder.AddMiddleware(requestTimerMW.Time)
-	mwBuilder.AddMiddleware(authMiddleWare.TokenToContext)
-	mw := mwBuilder.Build()
+	apiMW := mwBuilder.Build()
+
+	fiMWBuilder := middleware.NewMiddlewareBuilder()
+	fiMWBuilder.AddMiddleware(authMiddleWare.TokenToContext)
+	foodItemMW := fiMWBuilder.Build()
 
 	mux := http.NewServeMux()
 
@@ -114,14 +117,22 @@ func (a *Application) Setup() {
 	notFoundInterceptor := middleware.NewFileNotFoundInterceptor(a.Logger)
 
 	mux.Handle("/", notFoundInterceptor.RespondWithFallback(fs, "/"))
-	mux.HandleFunc("GET /api/food-items", a.Controllers.FoodItemController.ListFoodItems)
-	mux.HandleFunc("POST /api/food-items", a.Controllers.FoodItemController.PostFoodItem)
-	mux.HandleFunc("POST /api/login", a.Controllers.AuthController.Login)
-	mux.HandleFunc("POST /api/register", a.Controllers.AuthController.Register)
+
+	foodItemControllerMux := http.NewServeMux()
+
+	foodItemControllerMux.HandleFunc("GET /api/food-items", a.Controllers.FoodItemController.ListFoodItems)
+	foodItemControllerMux.HandleFunc("POST /api/food-items", a.Controllers.FoodItemController.PostFoodItem)
+
+	apiMux := http.NewServeMux()
+	apiMux.Handle("/api/food-items", foodItemMW(foodItemControllerMux))
+	apiMux.HandleFunc("POST /api/login", a.Controllers.AuthController.Login)
+	apiMux.HandleFunc("POST /api/register", a.Controllers.AuthController.Register)
+
+	mux.Handle("/api/", apiMW(apiMux))
 
 	a.Server = http.Server{
 		Addr:                         a.Options.ListenAddress,
-		Handler:                      mw(mux),
+		Handler:                      mux,
 		DisableGeneralOptionsHandler: false,
 		TLSConfig:                    nil,
 		ReadTimeout:                  0,
