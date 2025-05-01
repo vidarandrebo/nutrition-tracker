@@ -5,14 +5,10 @@ import (
 	_ "github.com/jackc/pgx/v5/stdlib"
 	. "github.com/vidarandrebo/nutrition-tracker/api/internal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
-	"io"
-	"log/slog"
 	"os"
-	"path/filepath"
 )
 
 func main() {
@@ -28,37 +24,22 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	fileName := filepath.Join("./", "dataimporter.log")
-	logFile, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
-	if err != nil {
-		panic(err)
-	}
-	defer logFile.Close()
-	logHandlerOpts := slog.HandlerOptions{
-		Level: slog.LevelInfo,
-	}
-	logWriter := io.MultiWriter(logFile, os.Stderr)
-	logHandler := slog.NewTextHandler(logWriter, &logHandlerOpts)
-	logger := slog.New(logHandler)
-	envFile, err := os.Open("./.env")
-	env := utils.ReadEnv(envFile)
-	envFile.Close()
 
-	app := NewApplication(env)
-	app.FoodItemStore = fooditem.NewStore(app.DB)
-	userStore := user.NewStore(app.DB, logger)
-	hashingService := auth.NewHashingService()
-	app.AuthService = auth.NewAuthService(userStore, hashingService)
-	defer app.CloseDB()
+	app := NewImporter()
+	app.Setup()
 
-	matvareTabellenUser, err := userStore.GetUserByEmail("post@matvaretabellen.no")
+	matvareTabellenCredentials, ok := app.Options.SystemUsers["Matvaretabellen"]
+	if !ok {
+		panic("no systemuser config registered for matvaretabellen")
+	}
+	matvareTabellenUser, err := app.Stores.UserStore.GetUserByEmail(matvareTabellenCredentials.Email)
 	if err != nil {
-		app.AuthService.RegisterUser(&auth.RegisterRequest{
-			Email:    "post@matvaretabellen.no",
-			Password: env["MATVARETABELLEN_PASSWORD"],
+		app.Services.AuthService.RegisterUser(&auth.RegisterRequest{
+			Email:    matvareTabellenCredentials.Email,
+			Password: matvareTabellenCredentials.Password,
 		})
 	}
-	matvareTabellenUser, err = userStore.GetUserByEmail("post@matvaretabellen.no")
+	matvareTabellenUser, err = app.Stores.UserStore.GetUserByEmail("post@matvaretabellen.no")
 
 	foods, err := utils.ParseJson[matvaretabellen.Foods](file)
 
@@ -67,7 +48,7 @@ func main() {
 			foodItem := fooditem.FromMatvareTabellen(item)
 			foodItem.OwnerID = matvareTabellenUser.ID
 			fmt.Println(foodItem.Product, "Protein:", foodItem.Protein, "Carbo:", foodItem.Carbohydrate, "Fat:", foodItem.Fat)
-			app.FoodItemStore.AddFoodItem(foodItem)
+			app.Stores.FoodItemStore.AddFoodItem(foodItem)
 		}
 	}
 }
