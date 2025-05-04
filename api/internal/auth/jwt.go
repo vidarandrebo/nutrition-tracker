@@ -5,13 +5,14 @@ import (
 	"errors"
 	"fmt"
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/consts"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
 	"slices"
 	"strconv"
 	"time"
 )
 
 type JwtService struct {
+	opt configuration.Options
 	key []byte
 }
 
@@ -30,12 +31,12 @@ type JwtClaims struct {
 	NotBefore      *jwt.NumericDate
 }
 
-func NewJwtClaims(userID int64) *JwtClaims {
+func (js *JwtService) NewJwtClaims(userID int64) *JwtClaims {
 	now := time.Now()
 	return &JwtClaims{
 		Subject:        userID,
-		Issuer:         consts.JwtIssuer,
-		Audience:       []string{consts.JwtAudience},
+		Issuer:         js.opt.JwtIssuer,
+		Audience:       []string{js.opt.JwtAudience},
 		ExpirationTime: jwt.NewNumericDate(now.Add(1 * time.Hour)),
 		IssuedAt:       jwt.NewNumericDate(now),
 		NotBefore:      jwt.NewNumericDate(now.Add(-5 * time.Minute)),
@@ -53,11 +54,11 @@ func (jc *JwtClaims) ToClaimsMap() jwt.MapClaims {
 	}
 }
 
-func (jc *JwtClaims) validateIssuer() bool {
-	return jc.Issuer == consts.JwtIssuer
+func (jc *JwtService) validateIssuer(claims JwtClaims) bool {
+	return claims.Issuer == jc.opt.JwtIssuer
 }
-func (jc *JwtClaims) validateAudience() bool {
-	return slices.Contains(jc.Audience, consts.JwtAudience)
+func (js *JwtService) validateAudience(claims JwtClaims) bool {
+	return slices.Contains(claims.Audience, js.opt.JwtAudience)
 }
 func (jc *JwtClaims) validateExpirationTime() bool {
 	return jc.ExpirationTime.Time.After(time.Now())
@@ -65,11 +66,11 @@ func (jc *JwtClaims) validateExpirationTime() bool {
 func (jc *JwtClaims) validateNotBefore() bool {
 	return jc.NotBefore.Time.Before(time.Now())
 }
-func (jc *JwtClaims) Validate() bool {
-	return jc.validateIssuer() &&
-		jc.validateAudience() &&
-		jc.validateExpirationTime() &&
-		jc.validateNotBefore()
+func (js *JwtService) Validate(claims JwtClaims) bool {
+	return js.validateIssuer(claims) &&
+		js.validateAudience(claims) &&
+		claims.validateExpirationTime() &&
+		claims.validateNotBefore()
 }
 
 func stripNil(a []error) []error {
@@ -120,7 +121,7 @@ func ParseClaims(claims jwt.Claims) (*JwtClaims, error) {
 }
 
 func (js *JwtService) CreateToken(userID int64) (string, error) {
-	jwtClaims := NewJwtClaims(userID)
+	jwtClaims := js.NewJwtClaims(userID)
 	t := jwt.NewWithClaims(jwt.SigningMethodHS256,
 		// https://datatracker.ietf.org/doc/html/rfc7519#section-4.1
 		jwtClaims.ToClaimsMap(),

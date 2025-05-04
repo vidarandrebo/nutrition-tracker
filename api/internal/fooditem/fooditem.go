@@ -1,7 +1,6 @@
 package fooditem
 
 import (
-	"fmt"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 	"slices"
 )
@@ -77,7 +76,6 @@ func CalcAmount(amount float64, unit string) float64 {
 	case "":
 		return amount
 	default:
-		fmt.Println(fmt.Errorf(unit))
 		panic(unit)
 	}
 }
