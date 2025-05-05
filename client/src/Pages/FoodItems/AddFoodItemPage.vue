@@ -4,20 +4,22 @@ import { computed, reactive } from "vue";
 import { PostFoodItemRequest } from "../../Models/FoodItems/Requests.ts";
 import router from "../../Router.ts";
 import { HttpRequest } from "http-methods-ts";
-import { readFromLocalStorage } from "../../Models/User.ts";
 import InputText from "../../Components/InputText.vue";
 import InputNumber from "../../Components/InputNumber.vue";
 import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
+import type { FoodItemResponse } from "../../Models/FoodItems/Responses.ts";
+import { useUserStore } from "../../Stores/UserStore.ts";
 
 const formModel = reactive<PostFoodItemRequest>(new PostFoodItemRequest());
 
+const userStore = useUserStore();
 const foodItemStore = useFoodItemStore();
 
 async function postFoodItem() {
-    const user = readFromLocalStorage()
+    const user = userStore.user;
     if (user === null) {
-        return
+        return;
     }
     const httpRequest = new HttpRequest()
         .setRoute("/api/food-items")
@@ -28,17 +30,18 @@ async function postFoodItem() {
 
     await httpRequest.send();
     const httpResponse = httpRequest.getResponseData();
-     if (httpResponse) {
-            if (httpResponse?.status == 201) {
-                const foodItem = FoodItem.assignFromObject(httpResponse.body as Record<string, never>)
-                foodItemStore.collection.push(foodItem)
-            }
+    if (httpResponse) {
+        if (httpResponse?.status == 201) {
+            const foodItem = FoodItem.fromResponse(httpResponse.body as FoodItemResponse);
+            foodItemStore.collection.push(foodItem);
+        }
     }
     await router.push("/food-items");
 }
+
 const estKCal = computed(() => {
-    return 4 * formModel.protein + 4 * formModel.carbohydrate + 9 * formModel.fat
-})
+    return 4 * formModel.protein + 4 * formModel.carbohydrate + 9 * formModel.fat;
+});
 </script>
 
 <template>

@@ -4,9 +4,9 @@ import type { LoginForm } from "../Models/LoginForm.ts";
 import InputText from "../Components/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
 import type { AccessTokenResponse } from "../Models/AccessTokenResponse.ts";
-import { type User, writeToLocalStorage } from "../Models/User.ts";
 import router from "../Router.ts";
 import { useUserStore } from "../Stores/UserStore.ts";
+import { User } from "../Models/User.ts";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
@@ -26,7 +26,7 @@ async function login() {
         if (httpResponse?.status == 200) {
             loginResponse = httpResponse.body as AccessTokenResponse;
             const user: User = { email: loginForm.email, accessToken: loginResponse.token };
-            writeToLocalStorage(user);
+            User.writeToLocalStorage(user);
             userStore.user = user;
         }
     }
