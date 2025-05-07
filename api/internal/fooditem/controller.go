@@ -14,7 +14,7 @@ type Controller struct {
 func NewController(store *Store) *Controller {
 	return &Controller{store: store}
 }
-func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
+func (fc *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -28,16 +28,16 @@ func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
 	}
 	item := request.ToFoodItem()
 	item.OwnerID = userID
-	newItem := fc.store.AddFoodItem(item)
+	newItem := fc.store.Add(item)
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)
 	enc.Encode(newItem.ToFoodItemResponse())
 }
 
-func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
+func (fc *Controller) List(w http.ResponseWriter, r *http.Request) {
 
-	items := fc.store.GetFoodItems()
+	items := fc.store.Get()
 	responses := make([]FoodItemResponse, 0)
 
 	for _, item := range items {

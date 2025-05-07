@@ -1,21 +1,21 @@
 package meal
 
 import (
-	"fmt"
+	"encoding/json"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"net/http"
-	"time"
 )
 
 type Controller struct {
 	store *Store
+	last  int64
 }
 
 func NewController(store *Store) *Controller {
-	return &Controller{store: store}
+	return &Controller{store: store, last: 0}
 }
-func (fc *Controller) PostMeal(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	_, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -27,16 +27,27 @@ func (fc *Controller) PostMeal(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	meal := c.store.Add(Meal{
+		SequenceNumber: c.last,
+		Timestamp:      request.TimeStamp,
+	})
+	c.last++
+
 	w.WriteHeader(http.StatusCreated)
 
-	fmt.Println(request.TimeStamp.Add(5 * time.Hour))
+	response := MealResponse{
+		ID:      meal.ID,
+		Entries: nil,
+	}
 
-	//enc := json.NewEncoder(w)
+	enc := json.NewEncoder(w)
+	enc.Encode(response)
 }
 
-//func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
+//func (fc *Controller) List(w http.ResponseWriter, r *http.Request) {
 //
-//	items := fc.store.GetFoodItems()
+//	items := fc.store.Get()
 //	responses := make([]FoodItemResponse, 0)
 //
 //	for _, item := range items {
