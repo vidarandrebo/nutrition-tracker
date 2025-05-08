@@ -1,5 +1,5 @@
 <template>
-    <RouterLink class="menubar-router-link" :to="to">
+    <RouterLink :to="to">
         <slot></slot>
     </RouterLink>
 </template>

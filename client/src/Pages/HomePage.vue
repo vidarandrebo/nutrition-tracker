@@ -4,7 +4,6 @@ import { useUserStore } from "../Stores/UserStore.ts";
 import { ref, watch } from "vue";
 import InputDate from "../Components/InputDate.vue";
 import { HttpRequest } from "http-methods-ts";
-import { User } from "../Models/User.ts";
 
 const userStore = useUserStore();
 

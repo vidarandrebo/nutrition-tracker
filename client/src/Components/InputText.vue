@@ -11,7 +11,7 @@ function handleInput(event: Event) {
 </script>
 
 <template>
-    <input :value="modelValue" @input="handleInput" class="w-15" />
+    <input :value="modelValue" @input="handleInput" />
 </template>
 
 <style scoped></style>

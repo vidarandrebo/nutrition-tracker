@@ -25,15 +25,15 @@ async function register() {
 </script>
 <template>
     <h1>Register</h1>
-    <form v-on:submit.prevent="register" class="flex flex-column">
-        <label class="flex w-20 space-between pd-b-1">
+    <form v-on:submit.prevent="register" >
+        <label >
             <p>Email</p>
             <InputText v-model="registerForm.email" type="email" />
         </label>
-        <label class="flex w-20 space-between pd-b-1">
+        <label >
             <p>Password</p>
             <InputText v-model="registerForm.password" type="password" />
         </label>
-        <button type="submit" class="w-10">Register</button>
+        <button type="submit" >Register</button>
     </form>
 </template>

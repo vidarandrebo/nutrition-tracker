@@ -7,6 +7,7 @@ import type { AccessTokenResponse } from "../Models/AccessTokenResponse.ts";
 import router from "../Router.ts";
 import { useUserStore } from "../Stores/UserStore.ts";
 import { User } from "../Models/User.ts";
+import Button from "../Components/Button.vue";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
@@ -35,15 +36,16 @@ async function login() {
 </script>
 <template>
     <h1>Login</h1>
-    <form v-on:submit.prevent="login" class="flex flex-column">
-        <label class="flex w-20 space-between pd-b-1">
+    <form v-on:submit.prevent="login">
+        <label>
             <p>Email</p>
             <InputText v-model="loginForm.email" type="email" />
         </label>
-        <label class="flex w-20 space-between pd-b-1">
+        <label>
             <p>Password</p>
             <InputText v-model="loginForm.password" type="password" />
         </label>
-        <button type="submit" class="w-10">Login</button>
+        <button type="submit">Login</button>
+        <Button type="submit">Login</Button>
     </form>
 </template>

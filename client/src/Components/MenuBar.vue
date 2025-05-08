@@ -16,7 +16,7 @@ async function logout() {
 
 <template>
     <header>
-        <nav class="flex flex-row space-between">
+        <nav >
             <div>
                 <MenuBarRouterLink to="/">Home</MenuBarRouterLink>
                 <MenuBarRouterLink to="/food-items">Food Items</MenuBarRouterLink>
