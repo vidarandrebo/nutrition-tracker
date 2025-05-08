@@ -3,6 +3,7 @@ import { reactive } from "vue";
 import InputText from "../Components/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
 import type { RegisterForm } from "../Models/RegisterForm.ts";
+import HeaderH1 from "../Components/HeaderH1.vue";
 
 const registerForm = reactive<RegisterForm>({ email: "", password: "" });
 
@@ -24,7 +25,7 @@ async function register() {
 }
 </script>
 <template>
-    <h1>Register</h1>
+    <HeaderH1>Register</HeaderH1>
     <form v-on:submit.prevent="register" >
         <label >
             <p>Email</p>

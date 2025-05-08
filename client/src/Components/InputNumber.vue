@@ -12,7 +12,7 @@ function handleInput(event: Event) {
 </script>
 
 <template>
-    <input type="number" :value="modelValue" @input="handleInput" :placeholder="placeHolder?.toString()"/>
+    <input type="number" class="input" :value="modelValue" @input="handleInput" :placeholder="placeHolder?.toString()"/>
 </template>
 
 <style scoped></style>
