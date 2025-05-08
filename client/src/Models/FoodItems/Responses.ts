@@ -5,6 +5,6 @@ export type FoodItemResponse = {
     protein: number;
     carbohydrate: number;
     fat: number;
-    kCal: number
+    kCal: number;
     source: string;
-}
+};

@@ -56,7 +56,8 @@ async function logout() {
                 <div class="navbar-end">
                     <MenuBarRouterLink v-if="!userStore.user" to="/login">Login</MenuBarRouterLink>
                     <MenuBarRouterLink v-if="!userStore.user" to="/register">Register</MenuBarRouterLink>
-                    <MenuBarRouterLink v-if="userStore.user" to="/settings">{{ userStore.user.email }}
+                    <MenuBarRouterLink v-if="userStore.user" to="/settings"
+                        >{{ userStore.user.email }}
                     </MenuBarRouterLink>
                     <a href="#" @click="logout" class="button" v-if="userStore.user">Logout</a>
                 </div>

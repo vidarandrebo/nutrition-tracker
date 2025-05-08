@@ -8,6 +8,6 @@
 
 <style scoped>
 h1 {
-    font-size: 2.0rem;
+    font-size: 2rem;
 }
 </style>

@@ -19,7 +19,7 @@ watch(selectedDay, (newValue, oldValue) => {
 async function addMeal() {
     const user = userStore.user;
     if (user === null) {
-        return
+        return;
     }
     console.log("adding meal");
     console.log(`today: ${isToday(selectedDay.value)}`);
@@ -41,10 +41,10 @@ async function addMeal() {
     const response = httpRequest.getResponseData();
     switch (response?.status) {
         case 201:
-            console.log(response?.body)
+            console.log(response?.body);
             break;
         case 404:
-            console.log("oi, ya goofed up")
+            console.log("oi, ya goofed up");
             break;
         case 409:
         case 403:

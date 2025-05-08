@@ -24,17 +24,17 @@ const routes: Array<RouteRecordRaw> = [
         component: SettingsPage,
     },
     {
-        path:"/food-items",
+        path: "/food-items",
         name: "Food Items",
         component: FoodItemPage,
     },
     {
-        path:"/food-items/add",
+        path: "/food-items/add",
         name: "Add Food Item",
         component: AddFoodItemPage,
     },
     {
-        path:"/recipes",
+        path: "/recipes",
         name: "Recipes",
         component: RecipePage,
     },

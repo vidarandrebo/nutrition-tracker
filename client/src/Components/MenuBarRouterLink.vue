@@ -12,6 +12,6 @@ defineProps<{
 
 <style scoped>
 .router-link-active {
-    background-color:lightblue;
+    background-color: lightblue;
 }
 </style>

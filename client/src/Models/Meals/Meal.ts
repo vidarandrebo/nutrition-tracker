@@ -1,3 +1,1 @@
-export class Meal {
-
-}
+export class Meal {}
