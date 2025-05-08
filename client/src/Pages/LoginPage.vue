@@ -38,7 +38,7 @@ async function login() {
 </script>
 <template>
     <HeaderH1>Login</HeaderH1>
-    <form v-on:submit.prevent="login">
+    <form v-on:submit.prevent="login" class="box">
         <FormField>
             <label class="label">
                 Email

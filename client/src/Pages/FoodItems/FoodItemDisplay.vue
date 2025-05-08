@@ -10,7 +10,7 @@ const props = defineProps<FoodItemDisplayProps>();
 </script>
 
 <template>
-    <li>
+    <li class="box">
         <p>Manufacturer: {{ props.item.manufacturer}}</p>
         <p>Product {{ props.item.product }}</p>
         <p>Protein {{ props.item.protein }}</p>
