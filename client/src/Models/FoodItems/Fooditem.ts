@@ -35,28 +35,29 @@ export class FoodItem {
         foodItem.source = res.source;
         return foodItem;
     }
+
+    static async get(): Promise<FoodItem[] | null> {
+        const userStore = useUserStore();
+        const user = userStore.user;
+        if (user === null) {
+            return null;
+        }
+        const request = new HttpRequest()
+            .setRoute("/api/food-items")
+            .setMethod("GET")
+            .addHeader("Content-Type", "application/json")
+            .setBearerToken(user.accessToken);
+        await request.send();
+        const response = request.getResponseData();
+        if (response === null) {
+            return null;
+        }
+        if (response.status === 200) {
+            const payload = response.body as FoodItemResponse[];
+            const foodItems = payload.map((item) => FoodItem.fromResponse(item));
+            return foodItems;
+        }
+        return null;
+    }
 }
 
-export async function getFoodItems(): Promise<FoodItem[] | null> {
-    const userStore = useUserStore();
-    const user = userStore.user;
-    if (user === null) {
-        return null;
-    }
-    const request = new HttpRequest()
-        .setRoute("/api/food-items")
-        .setMethod("GET")
-        .addHeader("Content-Type", "application/json")
-        .setBearerToken(user.accessToken);
-    await request.send();
-    const response = request.getResponseData();
-    if (response === null) {
-        return null;
-    }
-    if (response.status === 200) {
-        const payload = response.body as FoodItemResponse[];
-        const foodItems = payload.map((item) => FoodItem.fromResponse(item));
-        return foodItems;
-    }
-    return null;
-}

@@ -3,6 +3,7 @@ package meal
 import (
 	"database/sql"
 	"log/slog"
+	"time"
 )
 
 type Store struct {
@@ -40,4 +41,19 @@ func (s *Store) Add(meal Meal) Meal {
 		panic(err)
 	}
 	return meal
+}
+
+func (s *Store) GetByDate(dateFrom time.Time, dateTo time.Time) []Meal {
+	rows, err := s.DB.Query("select m.id, m.meal_time, m.sequence_number from meals m where m.meal_time >= $1 and m.meal_time < $2", dateFrom, dateTo)
+	if err != nil {
+		panic(err)
+	}
+	meals := make([]Meal, 0)
+	for rows.Next() {
+		meal := Meal{}
+		rows.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber)
+		meals = append(meals, meal)
+	}
+	return meals
+
 }

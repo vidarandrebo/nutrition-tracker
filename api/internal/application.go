@@ -95,7 +95,7 @@ func (a *Application) addControllers() {
 	a.Controllers = &Controllers{}
 	a.Controllers.FoodItemController = fooditem.NewController(a.Stores.FoodItemStore)
 	a.Controllers.AuthController = auth.NewController(a.Services.AuthService, a.Logger)
-	a.Controllers.MealController = meal.NewController(a.Stores.MealStore)
+	a.Controllers.MealController = meal.NewController(a.Stores.MealStore, a.Logger)
 }
 
 func (a *Application) addMiddlewares() {
@@ -122,6 +122,7 @@ func (a *Application) mealRoutes() http.Handler {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/meals", a.Controllers.MealController.Post)
+	mux.HandleFunc("GET /api/meals", a.Controllers.MealController.Get)
 	return mw(mux)
 }
 

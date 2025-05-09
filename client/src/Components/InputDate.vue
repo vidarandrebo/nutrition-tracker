@@ -24,7 +24,7 @@ function handleInput(event: Event) {
 </script>
 
 <template>
-    <input type="date" :value="dateString" @input="handleInput" />
+    <input class="input" type="date" :value="dateString" @input="handleInput" />
 </template>
 
 <style scoped></style>

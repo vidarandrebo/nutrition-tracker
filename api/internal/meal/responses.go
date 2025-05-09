@@ -1,8 +1,12 @@
 package meal
 
+import "time"
+
 type MealResponse struct {
-	ID      int64           `json:"id"`
-	Entries []EntryResponse `json:"entries"`
+	ID             int64           `json:"id"`
+	SequenceNumber int64           `json:"sequenceNumber"`
+	Timestamp      time.Time       `json:"timestamp"`
+	Entries        []EntryResponse `json:"entries"`
 }
 
 type EntryResponse struct {

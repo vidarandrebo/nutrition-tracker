@@ -35,8 +35,8 @@ async function logout() {
 </script>
 
 <template>
-    <header>
-        <nav class="navbar is-transparent is-active">
+    <header class="">
+        <nav class="navbar is-transparent is-active has-background-primary-light">
             <div class="navbar-brand">
                 <div :class="navbarBurgerClass" data-target="navbarExampleTransparentExample" @click="flipBurger">
                     <span></span>
