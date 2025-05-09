@@ -1,13 +1,13 @@
 import { defineStore } from "pinia";
 import { ref } from "vue";
-import { type FoodItem, getFoodItems } from "../Models/FoodItems/Fooditem.ts";
+import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
 
     async function init() {
         if (collection.value.length === 0) {
-            const items = await getFoodItems();
+            const items = await FoodItem.get();
             if (items === null) {
                 collection.value = [];
             } else {
@@ -17,7 +17,7 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     }
 
     async function refresh() {
-        const items = await getFoodItems();
+        const items = await FoodItem.get();
         if (items === null) {
             collection.value = [];
         } else {

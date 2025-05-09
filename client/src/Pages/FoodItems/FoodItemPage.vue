@@ -4,6 +4,7 @@ import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import { computed, onMounted, ref } from "vue";
 import FoodItemDisplay from "./FoodItemDisplay.vue";
 import InputText from "../../Components/InputText.vue";
+import FormField from "../../Components/FormField.vue";
 
 const foodItemStore = useFoodItemStore();
 
@@ -33,8 +34,12 @@ const filteredFoodItems = computed(() => {
 
 <template>
     <HeaderH1>Food Items</HeaderH1>
-    <RouterLink to="/food-items/add">Add</RouterLink>
-    <InputText v-model="searchTerm"></InputText>
+    <FormField>
+        <RouterLink class="button is-primary" to="/food-items/add">Add</RouterLink>
+    </FormField>
+    <FormField>
+        <InputText v-model="searchTerm" placeholder="Search"></InputText>
+    </FormField>
     <ul>
         <FoodItemDisplay v-for="foodItem in filteredFoodItems" :item="foodItem" :key="foodItem.id"></FoodItemDisplay>
     </ul>

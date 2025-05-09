@@ -7,7 +7,9 @@ import MenuBar from "./Components/MenuBar.vue";
     <main>
         <RouterView></RouterView>
     </main>
-    <footer>
-
-    </footer>
+    <footer></footer>
 </template>
+
+<style>
+@import "bulma/bulma.scss";
+</style>

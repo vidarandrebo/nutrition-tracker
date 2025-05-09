@@ -19,7 +19,7 @@ func (sw *StatusWriter) WriteHeader(statusCode int) {
 	sw.ResponseWriter.WriteHeader(statusCode)
 	sw.statusCode = statusCode
 }
-func NewRequestTimer(log *slog.Logger) *RequestMetadata {
+func NewRequestMetadata(log *slog.Logger) *RequestMetadata {
 	return &RequestMetadata{log: log.With(slog.String("module", "middleware.RequestMetadata"))}
 }
 
