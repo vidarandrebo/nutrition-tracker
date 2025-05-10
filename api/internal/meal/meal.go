@@ -7,4 +7,5 @@ type Meal struct {
 	SequenceNumber int64
 	Timestamp      time.Time
 	Entries        []Entry
+	OwnerID        int64
 }

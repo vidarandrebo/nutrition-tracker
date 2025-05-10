@@ -32,7 +32,8 @@ CREATE TABLE IF NOT EXISTS meals
 (
     id              bigserial primary key,
     sequence_number integer,
-    meal_time       timestamp
+    meal_time       timestamp,
+    owner_id        bigint REFERENCES users (id)
 );
 
 CREATE TABLE IF NOT EXISTS meal_entries
