@@ -25,11 +25,11 @@ export class Meal {
         }
         return ts;
     }
-    static async add(day: Date) : Promise<void> {
+    static async add(day: Date) : Promise<Meal | null> {
         const userStore = useUserStore();
         const user = userStore.user;
         if (user === null) {
-            return;
+            return null;
         }
 
         const request: PostMealRequest = {
@@ -48,7 +48,9 @@ export class Meal {
         const response = httpRequest.getResponseData();
         switch (response?.status) {
             case 201:
-                console.log(response?.body);
+                if (response?.body) {
+                    return Meal.fromResponse(response.body as MealResponse)
+                }
                 break;
             case 404:
                 console.log("oi, ya goofed up");
@@ -60,6 +62,7 @@ export class Meal {
             default:
                 break;
         }
+        return null;
     }
     static async get(day: Date): Promise<Meal[] | null> {
         const userStore = useUserStore();

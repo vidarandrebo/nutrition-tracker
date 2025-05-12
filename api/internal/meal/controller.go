@@ -44,9 +44,10 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 		ID:             meal.ID,
 		SequenceNumber: meal.SequenceNumber,
 		Timestamp:      meal.Timestamp,
-		Entries:        nil,
+		Entries:        make([]EntryResponse, 0),
 	}
 
+	w.Header().Set("content-Type", "application/json")
 	enc := json.NewEncoder(w)
 	enc.Encode(response)
 }
