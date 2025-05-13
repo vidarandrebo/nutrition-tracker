@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
@@ -25,5 +25,28 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         }
     }
 
-    return { collection, init, refresh };
+    const searchTerm = ref<string>("");
+    const filteredFoodItems = computed(() => {
+        if (searchTerm.value.length < 3) {
+            return collection.value;
+        }
+        const terms = searchTerm.value
+            .split(" ")
+            .filter((s) => s !== "")
+            .map((t) => t.toLowerCase());
+
+        if (searchTerm.value === "") {
+            return collection.value;
+        }
+        return collection.value.filter((x) => {
+            for (let i = 0; i < terms.length; i++) {
+                if (!(x.product.toLowerCase().includes(terms[i]) || x.manufacturer.toLowerCase().includes(terms[i]))) {
+                    return false;
+                }
+            }
+            return true;
+        })
+            .slice(0,100);
+    });
+    return { collection, init, refresh , filteredFoodItems, searchTerm};
 });

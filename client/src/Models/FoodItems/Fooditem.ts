@@ -11,6 +11,14 @@ export class FoodItem {
     fat: number;
     kCal: number;
     source: string;
+    get name(): string {
+        let out = this.manufacturer;
+        if (this.product.length > 0 && out.length > 0) {
+            out += " ";
+        }
+        return out + this.product
+
+    }
 
     constructor() {
         this.id = 0;

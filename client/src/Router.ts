@@ -6,6 +6,7 @@ import SettingsPage from "./Pages/SettingsPage.vue";
 import RecipePage from "./Pages/RecipePage.vue";
 import FoodItemPage from "./Pages/FoodItems/FoodItemPage.vue";
 import AddFoodItemPage from "./Pages/FoodItems/AddFoodItemPage.vue";
+import MealPage from "./Pages/Meals/MealPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -42,6 +43,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/",
         name: "Home",
         component: HomePage,
+    },
+    {
+        path: "/meals/:id",
+        name: "Meal",
+        component: MealPage,
     },
 ];
 

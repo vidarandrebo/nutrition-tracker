@@ -64,7 +64,7 @@ export class Meal {
         }
         return null;
     }
-    static async get(day: Date): Promise<Meal[] | null> {
+    static async getByDay(day: Date): Promise<Meal[] | null> {
         const userStore = useUserStore();
         const user = userStore.user;
         if (!user) {

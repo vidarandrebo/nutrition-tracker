@@ -9,7 +9,7 @@ import { onMounted } from "vue";
 const userStore = useUserStore();
 
 onMounted(async () => {
-    await mealStore.loadMeals()
+    await mealStore.loadMealsForDay()
 })
 
 const mealStore = useMealStore();
@@ -21,11 +21,11 @@ const mealStore = useMealStore();
         <InputDate v-model="mealStore.selectedDay"></InputDate>
     </div>
     <Button v-on:click="mealStore.addMeal">Add meal</Button>
-    <Button v-on:click="mealStore.loadMeals">Get meals</Button>
+    <Button v-on:click="mealStore.loadMealsForDay">Get meals</Button>
     <ul>
         <li v-for="item in mealStore.mealsForDay" :key="item.id" class="box">
             <div>
-                {{ item.id }}
+                <RouterLink :to="{path: '/meals/' + item.id}">{{ item.id }}</RouterLink>
             </div>
             <div>
                 {{ item.timestamp }}

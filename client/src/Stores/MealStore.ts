@@ -2,12 +2,14 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import { Meal } from "../Models/Meals/Meal.ts";
 import { addDays, startOfDay } from "../Utilities/Date.ts";
+import type { PostMealEntryRequest } from "../Models/Meals/Requests.ts";
+import { MealEntry } from "../Models/Meals/MealEntry.ts";
 
 export const useMealStore = defineStore("meals", () => {
     const selectedDay = ref<Date>(new Date());
     const collection = ref<Meal[]>([]);
 
-    watch(selectedDay, loadMeals);
+    watch(selectedDay, loadMealsForDay);
 
     const mealsForDay = computed(() => {
         const startTs = startOfDay(selectedDay.value);
@@ -15,13 +17,21 @@ export const useMealStore = defineStore("meals", () => {
 
         return collection.value.filter((m) => m.timestamp >= startTs && m.timestamp < endTs)
     });
-    async function loadMeals() {
-        const meals =  await Meal.get(selectedDay.value);
+    async function loadMealsForDay() {
+        const meals =  await Meal.getByDay(selectedDay.value);
         meals?.map((m) => {
             if (collection.value.find((x) => x.id === m.id) === undefined) {
                 collection.value.push(m)
             }
         })
+    }
+
+    function getMeal(id: number):  Meal | null {
+        const meal = collection.value.find((m) => m.id === id)
+        if (meal) {
+            return meal
+        }
+        return null
     }
 
     async function addMeal() {
@@ -31,5 +41,15 @@ export const useMealStore = defineStore("meals", () => {
         }
     }
 
-    return { collection, loadMeals, mealsForDay, selectedDay, addMeal};
+    async function addMealEntry(entry: PostMealEntryRequest, mealID: number) {
+        const newEntry = await MealEntry.add(entry, mealID)
+        if (newEntry) {
+            const meal = collection.value.find((m) => m.id === mealID);
+            if (meal) {
+                meal.entries.push(newEntry)
+            }
+        }
+    }
+
+    return { collection, loadMealsForDay, mealsForDay, selectedDay, addMeal, addMealEntry, getMeal};
 });

@@ -1,34 +1,25 @@
 <script setup lang="ts">
 import HeaderH1 from "../../Components/HeaderH1.vue";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
-import { computed, onMounted, ref } from "vue";
+import { onMounted, ref, watch } from "vue";
 import FoodItemDisplay from "./FoodItemDisplay.vue";
 import InputText from "../../Components/InputText.vue";
 import FormField from "../../Components/FormField.vue";
+import  debounce  from "debounce";
 
 const foodItemStore = useFoodItemStore();
+const searchTerm = ref<string>("");
 
 onMounted(async () => {
     await foodItemStore.init();
 });
-const searchTerm = ref<string>("");
-const filteredFoodItems = computed(() => {
-    const terms = searchTerm.value
-        .split(" ")
-        .filter((s) => s !== "")
-        .map((t) => t.toLowerCase());
 
-    if (searchTerm.value === "") {
-        return foodItemStore.collection;
-    }
-    return foodItemStore.collection.filter((x) => {
-        for (let i = 0; i < terms.length; i++) {
-            if (!(x.product.toLowerCase().includes(terms[i]) || x.manufacturer.toLowerCase().includes(terms[i]))) {
-                return false;
-            }
-        }
-        return true;
-    });
+const updateSearchTermDb = debounce(() => {
+    foodItemStore.searchTerm = searchTerm.value
+}, 400);
+
+watch(searchTerm, () => {
+    updateSearchTermDb();
 });
 </script>
 
@@ -41,7 +32,11 @@ const filteredFoodItems = computed(() => {
         <InputText v-model="searchTerm" placeholder="Search"></InputText>
     </FormField>
     <ul>
-        <FoodItemDisplay v-for="foodItem in filteredFoodItems" :item="foodItem" :key="foodItem.id"></FoodItemDisplay>
+        <FoodItemDisplay
+            v-for="foodItem in foodItemStore.filteredFoodItems"
+            :item="foodItem"
+            :key="foodItem.id"
+        ></FoodItemDisplay>
     </ul>
 </template>
 

@@ -45,6 +45,7 @@ type Controllers struct {
 type Middlewares struct {
 	Auth            *middleware.Auth
 	RequestMetadata *middleware.RequestMetadata
+	HeaderWriter    *middleware.HeaderWriter
 }
 
 func NewApplication() *Application {
@@ -102,6 +103,7 @@ func (a *Application) addMiddlewares() {
 	a.Middlewares = &Middlewares{}
 	a.Middlewares.RequestMetadata = middleware.NewRequestMetadata(a.Logger)
 	a.Middlewares.Auth = middleware.NewAuth(a.Logger, a.Services.JwtService)
+	a.Middlewares.HeaderWriter = middleware.NewHeaderWriter(a.Logger)
 }
 
 func (a *Application) foodItemRoutes() http.Handler {
@@ -129,6 +131,7 @@ func (a *Application) mealRoutes() http.Handler {
 func (a *Application) apiMux() http.Handler {
 	mwBuilder := middleware.NewMiddlewareBuilder()
 	mwBuilder.AddMiddleware(a.Middlewares.RequestMetadata.Time)
+	mwBuilder.AddMiddleware(a.Middlewares.HeaderWriter.WriteHeaders)
 	mw := mwBuilder.Build()
 
 	mux := http.NewServeMux()
