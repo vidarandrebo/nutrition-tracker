@@ -2,6 +2,7 @@ package meal
 
 import (
 	"database/sql"
+	"fmt"
 	"log/slog"
 	"time"
 )
@@ -55,5 +56,14 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 		meals = append(meals, meal)
 	}
 	return meals
+}
+func (s *Store) GetById(ownerID int64, id int64) (Meal, error) {
+	row := s.DB.QueryRow("select m.id, m.meal_time, m.sequence_number, m.owner_id from meals m where m.id = $1 and m.owner_id = $2", id, ownerID)
+	meal := Meal{}
+	err := row.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID)
 
+	if err != nil {
+		return Meal{}, fmt.Errorf("no meal with id %d", id)
+	}
+	return meal, nil
 }

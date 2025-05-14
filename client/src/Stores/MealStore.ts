@@ -31,7 +31,15 @@ export const useMealStore = defineStore("meals", () => {
         if (meal) {
             return meal
         }
+
         return null
+    }
+
+    async function loadMeal(id: number) {
+        const meal = await Meal.getById(id);
+        if (meal) {
+            collection.value.push(meal)
+        }
     }
 
     async function addMeal() {
@@ -51,5 +59,5 @@ export const useMealStore = defineStore("meals", () => {
         }
     }
 
-    return { collection, loadMealsForDay, mealsForDay, selectedDay, addMeal, addMealEntry, getMeal};
+    return { collection, loadMealsForDay, mealsForDay, selectedDay, addMeal, addMealEntry, getMeal, loadMeal};
 });

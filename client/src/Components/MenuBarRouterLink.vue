@@ -10,8 +10,8 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .router-link-active {
-    @apply has-background-primary
+    @apply has-background-primary;
 }
 </style>

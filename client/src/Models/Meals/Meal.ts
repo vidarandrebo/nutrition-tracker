@@ -96,6 +96,34 @@ export class Meal {
         }
         return null;
     }
+    static async getById(id: number): Promise<Meal | null> {
+        const userStore = useUserStore();
+        const user = userStore.user;
+        if (!user) {
+            return null;
+        }
+        const httpRequest = new HttpRequest()
+            .setRoute(`/api/meals/${id}`)
+            .setMethod("GET")
+            .addHeader("Content-Type", "application/json")
+            .setBearerToken(user.accessToken)
+        await httpRequest.send();
+        const response = httpRequest.getResponseData();
+
+        switch (response?.status) {
+            case 200:
+                if (response?.body) {
+                    return Meal.fromResponse(response.body as MealResponse);
+                }
+                break;
+            case 404:
+                console.warn("failed to fetch meals from server");
+                break;
+            default:
+                break;
+        }
+        return null;
+    }
 
     static fromResponse(res: MealResponse): Meal {
         const m = new Meal();

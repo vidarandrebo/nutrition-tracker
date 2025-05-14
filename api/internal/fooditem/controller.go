@@ -4,15 +4,20 @@ import (
 	"encoding/json"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
+	"log/slog"
 	"net/http"
+	"reflect"
 )
 
 type Controller struct {
-	store *Store
+	store  *Store
+	logger *slog.Logger
 }
 
-func NewController(store *Store) *Controller {
-	return &Controller{store: store}
+func NewController(store *Store, logger *slog.Logger) *Controller {
+	c := &Controller{store: store}
+	c.logger = logger.With("module", reflect.TypeOf(c))
+	return c
 }
 func (fc *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())

@@ -10,6 +10,6 @@ import MenuBar from "./Components/MenuBar.vue";
     <footer></footer>
 </template>
 
-<style>
-@import "bulma/bulma.scss";
+<style lang="scss">
+@use "bulma/sass";
 </style>

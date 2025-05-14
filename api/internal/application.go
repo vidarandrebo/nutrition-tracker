@@ -94,7 +94,7 @@ func (a *Application) addStores() {
 
 func (a *Application) addControllers() {
 	a.Controllers = &Controllers{}
-	a.Controllers.FoodItemController = fooditem.NewController(a.Stores.FoodItemStore)
+	a.Controllers.FoodItemController = fooditem.NewController(a.Stores.FoodItemStore, a.Logger)
 	a.Controllers.AuthController = auth.NewController(a.Services.AuthService, a.Logger)
 	a.Controllers.MealController = meal.NewController(a.Stores.MealStore, a.Logger)
 }
@@ -125,6 +125,7 @@ func (a *Application) mealRoutes() http.Handler {
 	mux := http.NewServeMux()
 	mux.HandleFunc("POST /api/meals", a.Controllers.MealController.Post)
 	mux.HandleFunc("GET /api/meals", a.Controllers.MealController.Get)
+	mux.HandleFunc("GET /api/meals/{id}", a.Controllers.MealController.GetByID)
 	return mw(mux)
 }
 
@@ -135,8 +136,12 @@ func (a *Application) apiMux() http.Handler {
 	mw := mwBuilder.Build()
 
 	mux := http.NewServeMux()
-	mux.Handle("/api/food-items", a.foodItemRoutes())
-	mux.Handle("/api/meals", a.mealRoutes())
+	foodItemRoutes := a.foodItemRoutes()
+	mealRoutes := a.mealRoutes()
+	mux.Handle("/api/food-items/", foodItemRoutes)
+	mux.Handle("/api/food-items", foodItemRoutes)
+	mux.Handle("/api/meals/", mealRoutes)
+	mux.Handle("/api/meals", mealRoutes)
 	mux.HandleFunc("POST /api/login", a.Controllers.AuthController.Login)
 	mux.HandleFunc("POST /api/register", a.Controllers.AuthController.Register)
 	return mw(mux)

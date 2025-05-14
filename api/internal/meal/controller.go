@@ -6,6 +6,8 @@ import (
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"log/slog"
 	"net/http"
+	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -16,7 +18,9 @@ type Controller struct {
 }
 
 func NewController(store *Store, logger *slog.Logger) *Controller {
-	return &Controller{store: store, last: 0, logger: logger}
+	c := &Controller{store: store, last: 0}
+	c.logger = logger.With("module", reflect.TypeOf(c))
+	return c
 }
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
@@ -101,5 +105,36 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 		})
 	}
 	enc := json.NewEncoder(w)
+	enc.Encode(response)
+}
+func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
+	enc := json.NewEncoder(w)
+	userID, err := auth.UserIDFromCtx(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		c.logger.Error("Failed to parse id from path", slog.Any("err", err))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	c.logger.Info("get by id", slog.Int64("id", id))
+
+	meal, err := c.store.GetById(userID, id)
+
+	if err != nil {
+		enc.Encode(err.Error())
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	response := MealResponse{
+		ID:             meal.ID,
+		SequenceNumber: meal.SequenceNumber,
+		Timestamp:      meal.Timestamp,
+		Entries:        make([]EntryResponse, 0),
+	}
 	enc.Encode(response)
 }

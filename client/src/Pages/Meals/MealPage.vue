@@ -9,7 +9,6 @@ import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import debounce from "debounce";
 import InputText from "../../Components/InputText.vue";
 import FormField from "../../Components/FormField.vue";
-import FoodItemDisplay from "../FoodItems/FoodItemDisplay.vue";
 
 const mealStore = useMealStore();
 
@@ -21,14 +20,14 @@ let mealId = 0;
 const searchTerm = ref<string>("");
 
 if (!Array.isArray(route.params.id)) {
-    mealId = parseInt(route.params.id)
+    mealId = parseInt(route.params.id);
 }
 
-const meal = ref<Meal | null>(null)
+const meal = ref<Meal | null>(null);
 
 
 const updateSearchTermDb = debounce(() => {
-    foodItemStore.searchTerm = searchTerm.value
+    foodItemStore.searchTerm = searchTerm.value;
 }, 400);
 
 watch(searchTerm, () => {
@@ -36,16 +35,20 @@ watch(searchTerm, () => {
 });
 
 onMounted(async () => {
-    meal.value = mealStore.getMeal(mealId)
-    await foodItemStore.init()
-})
-
+    let m = mealStore.getMeal(mealId);
+    if (!m) {
+        await mealStore.loadMeal(mealId);
+        m = mealStore.getMeal(mealId);
+    }
+    meal.value = m;
+    await foodItemStore.init();
+});
 
 
 </script>
 
 <template>
-<HeaderH1>Meal {{ mealId }}</HeaderH1>
+    <HeaderH1>Meal {{ mealId }}</HeaderH1>
     <div v-if="meal">
         <p>{{ meal.timestamp }}</p>
     </div>
@@ -56,7 +59,7 @@ onMounted(async () => {
         <InputText v-model="searchTerm" placeholder="Search"></InputText>
     </FormField>
     <ul>
-        <div v-for="foodItem in foodItemStore.filteredFoodItems" :key="foodItem.id">{{ foodItem.name}}</div>
+        <div v-for="foodItem in foodItemStore.filteredFoodItems" :key="foodItem.id">{{ foodItem.name }}</div>
     </ul>
 </template>
 
