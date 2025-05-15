@@ -138,3 +138,35 @@ func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 	}
 	enc.Encode(response)
 }
+func (c *Controller) PostEntry(w http.ResponseWriter, r *http.Request) {
+	userID, err := auth.UserIDFromCtx(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+
+	request, err := utils.ParseJson[PostMealEntryRequest](r.Body)
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	meal := c.store.Add(Meal{
+		SequenceNumber: c.last,
+		Timestamp:      request.Timestamp,
+		OwnerID:        userID,
+	})
+	c.last++
+
+	w.WriteHeader(http.StatusCreated)
+
+	response := MealResponse{
+		ID:             meal.ID,
+		SequenceNumber: meal.SequenceNumber,
+		Timestamp:      meal.Timestamp,
+		Entries:        make([]EntryResponse, 0),
+	}
+
+	enc := json.NewEncoder(w)
+	enc.Encode(response)
+}

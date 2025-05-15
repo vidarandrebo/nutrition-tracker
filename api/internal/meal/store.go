@@ -67,3 +67,13 @@ func (s *Store) GetById(ownerID int64, id int64) (Meal, error) {
 	}
 	return meal, nil
 }
+func (s *Store) AddMealEntry(entry Entry, ownerID int64) Entry {
+
+	err := s.DB.QueryRow("insert into meal_entries as me (food_item_id, amount) values ($1, $2, $3) returning me.id", entry.FoodItemID, entry.Amount).Scan(&entry.ID)
+
+	if err != nil {
+		panic(err)
+	}
+
+	return entry
+}

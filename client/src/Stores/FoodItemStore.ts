@@ -16,6 +16,10 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         }
     }
 
+    function getFoodItem(id: number) : FoodItem | undefined {
+        return collection.value.find((f) => f.id === id)
+    }
+
     async function refresh() {
         const items = await FoodItem.get();
         if (items === null) {
@@ -48,5 +52,5 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         })
             .slice(0,100);
     });
-    return { collection, init, refresh , filteredFoodItems, searchTerm};
+    return { collection, init, refresh , filteredFoodItems, searchTerm, getFoodItem};
 });
