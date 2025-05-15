@@ -4,17 +4,22 @@ import (
 	"encoding/json"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
+	"log/slog"
 	"net/http"
+	"reflect"
 )
 
 type Controller struct {
-	store *Store
+	store  *Store
+	logger *slog.Logger
 }
 
-func NewController(store *Store) *Controller {
-	return &Controller{store: store}
+func NewController(store *Store, logger *slog.Logger) *Controller {
+	c := &Controller{store: store}
+	c.logger = logger.With("module", reflect.TypeOf(c))
+	return c
 }
-func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
+func (fc *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -28,16 +33,16 @@ func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
 	}
 	item := request.ToFoodItem()
 	item.OwnerID = userID
-	newItem := fc.store.AddFoodItem(item)
+	newItem := fc.store.Add(item)
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)
 	enc.Encode(newItem.ToFoodItemResponse())
 }
 
-func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
+func (fc *Controller) List(w http.ResponseWriter, r *http.Request) {
 
-	items := fc.store.GetFoodItems()
+	items := fc.store.Get()
 	responses := make([]FoodItemResponse, 0)
 
 	for _, item := range items {

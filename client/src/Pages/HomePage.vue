@@ -1,18 +1,35 @@
 <script setup lang="ts">
 import HeaderH1 from "../Components/HeaderH1.vue";
-import HeaderH2 from "../Components/HeaderH2.vue";
-import HeaderH3 from "../Components/HeaderH3.vue";
-import HeaderH4 from "../Components/HeaderH4.vue";
-import HeaderH5 from "../Components/HeaderH5.vue";
-import HeaderH6 from "../Components/HeaderH6.vue";
+import { useUserStore } from "../Stores/UserStore.ts";
+import InputDate from "../Components/InputDate.vue";
+import Button from "../Components/Button.vue";
+import { useMealStore } from "../Stores/MealStore.ts";
+import { onMounted } from "vue";
+
+const userStore = useUserStore();
+
+onMounted(async () => {
+    await mealStore.loadMealsForDay()
+})
+
+const mealStore = useMealStore();
 </script>
 <template>
     <HeaderH1>Home</HeaderH1>
-    <HeaderH1>H1</HeaderH1>
-    <HeaderH2>H2</HeaderH2>
-    <HeaderH3>H3</HeaderH3>
-    <HeaderH4>H4</HeaderH4>
-    <HeaderH5>H5</HeaderH5>
-    <HeaderH6>H6</HeaderH6>
-    <p>This is a text</p>
+    <div v-if="userStore.user">
+        <p>Welcome back {{ userStore.user.email }}</p>
+        <InputDate v-model="mealStore.selectedDay"></InputDate>
+    </div>
+    <Button v-on:click="mealStore.addMeal">Add meal</Button>
+    <Button v-on:click="mealStore.loadMealsForDay">Get meals</Button>
+    <ul>
+        <li v-for="item in mealStore.mealsForDay" :key="item.id" class="box">
+            <div>
+                <RouterLink :to="{path: '/meals/' + item.id}">{{ item.id }}</RouterLink>
+            </div>
+            <div>
+                {{ item.timestamp }}
+            </div>
+        </li>
+    </ul>
 </template>
