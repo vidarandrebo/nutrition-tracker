@@ -126,6 +126,7 @@ func (a *Application) mealRoutes() http.Handler {
 	mux.HandleFunc("POST /api/meals", a.Controllers.MealController.Post)
 	mux.HandleFunc("GET /api/meals", a.Controllers.MealController.Get)
 	mux.HandleFunc("GET /api/meals/{id}", a.Controllers.MealController.GetByID)
+	mux.HandleFunc("POST /api/meals/{id}/entries", a.Controllers.MealController.PostEntry)
 	return mw(mux)
 }
 

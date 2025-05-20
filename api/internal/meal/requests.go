@@ -10,4 +10,5 @@ type PostMealEntryRequest struct {
 	MealID     int64
 	FoodItemID int64
 	Amount     float64
+	Timestamp  time.Time
 }

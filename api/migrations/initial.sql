@@ -42,4 +42,4 @@ CREATE TABLE IF NOT EXISTS meal_entries
     amount       double precision,
     food_item_id bigint references food_items (id),
     meal_id      bigint REFERENCES meals (id)
-)
+);

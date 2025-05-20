@@ -89,6 +89,7 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 
 	response := make([]MealResponse, 0, len(meals))
 	for _, m := range meals {
+		c.logger.Info("meal", slog.Any("meal", m))
 		entries := make([]EntryResponse, 0, len(m.Entries))
 		for _, e := range m.Entries {
 			entries = append(entries, EntryResponse{
@@ -122,7 +123,7 @@ func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 	}
 	c.logger.Info("get by id", slog.Int64("id", id))
 
-	meal, err := c.store.GetById(userID, id)
+	meal, err := c.store.GetById(id, userID)
 
 	if err != nil {
 		enc.Encode(err.Error())
@@ -151,22 +152,25 @@ func (c *Controller) PostEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	meal := c.store.Add(Meal{
-		SequenceNumber: c.last,
-		Timestamp:      request.Timestamp,
-		OwnerID:        userID,
-	})
-	c.last++
+	mealID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 
-	w.WriteHeader(http.StatusCreated)
+	entry, err := c.store.AddMealEntry(Entry{
+		FoodItemID: request.FoodItemID,
+		Amount:     request.Amount,
+	}, mealID, userID)
 
-	response := MealResponse{
-		ID:             meal.ID,
-		SequenceNumber: meal.SequenceNumber,
-		Timestamp:      meal.Timestamp,
-		Entries:        make([]EntryResponse, 0),
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
 	}
 
+	response := EntryResponse{
+		ID:         entry.ID,
+		Amount:     entry.Amount,
+		FoodItemID: entry.FoodItemID,
+	}
+
+	w.WriteHeader(http.StatusCreated)
 	enc := json.NewEncoder(w)
 	enc.Encode(response)
 }
