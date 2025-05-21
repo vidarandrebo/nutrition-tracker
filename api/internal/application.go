@@ -113,6 +113,7 @@ func (a *Application) foodItemRoutes() http.Handler {
 
 	mux := http.NewServeMux()
 	mux.HandleFunc("GET /api/food-items", a.Controllers.FoodItemController.List)
+	mux.HandleFunc("GET /api/food-items/{id}", a.Controllers.FoodItemController.Get)
 	mux.HandleFunc("POST /api/food-items", a.Controllers.FoodItemController.Post)
 	return mw(mux)
 }

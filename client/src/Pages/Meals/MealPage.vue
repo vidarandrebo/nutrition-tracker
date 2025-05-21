@@ -13,13 +13,8 @@ import Button from "../../Components/Button.vue";
 import InputNumber from "../../Components/InputNumber.vue";
 import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import Label from "../../Components/Label.vue";
-import { useUserStore } from "../../Stores/UserStore.ts";
-import { HttpRequest } from "http-methods-ts";
-import type { MealEntryResponse, MealResponse } from "../../Models/Meals/Responses.ts";
-import { MealEntry } from "../../Models/Meals/MealEntry.ts";
 
 const mealStore = useMealStore();
-const userStore = useUserStore();
 
 const foodItemForm = ref<PostMealEntryRequest>({
     foodItemId: 0,

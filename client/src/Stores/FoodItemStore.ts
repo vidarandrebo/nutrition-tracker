@@ -4,15 +4,17 @@ import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
+    const initialized = ref<boolean>(false)
 
     async function init() {
-        if (collection.value.length === 0) {
+        if (!initialized.value) {
             const items = await FoodItem.get();
             if (items === null) {
                 collection.value = [];
             } else {
                 collection.value = items;
             }
+            initialized.value = true;
         }
     }
 

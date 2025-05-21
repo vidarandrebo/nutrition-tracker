@@ -67,5 +67,27 @@ export class FoodItem {
         }
         return null;
     }
+    static async getById(id: number) : Promise<FoodItem | null> {
+        const userStore = useUserStore();
+        const user = userStore.user;
+        if (user === null) {
+            return null;
+        }
+        const request = new HttpRequest()
+            .setRoute(`/api/food-items/${id}`)
+            .setMethod("GET")
+            .addHeader("Content-Type", "application/json")
+            .setBearerToken(user.accessToken);
+        await request.send();
+        const response = request.getResponseData();
+        if (response === null) {
+            return null;
+        }
+        if (response.status === 200) {
+            const payload = response.body as FoodItemResponse;
+            return FoodItem.fromResponse(payload);
+        }
+        return null;
+    }
 }
 

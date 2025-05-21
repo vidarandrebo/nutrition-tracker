@@ -47,7 +47,7 @@ func (s *Store) Add(item FoodItem) FoodItem {
 	return item
 }
 
-func (s *Store) GetByID(id int64) FoodItem {
+func (s *Store) GetByID(id int64) (FoodItem, error) {
 	item := FoodItem{}
 	err := s.db.QueryRow(`
 		select id, manufacturer, product, protein, carbohydrate, fat, kcal,source, owner_id 
@@ -66,9 +66,9 @@ func (s *Store) GetByID(id int64) FoodItem {
 		&item.OwnerID,
 	)
 	if err != nil {
-		panic(err)
+		return FoodItem{}, err
 	}
-	return item
+	return item, nil
 }
 
 func (s *Store) Get() []FoodItem {
