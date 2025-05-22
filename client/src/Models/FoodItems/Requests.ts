@@ -2,9 +2,9 @@ export class PostFoodItemRequest {
     manufacturer: string;
     product: string;
     protein: number;
-    carbohydrate : number;
+    carbohydrate: number;
     fat: number;
-    kCal : number | undefined;
+    kCal: number | undefined;
 
     constructor() {
         this.manufacturer = "";

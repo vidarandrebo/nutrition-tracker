@@ -1,18 +1,65 @@
 <script setup lang="ts">
 import HeaderH1 from "../Components/HeaderH1.vue";
-import HeaderH2 from "../Components/HeaderH2.vue";
-import HeaderH3 from "../Components/HeaderH3.vue";
-import HeaderH4 from "../Components/HeaderH4.vue";
-import HeaderH5 from "../Components/HeaderH5.vue";
-import HeaderH6 from "../Components/HeaderH6.vue";
+import { useUserStore } from "../Stores/UserStore.ts";
+import InputDate from "../Components/InputDate.vue";
+import Button from "../Components/Button.vue";
+import { useMealStore } from "../Stores/MealStore.ts";
+import { computed, onMounted, watch } from "vue";
+import { useFoodItemStore } from "../Stores/FoodItemStore.ts";
+import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
+import { useMealViewStore } from "../Stores/MealViewStore.ts";
+
+const userStore = useUserStore();
+const mealStore = useMealStore();
+const foodItemStore = useFoodItemStore();
+const mealViewStore = useMealViewStore();
+
+
+const foodItemIds = computed(() => [...new Set(mealStore.mealsForDay
+    .flatMap((m) => m.entries)
+    .map((f) => f.foodItemId))
+]);
+onMounted(async () => {
+    await mealStore.loadMealsForDay();
+
+});
+watch(foodItemIds, () => {
+    for (const id of foodItemIds.value) {
+        if (id && !foodItemStore.getFoodItem(id)) {
+            FoodItem.getById(id).then((f) => {
+                if (f) {
+                    foodItemStore.collection.push(f);
+                }
+            });
+        }
+    }
+});
+
+
 </script>
 <template>
     <HeaderH1>Home</HeaderH1>
-    <HeaderH1>H1</HeaderH1>
-    <HeaderH2>H2</HeaderH2>
-    <HeaderH3>H3</HeaderH3>
-    <HeaderH4>H4</HeaderH4>
-    <HeaderH5>H5</HeaderH5>
-    <HeaderH6>H6</HeaderH6>
-    <p>This is a text</p>
+    <div v-if="userStore.user">
+        <p>Welcome back {{ userStore.user.email }}</p>
+        <InputDate v-model="mealStore.selectedDay"></InputDate>
+    </div>
+    <Button v-on:click="mealStore.addMeal">Add meal</Button>
+    <Button v-on:click="mealStore.loadMealsForDay">Get meals</Button>
+    <ul>
+        <li v-for="item in mealViewStore.mealsView" :key="item.id" class="box">
+            <div>
+                <RouterLink :to="{path: '/meals/' + item.id}">{{ item.id }}</RouterLink>
+            </div>
+            <div>
+                {{ item.timestamp }}
+            </div>
+            <ul>
+                <li v-for="entry in item.entries">
+                    <p>{{ entry.name }}, {{ entry.amount }}g.</p>
+                    <p>KCal: {{ entry.kCal }}, Protein: {{ entry.protein }}, Carbohydrate: {{ entry.carbohydrate }},
+                        Fat: {{ entry.fat }}</p>
+                </li>
+            </ul>
+        </li>
+    </ul>
 </template>

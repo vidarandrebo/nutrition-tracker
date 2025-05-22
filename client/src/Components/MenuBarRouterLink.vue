@@ -1,5 +1,5 @@
 <template>
-    <RouterLink class="menubar-router-link" :to="to">
+    <RouterLink class="navbar-item is-primary" :to="to">
         <slot></slot>
     </RouterLink>
 </template>
@@ -10,5 +10,8 @@ defineProps<{
 }>();
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+.router-link-active {
+    @apply has-background-primary;
+}
 </style>

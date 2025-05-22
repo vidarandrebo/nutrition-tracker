@@ -28,17 +28,18 @@ CREATE TABLE IF NOT EXISTS micronutrients
 );
 
 
-CREATE TABLE IF NOT EXISTS days
-(
-    id   bigserial primary key,
-    date date
-);
-
-
 CREATE TABLE IF NOT EXISTS meals
 (
     id              bigserial primary key,
     sequence_number integer,
-    day_id          bigint REFERENCES days (id)
+    meal_time       timestamp,
+    owner_id        bigint REFERENCES users (id)
 );
 
+CREATE TABLE IF NOT EXISTS meal_entries
+(
+    id           bigserial primary key,
+    amount       double precision,
+    food_item_id bigint references food_items (id),
+    meal_id      bigint REFERENCES meals (id)
+);

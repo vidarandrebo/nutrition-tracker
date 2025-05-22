@@ -1,0 +1,15 @@
+meta {
+  name: get-meal-by-id
+  type: http
+  seq: 7
+}
+
+get {
+  url: http://localhost:8080/api/meals/9
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
