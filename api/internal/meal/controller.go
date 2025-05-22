@@ -44,15 +44,8 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusCreated)
 
-	response := MealResponse{
-		ID:             meal.ID,
-		SequenceNumber: meal.SequenceNumber,
-		Timestamp:      meal.Timestamp,
-		Entries:        make([]EntryResponse, 0),
-	}
-
 	enc := json.NewEncoder(w)
-	enc.Encode(response)
+	enc.Encode(meal.ToResponse())
 }
 
 func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
@@ -88,22 +81,9 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	c.logger.Info("meal times", slog.Time("from", timeFrom), slog.Time("to", timeTo))
 
 	response := make([]MealResponse, 0, len(meals))
+
 	for _, m := range meals {
-		c.logger.Info("meal", slog.Any("meal", m))
-		entries := make([]EntryResponse, 0, len(m.Entries))
-		for _, e := range m.Entries {
-			entries = append(entries, EntryResponse{
-				ID:         e.ID,
-				Amount:     e.Amount,
-				FoodItemID: e.FoodItemID,
-			})
-		}
-		response = append(response, MealResponse{
-			ID:             m.ID,
-			SequenceNumber: m.SequenceNumber,
-			Timestamp:      m.Timestamp,
-			Entries:        entries,
-		})
+		response = append(response, m.ToResponse())
 	}
 	enc := json.NewEncoder(w)
 	enc.Encode(response)
@@ -131,13 +111,7 @@ func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := MealResponse{
-		ID:             meal.ID,
-		SequenceNumber: meal.SequenceNumber,
-		Timestamp:      meal.Timestamp,
-		Entries:        make([]EntryResponse, 0),
-	}
-	enc.Encode(response)
+	enc.Encode(meal.ToResponse())
 }
 func (c *Controller) PostEntry(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
@@ -164,13 +138,7 @@ func (c *Controller) PostEntry(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	response := EntryResponse{
-		ID:         entry.ID,
-		Amount:     entry.Amount,
-		FoodItemID: entry.FoodItemID,
-	}
-
 	w.WriteHeader(http.StatusCreated)
 	enc := json.NewEncoder(w)
-	enc.Encode(response)
+	enc.Encode(entry.ToResponse())
 }

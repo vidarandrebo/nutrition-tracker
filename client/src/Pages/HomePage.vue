@@ -7,16 +7,16 @@ import { useMealStore } from "../Stores/MealStore.ts";
 import { computed, onMounted, watch } from "vue";
 import { useFoodItemStore } from "../Stores/FoodItemStore.ts";
 import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
-import type { MealView } from "../Models/Meals/MealView.ts";
+import { useMealViewStore } from "../Stores/MealViewStore.ts";
 
 const userStore = useUserStore();
 const mealStore = useMealStore();
 const foodItemStore = useFoodItemStore();
+const mealViewStore = useMealViewStore();
 
 
 const foodItemIds = computed(() => [...new Set(mealStore.mealsForDay
-    .map((m) => m.entries)
-    .flat(1)
+    .flatMap((m) => m.entries)
     .map((f) => f.foodItemId))
 ]);
 onMounted(async () => {
@@ -35,25 +35,6 @@ watch(foodItemIds, () => {
     }
 });
 
-const mealsView = computed((): MealView[] => {
-    return mealStore.mealsForDay.map((m) => {
-        return {
-            id: m.id,
-            timestamp: m.timestamp,
-            entries: m.entries.map((me) => {
-                const fi = foodItemStore.getFoodItem(me.foodItemId);
-                return {
-                    id: me.id,
-                    name: fi?.name ?? "",
-                    protein: fi ? (fi.protein * me.amount) / 100 : 0.0,
-                    carbohydrate: fi ? (fi.carbohydrate * me.amount) / 100 : 0.0,
-                    fat: fi ? (fi.fat * me.amount) / 100 : 0.0,
-                    kCal: fi ? (fi.kCal * me.amount) / 100 : 0.0
-                };
-            })
-        };
-    });
-});
 
 </script>
 <template>
@@ -65,16 +46,20 @@ const mealsView = computed((): MealView[] => {
     <Button v-on:click="mealStore.addMeal">Add meal</Button>
     <Button v-on:click="mealStore.loadMealsForDay">Get meals</Button>
     <ul>
-        <li v-for="item in mealsView" :key="item.id" class="box">
+        <li v-for="item in mealViewStore.mealsView" :key="item.id" class="box">
             <div>
                 <RouterLink :to="{path: '/meals/' + item.id}">{{ item.id }}</RouterLink>
             </div>
             <div>
                 {{ item.timestamp }}
             </div>
-            <div v-for="entry in item.entries">
-                {{ entry.name }} {{ entry.protein }}
-            </div>
+            <ul>
+                <li v-for="entry in item.entries">
+                    <p>{{ entry.name }}, {{ entry.amount }}g.</p>
+                    <p>KCal: {{ entry.kCal }}, Protein: {{ entry.protein }}, Carbohydrate: {{ entry.carbohydrate }},
+                        Fat: {{ entry.fat }}</p>
+                </li>
+            </ul>
         </li>
     </ul>
 </template>

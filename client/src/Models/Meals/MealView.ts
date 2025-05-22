@@ -11,4 +11,5 @@ export type MealEntryView = {
     carbohydrate: number
     fat: number
     kCal: number
+    amount: number
 }

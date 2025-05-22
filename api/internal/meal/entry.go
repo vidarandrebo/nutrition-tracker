@@ -13,3 +13,15 @@ func (e Entry) FoodItemIDOrNil() any {
 	}
 	return e.FoodItemID
 }
+
+func (e Entry) ToResponse() EntryResponse {
+	return EntryResponse{
+		ID:         e.ID,
+		Amount:     e.Amount,
+		FoodItemID: e.FoodItemID,
+	}
+}
+
+func (e Entry) IsValid() bool {
+	return (e.ID != 0) && (e.Amount != 0.0)
+}

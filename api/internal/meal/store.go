@@ -81,7 +81,9 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 			meals = append(meals, meal)
 			entries[meal.ID] = make([]Entry, 0)
 		}
-		entries[meal.ID] = append(entries[meal.ID], entry)
+		if entry.IsValid() {
+			entries[meal.ID] = append(entries[meal.ID], entry)
+		}
 		lastMealId = meal.ID
 	}
 
