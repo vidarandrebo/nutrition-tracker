@@ -45,7 +45,7 @@ watch(foodItemIds, () => {
     </div>
     <Button v-on:click="mealStore.addMeal">Add meal</Button>
     <Button v-on:click="mealStore.loadMealsForDay">Get meals</Button>
-    <ul>
+    <ul class="">
         <li v-for="item in mealViewStore.mealsView" :key="item.id" class="box">
             <div>
                 <RouterLink :to="{path: '/meals/' + item.id}">{{ item.id }}</RouterLink>
@@ -53,7 +53,7 @@ watch(foodItemIds, () => {
             <div>
                 {{ item.timestamp }}
             </div>
-            <ul>
+            <ul class="content">
                 <li v-for="entry in item.entries">
                     <p>{{ entry.name }}, {{ entry.amount }}g.</p>
                     <p>KCal: {{ entry.kCal }}, Protein: {{ entry.protein }}, Carbohydrate: {{ entry.carbohydrate }},

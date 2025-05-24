@@ -13,6 +13,8 @@ import Button from "../../Components/Button.vue";
 import InputNumber from "../../Components/InputNumber.vue";
 import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import Label from "../../Components/Label.vue";
+import Modal from "../../Components/Modal.vue";
+import type { Macronutrients } from "../../Models/Common/Macronutrients.ts";
 
 const mealStore = useMealStore();
 
@@ -63,21 +65,22 @@ function showFoodItemDialog(item: FoodItem) {
     selectedFoodItem.value = foodItemStore.getFoodItem(item.id);
 }
 
-const nutrients = computed(() => {
+const nutrients = computed((): Macronutrients => {
     if (selectedFoodItem.value) {
         return {
             protein: (selectedFoodItem.value.protein * foodItemForm.value.amount) / 100,
-            carb: (selectedFoodItem.value.carbohydrate * foodItemForm.value.amount) / 100,
+            carbohydrate: (selectedFoodItem.value.carbohydrate * foodItemForm.value.amount) / 100,
             fat: (selectedFoodItem.value.fat * foodItemForm.value.amount) / 100,
         };
     }
-    return { protein: 0, carb: 0, fat: 0 };
+    return { protein: 0, carbohydrate: 0, fat: 0 };
 });
 
 async function addToMeal() {
     if (meal.value) {
         await mealStore.addMealEntry(foodItemForm.value, meal.value.id)
     }
+    selectFoodItem.value = true;
 }
 </script>
 
@@ -108,17 +111,23 @@ async function addToMeal() {
         </ul>
     </template>
     <template v-else>
-        <div class="is-flex">
-            <p>Name: {{ selectedFoodItem?.name }}</p>
-            <Label>
-                <p>Amount (g)</p>
-                <p v-if="selectedFoodItem">Protein: {{ nutrients.protein }}</p>
-                <p v-if="selectedFoodItem">Carb: {{ nutrients.carb }}</p>
-                <p v-if="selectedFoodItem">Fat: {{ nutrients.fat }}</p>
-                <InputNumber v-model="foodItemForm.amount"></InputNumber>
-            </Label>
-            <Button @click="addToMeal">Add</Button>
-        </div>
+        <Modal @closed="() => selectFoodItem = true" title="Add Item">
+            <template #default>
+                <div class="is-flex is-flex-direction-column">
+                    <p><b>Name:</b> {{ selectedFoodItem?.name }}</p>
+                    <p><b>Protein:</b> {{ nutrients.protein }} g</p>
+                    <p><b>Carb:</b> {{ nutrients.carbohydrate }} g</p>
+                    <p><b>Fat:</b> {{ nutrients.fat }} g</p>
+                    <Label>
+                        <p>Amount (g)</p>
+                        <InputNumber v-model="foodItemForm.amount"></InputNumber>
+                    </Label>
+                </div>
+            </template>
+            <template #footer>
+                <Button @click="addToMeal">Add</Button>
+            </template>
+        </Modal>
     </template>
 </template>
 

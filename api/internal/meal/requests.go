@@ -7,8 +7,6 @@ type PostMealRequest struct {
 }
 
 type PostMealEntryRequest struct {
-	MealID     int64
-	FoodItemID int64
-	Amount     float64
-	Timestamp  time.Time
+	FoodItemID int64   `json:"foodItemId"`
+	Amount     float64 `json:"amount"`
 }

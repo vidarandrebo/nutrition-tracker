@@ -7,7 +7,7 @@ const emit = defineEmits(["update:modelValue"]);
 
 function handleInput(event: Event) {
     const inputValue = (event.target as HTMLInputElement).value;
-    emit("update:modelValue", inputValue);
+    emit("update:modelValue", parseFloat(inputValue));
 }
 </script>
 
