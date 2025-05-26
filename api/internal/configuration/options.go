@@ -9,6 +9,7 @@ type Options struct {
 	JwtSecret            string                           `json:"JwtSecret"`
 	JwtIssuer            string                           `json:"JwtIssuer"`
 	JwtAudience          string                           `json:"JwtAudience"`
+	JwtExpirationTime    int64                            `json:"JwtExpirationTime"`
 	ListenAddress        string                           `json:"ListenAddress"`
 	StaticFilesDirectory string                           `json:"StaticFilesDirectory"`
 	LogFile              string                           `json:"LogFile"`

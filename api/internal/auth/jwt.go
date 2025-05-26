@@ -12,13 +12,14 @@ import (
 )
 
 type JwtService struct {
-	opt configuration.Options
+	opt *configuration.Options
 	key []byte
 }
 
-func NewJwtService() *JwtService {
+func NewJwtService(opt *configuration.Options) *JwtService {
 	return &JwtService{
-		key: []byte("this is some key that should be changed"),
+		opt: opt,
+		key: []byte(opt.JwtSecret),
 	}
 }
 
@@ -37,7 +38,7 @@ func (js *JwtService) NewJwtClaims(userID int64) *JwtClaims {
 		Subject:        userID,
 		Issuer:         js.opt.JwtIssuer,
 		Audience:       []string{js.opt.JwtAudience},
-		ExpirationTime: jwt.NewNumericDate(now.Add(1 * time.Hour)),
+		ExpirationTime: jwt.NewNumericDate(now.Add(time.Duration(js.opt.JwtExpirationTime) * time.Second)),
 		IssuedAt:       jwt.NewNumericDate(now),
 		NotBefore:      jwt.NewNumericDate(now.Add(-5 * time.Minute)),
 	}

@@ -3,6 +3,11 @@ import { reactive } from "vue";
 import InputText from "../Components/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
 import type { RegisterForm } from "../Models/RegisterForm.ts";
+import HeaderH1 from "../Components/HeaderH1.vue";
+import Button from "../Components/Button.vue";
+import Label from "../Components/Label.vue";
+import FormField from "../Components/FormField.vue";
+import router from "../Router.ts";
 
 const registerForm = reactive<RegisterForm>({ email: "", password: "" });
 
@@ -19,21 +24,28 @@ async function register() {
     if (httpResponse) {
         if (httpResponse?.status == 201) {
             console.log("register successful");
+            await router.push("/login");
         }
     }
 }
 </script>
 <template>
-    <h1>Register</h1>
-    <form v-on:submit.prevent="register" class="flex flex-column">
-        <label class="flex w-20 space-between pd-b-1">
-            <p>Email</p>
-            <InputText v-model="registerForm.email" type="email" />
-        </label>
-        <label class="flex w-20 space-between pd-b-1">
-            <p>Password</p>
-            <InputText v-model="registerForm.password" type="password" />
-        </label>
-        <button type="submit" class="w-10">Register</button>
-    </form>
+    <HeaderH1>Register</HeaderH1>
+    <div class="container ">
+        <form v-on:submit.prevent="register" class="box">
+            <FormField>
+                <Label>
+                    Email
+                    <InputText v-model="registerForm.email" type="email" />
+                </Label>
+            </FormField>
+            <FormField>
+                <Label>
+                    Password
+                    <InputText v-model="registerForm.password" type="password" />
+                </Label>
+            </FormField>
+            <Button type="submit">Register</Button>
+        </form>
+    </div>
 </template>

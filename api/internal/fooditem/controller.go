@@ -4,17 +4,23 @@ import (
 	"encoding/json"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
+	"log/slog"
 	"net/http"
+	"reflect"
+	"strconv"
 )
 
 type Controller struct {
-	store *Store
+	store  *Store
+	logger *slog.Logger
 }
 
-func NewController(store *Store) *Controller {
-	return &Controller{store: store}
+func NewController(store *Store, logger *slog.Logger) *Controller {
+	c := &Controller{store: store}
+	c.logger = logger.With("module", reflect.TypeOf(c))
+	return c
 }
-func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
@@ -28,16 +34,16 @@ func (fc *Controller) PostFoodItem(w http.ResponseWriter, r *http.Request) {
 	}
 	item := request.ToFoodItem()
 	item.OwnerID = userID
-	newItem := fc.store.AddFoodItem(item)
+	newItem := c.store.Add(item)
 	w.WriteHeader(http.StatusCreated)
 
 	enc := json.NewEncoder(w)
 	enc.Encode(newItem.ToFoodItemResponse())
 }
 
-func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
+func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
 
-	items := fc.store.GetFoodItems()
+	items := c.store.Get()
 	responses := make([]FoodItemResponse, 0)
 
 	for _, item := range items {
@@ -45,4 +51,22 @@ func (fc *Controller) ListFoodItems(w http.ResponseWriter, r *http.Request) {
 	}
 	enc := json.NewEncoder(w)
 	enc.Encode(responses)
+}
+func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
+
+	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
+	if err != nil {
+		c.logger.Error("Failed to parse id from path", slog.Any("err", err))
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+	item, err := c.store.GetByID(id)
+	if err != nil {
+		c.logger.Info("fooditem not found", slog.Any("err", err))
+		w.WriteHeader(http.StatusNotFound)
+		return
+	}
+
+	enc := json.NewEncoder(w)
+	enc.Encode(item.ToFoodItemResponse())
 }

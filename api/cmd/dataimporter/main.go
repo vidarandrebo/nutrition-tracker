@@ -48,7 +48,7 @@ func main() {
 			foodItem := fooditem.FromMatvareTabellen(item)
 			foodItem.OwnerID = matvareTabellenUser.ID
 			fmt.Println(foodItem.Product, "Protein:", foodItem.Protein, "Carbo:", foodItem.Carbohydrate, "Fat:", foodItem.Fat)
-			app.Stores.FoodItemStore.AddFoodItem(foodItem)
+			app.Stores.FoodItemStore.Add(foodItem)
 		}
 	}
 }

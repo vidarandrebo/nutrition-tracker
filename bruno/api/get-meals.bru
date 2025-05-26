@@ -1,0 +1,20 @@
+meta {
+  name: get-meals
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/api/meals?dateTo=2025-05-09T18:01:39.688Z&dateFrom=2025-05-05T18:01:39.688Z
+  body: none
+  auth: bearer
+}
+
+params:query {
+  dateTo: 2025-05-09T18:01:39.688Z
+  dateFrom: 2025-05-05T18:01:39.688Z
+}
+
+auth:bearer {
+  token: {{token}}
+}

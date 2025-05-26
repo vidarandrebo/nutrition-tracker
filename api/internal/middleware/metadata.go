@@ -3,11 +3,12 @@ package middleware
 import (
 	"log/slog"
 	"net/http"
+	"reflect"
 	"time"
 )
 
 type RequestMetadata struct {
-	log *slog.Logger
+	logger *slog.Logger
 }
 
 type StatusWriter struct {
@@ -19,8 +20,10 @@ func (sw *StatusWriter) WriteHeader(statusCode int) {
 	sw.ResponseWriter.WriteHeader(statusCode)
 	sw.statusCode = statusCode
 }
-func NewRequestTimer(log *slog.Logger) *RequestMetadata {
-	return &RequestMetadata{log: log.With(slog.String("module", "middleware.RequestMetadata"))}
+func NewRequestMetadata(logger *slog.Logger) *RequestMetadata {
+	rm := &RequestMetadata{}
+	rm.logger = logger.With("module", reflect.TypeOf(rm))
+	return rm
 }
 
 func (rt *RequestMetadata) Time(next http.Handler) http.Handler {
@@ -28,6 +31,6 @@ func (rt *RequestMetadata) Time(next http.Handler) http.Handler {
 		start := time.Now()
 		writer := &StatusWriter{ResponseWriter: w, statusCode: http.StatusOK}
 		next.ServeHTTP(writer, r)
-		rt.log.Info(r.Method, slog.Int("status", writer.statusCode), slog.String("path", r.URL.Path), slog.Any("time", time.Since(start)))
+		rt.logger.Info(r.Method, slog.Int("status", writer.statusCode), slog.String("path", r.URL.Path), slog.Any("time", time.Since(start)))
 	})
 }

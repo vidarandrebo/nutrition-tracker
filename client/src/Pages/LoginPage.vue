@@ -4,9 +4,13 @@ import type { LoginForm } from "../Models/LoginForm.ts";
 import InputText from "../Components/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
 import type { AccessTokenResponse } from "../Models/AccessTokenResponse.ts";
-import { type User, writeToLocalStorage } from "../Models/User.ts";
 import router from "../Router.ts";
 import { useUserStore } from "../Stores/UserStore.ts";
+import { User } from "../Models/User.ts";
+import Button from "../Components/Button.vue";
+import FormField from "../Components/FormField.vue";
+import HeaderH1 from "../Components/HeaderH1.vue";
+import Label from "../Components/Label.vue";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
@@ -26,24 +30,34 @@ async function login() {
         if (httpResponse?.status == 200) {
             loginResponse = httpResponse.body as AccessTokenResponse;
             const user: User = { email: loginForm.email, accessToken: loginResponse.token };
-            writeToLocalStorage(user);
+            User.writeToLocalStorage(user);
             userStore.user = user;
+            await router.push("/");
         }
     }
-    await router.push("/");
 }
 </script>
 <template>
-    <h1>Login</h1>
-    <form v-on:submit.prevent="login" class="flex flex-column">
-        <label class="flex w-20 space-between pd-b-1">
-            <p>Email</p>
-            <InputText v-model="loginForm.email" type="email" />
-        </label>
-        <label class="flex w-20 space-between pd-b-1">
-            <p>Password</p>
-            <InputText v-model="loginForm.password" type="password" />
-        </label>
-        <button type="submit" class="w-10">Login</button>
-    </form>
+    <HeaderH1>Login</HeaderH1>
+    <div class="container ">
+        <form v-on:submit.prevent="login" class="box">
+            <FormField>
+                <Label class="label">
+                    Email
+                    <div class="control">
+                        <InputText v-model="loginForm.email" type="email" />
+                    </div>
+                </Label>
+            </FormField>
+            <FormField>
+                <Label>
+                    <p>Password</p>
+                    <InputText v-model="loginForm.password" type="password" />
+                </Label>
+            </FormField>
+            <FormField>
+                <Button class="is-primary" type="submit">Login</Button>
+            </FormField>
+        </form>
+    </div>
 </template>
