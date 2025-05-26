@@ -81,9 +81,9 @@ func (a *Application) readConfiguration() {
 }
 func (a *Application) addServices() {
 	a.Services = &Services{}
-	a.Services.JwtService = auth.NewJwtService()
+	a.Services.JwtService = auth.NewJwtService(a.Options)
 	a.Services.HashingService = auth.NewHashingService()
-	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService)
+	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService, a.Services.JwtService)
 }
 func (a *Application) addStores() {
 	a.Stores = &Stores{}

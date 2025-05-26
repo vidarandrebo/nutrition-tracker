@@ -101,12 +101,11 @@ async function addToMeal() {
                 v-for="foodItem in foodItemStore.filteredFoodItems"
                 :key="foodItem.id"
                 @click="showFoodItemDialog(foodItem)"
-                class="is-flex"
+                class="is-flex box"
             >
                 <p>
                     {{ foodItem.name }}
                 </p>
-                <Button>+</Button>
             </li>
         </ul>
     </template>

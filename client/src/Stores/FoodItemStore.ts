@@ -6,6 +6,11 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
     const initialized = ref<boolean>(false)
 
+    function clear() {
+        collection.value = [];
+        initialized.value = false;
+    }
+
     async function init() {
         if (!initialized.value) {
             const items = await FoodItem.get();
@@ -54,5 +59,5 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         })
             .slice(0,100);
     });
-    return { collection, init, refresh , filteredFoodItems, searchTerm, getFoodItem};
+    return { clear, collection, init, refresh , filteredFoodItems, searchTerm, getFoodItem, initialized};
 });

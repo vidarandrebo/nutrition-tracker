@@ -11,11 +11,11 @@ type Service struct {
 	jwtService     *JwtService
 }
 
-func NewAuthService(store user.IStore, hs IHashingService) *Service {
+func NewAuthService(store user.IStore, hs IHashingService, jwtService *JwtService) *Service {
 	return &Service{
 		userStore:      store,
 		hashingService: hs,
-		jwtService:     NewJwtService(),
+		jwtService:     jwtService,
 	}
 }
 

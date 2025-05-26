@@ -1,3 +1,5 @@
+import type { Energy } from "../Common/Energy.ts";
+
 export type MealView = {
     id: number;
     timestamp: Date;
@@ -7,9 +9,5 @@ export type MealView = {
 export type MealEntryView = {
     id: number
     name: string
-    protein: number
-    carbohydrate: number
-    fat: number
-    kCal: number
     amount: number
-}
+} & Energy

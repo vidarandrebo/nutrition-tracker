@@ -11,6 +11,10 @@ export const useMealStore = defineStore("meals", () => {
 
     watch(selectedDay, loadMealsForDay);
 
+    function clear() {
+        collection.value = [];
+    }
+
     const mealsForDay = computed(() => {
         const startTs = startOfDay(selectedDay.value);
         const endTs = addDays(startTs, 1)
@@ -59,5 +63,5 @@ export const useMealStore = defineStore("meals", () => {
         }
     }
 
-    return { collection, loadMealsForDay, mealsForDay, selectedDay, addMeal, addMealEntry, getMeal, loadMeal};
+    return { clear, collection, loadMealsForDay, mealsForDay, selectedDay, addMeal, addMealEntry, getMeal, loadMeal};
 });

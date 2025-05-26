@@ -3,6 +3,8 @@ import { useUserStore } from "../Stores/UserStore.ts";
 import router from "../Router.ts";
 import MenuBarRouterLink from "./MenuBarRouterLink.vue";
 import { computed, ref } from "vue";
+import { useMealStore } from "../Stores/MealStore.ts";
+import { useFoodItemStore } from "../Stores/FoodItemStore.ts";
 
 const userStore = useUserStore();
 
@@ -27,6 +29,11 @@ function flipBurger() {
 
 async function logout() {
     userStore.user = null;
+    const mealStore = useMealStore();
+    mealStore.clear();
+    const foodItemStore = useFoodItemStore();
+    foodItemStore.clear();
+
 
     localStorage.removeItem("user");
 
