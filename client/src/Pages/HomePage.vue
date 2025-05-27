@@ -43,8 +43,8 @@ function bumpDay(n: number) {
         <div>
             <p>KCal: {{mealViewStore.dailyMacros.kCal}}, Protein: {{mealViewStore.dailyMacros.protein}} g, Carbohydrate: {{mealViewStore.dailyMacros.carbohydrate}} g, Fat: {{mealViewStore.dailyMacros.fat}} g</p>
         </div>
-        <div class="columns">
-            <div class="column flex">
+        <div class="is-flex is-justify-content-space-between">
+            <div class="">
                 <div class="is-flex">
                     <div class="">
                         <Button @click="bumpDay(-1)">&larr;</Button>
@@ -57,7 +57,7 @@ function bumpDay(n: number) {
                     </div>
                 </div>
             </div>
-            <div class="column is-narrow">
+            <div class="is-narrow">
                 <Button v-on:click="mealStore.addMeal">Add meal</Button>
             </div>
         </div>
