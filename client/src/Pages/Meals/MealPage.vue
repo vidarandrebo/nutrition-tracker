@@ -14,13 +14,13 @@ import InputNumber from "../../Components/InputNumber.vue";
 import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import Label from "../../Components/Label.vue";
 import Modal from "../../Components/Modal.vue";
-import type { Macronutrients } from "../../Models/Common/Macronutrients.ts";
+import type { Energy } from "../../Models/Common/Energy.ts";
 
 const mealStore = useMealStore();
 
 const foodItemForm = ref<PostMealEntryRequest>({
     foodItemId: 0,
-    amount: 0,
+    amount: 0
 });
 
 const foodItemStore = useFoodItemStore();
@@ -61,24 +61,25 @@ onMounted(async () => {
 function showFoodItemDialog(item: FoodItem) {
     selectFoodItem.value = false;
     foodItemForm.value.amount = 100;
-    foodItemForm.value.foodItemId = item.id
+    foodItemForm.value.foodItemId = item.id;
     selectedFoodItem.value = foodItemStore.getFoodItem(item.id);
 }
 
-const nutrients = computed((): Macronutrients => {
+const nutrients = computed((): Energy => {
     if (selectedFoodItem.value) {
         return {
+            kCal: (selectedFoodItem.value.kCal * foodItemForm.value.amount) / 100,
             protein: (selectedFoodItem.value.protein * foodItemForm.value.amount) / 100,
             carbohydrate: (selectedFoodItem.value.carbohydrate * foodItemForm.value.amount) / 100,
-            fat: (selectedFoodItem.value.fat * foodItemForm.value.amount) / 100,
+            fat: (selectedFoodItem.value.fat * foodItemForm.value.amount) / 100
         };
     }
-    return { protein: 0, carbohydrate: 0, fat: 0 };
+    return { kCal: 0, protein: 0, carbohydrate: 0, fat: 0 };
 });
 
 async function addToMeal() {
     if (meal.value) {
-        await mealStore.addMealEntry(foodItemForm.value, meal.value.id)
+        await mealStore.addMealEntry(foodItemForm.value, meal.value.id);
     }
     selectFoodItem.value = true;
 }
@@ -101,26 +102,27 @@ async function addToMeal() {
                 v-for="foodItem in foodItemStore.filteredFoodItems"
                 :key="foodItem.id"
                 @click="showFoodItemDialog(foodItem)"
-                class="is-flex box"
+                class="is-flex box is-justify-content-space-between"
             >
-                <p>
-                    {{ foodItem.name }}
-                </p>
+                <p><b>{{ foodItem.name }}</b></p>
+                <p class="pr-2"><b>KCal:</b> {{ foodItem.kCal }}</p>
             </li>
         </ul>
     </template>
     <template v-else>
-        <Modal @closed="() => selectFoodItem = true" title="Add Item">
+        <Modal @closed="() => selectFoodItem = true" :title="selectedFoodItem?.name">
             <template #default>
                 <div class="is-flex is-flex-direction-column">
-                    <p><b>Name:</b> {{ selectedFoodItem?.name }}</p>
-                    <p><b>Protein:</b> {{ nutrients.protein }} g</p>
-                    <p><b>Carb:</b> {{ nutrients.carbohydrate }} g</p>
-                    <p><b>Fat:</b> {{ nutrients.fat }} g</p>
                     <Label>
                         <p>Amount (g)</p>
                         <InputNumber v-model="foodItemForm.amount"></InputNumber>
                     </Label>
+                    <div class="is-flex is-flex-direction-row is-justify-content-space-between is-flex-wrap-wrap">
+                        <p class="pr-2"><b>KCal:</b> {{ nutrients.kCal }}</p>
+                        <p class="pr-2"><b>Protein:</b> {{ nutrients.protein }}&nbsp;g</p>
+                        <p class="pr-2"><b>Carbohydrate:</b> {{ nutrients.carbohydrate }}&nbsp;g</p>
+                        <p class="pr-2"><b>Fat:</b> {{ nutrients.fat }}&nbsp;g</p>
+                    </div>
                 </div>
             </template>
             <template #footer>
