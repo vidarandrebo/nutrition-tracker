@@ -1,0 +1,21 @@
+meta {
+  name: post-recipes
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://localhost:8080/api/recipes
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "hello"
+  }
+}
