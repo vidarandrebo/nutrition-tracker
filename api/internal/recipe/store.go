@@ -18,10 +18,73 @@ func NewStore(db *sql.DB, logger *slog.Logger) *Store {
 }
 
 func (s *Store) Get(ownerID int64) ([]Recipe, error) {
+	rows, err := s.DB.Query(`
+		WITH owners_recipes AS (
+		    SELECT id, owner_id 
+			FROM recipes
+			WHERE owner_id = $1
+        )
+		SELECT r.id, r.owner_id, re.id, re.food_item_id, re.amount
+		FROM owners_recipes r
+			LEFT JOIN recipe_entries re ON r.id = re.recipe_id`,
+		ownerID,
+	)
+	if err != nil {
+		return nil, err
+	}
 	recipes := make([]Recipe, 0)
+	entries := make(map[int64][]Entry)
+	lastRecipeID := int64(0)
+	for rows.Next() {
+		recipe := Recipe{}
+		entry := Entry{}
+		rows.Scan(&recipe.ID, &recipe.OwnerID, &entry.ID, &entry.FoodItemID, &entry.Amount)
+		if lastRecipeID != recipe.ID {
+			recipes = append(recipes, recipe)
+			entries[recipe.ID] = make([]Entry, 0)
+		}
+		if entry.IsValid() {
+			entries[recipe.ID] = append(entries[recipe.ID], entry)
+		}
+		lastRecipeID = recipe.ID
+	}
+
+	for i := 0; i < len(recipes); i++ {
+		recipes[i].Entries = entries[recipes[i].ID]
+	}
+
 	return recipes, nil
 }
 
-func (s *Store) Add(recipe Recipe, ownerID int64) (Recipe, error) {
-	return Recipe{}, nil
+func (s *Store) Add(recipe Recipe) (Recipe, error) {
+	tx, err := s.DB.Begin()
+
+	err = tx.QueryRow(`
+		INSERT INTO recipes AS r (name, owner_id)
+		VALUES ($1, $2)
+		RETURNING r.id`,
+		recipe.Name,
+		recipe.OwnerID,
+	).Scan(&recipe.ID)
+	if err != nil {
+		return Recipe{}, err
+	}
+
+	for _, entry := range recipe.Entries {
+		err = tx.QueryRow(`
+			INSERT INTO recipe_entries AS re (amount, food_item_id, recipe_id)
+			VALUES ($1, $2, $3)
+			RETURNING re.id`,
+			entry.Amount,
+			entry.FoodItemIDOrNil(),
+			recipe.ID,
+		).Scan(&entry.ID)
+	}
+	err = tx.Commit()
+	if err != nil {
+		return Recipe{}, err
+	}
+	s.logger.Info("added new recipe", slog.Any("recipe", recipe))
+
+	return recipe, nil
 }

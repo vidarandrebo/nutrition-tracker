@@ -18,7 +18,7 @@ func (p *Post) Process(body *PostRecipeRequest, r *http.Request) utils.Response 
 	if err != nil {
 		return utils.Unauthorized()
 	}
-	recipe, err := p.store.Add(Recipe{}, userID)
+	recipe, err := p.store.Add(Recipe{OwnerID: userID})
 	if err != nil {
 		return utils.BadRequest()
 	}

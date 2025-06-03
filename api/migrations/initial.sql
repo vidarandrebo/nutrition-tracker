@@ -66,6 +66,7 @@ CREATE TABLE IF NOT EXISTS recipes
 CREATE TABLE IF NOT EXISTS recipe_entries
 (
     id            bigserial PRIMARY KEY,
+    amount        double precision,
     food_item_id  bigint REFERENCES food_items (id),
     date_created  timestamp,
     date_modified timestamp,
