@@ -14,7 +14,7 @@ type Controller struct {
 }
 
 func NewController(as *Service, log *slog.Logger) *Controller {
-	return &Controller{AuthService: as, Logger: log.With(slog.String("module", "auth.Controller"))}
+	return &Controller{AuthService: as, Logger: log.With(slog.String("module", "auth.ControllerWithBody"))}
 }
 
 func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {

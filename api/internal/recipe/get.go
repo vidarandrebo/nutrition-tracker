@@ -6,14 +6,14 @@ import (
 	"net/http"
 )
 
-type Post struct {
+type Get struct {
 	*ActionBase
 }
 
-func NewPost(action *ActionBase) *controller.ControllerWithBody[PostRecipeRequest] {
-	return controller.NewControllerWithBody(&Post{action})
+func NewGet(action *ActionBase) *controller.Controller {
+	return controller.NewController(&Get{action})
 }
-func (p *Post) Process(body PostRecipeRequest, r *http.Request) controller.Response {
+func (p *Get) Process(r *http.Request) controller.Response {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
 		return controller.Unauthorized()
