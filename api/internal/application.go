@@ -8,6 +8,7 @@ import (
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/meal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/middleware"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/recipe"
 	"io"
 	"log/slog"
 	"net/http"
@@ -34,12 +35,14 @@ type Stores struct {
 	FoodItemStore *fooditem.Store
 	UserStore     *user.Store
 	MealStore     *meal.Store
+	RecipeStore   *recipe.Store
 }
 
 type Controllers struct {
 	FoodItemController *fooditem.Controller
 	AuthController     *auth.Controller
 	MealController     *meal.Controller
+	Recipe             *recipe.Actions
 }
 
 type Middlewares struct {
@@ -87,9 +90,10 @@ func (a *Application) addServices() {
 }
 func (a *Application) addStores() {
 	a.Stores = &Stores{}
-	a.Stores.FoodItemStore = fooditem.NewStore(a.DB)
+	a.Stores.FoodItemStore = fooditem.NewStore(a.DB, a.Logger)
 	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
 	a.Stores.MealStore = meal.NewStore(a.DB, a.Logger)
+	a.Stores.RecipeStore = recipe.NewStore(a.DB, a.Logger)
 }
 
 func (a *Application) addControllers() {
@@ -97,6 +101,7 @@ func (a *Application) addControllers() {
 	a.Controllers.FoodItemController = fooditem.NewController(a.Stores.FoodItemStore, a.Logger)
 	a.Controllers.AuthController = auth.NewController(a.Services.AuthService, a.Logger)
 	a.Controllers.MealController = meal.NewController(a.Stores.MealStore, a.Logger)
+	a.Controllers.Recipe = recipe.NewActions(a.Stores.RecipeStore, a.Logger)
 }
 
 func (a *Application) addMiddlewares() {
@@ -131,6 +136,16 @@ func (a *Application) mealRoutes() http.Handler {
 	return mw(mux)
 }
 
+func (a *Application) recipeRoutes() http.Handler {
+	mwBuilder := middleware.NewMiddlewareBuilder()
+	mwBuilder.AddMiddleware(a.Middlewares.Auth.TokenToContext)
+	mw := mwBuilder.Build()
+
+	mux := http.NewServeMux()
+	mux.Handle("POST /api/recipes", a.Controllers.Recipe.Post)
+	return mw(mux)
+}
+
 func (a *Application) apiMux() http.Handler {
 	mwBuilder := middleware.NewMiddlewareBuilder()
 	mwBuilder.AddMiddleware(a.Middlewares.RequestMetadata.Time)
@@ -140,10 +155,13 @@ func (a *Application) apiMux() http.Handler {
 	mux := http.NewServeMux()
 	foodItemRoutes := a.foodItemRoutes()
 	mealRoutes := a.mealRoutes()
+	recipeRoutes := a.recipeRoutes()
 	mux.Handle("/api/food-items/", foodItemRoutes)
 	mux.Handle("/api/food-items", foodItemRoutes)
 	mux.Handle("/api/meals/", mealRoutes)
 	mux.Handle("/api/meals", mealRoutes)
+	mux.Handle("/api/recipes/", recipeRoutes)
+	mux.Handle("/api/recipes", recipeRoutes)
 	mux.HandleFunc("POST /api/login", a.Controllers.AuthController.Login)
 	mux.HandleFunc("POST /api/register", a.Controllers.AuthController.Register)
 	return mw(mux)

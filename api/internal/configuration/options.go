@@ -28,7 +28,7 @@ func ParseOptions(fileName string) (*Options, error) {
 		return nil, err
 	}
 
-	return options, nil
+	return &options, nil
 }
 
 type SystemUserCredentials struct {
