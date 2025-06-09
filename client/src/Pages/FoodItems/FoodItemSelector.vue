@@ -25,21 +25,23 @@ onMounted(async () => {
 
 <template>
     <section class="section">
-        <HeaderH2>Add Food item</HeaderH2>
         <Level>
             <template #left>
-                <Label>
-                    Search (showing {{ foodItemStore.filteredFoodItems.length }} entries)
-                    <InputText v-model="foodItemStore.searchTerm"></InputText>
-                </Label>
+                <HeaderH2>Add Food item</HeaderH2>
             </template>
             <template #right>
-                <Button @click="cancel">Cancel</Button>
+                <Button @click="cancel" class="level-item">Cancel</Button>
             </template>
         </Level>
+        <Label >
+            Search (showing {{ foodItemStore.filteredFoodItems.length }} entries)
+            <InputText v-model="foodItemStore.searchTerm" placeholder="Search"></InputText>
+        </Label>
         <div v-for="item in foodItemStore.filteredFoodItems"
+             :key="item.id"
              class="is-flex is-flex-direction-row is-justify-content-space-between box">
-            <p>{{ item.name }}</p>
+            <p><b>{{ item.name }}</b></p>
+            <p class="pr-2"><b>KCal:</b> {{ item.kCal }}</p>
             <ButtonPrimary @click="() => emit('select', item.id)">Add</ButtonPrimary>
         </div>
     </section>

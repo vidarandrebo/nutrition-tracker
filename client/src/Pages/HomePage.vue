@@ -9,7 +9,6 @@ import { useFoodItemStore } from "../Stores/FoodItemStore.ts";
 import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 import { useMealViewStore } from "../Stores/MealViewStore.ts";
 import { addDays } from "../Utilities/Date.ts";
-import Level from "../Components/Level.vue";
 
 const userStore = useUserStore();
 const mealStore = useMealStore();
@@ -17,7 +16,7 @@ const foodItemStore = useFoodItemStore();
 const mealViewStore = useMealViewStore();
 
 const foodItemIds = computed(() => [
-    ...new Set(mealStore.mealsForDay.flatMap((m) => m.entries).map((f) => f.foodItemId))
+    ...new Set(mealStore.mealsForDay.flatMap((m) => m.entries).map((f) => f.foodItemId)),
 ]);
 onMounted(async () => {
     await mealStore.loadMealsForDay();
@@ -42,7 +41,10 @@ function bumpDay(n: number) {
     <HeaderH1>Home</HeaderH1>
     <div v-if="userStore.user">
         <div>
-            <p>KCal: {{mealViewStore.dailyMacros.kCal}}, Protein: {{mealViewStore.dailyMacros.protein}} g, Carbohydrate: {{mealViewStore.dailyMacros.carbohydrate}} g, Fat: {{mealViewStore.dailyMacros.fat}} g</p>
+            <p>
+                KCal: {{ mealViewStore.dailyMacros.kCal }}, Protein: {{ mealViewStore.dailyMacros.protein }} g,
+                Carbohydrate: {{ mealViewStore.dailyMacros.carbohydrate }} g, Fat: {{ mealViewStore.dailyMacros.fat }} g
+            </p>
         </div>
         <div class="is-flex is-justify-content-space-between">
             <div class="">

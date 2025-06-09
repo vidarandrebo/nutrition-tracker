@@ -5,14 +5,19 @@ import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import router from "../../Router.ts";
 import Level from "../../Components/Level.vue";
 import { onMounted } from "vue";
+import { useRecipeViewStore } from "../../Stores/RecipeViewStore.ts";
+import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 
 const recipeStore = useRecipeStore();
+const foodItemStore = useFoodItemStore();
+
+const recipeViewStore = useRecipeViewStore();
 onMounted(async () => {
-    await recipeStore.init();
+    await Promise.all([recipeStore.init(), foodItemStore.init()]);
 });
 
-function addRecipe() {
-    router.push("/recipes/add");
+async function addRecipe() {
+    await router.push("/recipes/add");
 }
 </script>
 
@@ -25,8 +30,12 @@ function addRecipe() {
             <ButtonPrimary @click="addRecipe" class="level-item">Add</ButtonPrimary>
         </template>
     </Level>
-    <article v-for="item in recipeStore.collection" :key="item.id">
-        {{ item.name }} {{ item.entries }}
+    <article v-for="item in recipeViewStore.recipesView" :key="item.id" class="box">
+        {{ item.name }}
+        <p>
+            KCal: {{ item.kCal }}, Protein: {{ item.protein }} g,
+            Carbohydrate: {{ item.carbohydrate }} g, Fat: {{ item.fat }} g
+        </p>
     </article>
 </template>
 

@@ -5,6 +5,7 @@ import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
     const initialized = ref<boolean>(false)
+    const searchTerm = ref<string>("");
 
     function clear() {
         collection.value = [];
@@ -12,6 +13,7 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     }
 
     async function init() {
+        searchTerm.value = "";
         if (!initialized.value) {
             const items = await FoodItem.get();
             if (items === null) {
@@ -36,7 +38,6 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         }
     }
 
-    const searchTerm = ref<string>("");
     const filteredFoodItems = computed(() => {
         if (searchTerm.value.length < 3) {
             return collection.value;

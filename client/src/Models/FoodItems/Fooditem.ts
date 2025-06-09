@@ -1,6 +1,7 @@
 import { HttpRequest } from "http-methods-ts";
 import type { FoodItemResponse } from "./Responses.ts";
 import { useUserStore } from "../../Stores/UserStore.ts";
+import type { Energy } from "../Common/Energy.ts";
 
 export class FoodItem {
     id: number;
@@ -18,6 +19,14 @@ export class FoodItem {
         }
         return out + this.product
 
+    }
+    get energy(): Energy {
+        return {
+            protein: this.protein,
+            carbohydrate: this.carbohydrate,
+            fat: this.fat,
+            kCal: this.kCal
+        }
     }
 
     constructor() {

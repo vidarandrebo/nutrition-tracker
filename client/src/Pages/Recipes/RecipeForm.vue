@@ -8,7 +8,6 @@ import InputNumber from "../../Components/Forms/InputNumber.vue";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FoodItemSelector from "../FoodItems/FoodItemSelector.vue";
 import Level from "../../Components/Level.vue";
-import { Recipe } from "../../Models/Recipes/Recipe.ts";
 import { useRecipeStore } from "../../Stores/RecipeStore.ts";
 
 const item = ref<RecipeRequest>({ name: "", entries: [] });
@@ -25,7 +24,7 @@ function onFoodItemSelected(id: number) {
 }
 
 async function submit() {
-    await recipeStore.addRecipe(item.value)
+    await recipeStore.addRecipe(item.value);
 }
 </script>
 
@@ -43,7 +42,11 @@ async function submit() {
                 <ButtonPrimary @click="addEntry">Add Entry</ButtonPrimary>
             </template>
         </Level>
-        <FoodItemSelector v-if="showFoodItemSelector" @select="onFoodItemSelected" @cancel="showFoodItemSelector = false"></FoodItemSelector>
+        <FoodItemSelector
+            v-if="showFoodItemSelector"
+            @select="onFoodItemSelected"
+            @cancel="showFoodItemSelector = false"
+        ></FoodItemSelector>
         <template v-for="(_, id) in item.entries" v-else>
             <div class="box is-flex is-flex-direction-row is-justify-content-space-between">
                 <Label>
@@ -61,6 +64,4 @@ async function submit() {
     <p>{{ item }}</p>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

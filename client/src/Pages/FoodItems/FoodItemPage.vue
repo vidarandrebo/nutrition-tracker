@@ -6,7 +6,6 @@ import FoodItemDisplay from "./FoodItemDisplay.vue";
 import InputText from "../../Components/Forms/InputText.vue";
 import FormField from "../../Components/Forms/FormField.vue";
 import debounce from "debounce";
-import Level from "../../Components/Level.vue";
 
 const foodItemStore = useFoodItemStore();
 const searchTerm = ref<string>("");
