@@ -18,9 +18,13 @@ func (p *Get) Process(r *http.Request) controller.Response {
 	if err != nil {
 		return controller.Unauthorized()
 	}
-	recipe, err := p.store.Add(Recipe{OwnerID: userID})
+	recipes, err := p.store.Get(userID)
 	if err != nil {
 		return controller.BadRequest()
 	}
-	return controller.Created(recipe.ToResponse())
+	responses := make([]RecipeResponse, 0, len(recipes))
+	for _, recipe := range recipes {
+		responses = append(responses, recipe.ToResponse())
+	}
+	return controller.Ok(responses)
 }

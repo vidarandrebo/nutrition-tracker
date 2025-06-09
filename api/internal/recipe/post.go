@@ -18,7 +18,14 @@ func (p *Post) Process(body PostRecipeRequest, r *http.Request) controller.Respo
 	if err != nil {
 		return controller.Unauthorized()
 	}
-	recipe, err := p.store.Add(Recipe{OwnerID: userID})
+	entries := make([]Entry, 0, len(body.Entries))
+	for _, e := range body.Entries {
+		entries = append(entries, Entry{
+			Amount:     e.Amount,
+			FoodItemID: e.FoodItemID,
+		})
+	}
+	recipe, err := p.store.Add(Recipe{Name: body.Name, Entries: entries, OwnerID: userID})
 	if err != nil {
 		return controller.BadRequest()
 	}

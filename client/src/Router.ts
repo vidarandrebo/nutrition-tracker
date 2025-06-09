@@ -3,10 +3,11 @@ import HomePage from "./Pages/HomePage.vue";
 import LoginPage from "./Pages/LoginPage.vue";
 import RegisterPage from "./Pages/RegisterPage.vue";
 import SettingsPage from "./Pages/SettingsPage.vue";
-import RecipePage from "./Pages/RecipePage.vue";
+import RecipePage from "./Pages/Recipes/RecipePage.vue";
 import FoodItemPage from "./Pages/FoodItems/FoodItemPage.vue";
 import AddFoodItemPage from "./Pages/FoodItems/AddFoodItemPage.vue";
 import MealPage from "./Pages/Meals/MealPage.vue";
+import AddRecipePage from "./Pages/Recipes/AddRecipePage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -38,6 +39,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/recipes",
         name: "Recipes",
         component: RecipePage,
+    },
+    {
+        path: "/recipes/add",
+        name: "Add Recipe",
+        component: AddRecipePage,
     },
     {
         path: "/",

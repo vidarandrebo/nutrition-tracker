@@ -143,6 +143,7 @@ func (a *Application) recipeRoutes() http.Handler {
 
 	mux := http.NewServeMux()
 	mux.Handle("POST /api/recipes", a.Controllers.Recipe.Post)
+	mux.Handle("GET /api/recipes", a.Controllers.Recipe.Get)
 	return mw(mux)
 }
 

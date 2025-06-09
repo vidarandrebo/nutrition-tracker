@@ -53,7 +53,7 @@ async function logout() {
                 </div>
             </div>
 
-            <div id="navbarExampleTransparentExample" :class="navbarMenuClass">
+            <div id="navbarExampleTransparentExample" :class="navbarMenuClass" @click="flipBurger">
                 <div class="navbar-start">
                     <MenuBarRouterLink to="/">Home</MenuBarRouterLink>
                     <MenuBarRouterLink to="/food-items">Food Items</MenuBarRouterLink>

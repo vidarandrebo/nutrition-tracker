@@ -6,13 +6,13 @@ import { computed, onMounted, ref, watch } from "vue";
 import type { Meal } from "../../Models/Meals/Meal.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import debounce from "debounce";
-import InputText from "../../Components/InputText.vue";
-import FormField from "../../Components/FormField.vue";
+import InputText from "../../Components/Forms/InputText.vue";
+import FormField from "../../Components/Forms/FormField.vue";
 import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
-import Button from "../../Components/Button.vue";
-import InputNumber from "../../Components/InputNumber.vue";
+import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
+import InputNumber from "../../Components/Forms/InputNumber.vue";
 import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
-import Label from "../../Components/Label.vue";
+import Label from "../../Components/Forms/Label.vue";
 import Modal from "../../Components/Modal.vue";
 import type { Energy } from "../../Models/Common/Energy.ts";
 
@@ -126,7 +126,7 @@ async function addToMeal() {
                 </div>
             </template>
             <template #footer>
-                <Button @click="addToMeal">Add</Button>
+                <ButtonPrimary @click="addToMeal">Add</ButtonPrimary>
             </template>
         </Modal>
     </template>

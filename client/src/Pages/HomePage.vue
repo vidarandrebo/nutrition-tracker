@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import HeaderH1 from "../Components/HeaderH1.vue";
 import { useUserStore } from "../Stores/UserStore.ts";
-import InputDate from "../Components/InputDate.vue";
-import Button from "../Components/Button.vue";
+import InputDate from "../Components/Forms/InputDate.vue";
+import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import { useMealStore } from "../Stores/MealStore.ts";
 import { computed, onMounted, watch } from "vue";
 import { useFoodItemStore } from "../Stores/FoodItemStore.ts";
 import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 import { useMealViewStore } from "../Stores/MealViewStore.ts";
 import { addDays } from "../Utilities/Date.ts";
+import Level from "../Components/Level.vue";
 
 const userStore = useUserStore();
 const mealStore = useMealStore();
@@ -16,7 +17,7 @@ const foodItemStore = useFoodItemStore();
 const mealViewStore = useMealViewStore();
 
 const foodItemIds = computed(() => [
-    ...new Set(mealStore.mealsForDay.flatMap((m) => m.entries).map((f) => f.foodItemId)),
+    ...new Set(mealStore.mealsForDay.flatMap((m) => m.entries).map((f) => f.foodItemId))
 ]);
 onMounted(async () => {
     await mealStore.loadMealsForDay();
@@ -47,18 +48,18 @@ function bumpDay(n: number) {
             <div class="">
                 <div class="is-flex">
                     <div class="">
-                        <Button @click="bumpDay(-1)">&larr;</Button>
+                        <ButtonPrimary @click="bumpDay(-1)">&larr;</ButtonPrimary>
                     </div>
                     <div class="">
                         <InputDate v-model="mealStore.selectedDay"></InputDate>
                     </div>
                     <div class="">
-                        <Button @click="bumpDay(1)">&rarr;</Button>
+                        <ButtonPrimary @click="bumpDay(1)">&rarr;</ButtonPrimary>
                     </div>
                 </div>
             </div>
             <div class="is-narrow">
-                <Button v-on:click="mealStore.addMeal">Add meal</Button>
+                <ButtonPrimary v-on:click="mealStore.addMeal">Add meal</ButtonPrimary>
             </div>
         </div>
     </div>

@@ -20,11 +20,11 @@ func NewStore(db *sql.DB, logger *slog.Logger) *Store {
 func (s *Store) Get(ownerID int64) ([]Recipe, error) {
 	rows, err := s.DB.Query(`
 		WITH owners_recipes AS (
-		    SELECT id, owner_id 
+		    SELECT id, name, owner_id 
 			FROM recipes
 			WHERE owner_id = $1
         )
-		SELECT r.id, r.owner_id, re.id, re.food_item_id, re.amount
+		SELECT r.id, r.name, r.owner_id, re.id, re.food_item_id, re.amount
 		FROM owners_recipes r
 			LEFT JOIN recipe_entries re ON r.id = re.recipe_id`,
 		ownerID,
@@ -38,7 +38,7 @@ func (s *Store) Get(ownerID int64) ([]Recipe, error) {
 	for rows.Next() {
 		recipe := Recipe{}
 		entry := Entry{}
-		rows.Scan(&recipe.ID, &recipe.OwnerID, &entry.ID, &entry.FoodItemID, &entry.Amount)
+		rows.Scan(&recipe.ID, &recipe.Name, &recipe.OwnerID, &entry.ID, &entry.FoodItemID, &entry.Amount)
 		if lastRecipeID != recipe.ID {
 			recipes = append(recipes, recipe)
 			entries[recipe.ID] = make([]Entry, 0)

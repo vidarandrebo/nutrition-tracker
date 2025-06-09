@@ -1,12 +1,12 @@
 <script setup lang="ts">
 import { reactive } from "vue";
-import InputText from "../Components/InputText.vue";
+import InputText from "../Components/Forms/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
 import type { RegisterForm } from "../Models/RegisterForm.ts";
 import HeaderH1 from "../Components/HeaderH1.vue";
-import Button from "../Components/Button.vue";
-import Label from "../Components/Label.vue";
-import FormField from "../Components/FormField.vue";
+import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
+import Label from "../Components/Forms/Label.vue";
+import FormField from "../Components/Forms/FormField.vue";
 import router from "../Router.ts";
 
 const registerForm = reactive<RegisterForm>({ email: "", password: "" });
@@ -45,7 +45,7 @@ async function register() {
                     <InputText v-model="registerForm.password" type="password" />
                 </Label>
             </FormField>
-            <Button type="submit">Register</Button>
+            <ButtonPrimary type="submit">Register</ButtonPrimary>
         </form>
     </div>
 </template>

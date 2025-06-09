@@ -4,15 +4,15 @@ import { computed, reactive } from "vue";
 import { PostFoodItemRequest } from "../../Models/FoodItems/Requests.ts";
 import router from "../../Router.ts";
 import { HttpRequest } from "http-methods-ts";
-import InputText from "../../Components/InputText.vue";
-import InputNumber from "../../Components/InputNumber.vue";
+import InputText from "../../Components/Forms/InputText.vue";
+import InputNumber from "../../Components/Forms/InputNumber.vue";
 import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import type { FoodItemResponse } from "../../Models/FoodItems/Responses.ts";
 import { useUserStore } from "../../Stores/UserStore.ts";
-import Button from "../../Components/Button.vue";
-import FormField from "../../Components/FormField.vue";
-import Label from "../../Components/Label.vue";
+import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
+import FormField from "../../Components/Forms/FormField.vue";
+import Label from "../../Components/Forms/Label.vue";
 
 const formModel = reactive<PostFoodItemRequest>(new PostFoodItemRequest());
 
@@ -86,7 +86,7 @@ const estKCal = computed(() => {
                 <InputNumber v-model.number="formModel.kCal" :place-holder="estKCal"></InputNumber>
             </Label>
         </FormField>
-        <Button type="submit">Add</Button>
+        <ButtonPrimary type="submit">Add</ButtonPrimary>
     </form>
 </template>
 

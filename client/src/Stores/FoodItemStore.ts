@@ -57,7 +57,7 @@ export const useFoodItemStore = defineStore("foodItems", () => {
             }
             return true;
         })
-            .slice(0,100);
+            .slice(0,25);
     });
     return { clear, collection, init, refresh , filteredFoodItems, searchTerm, getFoodItem, initialized};
 });

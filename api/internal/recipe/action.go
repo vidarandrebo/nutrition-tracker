@@ -32,7 +32,7 @@ func NewActions(store *Store, logger *slog.Logger) *Actions {
 	return &Actions{
 		Post:    NewPost(actionBase),
 		GetById: nil,
-		Get:     nil,
+		Get:     NewGet(actionBase),
 		Put:     nil,
 		Delete:  nil,
 	}
