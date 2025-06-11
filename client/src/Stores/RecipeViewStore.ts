@@ -22,14 +22,45 @@ export const useRecipeViewStore = defineStore("recipeViewStore", () => {
                     id: e.id,
                 };
             });
-            const e = SumEnergy(entries)
+            const e = SumEnergy(entries);
             return {
                 id: r.id,
                 name: r.name,
                 entries: entries,
-                ...e
+                ...e,
             };
         });
     });
-    return { recipesView };
+
+    function getRecipe(id: number): RecipeView | undefined {
+        const recipe = recipeStore.collection.find((r) => r.id === id);
+        if (!recipe) {
+            return undefined;
+        }
+        const entries = recipe.entries.map((e): RecipeEntryView => {
+            const fi = foodItemStore.getFoodItem(e.foodItemId);
+            return {
+                amount: e.amount,
+                protein: fi ? (fi.protein * e.amount) / 100.0 : 0.0,
+                carbohydrate: fi ? (fi.carbohydrate * e.amount) / 100.0 : 0.0,
+                fat: fi ? (fi.fat * e.amount) / 100.0 : 0.0,
+                kCal: fi ? (fi.kCal * e.amount) / 100.0 : 0.0,
+                name: fi ? fi.name : "",
+                id: e.id,
+            };
+        });
+        const e = SumEnergy(entries);
+        return {
+            id: recipe.id,
+            name: recipe.name,
+            entries: entries,
+            ...e,
+        };
+    }
+
+    async function init() {
+        await Promise.all([recipeStore.init(), foodItemStore.init()]);
+    }
+
+    return { recipesView, init, getRecipe };
 });

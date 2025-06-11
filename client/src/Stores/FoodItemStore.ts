@@ -4,7 +4,7 @@ import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
-    const initialized = ref<boolean>(false)
+    const initialized = ref<boolean>(false);
     const searchTerm = ref<string>("");
 
     function clear() {
@@ -25,8 +25,8 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         }
     }
 
-    function getFoodItem(id: number) : FoodItem | undefined {
-        return collection.value.find((f) => f.id === id)
+    function getFoodItem(id: number): FoodItem | undefined {
+        return collection.value.find((f) => f.id === id);
     }
 
     async function refresh() {
@@ -50,15 +50,18 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         if (searchTerm.value === "") {
             return collection.value;
         }
-        return collection.value.filter((x) => {
-            for (let i = 0; i < terms.length; i++) {
-                if (!(x.product.toLowerCase().includes(terms[i]) || x.manufacturer.toLowerCase().includes(terms[i]))) {
-                    return false;
+        return collection.value
+            .filter((x) => {
+                for (let i = 0; i < terms.length; i++) {
+                    if (
+                        !(x.product.toLowerCase().includes(terms[i]) || x.manufacturer.toLowerCase().includes(terms[i]))
+                    ) {
+                        return false;
+                    }
                 }
-            }
-            return true;
-        })
-            .slice(0,25);
+                return true;
+            })
+            .slice(0, 25);
     });
-    return { clear, collection, init, refresh , filteredFoodItems, searchTerm, getFoodItem, initialized};
+    return { clear, collection, init, refresh, filteredFoodItems, searchTerm, getFoodItem, initialized };
 });

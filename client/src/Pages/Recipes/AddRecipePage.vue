@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 import RecipeForm from "./RecipeForm.vue";
 import HeaderH1 from "../../Components/HeaderH1.vue";
 </script>
@@ -9,6 +8,4 @@ import HeaderH1 from "../../Components/HeaderH1.vue";
     <RecipeForm></RecipeForm>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

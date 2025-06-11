@@ -2,12 +2,12 @@
 import { ref } from "vue";
 import type { RecipeRequest } from "../../Models/Recipes/Requests.ts";
 import InputText from "../../Components/Forms/InputText.vue";
-import Label from "../../Components/Forms/Label.vue";
+import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import HeaderH2 from "../../Components/HeaderH2.vue";
 import InputNumber from "../../Components/Forms/InputNumber.vue";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FoodItemSelector from "../FoodItems/FoodItemSelector.vue";
-import Level from "../../Components/Level.vue";
+import LevelPrimary from "../../Components/LevelPrimary.vue";
 import { useRecipeStore } from "../../Stores/RecipeStore.ts";
 
 const item = ref<RecipeRequest>({ name: "", entries: [] });
@@ -29,34 +29,34 @@ async function submit() {
 </script>
 
 <template>
-    <form v-on:submit.prevent="submit">
-        <Label>
+    <form @submit.prevent="submit">
+        <LabelPrimary>
             Name
             <InputText v-model="item.name"></InputText>
-        </Label>
-        <Level v-if="!showFoodItemSelector">
+        </LabelPrimary>
+        <LevelPrimary v-if="!showFoodItemSelector">
             <template #left>
                 <HeaderH2 class="level-item">Entries</HeaderH2>
             </template>
             <template #right>
                 <ButtonPrimary @click="addEntry">Add Entry</ButtonPrimary>
             </template>
-        </Level>
+        </LevelPrimary>
         <FoodItemSelector
             v-if="showFoodItemSelector"
             @select="onFoodItemSelected"
             @cancel="showFoodItemSelector = false"
         ></FoodItemSelector>
-        <template v-for="(_, id) in item.entries" v-else>
+        <template v-for="(_, id) in item.entries" v-else :key="id">
             <div class="box is-flex is-flex-direction-row is-justify-content-space-between">
-                <Label>
+                <LabelPrimary>
                     FoodItem
                     <InputNumber v-model="item.entries[id].foodItemId" disabled></InputNumber>
-                </Label>
-                <Label>
+                </LabelPrimary>
+                <LabelPrimary>
                     Amount
                     <InputNumber v-model="item.entries[id].amount"></InputNumber>
-                </Label>
+                </LabelPrimary>
             </div>
         </template>
         <ButtonPrimary type="submit">Save</ButtonPrimary>

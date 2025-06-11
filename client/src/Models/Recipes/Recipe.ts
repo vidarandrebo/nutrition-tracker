@@ -15,8 +15,8 @@ export class Recipe {
         this.entries = [];
     }
 
-    static fromResponses(responses: RecipeResponse[]) : Recipe[] {
-        return responses.map((r) => this.fromResponse(r))
+    static fromResponses(responses: RecipeResponse[]): Recipe[] {
+        return responses.map((r) => this.fromResponse(r));
     }
     static fromResponse(response: RecipeResponse): Recipe {
         const r = new Recipe();
@@ -25,7 +25,7 @@ export class Recipe {
         r.name = response.name;
         return r;
     }
-    static async add(request: RecipeRequest) : Promise<Recipe | null> {
+    static async add(request: RecipeRequest): Promise<Recipe | null> {
         const userStore = useUserStore();
         const user = userStore.user;
         if (user === null) {
@@ -45,7 +45,7 @@ export class Recipe {
         switch (response?.status) {
             case 201:
                 if (response?.body) {
-                    return Recipe.fromResponse(response.body as RecipeResponse)
+                    return Recipe.fromResponse(response.body as RecipeResponse);
                 }
                 break;
             default:
@@ -53,7 +53,7 @@ export class Recipe {
         }
         return null;
     }
-    static async get() : Promise<Recipe[] | null>{
+    static async get(): Promise<Recipe[] | null> {
         const userStore = useUserStore();
         const user = userStore.user;
         if (user === null) {

@@ -61,7 +61,7 @@ function bumpDay(n: number) {
                 </div>
             </div>
             <div class="is-narrow">
-                <ButtonPrimary v-on:click="mealStore.addMeal">Add meal</ButtonPrimary>
+                <ButtonPrimary @click="mealStore.addMeal">Add meal</ButtonPrimary>
             </div>
         </div>
     </div>

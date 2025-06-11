@@ -4,10 +4,10 @@ export type RecipeView = {
     id: number;
     name: string;
     entries: RecipeEntryView[];
-} & Energy
+} & Energy;
 
 export type RecipeEntryView = {
-    id: number
-    amount: number
-    name: string
-} & Energy
+    id: number;
+    amount: number;
+    name: string;
+} & Energy;

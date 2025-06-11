@@ -48,5 +48,5 @@ export const useMealViewStore = defineStore("mealViewStore", () => {
         return energy;
     });
 
-    return { mealsView , dailyMacros};
+    return { mealsView, dailyMacros };
 });

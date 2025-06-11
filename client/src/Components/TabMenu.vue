@@ -7,12 +7,12 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    selected: [tab: string]
+    selected: [tab: string];
 }>();
 const selected = ref<string>(props.preselected);
 function selectTab(t: string) {
-    selected.value = t
-    emit('selected', t)
+    selected.value = t;
+    emit("selected", t);
 }
 </script>
 

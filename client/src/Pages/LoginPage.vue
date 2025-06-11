@@ -10,7 +10,7 @@ import { User } from "../Models/User.ts";
 import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../Components/Forms/FormField.vue";
 import HeaderH1 from "../Components/HeaderH1.vue";
-import Label from "../Components/Forms/Label.vue";
+import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
@@ -39,21 +39,21 @@ async function login() {
 </script>
 <template>
     <HeaderH1>Login</HeaderH1>
-    <div class="container ">
-        <form v-on:submit.prevent="login" class="box">
+    <div class="container">
+        <form class="box" @submit.prevent="login">
             <FormField>
-                <Label class="label">
+                <LabelPrimary class="label">
                     Email
                     <div class="control">
                         <InputText v-model="loginForm.email" type="email" />
                     </div>
-                </Label>
+                </LabelPrimary>
             </FormField>
             <FormField>
-                <Label>
+                <LabelPrimary>
                     <p>Password</p>
                     <InputText v-model="loginForm.password" type="password" />
-                </Label>
+                </LabelPrimary>
             </FormField>
             <FormField>
                 <ButtonPrimary class="is-primary" type="submit">Login</ButtonPrimary>

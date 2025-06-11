@@ -1,5 +1,4 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
     <div class="level is-mobile">
@@ -12,6 +11,4 @@
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

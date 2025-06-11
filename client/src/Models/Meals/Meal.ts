@@ -13,7 +13,7 @@ export class Meal {
 
     constructor() {
         this.id = 0;
-        this.timestamp = new Date()
+        this.timestamp = new Date();
         this.sequenceNumber = 0;
         this.entries = [];
     }
@@ -25,7 +25,7 @@ export class Meal {
         }
         return ts;
     }
-    static async add(day: Date) : Promise<Meal | null> {
+    static async add(day: Date): Promise<Meal | null> {
         const userStore = useUserStore();
         const user = userStore.user;
         if (user === null) {
@@ -49,7 +49,7 @@ export class Meal {
         switch (response?.status) {
             case 201:
                 if (response?.body) {
-                    return Meal.fromResponse(response.body as MealResponse)
+                    return Meal.fromResponse(response.body as MealResponse);
                 }
                 break;
             case 404:
@@ -106,7 +106,7 @@ export class Meal {
             .setRoute(`/api/meals/${id}`)
             .setMethod("GET")
             .addHeader("Content-Type", "application/json")
-            .setBearerToken(user.accessToken)
+            .setBearerToken(user.accessToken);
         await httpRequest.send();
         const response = httpRequest.getResponseData();
 
@@ -137,6 +137,4 @@ export class Meal {
     static fromResponses(res: MealResponse[]): Meal[] {
         return res.map((r) => this.fromResponse(r));
     }
-
 }
-

@@ -17,16 +17,15 @@ export class FoodItem {
         if (this.product.length > 0 && out.length > 0) {
             out += " ";
         }
-        return out + this.product
-
+        return out + this.product;
     }
     get energy(): Energy {
         return {
             protein: this.protein,
             carbohydrate: this.carbohydrate,
             fat: this.fat,
-            kCal: this.kCal
-        }
+            kCal: this.kCal,
+        };
     }
 
     constructor() {
@@ -76,7 +75,7 @@ export class FoodItem {
         }
         return null;
     }
-    static async getById(id: number) : Promise<FoodItem | null> {
+    static async getById(id: number): Promise<FoodItem | null> {
         const userStore = useUserStore();
         const user = userStore.user;
         if (user === null) {
@@ -99,4 +98,3 @@ export class FoodItem {
         return null;
     }
 }
-

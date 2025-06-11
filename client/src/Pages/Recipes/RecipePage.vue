@@ -3,7 +3,7 @@ import HeaderH1 from "../../Components/HeaderH1.vue";
 import { useRecipeStore } from "../../Stores/RecipeStore.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import router from "../../Router.ts";
-import Level from "../../Components/Level.vue";
+import LevelPrimary from "../../Components/LevelPrimary.vue";
 import { onMounted } from "vue";
 import { useRecipeViewStore } from "../../Stores/RecipeViewStore.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
@@ -22,19 +22,19 @@ async function addRecipe() {
 </script>
 
 <template>
-    <Level>
+    <LevelPrimary>
         <template #left>
             <HeaderH1 class="level-item">Recipes</HeaderH1>
         </template>
         <template #right>
-            <ButtonPrimary @click="addRecipe" class="level-item">Add</ButtonPrimary>
+            <ButtonPrimary class="level-item" @click="addRecipe">Add</ButtonPrimary>
         </template>
-    </Level>
+    </LevelPrimary>
     <article v-for="item in recipeViewStore.recipesView" :key="item.id" class="box">
         {{ item.name }}
         <p>
-            KCal: {{ item.kCal }}, Protein: {{ item.protein }} g,
-            Carbohydrate: {{ item.carbohydrate }} g, Fat: {{ item.fat }} g
+            KCal: {{ item.kCal }}, Protein: {{ item.protein }} g, Carbohydrate: {{ item.carbohydrate }} g, Fat:
+            {{ item.fat }} g
         </p>
     </article>
 </template>

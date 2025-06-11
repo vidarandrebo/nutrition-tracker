@@ -12,7 +12,7 @@ import type { FoodItemResponse } from "../../Models/FoodItems/Responses.ts";
 import { useUserStore } from "../../Stores/UserStore.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../../Components/Forms/FormField.vue";
-import Label from "../../Components/Forms/Label.vue";
+import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 
 const formModel = reactive<PostFoodItemRequest>(new PostFoodItemRequest());
 
@@ -49,42 +49,42 @@ const estKCal = computed(() => {
 
 <template>
     <HeaderH1>Add FoodItem</HeaderH1>
-    <form v-on:submit.prevent="postFoodItem">
+    <form @submit.prevent="postFoodItem">
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Manufacturer</p>
                 <InputText v-model="formModel.manufacturer"></InputText>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Product</p>
                 <InputText v-model="formModel.product"></InputText>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Protein</p>
                 <InputNumber v-model.number="formModel.protein"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Carbohydrate</p>
                 <InputNumber v-model.number="formModel.carbohydrate"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Fat</p>
                 <InputNumber v-model.number="formModel.fat"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>KCal</p>
                 <InputNumber v-model.number="formModel.kCal" :place-holder="estKCal"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <ButtonPrimary type="submit">Add</ButtonPrimary>
     </form>

@@ -12,21 +12,19 @@ export const useRecipeStore = defineStore("recipeStore", () => {
             const items = await Recipe.get();
             if (items === null) {
                 collection.value = [];
-            }
-            else {
+            } else {
                 collection.value = items;
             }
-            initialized.value = true
+            initialized.value = true;
         }
-
     }
 
     async function addRecipe(recipe: RecipeRequest) {
         const newRecipe = await Recipe.add(recipe);
         if (newRecipe) {
-            collection.value.push(newRecipe)
+            collection.value.push(newRecipe);
         }
     }
 
-    return { collection, addRecipe , init};
+    return { collection, addRecipe, init };
 });

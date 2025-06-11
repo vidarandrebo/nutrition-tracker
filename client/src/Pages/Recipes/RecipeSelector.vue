@@ -1,14 +1,12 @@
 <script setup lang="ts">
-import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
-import InputText from "../../Components/Forms/InputText.vue";
-import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import { onMounted } from "vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import ButtonPlain from "../../Components/Buttons/ButtonPlain.vue";
 import HeaderH2 from "../../Components/HeaderH2.vue";
+import { useRecipeViewStore } from "../../Stores/RecipeViewStore";
 
-const foodItemStore = useFoodItemStore();
+const recipeViewStore = useRecipeViewStore();
 
 const emit = defineEmits<{
     select: [id: number];
@@ -20,7 +18,7 @@ function cancel() {
 }
 
 onMounted(async () => {
-    await foodItemStore.init();
+    await recipeViewStore.init();
 });
 </script>
 
@@ -28,18 +26,18 @@ onMounted(async () => {
     <section class="section">
         <LevelPrimary>
             <template #left>
-                <HeaderH2>Add Food item</HeaderH2>
+                <HeaderH2>Add Recipe</HeaderH2>
             </template>
             <template #right>
                 <ButtonPlain class="level-item" @click="cancel">Cancel</ButtonPlain>
             </template>
         </LevelPrimary>
-        <LabelPrimary>
-            Search (showing {{ foodItemStore.filteredFoodItems.length }} entries)
-            <InputText v-model="foodItemStore.searchTerm" placeholder="Search"></InputText>
-        </LabelPrimary>
+        <!--<LabelPrimary>
+            Search (showing {{ recipeViewStore.recipesView.length }} entries)
+            <InputText v-model="recipeViewStore.searchTerm" placeholder="Search"></InputText>
+        </LabelPrimary>-->
         <div
-            v-for="item in foodItemStore.filteredFoodItems"
+            v-for="item in recipeViewStore.recipesView"
             :key="item.id"
             class="is-flex is-flex-direction-row is-justify-content-space-between box"
         >

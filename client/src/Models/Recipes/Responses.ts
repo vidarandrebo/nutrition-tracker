@@ -1,10 +1,10 @@
 export type RecipeResponse = {
-    id: number
+    id: number;
     name: string;
-    entries: RecipeEntryResponse[]
-}
+    entries: RecipeEntryResponse[];
+};
 export type RecipeEntryResponse = {
-    id: number
+    id: number;
     amount: number;
     foodItemId: number;
-}
+};

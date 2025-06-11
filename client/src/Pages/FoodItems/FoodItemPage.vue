@@ -34,8 +34,8 @@ watch(searchTerm, () => {
     <ul>
         <FoodItemDisplay
             v-for="foodItem in foodItemStore.filteredFoodItems"
-            :item="foodItem"
             :key="foodItem.id"
+            :item="foodItem"
         ></FoodItemDisplay>
     </ul>
 </template>
