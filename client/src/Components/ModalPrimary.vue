@@ -1,24 +1,20 @@
 <script setup lang="ts">
-
-import { computed, ref, watch } from "vue";
+import { computed } from "vue";
 
 const props = defineProps<{
+    modelValue: boolean;
     title?: string;
 }>();
-
-const isActive = ref<boolean>(true);
-const emits = defineEmits<{
-    (e: "closed"): void
+const emit = defineEmits<{
+    (e: "update:modelValue", payload: boolean): void;
 }>();
 
-watch(isActive, (value) => {
-    if (!value) {
-        emits("closed");
-    }
-});
+function close() {
+    emit("update:modelValue", false);
+}
 
 const modalActiveClass = computed(() => {
-    if (isActive.value) {
+    if (props.modelValue) {
         return "modal is-active";
     }
     return "modal";
@@ -26,11 +22,11 @@ const modalActiveClass = computed(() => {
 </script>
 <template>
     <div :class="modalActiveClass">
-        <div class="modal-background" @click="() => isActive = false"></div>
+        <div class="modal-background" @click="close"></div>
         <div class="modal-card">
             <header class="modal-card-head">
                 <h2 class="modal-card-title">{{ props.title }}</h2>
-                <button class="delete" aria-label="close" @click="() => isActive = false"></button>
+                <button class="delete" aria-label="close" @click="close"></button>
                 <slot name="header"></slot>
             </header>
             <section class="modal-card-body">
@@ -39,15 +35,12 @@ const modalActiveClass = computed(() => {
             </section>
             <footer class="modal-card-foot">
                 <div class="buttons">
-                    <slot name="footer">
-                    </slot>
-                    <button class="button" @click="() => isActive= false">Cancel</button>
+                    <slot name="footer"> </slot>
+                    <button class="button" @click="close">Cancel</button>
                 </div>
             </footer>
         </div>
     </div>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

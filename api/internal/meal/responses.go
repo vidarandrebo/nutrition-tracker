@@ -13,4 +13,5 @@ type EntryResponse struct {
 	ID         int64   `json:"id"`
 	Amount     float64 `json:"amount"`
 	FoodItemID int64   `json:"foodItemId"`
+	RecipeID   int64   `json:"recipeId"`
 }

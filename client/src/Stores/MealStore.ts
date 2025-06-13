@@ -17,51 +17,51 @@ export const useMealStore = defineStore("meals", () => {
 
     const mealsForDay = computed(() => {
         const startTs = startOfDay(selectedDay.value);
-        const endTs = addDays(startTs, 1)
+        const endTs = addDays(startTs, 1);
 
-        return collection.value.filter((m) => m.timestamp >= startTs && m.timestamp < endTs)
+        return collection.value.filter((m) => m.timestamp >= startTs && m.timestamp < endTs);
     });
     async function loadMealsForDay() {
-        const meals =  await Meal.getByDay(selectedDay.value);
+        const meals = await Meal.getByDay(selectedDay.value);
         meals?.map((m) => {
             if (collection.value.find((x) => x.id === m.id) === undefined) {
-                collection.value.push(m)
+                collection.value.push(m);
             }
-        })
+        });
     }
 
-    function getMeal(id: number):  Meal | null {
-        const meal = collection.value.find((m) => m.id === id)
+    function getMeal(id: number): Meal | null {
+        const meal = collection.value.find((m) => m.id === id);
         if (meal) {
-            return meal
+            return meal;
         }
 
-        return null
+        return null;
     }
 
     async function loadMeal(id: number) {
         const meal = await Meal.getById(id);
         if (meal) {
-            collection.value.push(meal)
+            collection.value.push(meal);
         }
     }
 
     async function addMeal() {
-        const meal = await Meal.add(selectedDay.value)
+        const meal = await Meal.add(selectedDay.value);
         if (meal) {
-            collection.value.push(meal)
+            collection.value.push(meal);
         }
     }
 
     async function addMealEntry(entry: PostMealEntryRequest, mealID: number) {
-        const newEntry = await MealEntry.add(entry, mealID)
+        const newEntry = await MealEntry.add(entry, mealID);
         if (newEntry) {
             const meal = collection.value.find((m) => m.id === mealID);
             if (meal) {
-                meal.entries.push(newEntry)
+                meal.entries.push(newEntry);
             }
         }
     }
 
-    return { clear, collection, loadMealsForDay, mealsForDay, selectedDay, addMeal, addMealEntry, getMeal, loadMeal};
+    return { clear, collection, loadMealsForDay, mealsForDay, selectedDay, addMeal, addMealEntry, getMeal, loadMeal };
 });

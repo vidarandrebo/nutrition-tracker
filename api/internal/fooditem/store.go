@@ -2,14 +2,19 @@ package fooditem
 
 import (
 	"database/sql"
+	"log/slog"
+	"reflect"
 )
 
 type Store struct {
-	db *sql.DB
+	db     *sql.DB
+	logger *slog.Logger
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{db: db}
+func NewStore(db *sql.DB, logger *slog.Logger) *Store {
+	s := Store{db: db}
+	s.logger = logger.With(slog.Any("module", reflect.TypeOf(s)))
+	return &s
 }
 
 func (s *Store) Add(item FoodItem) FoodItem {
@@ -43,6 +48,7 @@ func (s *Store) Add(item FoodItem) FoodItem {
 	if err != nil {
 		panic(err)
 	}
+	s.logger.Info("added fooditem", slog.Any("fooditem", item))
 
 	return item
 }

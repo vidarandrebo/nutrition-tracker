@@ -4,7 +4,8 @@ import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
-    const initialized = ref<boolean>(false)
+    const initialized = ref<boolean>(false);
+    const searchTerm = ref<string>("");
 
     function clear() {
         collection.value = [];
@@ -12,6 +13,7 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     }
 
     async function init() {
+        searchTerm.value = "";
         if (!initialized.value) {
             const items = await FoodItem.get();
             if (items === null) {
@@ -23,8 +25,8 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         }
     }
 
-    function getFoodItem(id: number) : FoodItem | undefined {
-        return collection.value.find((f) => f.id === id)
+    function getFoodItem(id: number): FoodItem | undefined {
+        return collection.value.find((f) => f.id === id);
     }
 
     async function refresh() {
@@ -36,7 +38,6 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         }
     }
 
-    const searchTerm = ref<string>("");
     const filteredFoodItems = computed(() => {
         if (searchTerm.value.length < 3) {
             return collection.value;
@@ -49,15 +50,18 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         if (searchTerm.value === "") {
             return collection.value;
         }
-        return collection.value.filter((x) => {
-            for (let i = 0; i < terms.length; i++) {
-                if (!(x.product.toLowerCase().includes(terms[i]) || x.manufacturer.toLowerCase().includes(terms[i]))) {
-                    return false;
+        return collection.value
+            .filter((x) => {
+                for (let i = 0; i < terms.length; i++) {
+                    if (
+                        !(x.product.toLowerCase().includes(terms[i]) || x.manufacturer.toLowerCase().includes(terms[i]))
+                    ) {
+                        return false;
+                    }
                 }
-            }
-            return true;
-        })
-            .slice(0,100);
+                return true;
+            })
+            .slice(0, 25);
     });
-    return { clear, collection, init, refresh , filteredFoodItems, searchTerm, getFoodItem, initialized};
+    return { clear, collection, init, refresh, filteredFoodItems, searchTerm, getFoodItem, initialized };
 });

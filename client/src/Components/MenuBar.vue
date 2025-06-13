@@ -34,7 +34,6 @@ async function logout() {
     const foodItemStore = useFoodItemStore();
     foodItemStore.clear();
 
-
     localStorage.removeItem("user");
 
     await router.push("/login");
@@ -53,7 +52,7 @@ async function logout() {
                 </div>
             </div>
 
-            <div id="navbarExampleTransparentExample" :class="navbarMenuClass">
+            <div id="navbarExampleTransparentExample" :class="navbarMenuClass" @click="flipBurger">
                 <div class="navbar-start">
                     <MenuBarRouterLink to="/">Home</MenuBarRouterLink>
                     <MenuBarRouterLink to="/food-items">Food Items</MenuBarRouterLink>
@@ -66,7 +65,7 @@ async function logout() {
                     <MenuBarRouterLink v-if="userStore.user" to="/settings"
                         >{{ userStore.user.email }}
                     </MenuBarRouterLink>
-                    <a href="#" @click="logout" class="button" v-if="userStore.user">Logout</a>
+                    <a v-if="userStore.user" href="#" class="button" @click="logout">Logout</a>
                 </div>
             </div>
         </nav>

@@ -1,11 +1,12 @@
 export type MealResponse = {
     id: number;
-    timestamp: string
+    timestamp: string;
     sequenceNumber: number;
     entries: MealEntryResponse[];
-}
+};
 export type MealEntryResponse = {
     id: number;
     foodItemId: number;
+    recipeId: number;
     amount: number;
-}
+};

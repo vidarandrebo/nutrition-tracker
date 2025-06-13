@@ -5,12 +5,14 @@ import { HttpRequest } from "http-methods-ts";
 
 export class MealEntry {
     id: number;
-    foodItemId: number;
+    foodItemId: number | null;
+    recipeId: number | null;
     amount: number;
 
     constructor() {
         this.id = 0;
-        this.foodItemId = 0;
+        this.foodItemId = null;
+        this.recipeId = null;
         this.amount = 0;
     }
 
@@ -53,7 +55,8 @@ export class MealEntry {
         const me = new MealEntry();
         me.id = res.id;
         me.amount = res.amount;
-        me.foodItemId = res.foodItemId;
+        me.foodItemId = res.foodItemId !== 0 ? res.foodItemId : null;
+        me.recipeId = res.recipeId !== 0 ? res.recipeId : null;
         return me;
     }
 }

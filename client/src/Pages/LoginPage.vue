@@ -1,16 +1,16 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import type { LoginForm } from "../Models/LoginForm.ts";
-import InputText from "../Components/InputText.vue";
+import InputText from "../Components/Forms/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
 import type { AccessTokenResponse } from "../Models/AccessTokenResponse.ts";
 import router from "../Router.ts";
 import { useUserStore } from "../Stores/UserStore.ts";
 import { User } from "../Models/User.ts";
-import Button from "../Components/Button.vue";
-import FormField from "../Components/FormField.vue";
+import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
+import FormField from "../Components/Forms/FormField.vue";
 import HeaderH1 from "../Components/HeaderH1.vue";
-import Label from "../Components/Label.vue";
+import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
@@ -39,24 +39,24 @@ async function login() {
 </script>
 <template>
     <HeaderH1>Login</HeaderH1>
-    <div class="container ">
-        <form v-on:submit.prevent="login" class="box">
+    <div class="container">
+        <form class="box" @submit.prevent="login">
             <FormField>
-                <Label class="label">
+                <LabelPrimary class="label">
                     Email
                     <div class="control">
                         <InputText v-model="loginForm.email" type="email" />
                     </div>
-                </Label>
+                </LabelPrimary>
             </FormField>
             <FormField>
-                <Label>
+                <LabelPrimary>
                     <p>Password</p>
                     <InputText v-model="loginForm.password" type="password" />
-                </Label>
+                </LabelPrimary>
             </FormField>
             <FormField>
-                <Button class="is-primary" type="submit">Login</Button>
+                <ButtonPrimary class="is-primary" type="submit">Login</ButtonPrimary>
             </FormField>
         </form>
     </div>

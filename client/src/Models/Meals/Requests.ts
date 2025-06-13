@@ -4,5 +4,6 @@ export type PostMealRequest = {
 
 export type PostMealEntryRequest = {
     foodItemId: number;
+    recipeId: number;
     amount: number;
-}
+};

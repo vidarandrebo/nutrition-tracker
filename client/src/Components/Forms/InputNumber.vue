@@ -16,8 +16,8 @@ function handleInput(event: Event) {
         type="number"
         class="input"
         :value="modelValue"
-        @input="handleInput"
         :placeholder="placeHolder?.toString()"
+        @input="handleInput"
     />
 </template>
 
