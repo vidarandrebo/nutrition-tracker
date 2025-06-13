@@ -49,6 +49,7 @@ CREATE TABLE IF NOT EXISTS meal_entries
     id            bigserial PRIMARY KEY,
     amount        double precision                               NOT NULL,
     food_item_id  bigint REFERENCES food_items (id),
+    recipe_id     bigint REFERENCES food_items (id),
     date_created  timestamp,
     date_modified timestamp,
     meal_id       bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL

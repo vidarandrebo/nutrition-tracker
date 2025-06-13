@@ -125,13 +125,18 @@ func (c *Controller) PostEntry(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+	if ok, err := request.Validate(); !ok {
+		w.WriteHeader(http.StatusBadRequest)
+		w.Write([]byte(err.Error()))
+	}
 
 	mealID, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 
-	entry, err := c.store.AddMealEntry(Entry{
-		FoodItemID: request.FoodItemID,
-		Amount:     request.Amount,
-	}, mealID, userID)
+	entry, err := c.store.AddMealEntry(
+		EntryFromRequest(request),
+		mealID,
+		userID,
+	)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)

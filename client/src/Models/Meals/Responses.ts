@@ -7,5 +7,6 @@ export type MealResponse = {
 export type MealEntryResponse = {
     id: number;
     foodItemId: number;
+    recipeId: number;
     amount: number;
 };

@@ -33,11 +33,12 @@ func (s *Store) Add(meal Meal) Meal {
 
 	for _, entry := range meal.Entries {
 		err = tx.QueryRow(`
-			INSERT INTO meal_entries AS me (amount, food_item_id, meal_id) 
+			INSERT INTO meal_entries AS me (amount, food_item_id, recipe_id, meal_id) 
 			VALUES ($1, $2, $3) 
 			RETURNING me.id`,
 			entry.Amount,
-			entry.FoodItemIDOrNil(),
+			entry.foodItemID,
+			entry.recipeID,
 			meal.ID,
 		).Scan(&entry.ID)
 		if err != nil {
@@ -60,7 +61,7 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 		  AND meal_time >= $2 
 		  AND meal_time < $3
 	) 
-	SELECT m.id, m.meal_time, m.sequence_number, m.owner_id, me.id, me.food_item_id, me.amount
+	SELECT m.id, m.meal_time, m.sequence_number, m.owner_id, me.id, me.food_item_id, me.recipe_id, me.amount
 	FROM meal_for_day m 
 		LEFT JOIN meal_entries me ON me.meal_id = m.id`,
 		ownerID,
@@ -76,13 +77,15 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 	for rows.Next() {
 		meal := Meal{}
 		entry := Entry{}
-		rows.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID, &entry.ID, &entry.FoodItemID, &entry.Amount)
+		rows.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID, &entry.ID, &entry.foodItemID, &entry.recipeID, &entry.Amount)
 		if lastMealId != meal.ID {
 			meals = append(meals, meal)
 			entries[meal.ID] = make([]Entry, 0)
 		}
 		if entry.IsValid() {
 			entries[meal.ID] = append(entries[meal.ID], entry)
+		} else {
+			s.Logger.Error("failed to load entry", slog.Any("e", entry))
 		}
 		lastMealId = meal.ID
 	}
@@ -115,10 +118,10 @@ func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, e
 	}
 
 	err = s.DB.QueryRow(`
-		INSERT INTO meal_entries AS me (meal_id, food_item_id, amount) 
-		VALUES ($1, $2, $3) 
+		INSERT INTO meal_entries AS me (meal_id, food_item_id, recipe_id,amount) 
+		VALUES ($1, $2, $3, $4) 
 		RETURNING me.id`,
-		mealID, entry.FoodItemID, entry.Amount).Scan(&entry.ID)
+		mealID, entry.FoodItemID(), entry.RecipeID(), entry.Amount).Scan(&entry.ID)
 
 	if err != nil {
 		panic(err)

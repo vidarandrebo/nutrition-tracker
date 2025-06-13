@@ -20,6 +20,7 @@ const foodItemIds = computed(() => [
 ]);
 onMounted(async () => {
     await mealStore.loadMealsForDay();
+    await mealViewStore.init();
 });
 watch(foodItemIds, () => {
     for (const id of foodItemIds.value) {
@@ -75,7 +76,7 @@ function bumpDay(n: number) {
             </div>
             <ul class="content">
                 <li v-for="entry in item.entries" :key="entry.id" class="box">
-                    <p>{{ entry.name }}, {{ entry.amount }}g.</p>
+                    <p>{{ entry.name }}, {{ entry.amount }}</p>
                     <p>
                         KCal: {{ entry.kCal }}, Protein: {{ entry.protein }}, Carbohydrate: {{ entry.carbohydrate }},
                         Fat: {{ entry.fat }}

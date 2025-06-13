@@ -6,8 +6,14 @@ export type MealView = {
     entries: MealEntryView[];
 };
 
+export enum EntryType {
+    FoodItem,
+    Recipe,
+}
+
 export type MealEntryView = {
     id: number;
     name: string;
     amount: number;
+    entryType: EntryType;
 } & Energy;
