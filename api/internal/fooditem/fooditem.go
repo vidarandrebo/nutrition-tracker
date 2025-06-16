@@ -13,6 +13,7 @@ type FoodItem struct {
 	Carbohydrate   float64
 	Fat            float64
 	KCal           float64
+	Public         bool
 	Micronutrients []Micronutrient
 	Source         string
 	OwnerID        int64
@@ -53,6 +54,7 @@ func FromMatvareTabellen(item matvaretabellen.Food) FoodItem {
 		Carbohydrate:   item.Carbohydrate(),
 		Fat:            item.Fat(),
 		KCal:           float64(item.Calories.Quantity),
+		Public:         true,
 		Micronutrients: micronutrients,
 		Source:         "matvaretabellen.no",
 		OwnerID:        0,

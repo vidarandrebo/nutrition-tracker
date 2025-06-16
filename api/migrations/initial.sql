@@ -17,6 +17,7 @@ CREATE TABLE IF NOT EXISTS food_items
     carbohydrate  double precision,
     fat           double precision,
     kcal          double precision,
+    public        boolean,
     source        varchar(128),
     date_created  timestamp,
     date_modified timestamp,

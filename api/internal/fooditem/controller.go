@@ -42,8 +42,12 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
-
-	items := c.store.Get()
+	userID, err := auth.UserIDFromCtx(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	items := c.store.Get(userID)
 	responses := make([]FoodItemResponse, 0)
 
 	for _, item := range items {
@@ -54,13 +58,18 @@ func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
 }
 func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 
+	userID, err := auth.UserIDFromCtx(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	if err != nil {
 		c.logger.Error("Failed to parse id from path", slog.Any("err", err))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	item, err := c.store.GetByID(id)
+	item, err := c.store.GetByID(id, userID)
 	if err != nil {
 		c.logger.Info("fooditem not found", slog.Any("err", err))
 		w.WriteHeader(http.StatusNotFound)

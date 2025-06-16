@@ -11,6 +11,7 @@ export class FoodItem {
     carbohydrate: number;
     fat: number;
     kCal: number;
+    public: boolean;
     source: string;
     get name(): string {
         let out = this.manufacturer;
@@ -36,6 +37,7 @@ export class FoodItem {
         this.carbohydrate = 0.0;
         this.fat = 0.0;
         this.kCal = 0.0;
+        this.public = false;
         this.source = "";
     }
 
@@ -48,6 +50,7 @@ export class FoodItem {
         foodItem.carbohydrate = res.carbohydrate;
         foodItem.fat = res.fat;
         foodItem.kCal = res.kCal;
+        foodItem.public = res.public;
         foodItem.source = res.source;
         return foodItem;
     }
