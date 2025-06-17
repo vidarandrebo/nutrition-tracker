@@ -16,12 +16,12 @@ export class MacronutrientsView {
     }
 
     get Protein(): string {
-        return this.protein.toFixed(2)
+        return this.protein.toFixed(2);
     }
     get Carbohydrate(): string {
-        return this.carbohydrate.toFixed(2)
+        return this.carbohydrate.toFixed(2);
     }
     get Fat(): string {
-        return this.fat.toFixed(2)
+        return this.fat.toFixed(2);
     }
 }

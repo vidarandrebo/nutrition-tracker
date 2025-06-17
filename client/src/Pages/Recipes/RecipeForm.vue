@@ -28,7 +28,7 @@ function onFoodItemSelected(id: number) {
 
 async function submit() {
     await recipeStore.addRecipe(item.value);
-    await router.push("/recipes")
+    await router.push("/recipes");
 }
 </script>
 

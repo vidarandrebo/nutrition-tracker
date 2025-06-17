@@ -43,12 +43,13 @@ export const useMealViewStore = defineStore("mealViewStore", () => {
                             r ? r.protein * me.amount : 0.0,
                             r ? r.carbohydrate * me.amount : 0.0,
                             r ? r.fat * me.amount : 0.0,
-                            r ? r.kCal * me.amount : 0.0
+                            r ? r.kCal * me.amount : 0.0,
                         );
                     } else {
                         throw new Error("neither food item or recipe found on meal entry");
                     }
-                }));
+                }),
+            );
         });
     });
 
@@ -57,7 +58,7 @@ export const useMealViewStore = defineStore("mealViewStore", () => {
             protein: 0.0,
             carbohydrate: 0.0,
             fat: 0.0,
-            kCal: 0.0
+            kCal: 0.0,
         };
         for (const meal of mealsView.value) {
             for (const entry of meal.entries) {
