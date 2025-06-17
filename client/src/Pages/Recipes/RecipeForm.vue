@@ -9,10 +9,13 @@ import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FoodItemSelector from "../FoodItems/FoodItemSelector.vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import { useRecipeStore } from "../../Stores/RecipeStore.ts";
+import router from "../../Router.ts";
+import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 
 const item = ref<RecipeRequest>({ name: "", entries: [] });
 const showFoodItemSelector = ref<boolean>(false);
 const recipeStore = useRecipeStore();
+const foodItemStore = useFoodItemStore();
 
 function addEntry() {
     showFoodItemSelector.value = true;
@@ -25,6 +28,7 @@ function onFoodItemSelected(id: number) {
 
 async function submit() {
     await recipeStore.addRecipe(item.value);
+    await router.push("/recipes")
 }
 </script>
 
@@ -52,6 +56,7 @@ async function submit() {
                 <LabelPrimary>
                     FoodItem
                     <InputNumber v-model="item.entries[id].foodItemId" disabled></InputNumber>
+                    {{ foodItemStore.getFoodItem(item.entries[id].foodItemId)?.name }}
                 </LabelPrimary>
                 <LabelPrimary>
                     Amount

@@ -43,8 +43,8 @@ function bumpDay(n: number) {
     <div v-if="userStore.user">
         <div>
             <p>
-                KCal: {{ mealViewStore.dailyMacros.kCal }}, Protein: {{ mealViewStore.dailyMacros.protein }} g,
-                Carbohydrate: {{ mealViewStore.dailyMacros.carbohydrate }} g, Fat: {{ mealViewStore.dailyMacros.fat }} g
+                KCal: {{ mealViewStore.dailyMacros.KCal }}, Protein: {{ mealViewStore.dailyMacros.Protein }} g,
+                Carbohydrate: {{ mealViewStore.dailyMacros.Carbohydrate }} g, Fat: {{ mealViewStore.dailyMacros.Fat }} g
             </p>
         </div>
         <div class="is-flex is-justify-content-space-between">
@@ -78,8 +78,8 @@ function bumpDay(n: number) {
                 <li v-for="entry in item.entries" :key="entry.id" class="box">
                     <p>{{ entry.name }}, {{ entry.amount }}</p>
                     <p>
-                        KCal: {{ entry.kCal }}, Protein: {{ entry.protein }}, Carbohydrate: {{ entry.carbohydrate }},
-                        Fat: {{ entry.fat }}
+                        KCal: {{ entry.KCal }}, Protein: {{ entry.Protein }}, Carbohydrate: {{ entry.Carbohydrate }},
+                        Fat: {{ entry.Fat }}
                     </p>
                 </li>
             </ul>
