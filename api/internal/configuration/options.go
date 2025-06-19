@@ -1,8 +1,9 @@
 package configuration
 
 import (
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"os"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Options struct {

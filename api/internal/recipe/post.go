@@ -1,9 +1,10 @@
 package recipe
 
 import (
+	"net/http"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/controller"
-	"net/http"
 )
 
 type Post struct {
@@ -13,6 +14,7 @@ type Post struct {
 func NewPost(action *ActionBase) *controller.ControllerWithBody[PostRecipeRequest] {
 	return controller.NewControllerWithBody(&Post{action})
 }
+
 func (p *Post) Process(body PostRecipeRequest, r *http.Request) controller.Response {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {

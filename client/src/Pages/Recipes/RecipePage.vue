@@ -31,10 +31,10 @@ async function addRecipe() {
         </template>
     </LevelPrimary>
     <article v-for="item in recipeViewStore.recipesView" :key="item.id" class="box">
-        {{ item.name }}
+        <b>{{ item.name }}</b>
         <p>
-            KCal: {{ item.kCal }}, Protein: {{ item.protein }} g, Carbohydrate: {{ item.carbohydrate }} g, Fat:
-            {{ item.fat }} g
+            KCal: {{ item.KCal }}, Protein: {{ item.Protein }} g, Carbohydrate: {{ item.Carbohydrate }} g, Fat:
+            {{ item.Fat }} g
         </p>
     </article>
 </template>

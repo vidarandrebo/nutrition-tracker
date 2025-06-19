@@ -6,6 +6,7 @@ import FoodItemDisplay from "./FoodItemDisplay.vue";
 import InputText from "../../Components/Forms/InputText.vue";
 import FormField from "../../Components/Forms/FormField.vue";
 import debounce from "debounce";
+import LevelPrimary from "../../Components/LevelPrimary.vue";
 
 const foodItemStore = useFoodItemStore();
 const searchTerm = ref<string>("");
@@ -24,10 +25,16 @@ watch(searchTerm, () => {
 </script>
 
 <template>
-    <HeaderH1>Food Items</HeaderH1>
-    <FormField>
-        <RouterLink class="button is-primary" to="/food-items/add">Add</RouterLink>
-    </FormField>
+    <LevelPrimary>
+        <template #left>
+            <HeaderH1>Food Items</HeaderH1>
+        </template>
+        <template #right>
+            <FormField>
+                <RouterLink class="button is-primary" to="/food-items/add">Add</RouterLink>
+            </FormField>
+        </template>
+    </LevelPrimary>
     <FormField>
         <InputText v-model="searchTerm" placeholder="Search"></InputText>
     </FormField>

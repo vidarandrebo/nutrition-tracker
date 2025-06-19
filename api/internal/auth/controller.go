@@ -3,9 +3,10 @@ package auth
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"log/slog"
 	"net/http"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Controller struct {
@@ -36,7 +37,6 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	regRequest, err := utils.ParseJson[RegisterRequest](r.Body)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		c.Logger.Error("deserializing failed", slog.Any("err", err))
@@ -56,5 +56,4 @@ func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
 	} else {
 		w.WriteHeader(http.StatusCreated)
 	}
-
 }

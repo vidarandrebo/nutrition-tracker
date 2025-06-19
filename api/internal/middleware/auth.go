@@ -2,10 +2,11 @@ package middleware
 
 import (
 	"context"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"log/slog"
 	"net/http"
 	"strings"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 )
 
 type Auth struct {

@@ -20,6 +20,7 @@ func (sw *StatusWriter) WriteHeader(statusCode int) {
 	sw.ResponseWriter.WriteHeader(statusCode)
 	sw.statusCode = statusCode
 }
+
 func NewRequestMetadata(logger *slog.Logger) *RequestMetadata {
 	rm := &RequestMetadata{}
 	rm.logger = logger.With("module", reflect.TypeOf(rm))

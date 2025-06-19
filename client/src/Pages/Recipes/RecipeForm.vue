@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import type { RecipeRequest } from "../../Models/Recipes/Requests.ts";
 import InputText from "../../Components/Forms/InputText.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
@@ -30,6 +30,13 @@ async function submit() {
     await recipeStore.addRecipe(item.value);
     await router.push("/recipes");
 }
+
+const saveEnabled = computed((): boolean => {
+    return item.value.name !== "" && item.value.entries.length > 0;
+});
+const saveHelpText = computed((): string => {
+    return "Recipe needs to have a name and have at least one foodItem";
+});
 </script>
 
 <template>
@@ -40,10 +47,10 @@ async function submit() {
         </LabelPrimary>
         <LevelPrimary v-if="!showFoodItemSelector">
             <template #left>
-                <HeaderH2 class="level-item">Entries</HeaderH2>
+                <HeaderH2 class="level-item">Ingredients</HeaderH2>
             </template>
             <template #right>
-                <ButtonPrimary @click="addEntry">Add Entry</ButtonPrimary>
+                <ButtonPrimary @click="addEntry">Add Ingredient</ButtonPrimary>
             </template>
         </LevelPrimary>
         <FoodItemSelector
@@ -64,9 +71,12 @@ async function submit() {
                 </LabelPrimary>
             </div>
         </template>
-        <ButtonPrimary type="submit">Save</ButtonPrimary>
+        <LevelPrimary>
+            <template #right>
+                <ButtonPrimary type="submit" :enabled="saveEnabled" :disabled-text="saveHelpText">Save</ButtonPrimary>
+            </template>
+        </LevelPrimary>
     </form>
-    <p>{{ item }}</p>
 </template>
 
 <style scoped></style>

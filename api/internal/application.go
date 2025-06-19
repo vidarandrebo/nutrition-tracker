@@ -2,6 +2,11 @@ package internal
 
 import (
 	"database/sql"
+	"io"
+	"log/slog"
+	"net/http"
+	"os"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
@@ -9,10 +14,6 @@ import (
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/meal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/middleware"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/recipe"
-	"io"
-	"log/slog"
-	"net/http"
-	"os"
 )
 
 type Application struct {
@@ -54,6 +55,7 @@ type Middlewares struct {
 func NewApplication() *Application {
 	return &Application{}
 }
+
 func (a *Application) addLogger() {
 	logFile, err := os.OpenFile(a.Options.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 	if err != nil {
@@ -75,6 +77,7 @@ func (a *Application) addDB() {
 	}
 	a.DB = db
 }
+
 func (a *Application) readConfiguration() {
 	opt, err := configuration.ParseOptions("appsettings.json")
 	if err != nil {
@@ -82,12 +85,14 @@ func (a *Application) readConfiguration() {
 	}
 	a.Options = opt
 }
+
 func (a *Application) addServices() {
 	a.Services = &Services{}
 	a.Services.JwtService = auth.NewJwtService(a.Options)
 	a.Services.HashingService = auth.NewHashingService()
 	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService, a.Services.JwtService)
 }
+
 func (a *Application) addStores() {
 	a.Stores = &Stores{}
 	a.Stores.FoodItemStore = fooditem.NewStore(a.DB, a.Logger)
@@ -181,6 +186,7 @@ func (a *Application) rootMux() http.Handler {
 
 	return mux
 }
+
 func (a *Application) Setup() {
 	a.readConfiguration()
 	a.addLogger()
@@ -207,6 +213,7 @@ func (a *Application) Setup() {
 		ConnContext:                  nil,
 	}
 }
+
 func (a *Application) Run() {
 	a.Logger.Info("Listening", slog.String("address", "http://localhost"), slog.String("port", a.Options.ListenAddress))
 	err := a.Server.ListenAndServe()

@@ -1,8 +1,9 @@
 package meal
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPostMealEntryRequest_Validate_BothIDs(t *testing.T) {
@@ -17,6 +18,7 @@ func TestPostMealEntryRequest_Validate_BothIDs(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.False(t, ok)
 }
+
 func TestPostMealEntryRequest_Validate_ZeroAmount(t *testing.T) {
 	r := PostMealEntryRequest{
 		FoodItemID: 0,
@@ -27,6 +29,7 @@ func TestPostMealEntryRequest_Validate_ZeroAmount(t *testing.T) {
 	ok, _ := r.Validate()
 	assert.False(t, ok)
 }
+
 func TestPostMealEntryRequest_Validate_Success(t *testing.T) {
 	r := PostMealEntryRequest{
 		FoodItemID: 2,

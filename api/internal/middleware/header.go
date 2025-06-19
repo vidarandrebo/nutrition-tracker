@@ -19,6 +19,7 @@ func (hw *HeaderWriter) WriteHeaders(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
 func (hw *HeaderWriter) WriteContentTypeHeader(h http.Header) {
 	h.Set("Content-Type", "application/json")
 }

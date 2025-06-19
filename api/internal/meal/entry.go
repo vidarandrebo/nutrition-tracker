@@ -2,6 +2,7 @@ package meal
 
 import (
 	"database/sql"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
@@ -18,6 +19,7 @@ func (e Entry) FoodItemID() any {
 	}
 	return e.foodItemID.Int64
 }
+
 func (e Entry) RecipeID() any {
 	if !e.recipeID.Valid {
 		return nil

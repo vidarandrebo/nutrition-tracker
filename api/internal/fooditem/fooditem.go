@@ -1,8 +1,9 @@
 package fooditem
 
 import (
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 	"slices"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 )
 
 type FoodItem struct {
@@ -61,6 +62,7 @@ func FromMatvareTabellen(item matvaretabellen.Food) FoodItem {
 	}
 	return foodItem
 }
+
 func CalcAmount(amount float64, unit string) float64 {
 	switch unit {
 	case "mg":

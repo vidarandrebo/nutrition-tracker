@@ -2,14 +2,15 @@ package internal
 
 import (
 	"database/sql"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"io"
 	"log/slog"
 	"net/http"
 	"os"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 )
 
 type Importer struct {
@@ -28,6 +29,7 @@ func (a *Importer) CloseDB() {
 func NewImporter() *Importer {
 	return &Importer{}
 }
+
 func (a *Importer) configureLogger() {
 	logFile, err := os.OpenFile("./dataimporter.log", os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 	if err != nil {
@@ -49,6 +51,7 @@ func (a *Importer) configureDB() {
 	}
 	a.DB = db
 }
+
 func (a *Importer) readConfiguration() {
 	opt, err := configuration.ParseOptions("appsettings.json")
 	if err != nil {
@@ -56,12 +59,14 @@ func (a *Importer) readConfiguration() {
 	}
 	a.Options = opt
 }
+
 func (a *Importer) configureServices() {
 	a.Services = &Services{}
 	a.Services.JwtService = auth.NewJwtService(a.Options)
 	a.Services.HashingService = auth.NewHashingService()
 	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService, a.Services.JwtService)
 }
+
 func (a *Importer) configureStores() {
 	a.Stores = &Stores{}
 	a.Stores.FoodItemStore = fooditem.NewStore(a.DB, a.Logger)
@@ -74,5 +79,4 @@ func (a *Importer) Setup() {
 	a.configureDB()
 	a.configureStores()
 	a.configureServices()
-
 }

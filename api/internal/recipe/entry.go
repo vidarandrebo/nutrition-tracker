@@ -13,6 +13,7 @@ func (e Entry) FoodItemIDOrNil() any {
 	}
 	return e.FoodItemID
 }
+
 func (e Entry) IsValid() bool {
 	return (e.ID != 0) && (e.Amount != 0.0)
 }

@@ -24,6 +24,7 @@ func (mer PostMealEntryRequest) Validate() (bool, error) {
 	}
 	return true, nil
 }
+
 func (mer PostMealEntryRequest) eitherFoodItemOrRecipe() bool {
 	return (mer.RecipeID == 0 && mer.FoodItemID != 0) || (mer.RecipeID != 0 && mer.FoodItemID == 0)
 }

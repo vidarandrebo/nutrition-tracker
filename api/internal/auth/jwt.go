@@ -4,11 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
 	"slices"
 	"strconv"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
 )
 
 type JwtService struct {
@@ -58,15 +59,19 @@ func (jc *JwtClaims) ToClaimsMap() jwt.MapClaims {
 func (jc *JwtService) validateIssuer(claims JwtClaims) bool {
 	return claims.Issuer == jc.opt.JwtIssuer
 }
+
 func (js *JwtService) validateAudience(claims JwtClaims) bool {
 	return slices.Contains(claims.Audience, js.opt.JwtAudience)
 }
+
 func (jc *JwtClaims) validateExpirationTime() bool {
 	return jc.ExpirationTime.Time.After(time.Now())
 }
+
 func (jc *JwtClaims) validateNotBefore() bool {
 	return jc.NotBefore.Time.Before(time.Now())
 }
+
 func (js *JwtService) Validate(claims JwtClaims) bool {
 	return js.validateIssuer(claims) &&
 		js.validateAudience(claims) &&

@@ -13,6 +13,7 @@ import { useUserStore } from "../../Stores/UserStore.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../../Components/Forms/FormField.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
+import LevelPrimary from "../../Components/LevelPrimary.vue";
 
 const formModel = reactive<PostFoodItemRequest>(new PostFoodItemRequest());
 
@@ -86,7 +87,11 @@ const estKCal = computed(() => {
                 <InputNumber v-model.number="formModel.kCal" :place-holder="estKCal"></InputNumber>
             </LabelPrimary>
         </FormField>
-        <ButtonPrimary type="submit">Add</ButtonPrimary>
+        <LevelPrimary>
+            <template #right>
+                <ButtonPrimary type="submit">Add</ButtonPrimary>
+            </template>
+        </LevelPrimary>
     </form>
 </template>
 

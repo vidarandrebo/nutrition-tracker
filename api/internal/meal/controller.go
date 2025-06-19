@@ -2,13 +2,14 @@ package meal
 
 import (
 	"encoding/json"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"log/slog"
 	"net/http"
 	"reflect"
 	"strconv"
 	"time"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Controller struct {
@@ -22,6 +23,7 @@ func NewController(store *Store, logger *slog.Logger) *Controller {
 	c.logger = logger.With("module", reflect.TypeOf(c))
 	return c
 }
+
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
@@ -50,7 +52,6 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 
 func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
-
 	if err != nil {
 		w.WriteHeader(http.StatusUnauthorized)
 		return
@@ -88,6 +89,7 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	enc.Encode(response)
 }
+
 func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	userID, err := auth.UserIDFromCtx(r.Context())
@@ -104,7 +106,6 @@ func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 	c.logger.Info("get by id", slog.Int64("id", id))
 
 	meal, err := c.store.GetById(id, userID)
-
 	if err != nil {
 		enc.Encode(err.Error())
 		w.WriteHeader(http.StatusNotFound)
@@ -113,6 +114,7 @@ func (c *Controller) GetByID(w http.ResponseWriter, r *http.Request) {
 
 	enc.Encode(meal.ToResponse())
 }
+
 func (c *Controller) PostEntry(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
@@ -137,7 +139,6 @@ func (c *Controller) PostEntry(w http.ResponseWriter, r *http.Request) {
 		mealID,
 		userID,
 	)
-
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

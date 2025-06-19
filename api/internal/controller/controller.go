@@ -2,8 +2,9 @@ package controller
 
 import (
 	"encoding/json"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"net/http"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Controller struct {
@@ -21,6 +22,7 @@ func (c *Controller) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		enc.Encode(response.data)
 	}
 }
+
 func NewController(action Action) *Controller {
 	return &Controller{action}
 }
@@ -38,6 +40,7 @@ func (c *ControllerWithBody[T]) ServeHTTP(w http.ResponseWriter, r *http.Request
 		enc.Encode(response.data)
 	}
 }
+
 func NewControllerWithBody[T any](action ActionWithBody[T]) *ControllerWithBody[T] {
 	return &ControllerWithBody[T]{action}
 }

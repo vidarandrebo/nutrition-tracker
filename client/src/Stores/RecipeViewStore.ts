@@ -2,8 +2,7 @@ import { defineStore } from "pinia";
 import { useFoodItemStore } from "./FoodItemStore.ts";
 import { useRecipeStore } from "./RecipeStore.ts";
 import { computed } from "vue";
-import type { RecipeEntryView, RecipeView } from "../Models/Recipes/RecipeView.ts";
-import { SumEnergy } from "../Models/Common/Energy.ts";
+import { RecipeEntryView, RecipeView } from "../Models/Recipes/RecipeView.ts";
 
 export const useRecipeViewStore = defineStore("recipeViewStore", () => {
     const recipeStore = useRecipeStore();
@@ -12,23 +11,17 @@ export const useRecipeViewStore = defineStore("recipeViewStore", () => {
         return recipeStore.collection.map((r): RecipeView => {
             const entries = r.entries.map((e): RecipeEntryView => {
                 const fi = foodItemStore.getFoodItem(e.foodItemId);
-                return {
-                    amount: e.amount,
-                    protein: fi ? (fi.protein * e.amount) / 100.0 : 0.0,
-                    carbohydrate: fi ? (fi.carbohydrate * e.amount) / 100.0 : 0.0,
-                    fat: fi ? (fi.fat * e.amount) / 100.0 : 0.0,
-                    kCal: fi ? (fi.kCal * e.amount) / 100.0 : 0.0,
-                    name: fi ? fi.name : "",
-                    id: e.id,
-                };
+                return new RecipeEntryView(
+                    e.id,
+                    fi ? fi.name : "",
+                    e.amount,
+                    fi ? (fi.protein * e.amount) / 100.0 : 0.0,
+                    fi ? (fi.carbohydrate * e.amount) / 100.0 : 0.0,
+                    fi ? (fi.fat * e.amount) / 100.0 : 0.0,
+                    fi ? (fi.kCal * e.amount) / 100.0 : 0.0,
+                );
             });
-            const e = SumEnergy(entries);
-            return {
-                id: r.id,
-                name: r.name,
-                entries: entries,
-                ...e,
-            };
+            return new RecipeView(r.id, r.name, entries);
         });
     });
 
@@ -39,23 +32,17 @@ export const useRecipeViewStore = defineStore("recipeViewStore", () => {
         }
         const entries = recipe.entries.map((e): RecipeEntryView => {
             const fi = foodItemStore.getFoodItem(e.foodItemId);
-            return {
-                amount: e.amount,
-                protein: fi ? (fi.protein * e.amount) / 100.0 : 0.0,
-                carbohydrate: fi ? (fi.carbohydrate * e.amount) / 100.0 : 0.0,
-                fat: fi ? (fi.fat * e.amount) / 100.0 : 0.0,
-                kCal: fi ? (fi.kCal * e.amount) / 100.0 : 0.0,
-                name: fi ? fi.name : "",
-                id: e.id,
-            };
+            return new RecipeEntryView(
+                e.id,
+                fi ? fi.name : "",
+                e.amount,
+                fi ? (fi.protein * e.amount) / 100.0 : 0.0,
+                fi ? (fi.carbohydrate * e.amount) / 100.0 : 0.0,
+                fi ? (fi.fat * e.amount) / 100.0 : 0.0,
+                fi ? (fi.kCal * e.amount) / 100.0 : 0.0,
+            );
         });
-        const e = SumEnergy(entries);
-        return {
-            id: recipe.id,
-            name: recipe.name,
-            entries: entries,
-            ...e,
-        };
+        return new RecipeView(recipe.id, recipe.name, entries);
     }
 
     async function init() {

@@ -26,7 +26,6 @@ func (s *Store) Add(meal Meal) Meal {
 		VALUES ($1, $2, $3) 
 		RETURNING m.id`,
 		meal.SequenceNumber, meal.Timestamp, meal.OwnerID).Scan(&meal.ID)
-
 	if err != nil {
 		panic(err)
 	}
@@ -95,6 +94,7 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 	}
 	return meals
 }
+
 func (s *Store) GetById(id int64, ownerID int64) (Meal, error) {
 	row := s.DB.QueryRow(`
 		SELECT m.id, m.meal_time, m.sequence_number, m.owner_id 
@@ -104,12 +104,12 @@ func (s *Store) GetById(id int64, ownerID int64) (Meal, error) {
 		id, ownerID)
 	meal := Meal{}
 	err := row.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID)
-
 	if err != nil {
 		return Meal{}, fmt.Errorf("no meal with id %d", id)
 	}
 	return meal, nil
 }
+
 func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, error) {
 	// only an ownership check
 	_, err := s.GetById(mealID, ownerID)
@@ -122,7 +122,6 @@ func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, e
 		VALUES ($1, $2, $3, $4) 
 		RETURNING me.id`,
 		mealID, entry.FoodItemID(), entry.RecipeID(), entry.Amount).Scan(&entry.ID)
-
 	if err != nil {
 		panic(err)
 	}
