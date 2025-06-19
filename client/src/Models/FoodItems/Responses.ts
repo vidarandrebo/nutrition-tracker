@@ -5,4 +5,5 @@ export type FoodItemResponse = {
     manufacturer: string;
     product: string;
     source: string;
+    public: boolean;
 } & Energy;

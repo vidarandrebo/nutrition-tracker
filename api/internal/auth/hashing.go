@@ -3,6 +3,7 @@ package auth
 import (
 	"bytes"
 	"crypto/rand"
+
 	"golang.org/x/crypto/argon2"
 )
 
@@ -29,13 +30,14 @@ func NewHashingService() *HashingService {
 		saltLen:     32,
 	}
 }
-func (hs *HashingService) HashPassword(password string) []byte {
 
+func (hs *HashingService) HashPassword(password string) []byte {
 	salt := hs.generateSalt()
 
 	hash := hs.hashPassword(password, salt)
 	return hash
 }
+
 func (hs *HashingService) hashPassword(password string, salt []byte) []byte {
 	hash := argon2.IDKey([]byte(password), salt, hs.time, hs.mem, hs.parallelism, hs.hashLen)
 
@@ -59,5 +61,4 @@ func (hs *HashingService) generateSalt() []byte {
 		panic(err)
 	}
 	return salt
-
 }

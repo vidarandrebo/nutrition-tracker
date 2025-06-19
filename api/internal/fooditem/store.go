@@ -2,28 +2,34 @@ package fooditem
 
 import (
 	"database/sql"
+	"log/slog"
+	"reflect"
 )
 
 type Store struct {
-	db *sql.DB
+	db     *sql.DB
+	logger *slog.Logger
 }
 
-func NewStore(db *sql.DB) *Store {
-	return &Store{db: db}
+func NewStore(db *sql.DB, logger *slog.Logger) *Store {
+	s := Store{db: db}
+	s.logger = logger.With(slog.Any("module", reflect.TypeOf(s)))
+	return &s
 }
 
 func (s *Store) Add(item FoodItem) FoodItem {
 	tx, err := s.db.Begin()
 	tx.QueryRow(`
-		insert into food_items as fi (manufacturer, product, protein, carbohydrate, fat, kcal, source, owner_id) 
-		values ($1, $2, $3, $4, $5, $6, $7, $8) 
-		returning fi.id`,
+		INSERT INTO food_items AS fi (manufacturer, product, protein, carbohydrate, fat, kcal, public, source, owner_id) 
+		VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) 
+		RETURNING fi.id`,
 		item.Manufacturer,
 		item.Product,
 		item.Protein,
 		item.Carbohydrate,
 		item.Fat,
 		item.KCal,
+		item.Public,
 		item.Source,
 		item.OwnerID,
 	).Scan(&item.ID)
@@ -32,8 +38,8 @@ func (s *Store) Add(item FoodItem) FoodItem {
 	}
 	for _, microNutrient := range item.Micronutrients {
 		_, err = tx.Exec(`
-			insert into micronutrients (name, amount, food_item_id) 
-			values ($1, $2, $3)`,
+			INSERT INTO micronutrients (name, amount, food_item_id) 
+			VALUES ($1, $2, $3)`,
 			microNutrient.Name, microNutrient.Amount, item.ID)
 		if err != nil {
 			panic(err)
@@ -43,17 +49,20 @@ func (s *Store) Add(item FoodItem) FoodItem {
 	if err != nil {
 		panic(err)
 	}
+	s.logger.Info("added fooditem", slog.Any("fooditem", item))
 
 	return item
 }
 
-func (s *Store) GetByID(id int64) (FoodItem, error) {
+func (s *Store) GetByID(id int64, ownerID int64) (FoodItem, error) {
 	item := FoodItem{}
 	err := s.db.QueryRow(`
-		select id, manufacturer, product, protein, carbohydrate, fat, kcal,source, owner_id 
-		from food_items 
-		where id = $1`,
+		SELECT id, manufacturer, product, protein, carbohydrate, fat, kcal, public, source, owner_id 
+		FROM food_items 
+		WHERE id = $1
+ 		  AND owner_id = $2`,
 		id,
+		ownerID,
 	).Scan(
 		&item.ID,
 		&item.Manufacturer,
@@ -62,6 +71,7 @@ func (s *Store) GetByID(id int64) (FoodItem, error) {
 		&item.Carbohydrate,
 		&item.Fat,
 		&item.KCal,
+		&item.Public,
 		&item.Source,
 		&item.OwnerID,
 	)
@@ -71,11 +81,15 @@ func (s *Store) GetByID(id int64) (FoodItem, error) {
 	return item, nil
 }
 
-func (s *Store) Get() []FoodItem {
+func (s *Store) Get(ownerID int64) []FoodItem {
 	items := make([]FoodItem, 0)
 	rows, err := s.db.Query(`
-		select id, manufacturer, product, protein, carbohydrate, fat, kcal , source, owner_id 
-		from food_items`)
+		SELECT id, manufacturer, product, protein, carbohydrate, fat, kcal, public, source, owner_id 
+		FROM food_items f
+		WHERE f.public = TRUE 
+		  OR f.owner_id = $1`,
+		ownerID,
+	)
 	for rows.Next() {
 		item := FoodItem{}
 		rows.Scan(
@@ -86,6 +100,7 @@ func (s *Store) Get() []FoodItem {
 			&item.Carbohydrate,
 			&item.Fat,
 			&item.KCal,
+			&item.Public,
 			&item.Source,
 			&item.OwnerID,
 		)

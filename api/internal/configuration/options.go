@@ -1,8 +1,9 @@
 package configuration
 
 import (
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"os"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Options struct {
@@ -28,7 +29,7 @@ func ParseOptions(fileName string) (*Options, error) {
 		return nil, err
 	}
 
-	return options, nil
+	return &options, nil
 }
 
 type SystemUserCredentials struct {

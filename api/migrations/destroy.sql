@@ -1,6 +1,24 @@
+DROP TRIGGER IF EXISTS set_created ON recipe_entries;
+DROP TRIGGER IF EXISTS set_created ON recipes;
+DROP TRIGGER IF EXISTS set_created ON micronutrients;
+DROP TRIGGER IF EXISTS set_created ON meal_entries;
+DROP TRIGGER IF EXISTS set_created ON food_items;
+DROP TRIGGER IF EXISTS set_created ON meals;
+DROP TRIGGER IF EXISTS set_created ON users;
+DROP TRIGGER IF EXISTS set_modified ON recipe_entries;
+DROP TRIGGER IF EXISTS set_modified ON recipes;
+DROP TRIGGER IF EXISTS set_modified ON micronutrients;
+DROP TRIGGER IF EXISTS set_modified ON meal_entries;
+DROP TRIGGER IF EXISTS set_modified ON food_items;
+DROP TRIGGER IF EXISTS set_modified ON meals;
+DROP TRIGGER IF EXISTS set_modified ON users;
+DROP FUNCTION IF EXISTS set_date_modified;
+DROP FUNCTION IF EXISTS set_date_created;
+
+DROP TABLE IF EXISTS recipe_entries;
+DROP TABLE IF EXISTS recipes;
 DROP TABLE IF EXISTS micronutrients;
 DROP TABLE IF EXISTS meal_entries;
 DROP TABLE IF EXISTS food_items;
 DROP TABLE IF EXISTS meals;
-DROP TABLE IF EXISTS days;
 DROP TABLE IF EXISTS users;

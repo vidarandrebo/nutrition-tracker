@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-
 	app := NewApplication()
 
 	app.Setup()

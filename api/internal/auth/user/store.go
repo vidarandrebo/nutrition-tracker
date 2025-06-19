@@ -36,7 +36,6 @@ func (s *Store) AddUser(user *User) {
 func (s *Store) ListUsers() []*User {
 	users := make([]*User, 0)
 	rows, err := s.db.Query("SELECT id, name, password_hash FROM users")
-
 	if err != nil {
 		panic(err)
 	}
@@ -49,6 +48,7 @@ func (s *Store) ListUsers() []*User {
 
 	return users
 }
+
 func (s *Store) GetUserByEmail(email string) (*User, error) {
 	row := s.db.QueryRow(`
 		SELECT id, name, email, password_hash 
@@ -58,7 +58,6 @@ func (s *Store) GetUserByEmail(email string) (*User, error) {
 
 	user := User{}
 	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash)
-
 	if err != nil {
 		s.log.Info("no user matching the credentials", slog.String("email", email))
 		return nil, errors.New("no user matching the email")

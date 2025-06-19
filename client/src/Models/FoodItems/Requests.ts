@@ -5,6 +5,7 @@ export class PostFoodItemRequest {
     carbohydrate: number;
     fat: number;
     kCal: number | undefined;
+    public: boolean;
 
     constructor() {
         this.manufacturer = "";
@@ -13,5 +14,6 @@ export class PostFoodItemRequest {
         this.carbohydrate = 0.0;
         this.fat = 0.0;
         this.kCal = undefined;
+        this.public = false;
     }
 }

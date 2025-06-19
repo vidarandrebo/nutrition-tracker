@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 )
 
@@ -19,7 +20,7 @@ func NewAuthService(store user.IStore, hs IHashingService, jwtService *JwtServic
 	}
 }
 
-func (s *Service) RegisterUser(rr *RegisterRequest) error {
+func (s *Service) RegisterUser(rr RegisterRequest) error {
 	existingUser, _ := s.userStore.GetUserByEmail(rr.Email)
 	if existingUser != nil {
 		return errors.New("user already exists")
@@ -38,7 +39,7 @@ func (s *Service) RegisterUser(rr *RegisterRequest) error {
 	return nil
 }
 
-func (s *Service) LoginUser(lr *LoginRequest) (string, error) {
+func (s *Service) LoginUser(lr LoginRequest) (string, error) {
 	user, err := s.userStore.GetUserByEmail(lr.Email)
 	if err != nil {
 		return "", errors.New("incorrect credentials")

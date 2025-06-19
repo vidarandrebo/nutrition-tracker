@@ -1,8 +1,9 @@
 package fooditem
 
 import (
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 	"slices"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 )
 
 type FoodItem struct {
@@ -13,6 +14,7 @@ type FoodItem struct {
 	Carbohydrate   float64
 	Fat            float64
 	KCal           float64
+	Public         bool
 	Micronutrients []Micronutrient
 	Source         string
 	OwnerID        int64
@@ -53,12 +55,14 @@ func FromMatvareTabellen(item matvaretabellen.Food) FoodItem {
 		Carbohydrate:   item.Carbohydrate(),
 		Fat:            item.Fat(),
 		KCal:           float64(item.Calories.Quantity),
+		Public:         true,
 		Micronutrients: micronutrients,
 		Source:         "matvaretabellen.no",
 		OwnerID:        0,
 	}
 	return foodItem
 }
+
 func CalcAmount(amount float64, unit string) float64 {
 	switch unit {
 	case "mg":

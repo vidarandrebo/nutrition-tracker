@@ -7,6 +7,7 @@ type PostFoodItemRequest struct {
 	Carbohydrate float64 `json:"carbohydrate"`
 	Fat          float64 `json:"fat"`
 	KCal         float64 `json:"kCal"`
+	Public       bool    `json:"public"`
 }
 
 func (fr *PostFoodItemRequest) ToFoodItem() FoodItem {
@@ -18,6 +19,7 @@ func (fr *PostFoodItemRequest) ToFoodItem() FoodItem {
 		Carbohydrate:   fr.Carbohydrate,
 		Fat:            fr.Fat,
 		KCal:           fr.KCal,
+		Public:         false,
 		Micronutrients: nil,
 	}
 	return item

@@ -27,6 +27,7 @@ func (f Food) Protein() float64 {
 	}
 	return 0.0
 }
+
 func (f Food) Carbohydrate() float64 {
 	for _, item := range f.Constituents {
 		if item.NutrientID == "Karbo" {
@@ -35,6 +36,7 @@ func (f Food) Carbohydrate() float64 {
 	}
 	return 0.0
 }
+
 func (f Food) Fat() float64 {
 	for _, item := range f.Constituents {
 		if item.NutrientID == "Fett" {

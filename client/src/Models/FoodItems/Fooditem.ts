@@ -1,6 +1,7 @@
 import { HttpRequest } from "http-methods-ts";
 import type { FoodItemResponse } from "./Responses.ts";
 import { useUserStore } from "../../Stores/UserStore.ts";
+import type { Energy } from "../Common/Energy.ts";
 
 export class FoodItem {
     id: number;
@@ -10,14 +11,22 @@ export class FoodItem {
     carbohydrate: number;
     fat: number;
     kCal: number;
+    public: boolean;
     source: string;
     get name(): string {
         let out = this.manufacturer;
         if (this.product.length > 0 && out.length > 0) {
             out += " ";
         }
-        return out + this.product
-
+        return out + this.product;
+    }
+    get energy(): Energy {
+        return {
+            protein: this.protein,
+            carbohydrate: this.carbohydrate,
+            fat: this.fat,
+            kCal: this.kCal,
+        };
     }
 
     constructor() {
@@ -28,6 +37,7 @@ export class FoodItem {
         this.carbohydrate = 0.0;
         this.fat = 0.0;
         this.kCal = 0.0;
+        this.public = false;
         this.source = "";
     }
 
@@ -40,6 +50,7 @@ export class FoodItem {
         foodItem.carbohydrate = res.carbohydrate;
         foodItem.fat = res.fat;
         foodItem.kCal = res.kCal;
+        foodItem.public = res.public;
         foodItem.source = res.source;
         return foodItem;
     }
@@ -67,7 +78,7 @@ export class FoodItem {
         }
         return null;
     }
-    static async getById(id: number) : Promise<FoodItem | null> {
+    static async getById(id: number): Promise<FoodItem | null> {
         const userStore = useUserStore();
         const user = userStore.user;
         if (user === null) {
@@ -90,4 +101,3 @@ export class FoodItem {
         return null;
     }
 }
-

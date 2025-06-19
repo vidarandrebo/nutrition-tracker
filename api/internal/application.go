@@ -2,16 +2,18 @@ package internal
 
 import (
 	"database/sql"
+	"io"
+	"log/slog"
+	"net/http"
+	"os"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/meal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/middleware"
-	"io"
-	"log/slog"
-	"net/http"
-	"os"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/recipe"
 )
 
 type Application struct {
@@ -34,12 +36,14 @@ type Stores struct {
 	FoodItemStore *fooditem.Store
 	UserStore     *user.Store
 	MealStore     *meal.Store
+	RecipeStore   *recipe.Store
 }
 
 type Controllers struct {
 	FoodItemController *fooditem.Controller
 	AuthController     *auth.Controller
 	MealController     *meal.Controller
+	Recipe             *recipe.Actions
 }
 
 type Middlewares struct {
@@ -51,6 +55,7 @@ type Middlewares struct {
 func NewApplication() *Application {
 	return &Application{}
 }
+
 func (a *Application) addLogger() {
 	logFile, err := os.OpenFile(a.Options.LogFile, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0o666)
 	if err != nil {
@@ -72,6 +77,7 @@ func (a *Application) addDB() {
 	}
 	a.DB = db
 }
+
 func (a *Application) readConfiguration() {
 	opt, err := configuration.ParseOptions("appsettings.json")
 	if err != nil {
@@ -79,17 +85,20 @@ func (a *Application) readConfiguration() {
 	}
 	a.Options = opt
 }
+
 func (a *Application) addServices() {
 	a.Services = &Services{}
 	a.Services.JwtService = auth.NewJwtService(a.Options)
 	a.Services.HashingService = auth.NewHashingService()
 	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService, a.Services.JwtService)
 }
+
 func (a *Application) addStores() {
 	a.Stores = &Stores{}
-	a.Stores.FoodItemStore = fooditem.NewStore(a.DB)
+	a.Stores.FoodItemStore = fooditem.NewStore(a.DB, a.Logger)
 	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
 	a.Stores.MealStore = meal.NewStore(a.DB, a.Logger)
+	a.Stores.RecipeStore = recipe.NewStore(a.DB, a.Logger)
 }
 
 func (a *Application) addControllers() {
@@ -97,6 +106,7 @@ func (a *Application) addControllers() {
 	a.Controllers.FoodItemController = fooditem.NewController(a.Stores.FoodItemStore, a.Logger)
 	a.Controllers.AuthController = auth.NewController(a.Services.AuthService, a.Logger)
 	a.Controllers.MealController = meal.NewController(a.Stores.MealStore, a.Logger)
+	a.Controllers.Recipe = recipe.NewActions(a.Stores.RecipeStore, a.Logger)
 }
 
 func (a *Application) addMiddlewares() {
@@ -131,6 +141,17 @@ func (a *Application) mealRoutes() http.Handler {
 	return mw(mux)
 }
 
+func (a *Application) recipeRoutes() http.Handler {
+	mwBuilder := middleware.NewMiddlewareBuilder()
+	mwBuilder.AddMiddleware(a.Middlewares.Auth.TokenToContext)
+	mw := mwBuilder.Build()
+
+	mux := http.NewServeMux()
+	mux.Handle("POST /api/recipes", a.Controllers.Recipe.Post)
+	mux.Handle("GET /api/recipes", a.Controllers.Recipe.Get)
+	return mw(mux)
+}
+
 func (a *Application) apiMux() http.Handler {
 	mwBuilder := middleware.NewMiddlewareBuilder()
 	mwBuilder.AddMiddleware(a.Middlewares.RequestMetadata.Time)
@@ -140,10 +161,13 @@ func (a *Application) apiMux() http.Handler {
 	mux := http.NewServeMux()
 	foodItemRoutes := a.foodItemRoutes()
 	mealRoutes := a.mealRoutes()
+	recipeRoutes := a.recipeRoutes()
 	mux.Handle("/api/food-items/", foodItemRoutes)
 	mux.Handle("/api/food-items", foodItemRoutes)
 	mux.Handle("/api/meals/", mealRoutes)
 	mux.Handle("/api/meals", mealRoutes)
+	mux.Handle("/api/recipes/", recipeRoutes)
+	mux.Handle("/api/recipes", recipeRoutes)
 	mux.HandleFunc("POST /api/login", a.Controllers.AuthController.Login)
 	mux.HandleFunc("POST /api/register", a.Controllers.AuthController.Register)
 	return mw(mux)
@@ -162,6 +186,7 @@ func (a *Application) rootMux() http.Handler {
 
 	return mux
 }
+
 func (a *Application) Setup() {
 	a.readConfiguration()
 	a.addLogger()
@@ -188,6 +213,7 @@ func (a *Application) Setup() {
 		ConnContext:                  nil,
 	}
 }
+
 func (a *Application) Run() {
 	a.Logger.Info("Listening", slog.String("address", "http://localhost"), slog.String("port", a.Options.ListenAddress))
 	err := a.Server.ListenAndServe()

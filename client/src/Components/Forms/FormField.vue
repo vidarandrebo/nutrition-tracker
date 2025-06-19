@@ -1,7 +1,8 @@
 <template>
-    <button class="button is-primary">
+    <div class="field">
         <slot></slot>
-    </button>
+    </div>
 </template>
 
+<script setup lang="ts"></script>
 <style scoped></style>

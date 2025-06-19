@@ -2,12 +2,13 @@ package fooditem
 
 import (
 	"encoding/json"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 	"log/slog"
 	"net/http"
 	"reflect"
 	"strconv"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Controller struct {
@@ -20,6 +21,7 @@ func NewController(store *Store, logger *slog.Logger) *Controller {
 	c.logger = logger.With("module", reflect.TypeOf(c))
 	return c
 }
+
 func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 	userID, err := auth.UserIDFromCtx(r.Context())
 	if err != nil {
@@ -42,8 +44,12 @@ func (c *Controller) Post(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
-
-	items := c.store.Get()
+	userID, err := auth.UserIDFromCtx(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
+	items := c.store.Get(userID)
 	responses := make([]FoodItemResponse, 0)
 
 	for _, item := range items {
@@ -52,15 +58,20 @@ func (c *Controller) List(w http.ResponseWriter, r *http.Request) {
 	enc := json.NewEncoder(w)
 	enc.Encode(responses)
 }
-func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 
+func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
+	userID, err := auth.UserIDFromCtx(r.Context())
+	if err != nil {
+		w.WriteHeader(http.StatusUnauthorized)
+		return
+	}
 	id, err := strconv.ParseInt(r.PathValue("id"), 10, 64)
 	if err != nil {
 		c.logger.Error("Failed to parse id from path", slog.Any("err", err))
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	item, err := c.store.GetByID(id)
+	item, err := c.store.GetByID(id, userID)
 	if err != nil {
 		c.logger.Info("fooditem not found", slog.Any("err", err))
 		w.WriteHeader(http.StatusNotFound)

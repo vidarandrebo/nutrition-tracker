@@ -1,8 +1,9 @@
 package auth
 
 import (
-	"github.com/stretchr/testify/assert"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestHashingService_CheckPassword_IsEqual(t *testing.T) {
@@ -16,6 +17,7 @@ func TestHashingService_CheckPassword_IsEqual(t *testing.T) {
 
 	assert.True(t, hs.CheckPassword(password2, hashedPassword))
 }
+
 func TestAuthService_CheckPassword_IsNotEqual(t *testing.T) {
 	hs := NewHashingService()
 	password1 := "that is some password you got there"

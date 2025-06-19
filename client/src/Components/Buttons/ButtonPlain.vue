@@ -1,8 +1,7 @@
 <template>
-    <div class="field">
+    <button class="button">
         <slot></slot>
-    </div>
+    </button>
 </template>
 
 <style scoped></style>
-<script setup lang="ts"></script>

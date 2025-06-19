@@ -4,15 +4,16 @@ import { computed, reactive } from "vue";
 import { PostFoodItemRequest } from "../../Models/FoodItems/Requests.ts";
 import router from "../../Router.ts";
 import { HttpRequest } from "http-methods-ts";
-import InputText from "../../Components/InputText.vue";
-import InputNumber from "../../Components/InputNumber.vue";
+import InputText from "../../Components/Forms/InputText.vue";
+import InputNumber from "../../Components/Forms/InputNumber.vue";
 import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import type { FoodItemResponse } from "../../Models/FoodItems/Responses.ts";
 import { useUserStore } from "../../Stores/UserStore.ts";
-import Button from "../../Components/Button.vue";
-import FormField from "../../Components/FormField.vue";
-import Label from "../../Components/Label.vue";
+import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
+import FormField from "../../Components/Forms/FormField.vue";
+import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
+import LevelPrimary from "../../Components/LevelPrimary.vue";
 
 const formModel = reactive<PostFoodItemRequest>(new PostFoodItemRequest());
 
@@ -49,44 +50,48 @@ const estKCal = computed(() => {
 
 <template>
     <HeaderH1>Add FoodItem</HeaderH1>
-    <form v-on:submit.prevent="postFoodItem">
+    <form @submit.prevent="postFoodItem">
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Manufacturer</p>
                 <InputText v-model="formModel.manufacturer"></InputText>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Product</p>
                 <InputText v-model="formModel.product"></InputText>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Protein</p>
                 <InputNumber v-model.number="formModel.protein"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Carbohydrate</p>
                 <InputNumber v-model.number="formModel.carbohydrate"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>Fat</p>
                 <InputNumber v-model.number="formModel.fat"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
         <FormField>
-            <Label>
+            <LabelPrimary>
                 <p>KCal</p>
                 <InputNumber v-model.number="formModel.kCal" :place-holder="estKCal"></InputNumber>
-            </Label>
+            </LabelPrimary>
         </FormField>
-        <Button type="submit">Add</Button>
+        <LevelPrimary>
+            <template #right>
+                <ButtonPrimary type="submit">Add</ButtonPrimary>
+            </template>
+        </LevelPrimary>
     </form>
 </template>
 

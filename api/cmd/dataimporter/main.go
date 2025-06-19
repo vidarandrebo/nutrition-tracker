@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"os"
+
 	_ "github.com/jackc/pgx/v5/stdlib"
 	. "github.com/vidarandrebo/nutrition-tracker/api/internal"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
-	"os"
 )
 
 func main() {
@@ -34,7 +35,7 @@ func main() {
 	}
 	matvareTabellenUser, err := app.Stores.UserStore.GetUserByEmail(matvareTabellenCredentials.Email)
 	if err != nil {
-		app.Services.AuthService.RegisterUser(&auth.RegisterRequest{
+		app.Services.AuthService.RegisterUser(auth.RegisterRequest{
 			Email:    matvareTabellenCredentials.Email,
 			Password: matvareTabellenCredentials.Password,
 		})

@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import HeaderH1 from "../Components/HeaderH1.vue";
 import { useUserStore } from "../Stores/UserStore.ts";
-import InputDate from "../Components/InputDate.vue";
-import Button from "../Components/Button.vue";
+import InputDate from "../Components/Forms/InputDate.vue";
+import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import { useMealStore } from "../Stores/MealStore.ts";
 import { computed, onMounted, watch } from "vue";
 import { useFoodItemStore } from "../Stores/FoodItemStore.ts";
@@ -20,6 +20,7 @@ const foodItemIds = computed(() => [
 ]);
 onMounted(async () => {
     await mealStore.loadMealsForDay();
+    await mealViewStore.init();
 });
 watch(foodItemIds, () => {
     for (const id of foodItemIds.value) {
@@ -41,24 +42,27 @@ function bumpDay(n: number) {
     <HeaderH1>Home</HeaderH1>
     <div v-if="userStore.user">
         <div>
-            <p>KCal: {{mealViewStore.dailyMacros.kCal}}, Protein: {{mealViewStore.dailyMacros.protein}} g, Carbohydrate: {{mealViewStore.dailyMacros.carbohydrate}} g, Fat: {{mealViewStore.dailyMacros.fat}} g</p>
+            <p>
+                KCal: {{ mealViewStore.dailyMacros.KCal }}, Protein: {{ mealViewStore.dailyMacros.Protein }} g,
+                Carbohydrate: {{ mealViewStore.dailyMacros.Carbohydrate }} g, Fat: {{ mealViewStore.dailyMacros.Fat }} g
+            </p>
         </div>
         <div class="is-flex is-justify-content-space-between">
             <div class="">
                 <div class="is-flex">
                     <div class="">
-                        <Button @click="bumpDay(-1)">&larr;</Button>
+                        <ButtonPrimary @click="bumpDay(-1)">&larr;</ButtonPrimary>
                     </div>
                     <div class="">
                         <InputDate v-model="mealStore.selectedDay"></InputDate>
                     </div>
                     <div class="">
-                        <Button @click="bumpDay(1)">&rarr;</Button>
+                        <ButtonPrimary @click="bumpDay(1)">&rarr;</ButtonPrimary>
                     </div>
                 </div>
             </div>
             <div class="is-narrow">
-                <Button v-on:click="mealStore.addMeal">Add meal</Button>
+                <ButtonPrimary @click="mealStore.addMeal">Add meal</ButtonPrimary>
             </div>
         </div>
     </div>
@@ -72,10 +76,10 @@ function bumpDay(n: number) {
             </div>
             <ul class="content">
                 <li v-for="entry in item.entries" :key="entry.id" class="box">
-                    <p>{{ entry.name }}, {{ entry.amount }}g.</p>
+                    <p>{{ entry.name }}, {{ entry.amount }}</p>
                     <p>
-                        KCal: {{ entry.kCal }}, Protein: {{ entry.protein }}, Carbohydrate: {{ entry.carbohydrate }},
-                        Fat: {{ entry.fat }}
+                        KCal: {{ entry.KCal }}, Protein: {{ entry.Protein }}, Carbohydrate: {{ entry.Carbohydrate }},
+                        Fat: {{ entry.Fat }}
                     </p>
                 </li>
             </ul>

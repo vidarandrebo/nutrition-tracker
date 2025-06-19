@@ -22,22 +22,22 @@ func NewStore(db *sql.DB, logger *slog.Logger) *Store {
 func (s *Store) Add(meal Meal) Meal {
 	tx, err := s.DB.Begin()
 	err = tx.QueryRow(`
-		insert into meals as m (sequence_number, meal_time, owner_id) 
-		values ($1, $2, $3) 
-		returning m.id`,
+		INSERT INTO meals AS m (sequence_number, meal_time, owner_id) 
+		VALUES ($1, $2, $3) 
+		RETURNING m.id`,
 		meal.SequenceNumber, meal.Timestamp, meal.OwnerID).Scan(&meal.ID)
-
 	if err != nil {
 		panic(err)
 	}
 
 	for _, entry := range meal.Entries {
 		err = tx.QueryRow(`
-			insert into meal_entries as me (amount, food_item_id, meal_id) 
-			values ($1, $2, $3) 
-			returning me.id`,
+			INSERT INTO meal_entries AS me (amount, food_item_id, recipe_id, meal_id) 
+			VALUES ($1, $2, $3) 
+			RETURNING me.id`,
 			entry.Amount,
-			entry.FoodItemIDOrNil(),
+			entry.foodItemID,
+			entry.recipeID,
 			meal.ID,
 		).Scan(&entry.ID)
 		if err != nil {
@@ -53,16 +53,16 @@ func (s *Store) Add(meal Meal) Meal {
 
 func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) []Meal {
 	rows, err := s.DB.Query(`
-	with meal_for_day as (
-		select id, meal_time, sequence_number, owner_id 
-		from meals 
-		where owner_id = $1 
-		  and meal_time >= $2 
-		  and meal_time < $3
+	WITH meal_for_day AS (
+		SELECT id, meal_time, sequence_number, owner_id 
+		FROM meals 
+		WHERE owner_id = $1 
+		  AND meal_time >= $2 
+		  AND meal_time < $3
 	) 
-	select m.id, m.meal_time, m.sequence_number, m.owner_id, me.id, me.food_item_id, me.amount
-	from meal_for_day m 
-		left join meal_entries me on me.meal_id = m.id`,
+	SELECT m.id, m.meal_time, m.sequence_number, m.owner_id, me.id, me.food_item_id, me.recipe_id, me.amount
+	FROM meal_for_day m 
+		LEFT JOIN meal_entries me ON me.meal_id = m.id`,
 		ownerID,
 		dateFrom,
 		dateTo,
@@ -76,13 +76,15 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 	for rows.Next() {
 		meal := Meal{}
 		entry := Entry{}
-		rows.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID, &entry.ID, &entry.FoodItemID, &entry.Amount)
+		rows.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID, &entry.ID, &entry.foodItemID, &entry.recipeID, &entry.Amount)
 		if lastMealId != meal.ID {
 			meals = append(meals, meal)
 			entries[meal.ID] = make([]Entry, 0)
 		}
 		if entry.IsValid() {
 			entries[meal.ID] = append(entries[meal.ID], entry)
+		} else {
+			s.Logger.Error("failed to load entry", slog.Any("e", entry))
 		}
 		lastMealId = meal.ID
 	}
@@ -92,21 +94,22 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 	}
 	return meals
 }
+
 func (s *Store) GetById(id int64, ownerID int64) (Meal, error) {
 	row := s.DB.QueryRow(`
-		select m.id, m.meal_time, m.sequence_number, m.owner_id 
-		from meals m 
-		where m.id = $1 
-		  and m.owner_id = $2`,
+		SELECT m.id, m.meal_time, m.sequence_number, m.owner_id 
+		FROM meals m 
+		WHERE m.id = $1 
+		  AND m.owner_id = $2`,
 		id, ownerID)
 	meal := Meal{}
 	err := row.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID)
-
 	if err != nil {
 		return Meal{}, fmt.Errorf("no meal with id %d", id)
 	}
 	return meal, nil
 }
+
 func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, error) {
 	// only an ownership check
 	_, err := s.GetById(mealID, ownerID)
@@ -115,11 +118,10 @@ func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, e
 	}
 
 	err = s.DB.QueryRow(`
-		insert into meal_entries as me (meal_id, food_item_id, amount) 
-		values ($1, $2, $3) 
-		returning me.id`,
-		mealID, entry.FoodItemID, entry.Amount).Scan(&entry.ID)
-
+		INSERT INTO meal_entries AS me (meal_id, food_item_id, recipe_id,amount) 
+		VALUES ($1, $2, $3, $4) 
+		RETURNING me.id`,
+		mealID, entry.FoodItemID(), entry.RecipeID(), entry.Amount).Scan(&entry.ID)
 	if err != nil {
 		panic(err)
 	}
