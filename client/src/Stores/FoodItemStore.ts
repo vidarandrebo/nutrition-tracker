@@ -53,15 +53,22 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         return collection.value
             .filter((x) => {
                 for (let i = 0; i < terms.length; i++) {
-                    if (
-                        !(x.product.toLowerCase().includes(terms[i]) || x.manufacturer.toLowerCase().includes(terms[i]))
-                    ) {
+                    if (!x.name.toLowerCase().includes(terms[i])) {
                         return false;
                     }
                 }
                 return true;
             })
-            .slice(0, 25);
+            .sort((a, b) => {
+                if (a.product.length < b.product.length) {
+                    return -1;
+                } else if (a.product.length > b.product.length) {
+                    return 1;
+                } else {
+                    return 0;
+                }
+            })
+            .slice(0, 50);
     });
     return { clear, collection, init, refresh, filteredFoodItems, searchTerm, getFoodItem, initialized };
 });

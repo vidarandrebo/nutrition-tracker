@@ -11,6 +11,10 @@ type PostFoodItemRequest struct {
 }
 
 func (fr *PostFoodItemRequest) ToFoodItem() FoodItem {
+	kCal := fr.KCal
+	if fr.KCal == 0.0 {
+		kCal = 4*fr.Protein + 4*fr.Carbohydrate + 9*fr.Fat
+	}
 	item := FoodItem{
 		ID:             0,
 		Manufacturer:   fr.Manufacturer,
@@ -18,7 +22,7 @@ func (fr *PostFoodItemRequest) ToFoodItem() FoodItem {
 		Protein:        fr.Protein,
 		Carbohydrate:   fr.Carbohydrate,
 		Fat:            fr.Fat,
-		KCal:           fr.KCal,
+		KCal:           kCal,
 		Public:         false,
 		Micronutrients: nil,
 	}
