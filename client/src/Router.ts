@@ -8,6 +8,7 @@ import FoodItemPage from "./Pages/FoodItems/FoodItemPage.vue";
 import AddFoodItemPage from "./Pages/FoodItems/AddFoodItemPage.vue";
 import MealPage from "./Pages/Meals/MealPage.vue";
 import AddRecipePage from "./Pages/Recipes/AddRecipePage.vue";
+import FoodItemDetailsPage from "./Pages/FoodItems/FoodItemDetailsPage.vue";
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -34,6 +35,11 @@ const routes: Array<RouteRecordRaw> = [
         path: "/food-items/add",
         name: "Add Food Item",
         component: AddFoodItemPage,
+    },
+    {
+        path: "/food-items/:id",
+        name: "Food Item Details",
+        component: FoodItemDetailsPage,
     },
     {
         path: "/recipes",

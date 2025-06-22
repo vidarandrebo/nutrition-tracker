@@ -6,7 +6,7 @@ import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import { onMounted } from "vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import ButtonPlain from "../../Components/Buttons/ButtonPlain.vue";
-import HeaderH2 from "../../Components/HeaderH2.vue";
+import HeaderH2 from "../../Components/Headings/HeaderH2.vue";
 
 const foodItemStore = useFoodItemStore();
 
@@ -25,7 +25,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <section class="section">
+    <section>
         <LevelPrimary>
             <template #left>
                 <HeaderH2>Add Food item</HeaderH2>

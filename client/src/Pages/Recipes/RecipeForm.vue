@@ -3,7 +3,7 @@ import { computed, ref } from "vue";
 import type { RecipeRequest } from "../../Models/Recipes/Requests.ts";
 import InputText from "../../Components/Forms/InputText.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
-import HeaderH2 from "../../Components/HeaderH2.vue";
+import HeaderH2 from "../../Components/Headings/HeaderH2.vue";
 import InputNumber from "../../Components/Forms/InputNumber.vue";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FoodItemSelector from "../FoodItems/FoodItemSelector.vue";
@@ -11,6 +11,7 @@ import LevelPrimary from "../../Components/LevelPrimary.vue";
 import { useRecipeStore } from "../../Stores/RecipeStore.ts";
 import router from "../../Router.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
+import FormField from "../../Components/Forms/FormField.vue";
 
 const item = ref<RecipeRequest>({ name: "", entries: [] });
 const showFoodItemSelector = ref<boolean>(false);
@@ -41,10 +42,12 @@ const saveHelpText = computed((): string => {
 
 <template>
     <form @submit.prevent="submit">
-        <LabelPrimary>
-            Name
-            <InputText v-model="item.name"></InputText>
-        </LabelPrimary>
+        <FormField>
+            <LabelPrimary>
+                Name
+                <InputText v-model="item.name"></InputText>
+            </LabelPrimary>
+        </FormField>
         <LevelPrimary v-if="!showFoodItemSelector">
             <template #left>
                 <HeaderH2 class="level-item">Ingredients</HeaderH2>

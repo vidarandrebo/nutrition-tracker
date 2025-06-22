@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeaderH1 from "../../Components/HeaderH1.vue";
+import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { useRoute } from "vue-router";
 import { useMealStore } from "../../Stores/MealStore.ts";
 import { onMounted, ref } from "vue";
@@ -41,24 +41,26 @@ onMounted(async () => {
 </script>
 
 <template>
-    <HeaderH1>Meal {{ mealId }}</HeaderH1>
-    <div v-if="meal">
-        <p>{{ meal.timestamp }}</p>
-    </div>
-    <div v-else>
-        <p class="is-warning">No meal found</p>
-    </div>
-    <TabMenu
-        :entries="['Food Items', 'Recipes']"
-        preselected="Food Items"
-        @selected="(value) => (activeTab = value)"
-    ></TabMenu>
-    <template v-if="activeTab === 'Food Items'">
-        <FoodItemTab @add-entry="addToMeal"></FoodItemTab>
-    </template>
-    <template v-if="activeTab === 'Recipes'">
-        <RecipeTab @add-entry="addToMeal"></RecipeTab>
-    </template>
+    <section class="container">
+        <HeaderH1>Meal {{ mealId }}</HeaderH1>
+        <div v-if="meal">
+            <p>{{ meal.timestamp }}</p>
+        </div>
+        <div v-else>
+            <p class="is-warning">No meal found</p>
+        </div>
+        <TabMenu
+            :entries="['Food Items', 'Recipes']"
+            preselected="Food Items"
+            @selected="(value) => (activeTab = value)"
+        ></TabMenu>
+        <template v-if="activeTab === 'Food Items'">
+            <FoodItemTab @add-entry="addToMeal"></FoodItemTab>
+        </template>
+        <template v-if="activeTab === 'Recipes'">
+            <RecipeTab @add-entry="addToMeal"></RecipeTab>
+        </template>
+    </section>
 </template>
 
 <style scoped></style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeaderH1 from "../../Components/HeaderH1.vue";
+import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { useRecipeStore } from "../../Stores/RecipeStore.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import router from "../../Router.ts";
@@ -22,21 +22,23 @@ async function addRecipe() {
 </script>
 
 <template>
-    <LevelPrimary>
-        <template #left>
-            <HeaderH1 class="level-item">Recipes</HeaderH1>
-        </template>
-        <template #right>
-            <ButtonPrimary class="level-item" @click="addRecipe">Add</ButtonPrimary>
-        </template>
-    </LevelPrimary>
-    <article v-for="item in recipeViewStore.recipesView" :key="item.id" class="box">
-        <b>{{ item.name }}</b>
-        <p>
-            KCal: {{ item.KCal }}, Protein: {{ item.Protein }} g, Carbohydrate: {{ item.Carbohydrate }} g, Fat:
-            {{ item.Fat }} g
-        </p>
-    </article>
+    <div class="container">
+        <LevelPrimary>
+            <template #left>
+                <HeaderH1 class="level-item">Recipes</HeaderH1>
+            </template>
+            <template #right>
+                <ButtonPrimary class="level-item" @click="addRecipe">Add</ButtonPrimary>
+            </template>
+        </LevelPrimary>
+        <article v-for="item in recipeViewStore.recipesView" :key="item.id" class="box">
+            <b>{{ item.name }}</b>
+            <p>
+                KCal: {{ item.KCal }}, Protein: {{ item.Protein }} g, Carbohydrate: {{ item.Carbohydrate }} g, Fat:
+                {{ item.Fat }} g
+            </p>
+        </article>
+    </div>
 </template>
 
 <style scoped></style>

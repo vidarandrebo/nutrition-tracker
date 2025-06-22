@@ -9,7 +9,7 @@ import { useUserStore } from "../Stores/UserStore.ts";
 import { User } from "../Models/User.ts";
 import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../Components/Forms/FormField.vue";
-import HeaderH1 from "../Components/HeaderH1.vue";
+import HeaderH1 from "../Components/Headings/HeaderH1.vue";
 import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
 
 const userStore = useUserStore();

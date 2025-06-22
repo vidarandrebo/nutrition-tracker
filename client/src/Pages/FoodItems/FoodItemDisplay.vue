@@ -9,12 +9,13 @@ const props = defineProps<FoodItemDisplayProps>();
 
 <template>
     <li class="box">
-        <p>Manufacturer: {{ props.item.manufacturer }}</p>
-        <p>Product {{ props.item.product }}</p>
-        <p>Protein {{ props.item.protein }}</p>
-        <p>Carbohydrate {{ props.item.carbohydrate }}</p>
-        <p>Fat {{ props.item.fat }}</p>
-        <p>KCal {{ props.item.kCal }}</p>
+        <RouterLink class="subtitle is-4" :to="{ path: '/food-items/' + props.item.id }">
+            <b> {{ item.name }}</b>
+        </RouterLink>
+        <p>Protein: {{ props.item.protein }}</p>
+        <p>Carbohydrate: {{ props.item.carbohydrate }}</p>
+        <p>Fat: {{ props.item.fat }}</p>
+        <p>KCal: {{ props.item.kCal }}</p>
     </li>
 </template>
 

@@ -71,8 +71,8 @@ func (c *Controller) Get(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
-	item, err := c.store.GetByID(id, userID)
-	if err != nil {
+	item, err := c.store.GetByID(id)
+	if err != nil || !item.HasAccess(userID) {
 		c.logger.Info("fooditem not found", slog.Any("err", err))
 		w.WriteHeader(http.StatusNotFound)
 		return

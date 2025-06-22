@@ -33,6 +33,13 @@ func (fi FoodItem) ToFoodItemResponse() FoodItemResponse {
 	}
 }
 
+func (fi FoodItem) HasAccess(userId int64) bool {
+	if fi.Public || fi.OwnerID == userId {
+		return true
+	}
+	return false
+}
+
 func FromMatvareTabellen(item matvaretabellen.Food) FoodItem {
 	macroNames := []string{"Protein", "Karbo", "Fett"}
 	micronutrients := make([]Micronutrient, 0)

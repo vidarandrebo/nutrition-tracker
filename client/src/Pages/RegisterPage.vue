@@ -3,7 +3,7 @@ import { reactive } from "vue";
 import InputText from "../Components/Forms/InputText.vue";
 import { HttpRequest } from "http-methods-ts";
 import type { RegisterForm } from "../Models/RegisterForm.ts";
-import HeaderH1 from "../Components/HeaderH1.vue";
+import HeaderH1 from "../Components/Headings/HeaderH1.vue";
 import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
 import FormField from "../Components/Forms/FormField.vue";
