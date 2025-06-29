@@ -2,6 +2,7 @@ package internal
 
 import (
 	"database/sql"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 	"io"
 	"log/slog"
 	"net/http"
@@ -187,37 +188,54 @@ func (a *Application) rootMux() http.Handler {
 	return mux
 }
 
+//func (a *Application) Setup() {
+//	a.readConfiguration()
+//	a.addLogger()
+//	a.addDB()
+//	a.addStores()
+//	a.addServices()
+//	a.addMiddlewares()
+//	a.addControllers()
+//
+//	a.Server = http.Server{
+//		Addr:                         a.Options.ListenAddress,
+//		Handler:                      a.rootMux(),
+//		DisableGeneralOptionsHandler: false,
+//		TLSConfig:                    nil,
+//		ReadTimeout:                  0,
+//		ReadHeaderTimeout:            0,
+//		WriteTimeout:                 0,
+//		IdleTimeout:                  0,
+//		MaxHeaderBytes:               0,
+//		TLSNextProto:                 nil,
+//		ConnState:                    nil,
+//		ErrorLog:                     nil,
+//		BaseContext:                  nil,
+//		ConnContext:                  nil,
+//	}
+//}
+//
+//func (a *Application) Run() {
+//	a.Logger.Info("Listening", slog.String("address", "http://localhost"), slog.String("port", a.O//ptions.ListenAddress))
+//	err := a.Server.ListenAndServe()
+//	if err != nil {
+//		a.Logger.Error("failure to listen and serve", slog.Any("err", err))
+//	}
+//}
+
 func (a *Application) Setup() {
-	a.readConfiguration()
-	a.addLogger()
-	a.addDB()
-	a.addStores()
-	a.addServices()
-	a.addMiddlewares()
-	a.addControllers()
+	server := NewServer(recipeEndpoint{}, mealEndpoint{}, foodItemEndpoint{}, authEndpoint{})
+	s := api.NewStrictHandler(server, make([]api.StrictMiddlewareFunc, 0))
+	mux := http.NewServeMux()
+	h := api.HandlerFromMux(s, mux)
 
-	a.Server = http.Server{
-		Addr:                         a.Options.ListenAddress,
-		Handler:                      a.rootMux(),
-		DisableGeneralOptionsHandler: false,
-		TLSConfig:                    nil,
-		ReadTimeout:                  0,
-		ReadHeaderTimeout:            0,
-		WriteTimeout:                 0,
-		IdleTimeout:                  0,
-		MaxHeaderBytes:               0,
-		TLSNextProto:                 nil,
-		ConnState:                    nil,
-		ErrorLog:                     nil,
-		BaseContext:                  nil,
-		ConnContext:                  nil,
+	httpServer := &http.Server{
+		Handler: h,
+		Addr:    ":8080",
 	}
+	httpServer.ListenAndServe()
+
 }
-
 func (a *Application) Run() {
-	a.Logger.Info("Listening", slog.String("address", "http://localhost"), slog.String("port", a.Options.ListenAddress))
-	err := a.Server.ListenAndServe()
-	if err != nil {
-		a.Logger.Error("failure to listen and serve", slog.Any("err", err))
-	}
+
 }
