@@ -3,9 +3,10 @@ package auth
 import (
 	"context"
 	"errors"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 	"log/slog"
 	"reflect"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 )
 
 type Endpoint struct {
@@ -43,7 +44,6 @@ func (e Endpoint) PostApiRegister(ctx context.Context, request api.PostApiRegist
 	}
 
 	err := e.AuthService.RegisterUser(regRequest)
-
 	if err != nil {
 		return nil, err
 	}

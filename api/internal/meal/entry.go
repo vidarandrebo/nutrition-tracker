@@ -3,6 +3,8 @@ package meal
 import (
 	"database/sql"
 
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
@@ -27,12 +29,12 @@ func (e Entry) RecipeID() any {
 	return e.recipeID.Int64
 }
 
-func (e Entry) ToResponse() EntryResponse {
-	return EntryResponse{
-		ID:         e.ID,
-		Amount:     e.Amount,
-		FoodItemID: e.foodItemID.Int64,
-		RecipeID:   e.recipeID.Int64,
+func (e Entry) ToResponse() api.MealEntryResponse {
+	return api.MealEntryResponse{
+		Id:         &e.ID,
+		Amount:     &e.Amount,
+		FoodItemId: &e.foodItemID.Int64,
+		RecipeId:   &e.recipeID.Int64,
 	}
 }
 

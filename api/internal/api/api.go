@@ -173,7 +173,6 @@ type PostApiRegisterJSONRequestBody = RegisterRequest
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
-
 	// (GET /api/food-items)
 	GetApiFoodItems(w http.ResponseWriter, r *http.Request)
 
@@ -219,7 +218,6 @@ type MiddlewareFunc func(http.Handler) http.Handler
 
 // GetApiFoodItems operation middleware
 func (siw *ServerInterfaceWrapper) GetApiFoodItems(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
 
 	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
@@ -239,7 +237,6 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItems(w http.ResponseWriter, r *htt
 
 // PostApiFoodItems operation middleware
 func (siw *ServerInterfaceWrapper) PostApiFoodItems(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
 
 	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
@@ -259,7 +256,6 @@ func (siw *ServerInterfaceWrapper) PostApiFoodItems(w http.ResponseWriter, r *ht
 
 // GetApiFoodItemsId operation middleware
 func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *http.Request) {
-
 	var err error
 
 	// ------------- Path parameter "id" -------------
@@ -290,7 +286,6 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *h
 
 // PostApiLogin operation middleware
 func (siw *ServerInterfaceWrapper) PostApiLogin(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
 
 	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
@@ -310,7 +305,6 @@ func (siw *ServerInterfaceWrapper) PostApiLogin(w http.ResponseWriter, r *http.R
 
 // GetApiMeals operation middleware
 func (siw *ServerInterfaceWrapper) GetApiMeals(w http.ResponseWriter, r *http.Request) {
-
 	var err error
 
 	ctx := r.Context()
@@ -351,7 +345,6 @@ func (siw *ServerInterfaceWrapper) GetApiMeals(w http.ResponseWriter, r *http.Re
 
 // PostApiMeals operation middleware
 func (siw *ServerInterfaceWrapper) PostApiMeals(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
 
 	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
@@ -371,7 +364,6 @@ func (siw *ServerInterfaceWrapper) PostApiMeals(w http.ResponseWriter, r *http.R
 
 // GetApiMealsId operation middleware
 func (siw *ServerInterfaceWrapper) GetApiMealsId(w http.ResponseWriter, r *http.Request) {
-
 	var err error
 
 	// ------------- Path parameter "id" -------------
@@ -402,7 +394,6 @@ func (siw *ServerInterfaceWrapper) GetApiMealsId(w http.ResponseWriter, r *http.
 
 // PostApiMealsIdEntries operation middleware
 func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, r *http.Request) {
-
 	var err error
 
 	// ------------- Path parameter "id" -------------
@@ -433,7 +424,6 @@ func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, 
 
 // GetApiRecipes operation middleware
 func (siw *ServerInterfaceWrapper) GetApiRecipes(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
 
 	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
@@ -453,7 +443,6 @@ func (siw *ServerInterfaceWrapper) GetApiRecipes(w http.ResponseWriter, r *http.
 
 // PostApiRecipes operation middleware
 func (siw *ServerInterfaceWrapper) PostApiRecipes(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
 
 	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
@@ -473,7 +462,6 @@ func (siw *ServerInterfaceWrapper) PostApiRecipes(w http.ResponseWriter, r *http
 
 // PostApiRegister operation middleware
 func (siw *ServerInterfaceWrapper) PostApiRegister(w http.ResponseWriter, r *http.Request) {
-
 	ctx := r.Context()
 
 	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
@@ -626,8 +614,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	return m
 }
 
-type GetApiFoodItemsRequestObject struct {
-}
+type GetApiFoodItemsRequestObject struct{}
 
 type GetApiFoodItemsResponseObject interface {
 	VisitGetApiFoodItemsResponse(w http.ResponseWriter) error
@@ -762,8 +749,7 @@ func (response PostApiMealsIdEntries201JSONResponse) VisitPostApiMealsIdEntriesR
 	return json.NewEncoder(w).Encode(response)
 }
 
-type GetApiRecipesRequestObject struct {
-}
+type GetApiRecipesRequestObject struct{}
 
 type GetApiRecipesResponseObject interface {
 	VisitGetApiRecipesResponse(w http.ResponseWriter) error
@@ -803,8 +789,7 @@ type PostApiRegisterResponseObject interface {
 	VisitPostApiRegisterResponse(w http.ResponseWriter) error
 }
 
-type PostApiRegister201Response struct {
-}
+type PostApiRegister201Response struct{}
 
 func (response PostApiRegister201Response) VisitPostApiRegisterResponse(w http.ResponseWriter) error {
 	w.WriteHeader(201)
@@ -813,7 +798,6 @@ func (response PostApiRegister201Response) VisitPostApiRegisterResponse(w http.R
 
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
-
 	// (GET /api/food-items)
 	GetApiFoodItems(ctx context.Context, request GetApiFoodItemsRequestObject) (GetApiFoodItemsResponseObject, error)
 
@@ -848,8 +832,10 @@ type StrictServerInterface interface {
 	PostApiRegister(ctx context.Context, request PostApiRegisterRequestObject) (PostApiRegisterResponseObject, error)
 }
 
-type StrictHandlerFunc = strictnethttp.StrictHTTPHandlerFunc
-type StrictMiddlewareFunc = strictnethttp.StrictHTTPMiddlewareFunc
+type (
+	StrictHandlerFunc    = strictnethttp.StrictHTTPHandlerFunc
+	StrictMiddlewareFunc = strictnethttp.StrictHTTPMiddlewareFunc
+)
 
 type StrictHTTPServerOptions struct {
 	RequestErrorHandlerFunc  func(w http.ResponseWriter, r *http.Request, err error)

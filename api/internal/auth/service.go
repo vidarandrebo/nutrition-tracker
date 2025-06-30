@@ -2,6 +2,7 @@ package auth
 
 import (
 	"errors"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 )
 

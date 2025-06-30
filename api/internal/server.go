@@ -7,10 +7,12 @@ import (
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/recipe"
 )
 
-type recipeEndpoint = recipe.Endpoint
-type mealEndpoint = meal.Endpoint
-type foodItemEndpoint = fooditem.Endpoint
-type authEndpoint = auth.Endpoint
+type (
+	recipeEndpoint   = recipe.Endpoint
+	mealEndpoint     = meal.Endpoint
+	foodItemEndpoint = fooditem.Endpoint
+	authEndpoint     = auth.Endpoint
+)
 
 type Server struct {
 	*recipeEndpoint

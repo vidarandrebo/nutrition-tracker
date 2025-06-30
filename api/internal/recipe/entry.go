@@ -1,5 +1,7 @@
 package recipe
 
+import "github.com/vidarandrebo/nutrition-tracker/api/internal/api"
+
 type Entry struct {
 	ID         int64
 	Amount     float64
@@ -18,10 +20,10 @@ func (e Entry) IsValid() bool {
 	return (e.ID != 0) && (e.Amount != 0.0)
 }
 
-func (e Entry) ToResponse() EntryResponse {
-	return EntryResponse{
-		ID:         e.ID,
-		Amount:     e.Amount,
-		FoodItemID: e.FoodItemID,
+func (e Entry) ToResponse() api.RecipeEntryResponse {
+	return api.RecipeEntryResponse{
+		Id:         &e.ID,
+		Amount:     &e.Amount,
+		FoodItemId: &e.FoodItemID,
 	}
 }

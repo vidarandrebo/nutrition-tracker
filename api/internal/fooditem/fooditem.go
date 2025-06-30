@@ -1,8 +1,9 @@
 package fooditem
 
 import (
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 	"slices"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
 )

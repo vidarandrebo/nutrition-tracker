@@ -2,10 +2,11 @@ package fooditem
 
 import (
 	"context"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"log/slog"
 	"reflect"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 )
 
 type Endpoint struct {
@@ -53,6 +54,7 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 	newItem := e.store.Add(item)
 	return api.PostApiFoodItems201JSONResponse(newItem.ToFoodItemResponse()), nil
 }
+
 func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodItemsIdRequestObject) (api.GetApiFoodItemsIdResponseObject, error) {
 	userID, err := auth.UserIDFromCtx(ctx)
 	if err != nil {
