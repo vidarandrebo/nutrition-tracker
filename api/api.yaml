@@ -58,6 +58,23 @@ paths:
                   - $ref: "#/components/schemas/FoodItemResponse"
           description:
 
+  /api/food-items/{id}:
+    get:
+      tags:
+        - Food Items
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            x-go-type: int64
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FoodItemResponse"
+          description: FoodItem with the provided id
 
   /api/meals:
     get:
@@ -108,7 +125,8 @@ paths:
         - name: id
           in: path
           schema:
-            type: number
+            type: integer
+            x-go-type: int64
       responses:
         200:
           content:
@@ -125,7 +143,8 @@ paths:
         - name: id
           in: path
           schema:
-            type: number
+            type: integer
+            x-go-type: int64
       requestBody:
         content:
           application/json:
@@ -248,8 +267,10 @@ components:
         - properties:
             foodItemId:
               type: integer
+              x-go-type: int64
             recipeId:
               type: integer
+              x-go-type: int64
 
 
     MealEntryResponse:
@@ -260,8 +281,10 @@ components:
         - properties:
             foodItemId:
               type: integer
+              x-go-type: int64
             recipeId:
               type: integer
+              x-go-type: int64
 
     MealResponse:
       type: object
@@ -270,7 +293,8 @@ components:
         - $ref: "#/components/schemas/WithTimestamp"
         - properties:
             sequenceNumber:
-              type: number
+              type: integer
+              x-go-type: int64
             entries:
               type: array
               items:
@@ -294,6 +318,7 @@ components:
         - properties:
             foodItemId:
               type: integer
+              x-go-type: int64
 
     RecipeResponse:
       type: object
@@ -315,6 +340,7 @@ components:
         - properties:
             foodItemId:
               type: integer
+              x-go-type: int64
 
     WithTimestamp:
       type: object
@@ -328,11 +354,13 @@ components:
       properties:
         id:
           type: integer
+          x-go-type: int64
 
     WithAmount:
       properties:
         amount:
           type: number
+          x-go-type: float64
 
     WithEnergy:
       type: object
@@ -341,16 +369,20 @@ components:
         - properties:
             kCal:
               type: number
+              x-go-type: float64
 
     WithMacronutrients:
       type: object
       properties:
         protein:
           type: number
+          x-go-type: float64
         carbohydrate:
           type: number
+          x-go-type: float64
         fat:
           type: number
+          x-go-type: float64
 
 
     LoginResponse:

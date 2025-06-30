@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"context"
+	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"log/slog"
 	"net/http"
 	"strings"
-
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 )
 
 type Auth struct {
@@ -18,8 +18,8 @@ func NewAuth(log *slog.Logger, js *auth.JwtService) *Auth {
 	return &Auth{log: log.With(slog.String("module", "middleware.Auth")), js: js}
 }
 
-func (rt *Auth) TokenToContext(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (rt *Auth) TokenToContext(next nethttp.StrictHTTPHandlerFunc, operationID string) nethttp.StrictHTTPHandlerFunc {
+	return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (response interface{}, err error) {
 		authHeader := r.Header.Get("Authorization")
 		token := strings.TrimPrefix(authHeader, "Bearer")
 		token = strings.TrimSpace(token)
@@ -28,10 +28,10 @@ func (rt *Auth) TokenToContext(next http.Handler) http.Handler {
 		if err != nil {
 			// keep ctx as is if no valid token is found
 			rt.log.Warn("authentication failure", slog.Any("error", err))
-			next.ServeHTTP(w, r)
+			return next(ctx, w, r, request)
 		} else {
-			newCtx := context.WithValue(r.Context(), "user", claims)
-			next.ServeHTTP(w, r.WithContext(newCtx))
+			newCtx := context.WithValue(ctx, "user", claims)
+			return next(newCtx, w, r, request)
 		}
-	})
+	}
 }

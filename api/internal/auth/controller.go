@@ -19,7 +19,7 @@ func NewController(as *Service, log *slog.Logger) *Controller {
 }
 
 func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
-	loginRequest, err := utils.ParseJson[LoginRequest](r.Body)
+	loginRequest, err := utils.ParseJson[Login](r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -36,7 +36,7 @@ func (c *Controller) Login(w http.ResponseWriter, r *http.Request) {
 }
 
 func (c *Controller) Register(w http.ResponseWriter, r *http.Request) {
-	regRequest, err := utils.ParseJson[RegisterRequest](r.Body)
+	regRequest, err := utils.ParseJson[Register](r.Body)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		c.Logger.Error("deserializing failed", slog.Any("err", err))

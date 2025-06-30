@@ -1,6 +1,7 @@
 package fooditem
 
 import (
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 	"slices"
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/matvaretabellen"
@@ -20,16 +21,17 @@ type FoodItem struct {
 	OwnerID        int64
 }
 
-func (fi FoodItem) ToFoodItemResponse() FoodItemResponse {
-	return FoodItemResponse{
-		ID:           fi.ID,
-		Manufacturer: fi.Manufacturer,
-		Product:      fi.Product,
-		Protein:      fi.Protein,
-		Carbohydrate: fi.Carbohydrate,
-		Fat:          fi.Fat,
-		KCal:         fi.KCal,
-		Source:       fi.Source,
+func (fi FoodItem) ToFoodItemResponse() api.FoodItemResponse {
+	return api.FoodItemResponse{
+		Carbohydrate: &fi.Carbohydrate,
+		Fat:          &fi.Fat,
+		Id:           &fi.ID,
+		KCal:         &fi.KCal,
+		Manufacturer: &fi.Manufacturer,
+		Product:      &fi.Product,
+		Protein:      &fi.Protein,
+		Public:       &fi.Public,
+		Source:       &fi.Source,
 	}
 }
 

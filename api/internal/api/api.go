@@ -22,13 +22,13 @@ const (
 
 // FoodItemResponse defines model for FoodItemResponse.
 type FoodItemResponse struct {
-	Carbohydrate *float32 `json:"carbohydrate,omitempty"`
-	Fat          *float32 `json:"fat,omitempty"`
-	Id           *int     `json:"id,omitempty"`
-	KCal         *float32 `json:"kCal,omitempty"`
+	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
+	Fat          *float64 `json:"fat,omitempty"`
+	Id           *int64   `json:"id,omitempty"`
+	KCal         *float64 `json:"kCal,omitempty"`
 	Manufacturer *string  `json:"manufacturer,omitempty"`
 	Product      *string  `json:"product,omitempty"`
-	Protein      *float32 `json:"protein,omitempty"`
+	Protein      *float64 `json:"protein,omitempty"`
 	Public       *bool    `json:"public,omitempty"`
 	Source       *string  `json:"source,omitempty"`
 }
@@ -43,37 +43,37 @@ type LoginResponse struct {
 
 // MealEntryResponse defines model for MealEntryResponse.
 type MealEntryResponse struct {
-	Amount     *float32 `json:"amount,omitempty"`
-	FoodItemId *int     `json:"foodItemId,omitempty"`
-	Id         *int     `json:"id,omitempty"`
-	RecipeId   *int     `json:"recipeId,omitempty"`
+	Amount     *float64 `json:"amount,omitempty"`
+	FoodItemId *int64   `json:"foodItemId,omitempty"`
+	Id         *int64   `json:"id,omitempty"`
+	RecipeId   *int64   `json:"recipeId,omitempty"`
 }
 
 // MealResponse defines model for MealResponse.
 type MealResponse struct {
 	Entries        *[]MealEntryResponse `json:"entries,omitempty"`
-	Id             *int                 `json:"id,omitempty"`
-	SequenceNumber *float32             `json:"sequenceNumber,omitempty"`
+	Id             *int64               `json:"id,omitempty"`
+	SequenceNumber *int64               `json:"sequenceNumber,omitempty"`
 	Timestamp      *time.Time           `json:"timestamp,omitempty"`
 }
 
 // PostFoodItemRequest defines model for PostFoodItemRequest.
 type PostFoodItemRequest struct {
-	Carbohydrate *float32 `json:"carbohydrate,omitempty"`
-	Fat          *float32 `json:"fat,omitempty"`
-	Id           *int     `json:"id,omitempty"`
-	KCal         *float32 `json:"kCal,omitempty"`
+	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
+	Fat          *float64 `json:"fat,omitempty"`
+	Id           *int64   `json:"id,omitempty"`
+	KCal         *float64 `json:"kCal,omitempty"`
 	Manufacturer *string  `json:"manufacturer,omitempty"`
 	Product      *string  `json:"product,omitempty"`
-	Protein      *float32 `json:"protein,omitempty"`
+	Protein      *float64 `json:"protein,omitempty"`
 	Public       *bool    `json:"public,omitempty"`
 }
 
 // PostMealEntryRequest defines model for PostMealEntryRequest.
 type PostMealEntryRequest struct {
-	Amount     *float32 `json:"amount,omitempty"`
-	FoodItemId *int     `json:"foodItemId,omitempty"`
-	RecipeId   *int     `json:"recipeId,omitempty"`
+	Amount     *float64 `json:"amount,omitempty"`
+	FoodItemId *int64   `json:"foodItemId,omitempty"`
+	RecipeId   *int64   `json:"recipeId,omitempty"`
 }
 
 // PostMealRequest defines model for PostMealRequest.
@@ -81,8 +81,8 @@ type PostMealRequest = WithTimestamp
 
 // PostRecipeEntryRequest defines model for PostRecipeEntryRequest.
 type PostRecipeEntryRequest struct {
-	Amount     *float32 `json:"amount,omitempty"`
-	FoodItemId *int     `json:"foodItemId,omitempty"`
+	Amount     *float64 `json:"amount,omitempty"`
+	FoodItemId *int64   `json:"foodItemId,omitempty"`
 }
 
 // PostRecipeRequest defines model for PostRecipeRequest.
@@ -93,15 +93,15 @@ type PostRecipeRequest struct {
 
 // RecipeEntryResponse defines model for RecipeEntryResponse.
 type RecipeEntryResponse struct {
-	Amount     *float32 `json:"amount,omitempty"`
-	FoodItemId *int     `json:"foodItemId,omitempty"`
-	Id         *int     `json:"id,omitempty"`
+	Amount     *float64 `json:"amount,omitempty"`
+	FoodItemId *int64   `json:"foodItemId,omitempty"`
+	Id         *int64   `json:"id,omitempty"`
 }
 
 // RecipeResponse defines model for RecipeResponse.
 type RecipeResponse struct {
 	Entries *[]RecipeEntryResponse `json:"entries,omitempty"`
-	Id      *int                   `json:"id,omitempty"`
+	Id      *int64                 `json:"id,omitempty"`
 	Name    *string                `json:"name,omitempty"`
 }
 
@@ -110,7 +110,7 @@ type RegisterRequest = WithCredentials
 
 // WithAmount defines model for WithAmount.
 type WithAmount struct {
-	Amount *float32 `json:"amount,omitempty"`
+	Amount *float64 `json:"amount,omitempty"`
 }
 
 // WithCredentials defines model for WithCredentials.
@@ -121,22 +121,22 @@ type WithCredentials struct {
 
 // WithEnergy defines model for WithEnergy.
 type WithEnergy struct {
-	Carbohydrate *float32 `json:"carbohydrate,omitempty"`
-	Fat          *float32 `json:"fat,omitempty"`
-	KCal         *float32 `json:"kCal,omitempty"`
-	Protein      *float32 `json:"protein,omitempty"`
+	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
+	Fat          *float64 `json:"fat,omitempty"`
+	KCal         *float64 `json:"kCal,omitempty"`
+	Protein      *float64 `json:"protein,omitempty"`
 }
 
 // WithId defines model for WithId.
 type WithId struct {
-	Id *int `json:"id,omitempty"`
+	Id *int64 `json:"id,omitempty"`
 }
 
 // WithMacronutrients defines model for WithMacronutrients.
 type WithMacronutrients struct {
-	Carbohydrate *float32 `json:"carbohydrate,omitempty"`
-	Fat          *float32 `json:"fat,omitempty"`
-	Protein      *float32 `json:"protein,omitempty"`
+	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
+	Fat          *float64 `json:"fat,omitempty"`
+	Protein      *float64 `json:"protein,omitempty"`
 }
 
 // WithTimestamp defines model for WithTimestamp.
@@ -180,6 +180,9 @@ type ServerInterface interface {
 	// (POST /api/food-items)
 	PostApiFoodItems(w http.ResponseWriter, r *http.Request)
 
+	// (GET /api/food-items/{id})
+	GetApiFoodItemsId(w http.ResponseWriter, r *http.Request, id int64)
+
 	// (POST /api/login)
 	PostApiLogin(w http.ResponseWriter, r *http.Request)
 
@@ -190,10 +193,10 @@ type ServerInterface interface {
 	PostApiMeals(w http.ResponseWriter, r *http.Request)
 
 	// (GET /api/meals/{id})
-	GetApiMealsId(w http.ResponseWriter, r *http.Request, id float32)
+	GetApiMealsId(w http.ResponseWriter, r *http.Request, id int64)
 
 	// (POST /api/meals/{id}/entries)
-	PostApiMealsIdEntries(w http.ResponseWriter, r *http.Request, id float32)
+	PostApiMealsIdEntries(w http.ResponseWriter, r *http.Request, id int64)
 
 	// (GET /api/recipes)
 	GetApiRecipes(w http.ResponseWriter, r *http.Request)
@@ -245,6 +248,37 @@ func (siw *ServerInterfaceWrapper) PostApiFoodItems(w http.ResponseWriter, r *ht
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiFoodItems(w, r)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// GetApiFoodItemsId operation middleware
+func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *http.Request) {
+
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: false})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	ctx := r.Context()
+
+	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
+
+	r = r.WithContext(ctx)
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.GetApiFoodItemsId(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -341,7 +375,7 @@ func (siw *ServerInterfaceWrapper) GetApiMealsId(w http.ResponseWriter, r *http.
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id float32
+	var id int64
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: false})
 	if err != nil {
@@ -372,7 +406,7 @@ func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, 
 	var err error
 
 	// ------------- Path parameter "id" -------------
-	var id float32
+	var id int64
 
 	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: false})
 	if err != nil {
@@ -579,6 +613,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 
 	m.HandleFunc("GET "+options.BaseURL+"/api/food-items", wrapper.GetApiFoodItems)
 	m.HandleFunc("POST "+options.BaseURL+"/api/food-items", wrapper.PostApiFoodItems)
+	m.HandleFunc("GET "+options.BaseURL+"/api/food-items/{id}", wrapper.GetApiFoodItemsId)
 	m.HandleFunc("POST "+options.BaseURL+"/api/login", wrapper.PostApiLogin)
 	m.HandleFunc("GET "+options.BaseURL+"/api/meals", wrapper.GetApiMeals)
 	m.HandleFunc("POST "+options.BaseURL+"/api/meals", wrapper.PostApiMeals)
@@ -620,6 +655,23 @@ type PostApiFoodItems201JSONResponse FoodItemResponse
 func (response PostApiFoodItems201JSONResponse) VisitPostApiFoodItemsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiFoodItemsIdRequestObject struct {
+	Id int64 `json:"id,omitempty"`
+}
+
+type GetApiFoodItemsIdResponseObject interface {
+	VisitGetApiFoodItemsIdResponse(w http.ResponseWriter) error
+}
+
+type GetApiFoodItemsId200JSONResponse FoodItemResponse
+
+func (response GetApiFoodItemsId200JSONResponse) VisitGetApiFoodItemsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -676,7 +728,7 @@ func (response PostApiMeals201JSONResponse) VisitPostApiMealsResponse(w http.Res
 }
 
 type GetApiMealsIdRequestObject struct {
-	Id float32 `json:"id,omitempty"`
+	Id int64 `json:"id,omitempty"`
 }
 
 type GetApiMealsIdResponseObject interface {
@@ -693,7 +745,7 @@ func (response GetApiMealsId200JSONResponse) VisitGetApiMealsIdResponse(w http.R
 }
 
 type PostApiMealsIdEntriesRequestObject struct {
-	Id   float32 `json:"id,omitempty"`
+	Id   int64 `json:"id,omitempty"`
 	Body *PostApiMealsIdEntriesJSONRequestBody
 }
 
@@ -767,6 +819,9 @@ type StrictServerInterface interface {
 
 	// (POST /api/food-items)
 	PostApiFoodItems(ctx context.Context, request PostApiFoodItemsRequestObject) (PostApiFoodItemsResponseObject, error)
+
+	// (GET /api/food-items/{id})
+	GetApiFoodItemsId(ctx context.Context, request GetApiFoodItemsIdRequestObject) (GetApiFoodItemsIdResponseObject, error)
 
 	// (POST /api/login)
 	PostApiLogin(ctx context.Context, request PostApiLoginRequestObject) (PostApiLoginResponseObject, error)
@@ -877,6 +932,32 @@ func (sh *strictHandler) PostApiFoodItems(w http.ResponseWriter, r *http.Request
 	}
 }
 
+// GetApiFoodItemsId operation middleware
+func (sh *strictHandler) GetApiFoodItemsId(w http.ResponseWriter, r *http.Request, id int64) {
+	var request GetApiFoodItemsIdRequestObject
+
+	request.Id = id
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.GetApiFoodItemsId(ctx, request.(GetApiFoodItemsIdRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "GetApiFoodItemsId")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(GetApiFoodItemsIdResponseObject); ok {
+		if err := validResponse.VisitGetApiFoodItemsIdResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // PostApiLogin operation middleware
 func (sh *strictHandler) PostApiLogin(w http.ResponseWriter, r *http.Request) {
 	var request PostApiLoginRequestObject
@@ -966,7 +1047,7 @@ func (sh *strictHandler) PostApiMeals(w http.ResponseWriter, r *http.Request) {
 }
 
 // GetApiMealsId operation middleware
-func (sh *strictHandler) GetApiMealsId(w http.ResponseWriter, r *http.Request, id float32) {
+func (sh *strictHandler) GetApiMealsId(w http.ResponseWriter, r *http.Request, id int64) {
 	var request GetApiMealsIdRequestObject
 
 	request.Id = id
@@ -992,7 +1073,7 @@ func (sh *strictHandler) GetApiMealsId(w http.ResponseWriter, r *http.Request, i
 }
 
 // PostApiMealsIdEntries operation middleware
-func (sh *strictHandler) PostApiMealsIdEntries(w http.ResponseWriter, r *http.Request, id float32) {
+func (sh *strictHandler) PostApiMealsIdEntries(w http.ResponseWriter, r *http.Request, id int64) {
 	var request PostApiMealsIdEntriesRequestObject
 
 	request.Id = id

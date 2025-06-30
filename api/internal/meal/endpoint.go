@@ -1,8 +1,15 @@
 package meal
 
-import "github.com/vidarandrebo/nutrition-tracker/api/internal/api"
+import (
+	"context"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
+	"log/slog"
+)
 
 type Endpoint struct {
+	store  *Store
+	logger *slog.Logger
+	last   int64
 }
 
 func (e Endpoint) GetApiMeals(ctx context.Context, request api.GetApiMealsRequestObject) (api.GetApiMealsResponseObject, error) {
