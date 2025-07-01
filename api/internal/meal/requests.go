@@ -2,12 +2,7 @@ package meal
 
 import (
 	"errors"
-	"time"
 )
-
-type PostMealRequest struct {
-	Timestamp time.Time `json:"timestamp"`
-}
 
 type PostMealEntryRequest struct {
 	FoodItemID int64   `json:"foodItemId"`

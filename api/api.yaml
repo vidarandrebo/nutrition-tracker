@@ -1,0 +1,418 @@
+# schema version
+openapi: 3.0.4
+
+# docs
+info:
+  title: Nutrition Tracker API
+  description: API Specification for Nutrition Tracker
+  version: 0.0.1
+
+# optional servers for public APIs
+servers:
+  - url: "https://nt.vidarboe.com"
+
+# tags are used to group the endpoints
+tags:
+  - name: Food Items
+    description: Manage Food Items
+  - name: Recipes
+    description: Manage Recipes
+  - name: Meals
+    description: Manage Meals
+  - name: Auth
+    description: Manage Auth
+
+# endpoints go here
+paths:
+  /api/food-items:
+    description: Food Items
+    summary: Food Items
+    get:
+      tags:
+        - Food Items
+      responses:
+        '200':
+          description: food items
+          content:
+            application/json:
+              schema:
+                type: "array"
+                items:
+                  $ref: '#/components/schemas/FoodItemResponse'
+    post:
+      tags:
+        - Food Items
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/PostFoodItemRequest"
+
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: "#/components/schemas/FoodItemResponse"
+          description:
+
+  /api/food-items/{id}:
+    get:
+      tags:
+        - Food Items
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            x-go-type: int64
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FoodItemResponse"
+          description: FoodItem with the provided id
+
+  /api/meals:
+    get:
+      tags:
+        - Meals
+      parameters:
+        - name: dateFrom
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: dateTo
+          in: query
+          schema:
+            type: string
+            format: date-time
+
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/MealResponse"
+          description: Meals in between the dates provided
+    post:
+      tags:
+        - Meals
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostMealRequest"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MealResponse"
+          description:
+
+  /api/meals/{id}:
+    get:
+      tags:
+        - Meals
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            x-go-type: int64
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MealResponse"
+          description: Meals with the provided id
+
+  /api/meals/{id}/entries:
+    post:
+      tags:
+        - Meals
+      parameters:
+        - name: id
+          in: path
+          schema:
+            type: integer
+            x-go-type: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostMealEntryRequest"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MealEntryResponse"
+          description: Meals entry that was added
+
+
+  /api/recipes:
+    get:
+      tags:
+        - Recipes
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RecipeResponse'
+          description: All recipes owned by user
+    post:
+      tags:
+        - Recipes
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PostRecipeRequest"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeResponse"
+          description: Recipe created
+
+  /api/login:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        200:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+          description: Log in the user
+
+
+  /api/register:
+    post:
+      tags:
+        - Auth
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+      responses:
+        201:
+          description: Register the user
+
+
+
+
+
+
+# reusable objects such as schemas, error types, request bodies
+components:
+  schemas:
+    FoodItemResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithEnergy"
+        - $ref: "#/components/schemas/WithId"
+        - properties:
+            manufacturer:
+              type: string
+            product:
+              type: string
+            public:
+              type: boolean
+            source:
+              type: string
+
+    PostFoodItemRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithEnergy"
+        - $ref: "#/components/schemas/WithId"
+        - properties:
+            manufacturer:
+              type: string
+            product:
+              type: string
+            public:
+              type: boolean
+
+    PostMealRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithTimestamp"
+
+    PostMealEntryRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            foodItemId:
+              type: integer
+              x-go-type: int64
+            recipeId:
+              type: integer
+              x-go-type: int64
+
+
+    MealEntryResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            foodItemId:
+              type: integer
+              x-go-type: int64
+            recipeId:
+              type: integer
+              x-go-type: int64
+
+    MealResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithTimestamp"
+        - properties:
+            sequenceNumber:
+              type: integer
+              x-go-type: int64
+            entries:
+              type: array
+              items:
+                $ref: "#/components/schemas/MealEntryResponse"
+
+    PostRecipeRequest:
+      type: object
+      properties:
+        name:
+          type: string
+        entries:
+          type: array
+          items:
+            $ref: "#/components/schemas/PostRecipeEntryRequest"
+
+
+    PostRecipeEntryRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            foodItemId:
+              type: integer
+              x-go-type: int64
+
+    RecipeResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - properties:
+            name:
+              type: string
+            entries:
+              type: array
+              items:
+                $ref: "#/components/schemas/RecipeEntryResponse"
+
+    RecipeEntryResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            foodItemId:
+              type: integer
+              x-go-type: int64
+
+    WithTimestamp:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+
+    WithId:
+      type: object
+      properties:
+        id:
+          type: integer
+          x-go-type: int64
+
+    WithAmount:
+      properties:
+        amount:
+          type: number
+          x-go-type: float64
+
+    WithEnergy:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithMacronutrients"
+        - properties:
+            kCal:
+              type: number
+              x-go-type: float64
+
+    WithMacronutrients:
+      type: object
+      properties:
+        protein:
+          type: number
+          x-go-type: float64
+        carbohydrate:
+          type: number
+          x-go-type: float64
+        fat:
+          type: number
+          x-go-type: float64
+
+
+    LoginResponse:
+      type: object
+      properties:
+        token:
+          type: string
+
+    RegisterRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithCredentials"
+
+    LoginRequest:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithCredentials"
+
+    WithCredentials:
+      type: object
+      properties:
+        email:
+          type: string
+          example: "mail@example.com"
+        password:
+          type: string
+          example: "pas$w0rd"
+
+
+
+# security mechanisms, should correspond to components.securitySchemes
+security:
+  - apiKeyAuth: [ ]

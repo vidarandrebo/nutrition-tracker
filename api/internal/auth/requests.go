@@ -4,12 +4,12 @@ import (
 	"net/mail"
 )
 
-type RegisterRequest struct {
+type Register struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }
 
-func (rr RegisterRequest) Validate() bool {
+func (rr Register) Validate() bool {
 	if _, err := mail.ParseAddress(rr.Email); err != nil {
 		return false
 	}
@@ -19,7 +19,7 @@ func (rr RegisterRequest) Validate() bool {
 	return true
 }
 
-type LoginRequest struct {
+type Login struct {
 	Email    string `json:"email"`
 	Password string `json:"password"`
 }

@@ -1,13 +1,7 @@
 <script setup lang="ts"></script>
 
 <template>
-    <h1>
+    <h6 class="title is-6">
         <slot></slot>
-    </h1>
+    </h6>
 </template>
-
-<style scoped>
-h1 {
-    font-size: 2rem;
-}
-</style>

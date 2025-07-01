@@ -1,10 +1,13 @@
 package middleware
 
 import (
+	"context"
 	"log/slog"
 	"net/http"
 	"reflect"
 	"time"
+
+	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 )
 
 type RequestMetadata struct {
@@ -27,11 +30,12 @@ func NewRequestMetadata(logger *slog.Logger) *RequestMetadata {
 	return rm
 }
 
-func (rt *RequestMetadata) Time(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+func (rt *RequestMetadata) Time(next nethttp.StrictHTTPHandlerFunc, operationID string) nethttp.StrictHTTPHandlerFunc {
+	return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (response interface{}, err error) {
 		start := time.Now()
 		writer := &StatusWriter{ResponseWriter: w, statusCode: http.StatusOK}
-		next.ServeHTTP(writer, r)
+		res, err := next(ctx, w, r, request)
 		rt.logger.Info(r.Method, slog.Int("status", writer.statusCode), slog.String("path", r.URL.Path), slog.Any("time", time.Since(start)))
-	})
+		return res, err
+	}
 }

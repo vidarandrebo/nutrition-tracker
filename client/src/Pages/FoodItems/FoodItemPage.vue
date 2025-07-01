@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeaderH1 from "../../Components/HeaderH1.vue";
+import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import { onMounted, ref, watch } from "vue";
 import FoodItemDisplay from "./FoodItemDisplay.vue";
@@ -25,26 +25,28 @@ watch(searchTerm, () => {
 </script>
 
 <template>
-    <LevelPrimary>
-        <template #left>
-            <HeaderH1>Food Items</HeaderH1>
-        </template>
-        <template #right>
-            <FormField>
-                <RouterLink class="button is-primary" to="/food-items/add">Add</RouterLink>
-            </FormField>
-        </template>
-    </LevelPrimary>
-    <FormField>
-        <InputText v-model="searchTerm" placeholder="Search"></InputText>
-    </FormField>
-    <ul>
-        <FoodItemDisplay
-            v-for="foodItem in foodItemStore.filteredFoodItems"
-            :key="foodItem.id"
-            :item="foodItem"
-        ></FoodItemDisplay>
-    </ul>
+    <section class="container">
+        <LevelPrimary>
+            <template #left>
+                <HeaderH1>Food Items</HeaderH1>
+            </template>
+            <template #right>
+                <FormField>
+                    <RouterLink class="button is-primary" to="/food-items/add">Add</RouterLink>
+                </FormField>
+            </template>
+        </LevelPrimary>
+        <FormField>
+            <InputText v-model="searchTerm" placeholder="Search"></InputText>
+        </FormField>
+        <ul>
+            <FoodItemDisplay
+                v-for="foodItem in foodItemStore.filteredFoodItems"
+                :key="foodItem.id"
+                :item="foodItem"
+            ></FoodItemDisplay>
+        </ul>
+    </section>
 </template>
 
 <style scoped></style>

@@ -54,15 +54,13 @@ func (s *Store) Add(item FoodItem) FoodItem {
 	return item
 }
 
-func (s *Store) GetByID(id int64, ownerID int64) (FoodItem, error) {
+func (s *Store) GetByID(id int64) (FoodItem, error) {
 	item := FoodItem{}
 	err := s.db.QueryRow(`
 		SELECT id, manufacturer, product, protein, carbohydrate, fat, kcal, public, source, owner_id 
 		FROM food_items 
-		WHERE id = $1
- 		  AND owner_id = $2`,
+		WHERE id = $1`,
 		id,
-		ownerID,
 	).Scan(
 		&item.ID,
 		&item.Manufacturer,

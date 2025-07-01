@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import HeaderH1 from "../../Components/HeaderH1.vue";
+import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { computed, reactive } from "vue";
 import { PostFoodItemRequest } from "../../Models/FoodItems/Requests.ts";
 import router from "../../Router.ts";

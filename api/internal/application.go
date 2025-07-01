@@ -7,6 +7,9 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
+
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
@@ -23,7 +26,7 @@ type Application struct {
 	Logger      *slog.Logger
 	Services    *Services
 	Stores      *Stores
-	Controllers *Controllers
+	Endpoints   *Endpoints
 	Middlewares *Middlewares
 }
 
@@ -39,17 +42,20 @@ type Stores struct {
 	RecipeStore   *recipe.Store
 }
 
-type Controllers struct {
-	FoodItemController *fooditem.Controller
-	AuthController     *auth.Controller
-	MealController     *meal.Controller
-	Recipe             *recipe.Actions
+type Endpoints struct {
+	FoodItemEndpoint *foodItemEndpoint
+	RecipeEndpoint   *recipeEndpoint
+	AuthEndpoint     *authEndpoint
+	MealEndpoint     *mealEndpoint
 }
 
 type Middlewares struct {
 	Auth            *middleware.Auth
 	RequestMetadata *middleware.RequestMetadata
-	HeaderWriter    *middleware.HeaderWriter
+}
+
+func (a *Application) GetMiddlewares() []nethttp.StrictHTTPMiddlewareFunc {
+	return []nethttp.StrictHTTPMiddlewareFunc{a.Middlewares.Auth.TokenToContext, a.Middlewares.RequestMetadata.Time}
 }
 
 func NewApplication() *Application {
@@ -101,76 +107,19 @@ func (a *Application) addStores() {
 	a.Stores.RecipeStore = recipe.NewStore(a.DB, a.Logger)
 }
 
-func (a *Application) addControllers() {
-	a.Controllers = &Controllers{}
-	a.Controllers.FoodItemController = fooditem.NewController(a.Stores.FoodItemStore, a.Logger)
-	a.Controllers.AuthController = auth.NewController(a.Services.AuthService, a.Logger)
-	a.Controllers.MealController = meal.NewController(a.Stores.MealStore, a.Logger)
-	a.Controllers.Recipe = recipe.NewActions(a.Stores.RecipeStore, a.Logger)
-}
-
 func (a *Application) addMiddlewares() {
 	a.Middlewares = &Middlewares{}
 	a.Middlewares.RequestMetadata = middleware.NewRequestMetadata(a.Logger)
 	a.Middlewares.Auth = middleware.NewAuth(a.Logger, a.Services.JwtService)
-	a.Middlewares.HeaderWriter = middleware.NewHeaderWriter(a.Logger)
 }
 
-func (a *Application) foodItemRoutes() http.Handler {
-	mwBuilder := middleware.NewMiddlewareBuilder()
-	mwBuilder.AddMiddleware(a.Middlewares.Auth.TokenToContext)
-	mw := mwBuilder.Build()
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("GET /api/food-items", a.Controllers.FoodItemController.List)
-	mux.HandleFunc("GET /api/food-items/{id}", a.Controllers.FoodItemController.Get)
-	mux.HandleFunc("POST /api/food-items", a.Controllers.FoodItemController.Post)
-	return mw(mux)
-}
-
-func (a *Application) mealRoutes() http.Handler {
-	mwBuilder := middleware.NewMiddlewareBuilder()
-	mwBuilder.AddMiddleware(a.Middlewares.Auth.TokenToContext)
-	mw := mwBuilder.Build()
-
-	mux := http.NewServeMux()
-	mux.HandleFunc("POST /api/meals", a.Controllers.MealController.Post)
-	mux.HandleFunc("GET /api/meals", a.Controllers.MealController.Get)
-	mux.HandleFunc("GET /api/meals/{id}", a.Controllers.MealController.GetByID)
-	mux.HandleFunc("POST /api/meals/{id}/entries", a.Controllers.MealController.PostEntry)
-	return mw(mux)
-}
-
-func (a *Application) recipeRoutes() http.Handler {
-	mwBuilder := middleware.NewMiddlewareBuilder()
-	mwBuilder.AddMiddleware(a.Middlewares.Auth.TokenToContext)
-	mw := mwBuilder.Build()
-
-	mux := http.NewServeMux()
-	mux.Handle("POST /api/recipes", a.Controllers.Recipe.Post)
-	mux.Handle("GET /api/recipes", a.Controllers.Recipe.Get)
-	return mw(mux)
-}
-
-func (a *Application) apiMux() http.Handler {
-	mwBuilder := middleware.NewMiddlewareBuilder()
-	mwBuilder.AddMiddleware(a.Middlewares.RequestMetadata.Time)
-	mwBuilder.AddMiddleware(a.Middlewares.HeaderWriter.WriteHeaders)
-	mw := mwBuilder.Build()
-
-	mux := http.NewServeMux()
-	foodItemRoutes := a.foodItemRoutes()
-	mealRoutes := a.mealRoutes()
-	recipeRoutes := a.recipeRoutes()
-	mux.Handle("/api/food-items/", foodItemRoutes)
-	mux.Handle("/api/food-items", foodItemRoutes)
-	mux.Handle("/api/meals/", mealRoutes)
-	mux.Handle("/api/meals", mealRoutes)
-	mux.Handle("/api/recipes/", recipeRoutes)
-	mux.Handle("/api/recipes", recipeRoutes)
-	mux.HandleFunc("POST /api/login", a.Controllers.AuthController.Login)
-	mux.HandleFunc("POST /api/register", a.Controllers.AuthController.Register)
-	return mw(mux)
+func (a *Application) addEndpoints() {
+	a.Endpoints = &Endpoints{
+		FoodItemEndpoint: fooditem.NewEndpoint(a.Stores.FoodItemStore, a.Logger),
+		RecipeEndpoint:   recipe.NewEndpoint(a.Stores.RecipeStore, a.Logger),
+		AuthEndpoint:     auth.NewEndpoint(a.Services.AuthService, a.Logger),
+		MealEndpoint:     meal.NewEndpoint(a.Stores.MealStore, a.Logger),
+	}
 }
 
 func (a *Application) staticFS() http.Handler {
@@ -179,10 +128,9 @@ func (a *Application) staticFS() http.Handler {
 	return notFoundInterceptor.RespondWithFallback(fs, "/")
 }
 
-func (a *Application) rootMux() http.Handler {
+func (a *Application) rootMux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.Handle("/", a.staticFS())
-	mux.Handle("/api/", a.apiMux())
 
 	return mux
 }
@@ -194,11 +142,15 @@ func (a *Application) Setup() {
 	a.addStores()
 	a.addServices()
 	a.addMiddlewares()
-	a.addControllers()
+	a.addEndpoints()
 
+	server := NewServer(a.Endpoints.RecipeEndpoint, a.Endpoints.MealEndpoint, a.Endpoints.FoodItemEndpoint, a.Endpoints.AuthEndpoint)
+	s := api.NewStrictHandler(server, a.GetMiddlewares())
+	mux := a.rootMux()
+	h := api.HandlerFromMux(s, mux)
 	a.Server = http.Server{
 		Addr:                         a.Options.ListenAddress,
-		Handler:                      a.rootMux(),
+		Handler:                      h,
 		DisableGeneralOptionsHandler: false,
 		TLSConfig:                    nil,
 		ReadTimeout:                  0,

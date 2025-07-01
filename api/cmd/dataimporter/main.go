@@ -35,7 +35,7 @@ func main() {
 	}
 	matvareTabellenUser, err := app.Stores.UserStore.GetUserByEmail(matvareTabellenCredentials.Email)
 	if err != nil {
-		app.Services.AuthService.RegisterUser(auth.RegisterRequest{
+		app.Services.AuthService.RegisterUser(auth.Register{
 			Email:    matvareTabellenCredentials.Email,
 			Password: matvareTabellenCredentials.Password,
 		})
