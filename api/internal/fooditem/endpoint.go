@@ -37,7 +37,7 @@ func (e Endpoint) GetApiFoodItems(ctx context.Context, request api.GetApiFoodIte
 func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodItemsRequestObject) (api.PostApiFoodItemsResponseObject, error) {
 	userID, err := auth.UserIDFromCtx(ctx)
 	if err != nil {
-		panic("")
+		return nil, err
 	}
 
 	r := PostFoodItemRequest{

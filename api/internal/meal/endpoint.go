@@ -27,28 +27,10 @@ func (e Endpoint) GetApiMeals(ctx context.Context, request api.GetApiMealsReques
 		return nil, err
 	}
 
-	//	queryValues := r.URL.Query()
-	//	dateFrom := queryValues.Get("dateFrom")
-	//	dateTo := queryValues.Get("dateTo")
-	//
-	//	timeTo, err := time.Parse(time.RFC3339, dateTo)
-	//	if err != nil {
-	//		errs = append(errs, err)
-	//	}
-	//	timeFrom, err := time.Parse(time.RFC3339, dateFrom)
-	//	if err != nil {
-	//		errs = append(errs, err)
-	//	}
-	//
-	//	if len(errs) > 0 {
-	//		w.WriteHeader(http.StatusBadRequest)
-	//		return
-	//	}
-
-	meals := e.store.GetByDate(userID, *request.Params.DateFrom, *request.Params.DateTo)
-
-	//	e.logger.Info("meal times", slog.String("from", dateFrom), slog.String("to", dateTo))
-	//	e.logger.Info("meal times", slog.Time("from", timeFrom), slog.Time("to", timeTo))
+	meals, err := e.store.GetByDate(userID, *request.Params.DateFrom, *request.Params.DateTo)
+	if err != nil {
+		return nil, err
+	}
 
 	response := make([]api.MealResponse, 0, len(meals))
 
@@ -64,12 +46,15 @@ func (e Endpoint) PostApiMeals(ctx context.Context, request api.PostApiMealsRequ
 		return nil, err
 	}
 
-	meal := e.store.Add(Meal{
+	meal, err := e.store.Add(Meal{
 		SequenceNumber: e.last,
 		Timestamp:      *request.Body.Timestamp,
 		OwnerID:        userID,
 	})
 	e.last++
+	if err != nil {
+		return nil, err
+	}
 
 	return api.PostApiMeals201JSONResponse(meal.ToResponse()), nil
 }

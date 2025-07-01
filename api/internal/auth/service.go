@@ -35,7 +35,10 @@ func (s *Service) RegisterUser(rr Register) error {
 		PasswordHash: hash,
 	}
 
-	s.userStore.AddUser(u)
+	err := s.userStore.AddUser(u)
+	if err != nil {
+		return err
+	}
 	return nil
 }
 

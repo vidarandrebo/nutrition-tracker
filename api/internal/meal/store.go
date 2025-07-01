@@ -19,7 +19,7 @@ func NewStore(db *sql.DB, logger *slog.Logger) *Store {
 	}
 }
 
-func (s *Store) Add(meal Meal) Meal {
+func (s *Store) Add(meal Meal) (Meal, error) {
 	tx, err := s.DB.Begin()
 	err = tx.QueryRow(`
 		INSERT INTO meals AS m (sequence_number, meal_time, owner_id) 
@@ -27,7 +27,7 @@ func (s *Store) Add(meal Meal) Meal {
 		RETURNING m.id`,
 		meal.SequenceNumber, meal.Timestamp, meal.OwnerID).Scan(&meal.ID)
 	if err != nil {
-		panic(err)
+		return Meal{}, err
 	}
 
 	for _, entry := range meal.Entries {
@@ -41,17 +41,17 @@ func (s *Store) Add(meal Meal) Meal {
 			meal.ID,
 		).Scan(&entry.ID)
 		if err != nil {
-			panic(err)
+			return Meal{}, err
 		}
 	}
 	err = tx.Commit()
 	if err != nil {
-		panic(err)
+		return Meal{}, err
 	}
-	return meal
+	return meal, nil
 }
 
-func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) []Meal {
+func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) ([]Meal, error) {
 	rows, err := s.DB.Query(`
 	WITH meal_for_day AS (
 		SELECT id, meal_time, sequence_number, owner_id 
@@ -68,7 +68,7 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 		dateTo,
 	)
 	if err != nil {
-		panic(err)
+		return nil, err
 	}
 	meals := make([]Meal, 0)
 	entries := make(map[int64][]Entry)
@@ -92,7 +92,7 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) [
 	for i := 0; i < len(meals); i++ {
 		meals[i].Entries = entries[meals[i].ID]
 	}
-	return meals
+	return meals, nil
 }
 
 func (s *Store) GetById(id int64, ownerID int64) (Meal, error) {
@@ -123,7 +123,7 @@ func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, e
 		RETURNING me.id`,
 		mealID, entry.FoodItemID(), entry.RecipeID(), entry.Amount).Scan(&entry.ID)
 	if err != nil {
-		panic(err)
+		return Entry{}, err
 	}
 
 	return entry, nil
