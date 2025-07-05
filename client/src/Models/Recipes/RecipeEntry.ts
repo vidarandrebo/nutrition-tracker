@@ -1,4 +1,4 @@
-import type { RecipeEntryResponse } from "./Responses.ts";
+import type { RecipeEntryResponse } from "../../Gen";
 
 export class RecipeEntry {
     id: number;
@@ -13,9 +13,9 @@ export class RecipeEntry {
 
     static fromResponse(request: RecipeEntryResponse): RecipeEntry {
         const r = new RecipeEntry();
-        r.id = request.id;
-        r.amount = request.amount;
-        r.foodItemId = request.foodItemId;
+        r.id = request.id ?? 0;
+        r.amount = request.amount ?? 0;
+        r.foodItemId = request.foodItemId ?? 0;
         return r;
     }
 }

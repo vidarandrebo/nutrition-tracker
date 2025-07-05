@@ -14,6 +14,11 @@ runs:
       shell: bash
       run: npm ci
 
+    - name: Test
+      working-directory: ${{ inputs.working-directory }}
+      shell: bash
+      run: npm run test
+
     - name: Build
       working-directory: ${{ inputs.working-directory }}
       shell: bash

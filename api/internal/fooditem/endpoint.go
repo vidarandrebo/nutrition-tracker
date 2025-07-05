@@ -46,8 +46,12 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 		Protein:      *request.Body.Protein,
 		Carbohydrate: *request.Body.Carbohydrate,
 		Fat:          *request.Body.Fat,
-		KCal:         *request.Body.KCal,
 		Public:       false,
+	}
+	if request.Body.KCal == nil {
+		r.KCal = 0.0
+	} else {
+		r.KCal = *request.Body.KCal
 	}
 	item := r.ToFoodItem()
 	item.OwnerID = userID

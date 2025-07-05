@@ -3,44 +3,31 @@ import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { computed, reactive } from "vue";
 import { PostFoodItemRequest } from "../../Models/FoodItems/Requests.ts";
 import router from "../../Router.ts";
-import { HttpRequest } from "http-methods-ts";
 import InputText from "../../Components/Forms/InputText.vue";
 import InputNumber from "../../Components/Forms/InputNumber.vue";
 import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
-import type { FoodItemResponse } from "../../Models/FoodItems/Responses.ts";
-import { useUserStore } from "../../Stores/UserStore.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../../Components/Forms/FormField.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
+import { getFoodItemsClient } from "../../Models/Api.ts";
 
 const formModel = reactive<PostFoodItemRequest>(new PostFoodItemRequest());
 
-const userStore = useUserStore();
 const foodItemStore = useFoodItemStore();
 
 async function postFoodItem() {
-    const user = userStore.user;
-    if (user === null) {
-        return;
-    }
-    const httpRequest = new HttpRequest()
-        .setRoute("/api/food-items")
-        .setMethod("POST")
-        .addHeader("Content-Type", "application/json")
-        .setBearerToken(user.accessToken)
-        .setRequestData(formModel);
+    const client = getFoodItemsClient();
 
-    await httpRequest.send();
-    const httpResponse = httpRequest.getResponseData();
-    if (httpResponse) {
-        if (httpResponse?.status == 201) {
-            const foodItem = FoodItem.fromResponse(httpResponse.body as FoodItemResponse);
-            foodItemStore.collection.push(foodItem);
-        }
+    try {
+        const response = await client.apiFoodItemsPost({ postFoodItemRequest: formModel });
+        const foodItem = FoodItem.fromResponse(response);
+        foodItemStore.collection.push(foodItem);
+        await router.push("/food-items");
+    } catch {
+        console.log("failed to create new food item");
     }
-    await router.push("/food-items");
 }
 
 const estKCal = computed(() => {

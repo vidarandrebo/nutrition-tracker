@@ -1,5 +1,5 @@
 export type PostMealRequest = {
-    timeStamp: Date;
+    timestamp: Date;
 };
 
 export type PostMealEntryRequest = {

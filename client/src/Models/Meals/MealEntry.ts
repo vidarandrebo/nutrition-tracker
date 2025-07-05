@@ -1,7 +1,6 @@
-import type { MealEntryResponse } from "./Responses.ts";
 import type { PostMealEntryRequest } from "./Requests.ts";
-import { useUserStore } from "../../Stores/UserStore.ts";
-import { HttpRequest } from "http-methods-ts";
+import { getMealsClient } from "../Api.ts";
+import type { MealEntryResponse } from "../../Gen";
 
 export class MealEntry {
     id: number;
@@ -17,32 +16,13 @@ export class MealEntry {
     }
 
     static async add(entry: PostMealEntryRequest, mealId: number): Promise<MealEntry | null> {
-        const userStore = useUserStore();
-        const user = userStore.user;
-        if (user === null) {
-            return null;
-        }
-        const httpRequest = new HttpRequest()
-            .setRoute(`/api/meals/${mealId}/entries`)
-            .setMethod("POST")
-            .addHeader("Content-Type", "application/json")
-            .setBearerToken(user.accessToken)
-            .setRequestData(entry);
+        const client = getMealsClient();
 
-        await httpRequest.send();
-
-        const response = httpRequest.getResponseData();
-
-        switch (response?.status) {
-            case 201:
-                if (response?.body) {
-                    return MealEntry.fromResponse(response.body as MealEntryResponse);
-                }
-                break;
-            case 404:
-                break;
-            default:
-                break;
+        try {
+            const response = await client.apiMealsIdEntriesPost({ id: mealId, postMealEntryRequest: entry });
+            return MealEntry.fromResponse(response);
+        } catch {
+            console.log("failed to add entry to meal");
         }
         return null;
     }
@@ -53,10 +33,10 @@ export class MealEntry {
 
     static fromResponse(res: MealEntryResponse): MealEntry {
         const me = new MealEntry();
-        me.id = res.id;
-        me.amount = res.amount;
-        me.foodItemId = res.foodItemId !== 0 ? res.foodItemId : null;
-        me.recipeId = res.recipeId !== 0 ? res.recipeId : null;
+        me.id = res.id ?? 0;
+        me.amount = res.amount ?? 0.0;
+        me.foodItemId = res.foodItemId ?? null;
+        me.recipeId = res.recipeId ?? null;
         return me;
     }
 }

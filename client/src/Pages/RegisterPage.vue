@@ -1,31 +1,24 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import InputText from "../Components/Forms/InputText.vue";
-import { HttpRequest } from "http-methods-ts";
-import type { RegisterForm } from "../Models/RegisterForm.ts";
+import type { RegisterForm } from "../Models/Auth/RegisterForm.ts";
 import HeaderH1 from "../Components/Headings/HeaderH1.vue";
 import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
 import FormField from "../Components/Forms/FormField.vue";
 import router from "../Router.ts";
+import { getAuthClient } from "../Models/Api.ts";
 
 const registerForm = reactive<RegisterForm>({ email: "", password: "" });
 
 async function register() {
-    const httpRequest = new HttpRequest()
-        .setRoute("/api/register")
-        .setMethod("POST")
-        .addHeader("Content-Type", "application/json")
-        .setRequestData(registerForm);
-
-    await httpRequest.send();
-    const httpResponse = httpRequest.getResponseData();
-
-    if (httpResponse) {
-        if (httpResponse?.status == 201) {
-            console.log("register successful");
-            await router.push("/login");
-        }
+    const api = getAuthClient();
+    try {
+        await api.apiRegisterPost({ registerRequest: registerForm });
+        console.log("register successful");
+        await router.push("/login");
+    } catch {
+        console.log("failed to register");
     }
 }
 </script>

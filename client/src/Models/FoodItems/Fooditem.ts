@@ -1,7 +1,6 @@
-import { HttpRequest } from "http-methods-ts";
-import type { FoodItemResponse } from "./Responses.ts";
-import { useUserStore } from "../../Stores/UserStore.ts";
 import type { Energy } from "../Common/Energy.ts";
+import { type FoodItemResponse } from "../../Gen";
+import { getFoodItemsClient } from "../Api.ts";
 
 export class FoodItem {
     id: number;
@@ -43,60 +42,36 @@ export class FoodItem {
 
     static fromResponse(res: FoodItemResponse): FoodItem {
         const foodItem = new FoodItem();
-        foodItem.id = res.id;
-        foodItem.manufacturer = res.manufacturer;
-        foodItem.product = res.product;
-        foodItem.protein = res.protein;
-        foodItem.carbohydrate = res.carbohydrate;
-        foodItem.fat = res.fat;
-        foodItem.kCal = res.kCal;
-        foodItem.public = res.public;
-        foodItem.source = res.source;
+        foodItem.id = res.id ?? 0;
+        foodItem.manufacturer = res.manufacturer ?? "";
+        foodItem.product = res.product ?? "";
+        foodItem.protein = res.protein ?? 0.0;
+        foodItem.carbohydrate = res.carbohydrate ?? 0.0;
+        foodItem.fat = res.fat ?? 0.0;
+        foodItem.kCal = res.kCal ?? 0.0;
+        foodItem.public = res.isPublic ?? false;
+        foodItem.source = res.source ?? "";
         return foodItem;
     }
 
     static async get(): Promise<FoodItem[] | null> {
-        const userStore = useUserStore();
-        const user = userStore.user;
-        if (user === null) {
-            return null;
-        }
-        const request = new HttpRequest()
-            .setRoute("/api/food-items")
-            .setMethod("GET")
-            .addHeader("Content-Type", "application/json")
-            .setBearerToken(user.accessToken);
-        await request.send();
-        const response = request.getResponseData();
-        if (response === null) {
-            return null;
-        }
-        if (response.status === 200) {
-            const payload = response.body as FoodItemResponse[];
-            const foodItems = payload.map((item) => FoodItem.fromResponse(item));
+        const client = getFoodItemsClient();
+        try {
+            const response = await client.apiFoodItemsGet();
+            const foodItems = response.map((item) => FoodItem.fromResponse(item));
             return foodItems;
+        } catch {
+            console.log("failed to fetch food items");
         }
         return null;
     }
     static async getById(id: number): Promise<FoodItem | null> {
-        const userStore = useUserStore();
-        const user = userStore.user;
-        if (user === null) {
-            return null;
-        }
-        const request = new HttpRequest()
-            .setRoute(`/api/food-items/${id}`)
-            .setMethod("GET")
-            .addHeader("Content-Type", "application/json")
-            .setBearerToken(user.accessToken);
-        await request.send();
-        const response = request.getResponseData();
-        if (response === null) {
-            return null;
-        }
-        if (response.status === 200) {
-            const payload = response.body as FoodItemResponse;
-            return FoodItem.fromResponse(payload);
+        const client = getFoodItemsClient();
+        try {
+            const response = await client.apiFoodItemsIdGet({ id: id });
+            return FoodItem.fromResponse(response);
+        } catch {
+            console.log("failed to fetch food items");
         }
         return null;
     }

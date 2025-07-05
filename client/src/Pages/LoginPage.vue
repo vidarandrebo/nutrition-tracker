@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import { reactive } from "vue";
-import type { LoginForm } from "../Models/LoginForm.ts";
+import type { LoginForm } from "../Models/Auth/LoginForm.ts";
 import InputText from "../Components/Forms/InputText.vue";
-import { HttpRequest } from "http-methods-ts";
-import type { AccessTokenResponse } from "../Models/AccessTokenResponse.ts";
 import router from "../Router.ts";
 import { useUserStore } from "../Stores/UserStore.ts";
 import { User } from "../Models/User.ts";
@@ -11,29 +9,25 @@ import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../Components/Forms/FormField.vue";
 import HeaderH1 from "../Components/Headings/HeaderH1.vue";
 import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
+import { getAuthClient } from "../Models/Api.ts";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
 
 async function login() {
-    const httpRequest = new HttpRequest()
-        .setRoute("/api/login")
-        .setMethod("POST")
-        .addHeader("Content-Type", "application/json")
-        .setRequestData(loginForm);
+    const api = getAuthClient();
+    const response = await api.apiLoginPost({
+        loginRequest: {
+            email: loginForm.email,
+            password: loginForm.password,
+        },
+    });
 
-    await httpRequest.send();
-    const httpResponse = httpRequest.getResponseData();
-    let loginResponse: AccessTokenResponse | undefined = undefined;
-
-    if (httpResponse) {
-        if (httpResponse?.status == 200) {
-            loginResponse = httpResponse.body as AccessTokenResponse;
-            const user: User = { email: loginForm.email, accessToken: loginResponse.token };
-            User.writeToLocalStorage(user);
-            userStore.user = user;
-            await router.push("/");
-        }
+    if (response.token) {
+        const user: User = { email: loginForm.email, accessToken: response.token };
+        User.writeToLocalStorage(user);
+        userStore.user = user;
+        await router.push("/");
     }
 }
 </script>
