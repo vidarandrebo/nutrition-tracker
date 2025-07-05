@@ -8,8 +8,6 @@ info:
   version: 0.0.1
 
 # optional servers for public APIs
-#servers:
-  #- url: "https://nt.vidarboe.com"
 
 # tags are used to group the endpoints
 tags:

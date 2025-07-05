@@ -9,10 +9,11 @@
         "preview": "vite preview",
         "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
         "lint-fix": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
-        "format": "prettier . --write"
+        "format": "prettier . --write",
+        "open-api": "openapi-generator-cli generate -i ../api/api.yaml -g typescript-fetch -o src/Gen/ --additional-properties=withInterfaces=true"
     },
     "dependencies": {
-        "@microsoft/kiota-bundle": "^1.0.0-preview.96",
+        "@openapitools/openapi-generator-cli": "^2.21.0",
         "bulma": "^1.0.4",
         "debounce": "^2.2.0",
         "http-methods-ts": "github:vidarandrebo/http-methods-ts#v0.3.0",
@@ -34,6 +35,7 @@
         "typescript": "~5.8.3",
         "typescript-eslint": "^8.35.1",
         "vite": "^7.0.2",
+        "vitest": "^3.2.4",
         "vue-tsc": "^3.0.1"
     }
 }
