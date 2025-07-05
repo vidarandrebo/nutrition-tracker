@@ -4,4 +4,4 @@ format:
 
 .PHONY: openapi
 openapi:
-	go tool oapi-codegen -config oapi-codegen.yaml api.yaml
+	go generate ./...

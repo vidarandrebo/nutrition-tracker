@@ -1,4 +1,4 @@
-import type { RecipeEntryResponse } from "./Responses.ts";
+import type { RecipeEntryResponse } from "../../Gen";
 
 export class RecipeEntry {
     id: number;

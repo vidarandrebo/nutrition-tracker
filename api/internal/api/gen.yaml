@@ -4,4 +4,5 @@
     std-http-server: true
     models: true
     strict-server: true
-  output: internal/api/api.go
+    client: true
+  output: api.go
