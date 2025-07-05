@@ -6,10 +6,14 @@
 package api
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
+	"io"
 	"net/http"
+	"net/url"
+	"strings"
 	"time"
 
 	"github.com/oapi-codegen/runtime"
@@ -170,6 +174,1502 @@ type PostApiRecipesJSONRequestBody = PostRecipeRequest
 
 // PostApiRegisterJSONRequestBody defines body for PostApiRegister for application/json ContentType.
 type PostApiRegisterJSONRequestBody = RegisterRequest
+
+// RequestEditorFn  is the function signature for the RequestEditor callback function
+type RequestEditorFn func(ctx context.Context, req *http.Request) error
+
+// Doer performs HTTP requests.
+//
+// The standard http.Client implements this interface.
+type HttpRequestDoer interface {
+	Do(req *http.Request) (*http.Response, error)
+}
+
+// Client which conforms to the OpenAPI3 specification for this service.
+type Client struct {
+	// The endpoint of the server conforming to this interface, with scheme,
+	// https://api.deepmap.com for example. This can contain a path relative
+	// to the server, such as https://api.deepmap.com/dev-test, and all the
+	// paths in the swagger spec will be appended to the server.
+	Server string
+
+	// Doer for performing requests, typically a *http.Client with any
+	// customized settings, such as certificate chains.
+	Client HttpRequestDoer
+
+	// A list of callbacks for modifying requests which are generated before sending over
+	// the network.
+	RequestEditors []RequestEditorFn
+}
+
+// ClientOption allows setting custom parameters during construction
+type ClientOption func(*Client) error
+
+// Creates a new Client, with reasonable defaults
+func NewClient(server string, opts ...ClientOption) (*Client, error) {
+	// create a client with sane default values
+	client := Client{
+		Server: server,
+	}
+	// mutate client and add all optional params
+	for _, o := range opts {
+		if err := o(&client); err != nil {
+			return nil, err
+		}
+	}
+	// ensure the server URL always has a trailing slash
+	if !strings.HasSuffix(client.Server, "/") {
+		client.Server += "/"
+	}
+	// create httpClient, if not already present
+	if client.Client == nil {
+		client.Client = &http.Client{}
+	}
+	return &client, nil
+}
+
+// WithHTTPClient allows overriding the default Doer, which is
+// automatically created using http.Client. This is useful for tests.
+func WithHTTPClient(doer HttpRequestDoer) ClientOption {
+	return func(c *Client) error {
+		c.Client = doer
+		return nil
+	}
+}
+
+// WithRequestEditorFn allows setting up a callback function, which will be
+// called right before sending the request. This can be used to mutate the request.
+func WithRequestEditorFn(fn RequestEditorFn) ClientOption {
+	return func(c *Client) error {
+		c.RequestEditors = append(c.RequestEditors, fn)
+		return nil
+	}
+}
+
+// The interface specification for the client above.
+type ClientInterface interface {
+	// GetApiFoodItems request
+	GetApiFoodItems(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostApiFoodItemsWithBody request with any body
+	PostApiFoodItemsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiFoodItems(ctx context.Context, body PostApiFoodItemsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetApiFoodItemsId request
+	GetApiFoodItemsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostApiLoginWithBody request with any body
+	PostApiLoginWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiLogin(ctx context.Context, body PostApiLoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetApiMeals request
+	GetApiMeals(ctx context.Context, params *GetApiMealsParams, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostApiMealsWithBody request with any body
+	PostApiMealsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiMeals(ctx context.Context, body PostApiMealsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetApiMealsId request
+	GetApiMealsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostApiMealsIdEntriesWithBody request with any body
+	PostApiMealsIdEntriesWithBody(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiMealsIdEntries(ctx context.Context, id int64, body PostApiMealsIdEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// GetApiRecipes request
+	GetApiRecipes(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostApiRecipesWithBody request with any body
+	PostApiRecipesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiRecipes(ctx context.Context, body PostApiRecipesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// PostApiRegisterWithBody request with any body
+	PostApiRegisterWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiRegister(ctx context.Context, body PostApiRegisterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+}
+
+func (c *Client) GetApiFoodItems(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiFoodItemsRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiFoodItemsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiFoodItemsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiFoodItems(ctx context.Context, body PostApiFoodItemsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiFoodItemsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetApiFoodItemsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiFoodItemsIdRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiLoginWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiLoginRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiLogin(ctx context.Context, body PostApiLoginJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiLoginRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetApiMeals(ctx context.Context, params *GetApiMealsParams, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiMealsRequest(c.Server, params)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiMealsWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiMealsRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiMeals(ctx context.Context, body PostApiMealsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiMealsRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetApiMealsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiMealsIdRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiMealsIdEntriesWithBody(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiMealsIdEntriesRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiMealsIdEntries(ctx context.Context, id int64, body PostApiMealsIdEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiMealsIdEntriesRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) GetApiRecipes(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewGetApiRecipesRequest(c.Server)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiRecipesWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiRecipesRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiRecipes(ctx context.Context, body PostApiRecipesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiRecipesRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiRegisterWithBody(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiRegisterRequestWithBody(c.Server, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiRegister(ctx context.Context, body PostApiRegisterJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiRegisterRequest(c.Server, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+// NewGetApiFoodItemsRequest generates requests for GetApiFoodItems
+func NewGetApiFoodItemsRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/food-items")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostApiFoodItemsRequest calls the generic PostApiFoodItems builder with application/json body
+func NewPostApiFoodItemsRequest(server string, body PostApiFoodItemsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiFoodItemsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiFoodItemsRequestWithBody generates requests for PostApiFoodItems with any type of body
+func NewPostApiFoodItemsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/food-items")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetApiFoodItemsIdRequest generates requests for GetApiFoodItemsId
+func NewGetApiFoodItemsIdRequest(server string, id int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/food-items/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostApiLoginRequest calls the generic PostApiLogin builder with application/json body
+func NewPostApiLoginRequest(server string, body PostApiLoginJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiLoginRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiLoginRequestWithBody generates requests for PostApiLogin with any type of body
+func NewPostApiLoginRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/login")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetApiMealsRequest generates requests for GetApiMeals
+func NewGetApiMealsRequest(server string, params *GetApiMealsParams) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	if params != nil {
+		queryValues := queryURL.Query()
+
+		if params.DateFrom != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dateFrom", runtime.ParamLocationQuery, *params.DateFrom); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+		}
+
+		if params.DateTo != nil {
+			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dateTo", runtime.ParamLocationQuery, *params.DateTo); err != nil {
+				return nil, err
+			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
+				return nil, err
+			} else {
+				for k, v := range parsed {
+					for _, v2 := range v {
+						queryValues.Add(k, v2)
+					}
+				}
+			}
+		}
+
+		queryURL.RawQuery = queryValues.Encode()
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostApiMealsRequest calls the generic PostApiMeals builder with application/json body
+func NewPostApiMealsRequest(server string, body PostApiMealsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiMealsRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiMealsRequestWithBody generates requests for PostApiMeals with any type of body
+func NewPostApiMealsRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetApiMealsIdRequest generates requests for GetApiMealsId
+func NewGetApiMealsIdRequest(server string, id int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostApiMealsIdEntriesRequest calls the generic PostApiMealsIdEntries builder with application/json body
+func NewPostApiMealsIdEntriesRequest(server string, id int64, body PostApiMealsIdEntriesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiMealsIdEntriesRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewPostApiMealsIdEntriesRequestWithBody generates requests for PostApiMealsIdEntries with any type of body
+func NewPostApiMealsIdEntriesRequestWithBody(server string, id int64, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals/%s/entries", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewGetApiRecipesRequest generates requests for GetApiRecipes
+func NewGetApiRecipesRequest(server string) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/recipes")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("GET", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewPostApiRecipesRequest calls the generic PostApiRecipes builder with application/json body
+func NewPostApiRecipesRequest(server string, body PostApiRecipesJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiRecipesRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiRecipesRequestWithBody generates requests for PostApiRecipes with any type of body
+func NewPostApiRecipesRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/recipes")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewPostApiRegisterRequest calls the generic PostApiRegister builder with application/json body
+func NewPostApiRegisterRequest(server string, body PostApiRegisterJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiRegisterRequestWithBody(server, "application/json", bodyReader)
+}
+
+// NewPostApiRegisterRequestWithBody generates requests for PostApiRegister with any type of body
+func NewPostApiRegisterRequestWithBody(server string, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/register")
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+func (c *Client) applyEditors(ctx context.Context, req *http.Request, additionalEditors []RequestEditorFn) error {
+	for _, r := range c.RequestEditors {
+		if err := r(ctx, req); err != nil {
+			return err
+		}
+	}
+	for _, r := range additionalEditors {
+		if err := r(ctx, req); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+// ClientWithResponses builds on ClientInterface to offer response payloads
+type ClientWithResponses struct {
+	ClientInterface
+}
+
+// NewClientWithResponses creates a new ClientWithResponses, which wraps
+// Client with return type handling
+func NewClientWithResponses(server string, opts ...ClientOption) (*ClientWithResponses, error) {
+	client, err := NewClient(server, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return &ClientWithResponses{client}, nil
+}
+
+// WithBaseURL overrides the baseURL.
+func WithBaseURL(baseURL string) ClientOption {
+	return func(c *Client) error {
+		newBaseURL, err := url.Parse(baseURL)
+		if err != nil {
+			return err
+		}
+		c.Server = newBaseURL.String()
+		return nil
+	}
+}
+
+// ClientWithResponsesInterface is the interface specification for the client with responses above.
+type ClientWithResponsesInterface interface {
+	// GetApiFoodItemsWithResponse request
+	GetApiFoodItemsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiFoodItemsResponse, error)
+
+	// PostApiFoodItemsWithBodyWithResponse request with any body
+	PostApiFoodItemsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiFoodItemsResponse, error)
+
+	PostApiFoodItemsWithResponse(ctx context.Context, body PostApiFoodItemsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiFoodItemsResponse, error)
+
+	// GetApiFoodItemsIdWithResponse request
+	GetApiFoodItemsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*GetApiFoodItemsIdResponse, error)
+
+	// PostApiLoginWithBodyWithResponse request with any body
+	PostApiLoginWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiLoginResponse, error)
+
+	PostApiLoginWithResponse(ctx context.Context, body PostApiLoginJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiLoginResponse, error)
+
+	// GetApiMealsWithResponse request
+	GetApiMealsWithResponse(ctx context.Context, params *GetApiMealsParams, reqEditors ...RequestEditorFn) (*GetApiMealsResponse, error)
+
+	// PostApiMealsWithBodyWithResponse request with any body
+	PostApiMealsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiMealsResponse, error)
+
+	PostApiMealsWithResponse(ctx context.Context, body PostApiMealsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiMealsResponse, error)
+
+	// GetApiMealsIdWithResponse request
+	GetApiMealsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*GetApiMealsIdResponse, error)
+
+	// PostApiMealsIdEntriesWithBodyWithResponse request with any body
+	PostApiMealsIdEntriesWithBodyWithResponse(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiMealsIdEntriesResponse, error)
+
+	PostApiMealsIdEntriesWithResponse(ctx context.Context, id int64, body PostApiMealsIdEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiMealsIdEntriesResponse, error)
+
+	// GetApiRecipesWithResponse request
+	GetApiRecipesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiRecipesResponse, error)
+
+	// PostApiRecipesWithBodyWithResponse request with any body
+	PostApiRecipesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiRecipesResponse, error)
+
+	PostApiRecipesWithResponse(ctx context.Context, body PostApiRecipesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiRecipesResponse, error)
+
+	// PostApiRegisterWithBodyWithResponse request with any body
+	PostApiRegisterWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiRegisterResponse, error)
+
+	PostApiRegisterWithResponse(ctx context.Context, body PostApiRegisterJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiRegisterResponse, error)
+}
+
+type GetApiFoodItemsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]FoodItemResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiFoodItemsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiFoodItemsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiFoodItemsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *FoodItemResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiFoodItemsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiFoodItemsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetApiFoodItemsIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *FoodItemResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiFoodItemsIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiFoodItemsIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiLoginResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *LoginResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiLoginResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiLoginResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetApiMealsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]MealResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiMealsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiMealsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiMealsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *MealResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiMealsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiMealsResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetApiMealsIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *MealResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiMealsIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiMealsIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiMealsIdEntriesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *MealEntryResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiMealsIdEntriesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiMealsIdEntriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type GetApiRecipesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON200      *[]RecipeResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r GetApiRecipesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r GetApiRecipesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiRecipesResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *RecipeResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiRecipesResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiRecipesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiRegisterResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiRegisterResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiRegisterResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+// GetApiFoodItemsWithResponse request returning *GetApiFoodItemsResponse
+func (c *ClientWithResponses) GetApiFoodItemsWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiFoodItemsResponse, error) {
+	rsp, err := c.GetApiFoodItems(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiFoodItemsResponse(rsp)
+}
+
+// PostApiFoodItemsWithBodyWithResponse request with arbitrary body returning *PostApiFoodItemsResponse
+func (c *ClientWithResponses) PostApiFoodItemsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiFoodItemsResponse, error) {
+	rsp, err := c.PostApiFoodItemsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiFoodItemsResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiFoodItemsWithResponse(ctx context.Context, body PostApiFoodItemsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiFoodItemsResponse, error) {
+	rsp, err := c.PostApiFoodItems(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiFoodItemsResponse(rsp)
+}
+
+// GetApiFoodItemsIdWithResponse request returning *GetApiFoodItemsIdResponse
+func (c *ClientWithResponses) GetApiFoodItemsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*GetApiFoodItemsIdResponse, error) {
+	rsp, err := c.GetApiFoodItemsId(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiFoodItemsIdResponse(rsp)
+}
+
+// PostApiLoginWithBodyWithResponse request with arbitrary body returning *PostApiLoginResponse
+func (c *ClientWithResponses) PostApiLoginWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiLoginResponse, error) {
+	rsp, err := c.PostApiLoginWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiLoginResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiLoginWithResponse(ctx context.Context, body PostApiLoginJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiLoginResponse, error) {
+	rsp, err := c.PostApiLogin(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiLoginResponse(rsp)
+}
+
+// GetApiMealsWithResponse request returning *GetApiMealsResponse
+func (c *ClientWithResponses) GetApiMealsWithResponse(ctx context.Context, params *GetApiMealsParams, reqEditors ...RequestEditorFn) (*GetApiMealsResponse, error) {
+	rsp, err := c.GetApiMeals(ctx, params, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiMealsResponse(rsp)
+}
+
+// PostApiMealsWithBodyWithResponse request with arbitrary body returning *PostApiMealsResponse
+func (c *ClientWithResponses) PostApiMealsWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiMealsResponse, error) {
+	rsp, err := c.PostApiMealsWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiMealsResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiMealsWithResponse(ctx context.Context, body PostApiMealsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiMealsResponse, error) {
+	rsp, err := c.PostApiMeals(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiMealsResponse(rsp)
+}
+
+// GetApiMealsIdWithResponse request returning *GetApiMealsIdResponse
+func (c *ClientWithResponses) GetApiMealsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*GetApiMealsIdResponse, error) {
+	rsp, err := c.GetApiMealsId(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiMealsIdResponse(rsp)
+}
+
+// PostApiMealsIdEntriesWithBodyWithResponse request with arbitrary body returning *PostApiMealsIdEntriesResponse
+func (c *ClientWithResponses) PostApiMealsIdEntriesWithBodyWithResponse(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiMealsIdEntriesResponse, error) {
+	rsp, err := c.PostApiMealsIdEntriesWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiMealsIdEntriesResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiMealsIdEntriesWithResponse(ctx context.Context, id int64, body PostApiMealsIdEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiMealsIdEntriesResponse, error) {
+	rsp, err := c.PostApiMealsIdEntries(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiMealsIdEntriesResponse(rsp)
+}
+
+// GetApiRecipesWithResponse request returning *GetApiRecipesResponse
+func (c *ClientWithResponses) GetApiRecipesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiRecipesResponse, error) {
+	rsp, err := c.GetApiRecipes(ctx, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseGetApiRecipesResponse(rsp)
+}
+
+// PostApiRecipesWithBodyWithResponse request with arbitrary body returning *PostApiRecipesResponse
+func (c *ClientWithResponses) PostApiRecipesWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiRecipesResponse, error) {
+	rsp, err := c.PostApiRecipesWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiRecipesResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiRecipesWithResponse(ctx context.Context, body PostApiRecipesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiRecipesResponse, error) {
+	rsp, err := c.PostApiRecipes(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiRecipesResponse(rsp)
+}
+
+// PostApiRegisterWithBodyWithResponse request with arbitrary body returning *PostApiRegisterResponse
+func (c *ClientWithResponses) PostApiRegisterWithBodyWithResponse(ctx context.Context, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiRegisterResponse, error) {
+	rsp, err := c.PostApiRegisterWithBody(ctx, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiRegisterResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiRegisterWithResponse(ctx context.Context, body PostApiRegisterJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiRegisterResponse, error) {
+	rsp, err := c.PostApiRegister(ctx, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiRegisterResponse(rsp)
+}
+
+// ParseGetApiFoodItemsResponse parses an HTTP response from a GetApiFoodItemsWithResponse call
+func ParseGetApiFoodItemsResponse(rsp *http.Response) (*GetApiFoodItemsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiFoodItemsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []FoodItemResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+	}
+
+	return response, nil
+}
+
+// ParsePostApiFoodItemsResponse parses an HTTP response from a PostApiFoodItemsWithResponse call
+func ParsePostApiFoodItemsResponse(rsp *http.Response) (*PostApiFoodItemsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiFoodItemsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest FoodItemResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+	}
+
+	return response, nil
+}
+
+// ParseGetApiFoodItemsIdResponse parses an HTTP response from a GetApiFoodItemsIdWithResponse call
+func ParseGetApiFoodItemsIdResponse(rsp *http.Response) (*GetApiFoodItemsIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiFoodItemsIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest FoodItemResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+	}
+
+	return response, nil
+}
+
+// ParsePostApiLoginResponse parses an HTTP response from a PostApiLoginWithResponse call
+func ParsePostApiLoginResponse(rsp *http.Response) (*PostApiLoginResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiLoginResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest LoginResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+	}
+
+	return response, nil
+}
+
+// ParseGetApiMealsResponse parses an HTTP response from a GetApiMealsWithResponse call
+func ParseGetApiMealsResponse(rsp *http.Response) (*GetApiMealsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiMealsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []MealResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+	}
+
+	return response, nil
+}
+
+// ParsePostApiMealsResponse parses an HTTP response from a PostApiMealsWithResponse call
+func ParsePostApiMealsResponse(rsp *http.Response) (*PostApiMealsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiMealsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest MealResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+	}
+
+	return response, nil
+}
+
+// ParseGetApiMealsIdResponse parses an HTTP response from a GetApiMealsIdWithResponse call
+func ParseGetApiMealsIdResponse(rsp *http.Response) (*GetApiMealsIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiMealsIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest MealResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+	}
+
+	return response, nil
+}
+
+// ParsePostApiMealsIdEntriesResponse parses an HTTP response from a PostApiMealsIdEntriesWithResponse call
+func ParsePostApiMealsIdEntriesResponse(rsp *http.Response) (*PostApiMealsIdEntriesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiMealsIdEntriesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest MealEntryResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+	}
+
+	return response, nil
+}
+
+// ParseGetApiRecipesResponse parses an HTTP response from a GetApiRecipesWithResponse call
+func ParseGetApiRecipesResponse(rsp *http.Response) (*GetApiRecipesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &GetApiRecipesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 200:
+		var dest []RecipeResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON200 = &dest
+	}
+
+	return response, nil
+}
+
+// ParsePostApiRecipesResponse parses an HTTP response from a PostApiRecipesWithResponse call
+func ParsePostApiRecipesResponse(rsp *http.Response) (*PostApiRecipesResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiRecipesResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest RecipeResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
+	}
+
+	return response, nil
+}
+
+// ParsePostApiRegisterResponse parses an HTTP response from a PostApiRegisterWithResponse call
+func ParsePostApiRegisterResponse(rsp *http.Response) (*PostApiRegisterResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiRegisterResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
