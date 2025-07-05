@@ -1,5 +1,5 @@
 # schema version
-openapi: 3.0.4
+openapi: 3.0.3
 
 # docs
 info:
@@ -238,7 +238,7 @@ components:
               type: string
             product:
               type: string
-            public:
+            isPublic:
               type: boolean
             source:
               type: string
@@ -253,7 +253,7 @@ components:
               type: string
             product:
               type: string
-            public:
+            isPublic:
               type: boolean
 
     PostMealRequest:
@@ -412,8 +412,8 @@ components:
           type: string
           example: "pas$w0rd"
 
-
-
-# security mechanisms, should correspond to components.securitySchemes
-security:
-  - apiKeyAuth: [ ]
+  securitySchemes:
+    bearerAuth: # arbitrary name for the security scheme
+      type: http
+      scheme: bearer
+      bearerFormat: JWT # optional, arbitrary value for documentation purposes

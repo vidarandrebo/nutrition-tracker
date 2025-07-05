@@ -20,20 +20,16 @@ import (
 	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 )
 
-const (
-	ApiKeyAuthScopes = "apiKeyAuth.Scopes"
-)
-
 // FoodItemResponse defines model for FoodItemResponse.
 type FoodItemResponse struct {
 	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
 	Fat          *float64 `json:"fat,omitempty"`
 	Id           *int64   `json:"id,omitempty"`
+	IsPublic     *bool    `json:"isPublic,omitempty"`
 	KCal         *float64 `json:"kCal,omitempty"`
 	Manufacturer *string  `json:"manufacturer,omitempty"`
 	Product      *string  `json:"product,omitempty"`
 	Protein      *float64 `json:"protein,omitempty"`
-	Public       *bool    `json:"public,omitempty"`
 	Source       *string  `json:"source,omitempty"`
 }
 
@@ -66,11 +62,11 @@ type PostFoodItemRequest struct {
 	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
 	Fat          *float64 `json:"fat,omitempty"`
 	Id           *int64   `json:"id,omitempty"`
+	IsPublic     *bool    `json:"isPublic,omitempty"`
 	KCal         *float64 `json:"kCal,omitempty"`
 	Manufacturer *string  `json:"manufacturer,omitempty"`
 	Product      *string  `json:"product,omitempty"`
 	Protein      *float64 `json:"protein,omitempty"`
-	Public       *bool    `json:"public,omitempty"`
 }
 
 // PostMealEntryRequest defines model for PostMealEntryRequest.
@@ -1734,12 +1730,6 @@ type MiddlewareFunc func(http.Handler) http.Handler
 // GetApiFoodItems operation middleware
 func (siw *ServerInterfaceWrapper) GetApiFoodItems(w http.ResponseWriter, r *http.Request) {
 
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
-
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetApiFoodItems(w, r)
 	}))
@@ -1753,12 +1743,6 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItems(w http.ResponseWriter, r *htt
 
 // PostApiFoodItems operation middleware
 func (siw *ServerInterfaceWrapper) PostApiFoodItems(w http.ResponseWriter, r *http.Request) {
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiFoodItems(w, r)
@@ -1785,12 +1769,6 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *h
 		return
 	}
 
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
-
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetApiFoodItemsId(w, r, id)
 	}))
@@ -1804,12 +1782,6 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *h
 
 // PostApiLogin operation middleware
 func (siw *ServerInterfaceWrapper) PostApiLogin(w http.ResponseWriter, r *http.Request) {
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiLogin(w, r)
@@ -1826,12 +1798,6 @@ func (siw *ServerInterfaceWrapper) PostApiLogin(w http.ResponseWriter, r *http.R
 func (siw *ServerInterfaceWrapper) GetApiMeals(w http.ResponseWriter, r *http.Request) {
 
 	var err error
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
 
 	// Parameter object where we will unmarshal all parameters from the context
 	var params GetApiMealsParams
@@ -1866,12 +1832,6 @@ func (siw *ServerInterfaceWrapper) GetApiMeals(w http.ResponseWriter, r *http.Re
 // PostApiMeals operation middleware
 func (siw *ServerInterfaceWrapper) PostApiMeals(w http.ResponseWriter, r *http.Request) {
 
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
-
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiMeals(w, r)
 	}))
@@ -1896,12 +1856,6 @@ func (siw *ServerInterfaceWrapper) GetApiMealsId(w http.ResponseWriter, r *http.
 		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
 		return
 	}
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetApiMealsId(w, r, id)
@@ -1928,12 +1882,6 @@ func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, 
 		return
 	}
 
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
-
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiMealsIdEntries(w, r, id)
 	}))
@@ -1947,12 +1895,6 @@ func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, 
 
 // GetApiRecipes operation middleware
 func (siw *ServerInterfaceWrapper) GetApiRecipes(w http.ResponseWriter, r *http.Request) {
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetApiRecipes(w, r)
@@ -1968,12 +1910,6 @@ func (siw *ServerInterfaceWrapper) GetApiRecipes(w http.ResponseWriter, r *http.
 // PostApiRecipes operation middleware
 func (siw *ServerInterfaceWrapper) PostApiRecipes(w http.ResponseWriter, r *http.Request) {
 
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
-
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiRecipes(w, r)
 	}))
@@ -1987,12 +1923,6 @@ func (siw *ServerInterfaceWrapper) PostApiRecipes(w http.ResponseWriter, r *http
 
 // PostApiRegister operation middleware
 func (siw *ServerInterfaceWrapper) PostApiRegister(w http.ResponseWriter, r *http.Request) {
-
-	ctx := r.Context()
-
-	ctx = context.WithValue(ctx, ApiKeyAuthScopes, []string{})
-
-	r = r.WithContext(ctx)
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiRegister(w, r)

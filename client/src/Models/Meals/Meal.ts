@@ -2,7 +2,6 @@ import { MealEntry } from "./MealEntry.ts";
 import { HttpRequest } from "http-methods-ts";
 import { useUserStore } from "../../Stores/UserStore.ts";
 import { addDays, isToday, startOfDay } from "../../Utilities/Date.ts";
-import type { MealResponse } from "./Responses.ts";
 import type { PostMealRequest } from "./Requests.ts";
 
 export class Meal {

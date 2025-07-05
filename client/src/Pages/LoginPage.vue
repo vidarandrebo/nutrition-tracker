@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { reactive } from "vue";
-import type { LoginForm } from "../Models/LoginForm.ts";
+import type { LoginForm } from "../Models/Auth/LoginForm.ts";
 import InputText from "../Components/Forms/InputText.vue";
 import router from "../Router.ts";
 import { useUserStore } from "../Stores/UserStore.ts";
@@ -9,15 +9,13 @@ import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../Components/Forms/FormField.vue";
 import HeaderH1 from "../Components/Headings/HeaderH1.vue";
 import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
-import { Configuration } from "../Gen";
-import { AuthApi } from "../Gen";
+import { getAuthClient } from "../Models/Api.ts";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
 
 async function login() {
-    const apiCfg = new Configuration({ basePath: "" });
-    const api = new AuthApi(apiCfg);
+    const api = getAuthClient();
     const response = await api.apiLoginPost({
         loginRequest: {
             email: loginForm.email,

@@ -31,7 +31,7 @@ func (fi FoodItem) ToFoodItemResponse() api.FoodItemResponse {
 		Manufacturer: &fi.Manufacturer,
 		Product:      &fi.Product,
 		Protein:      &fi.Protein,
-		Public:       &fi.Public,
+		IsPublic:     &fi.Public,
 		Source:       &fi.Source,
 	}
 }

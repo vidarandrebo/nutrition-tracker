@@ -1,4 +1,4 @@
-import { validAccessToken } from "./AccessToken.ts";
+import { validAccessToken } from "./Auth/AccessToken.ts";
 
 export class User {
     email: string;

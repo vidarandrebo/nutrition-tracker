@@ -2,6 +2,7 @@ import { RecipeEntry } from "./RecipeEntry.ts";
 import type { RecipeRequest } from "./Requests.ts";
 import { HttpRequest } from "http-methods-ts";
 import { useUserStore } from "../../Stores/UserStore.ts";
+import type { RecipeResponse } from "../../Gen";
 
 export class Recipe {
     id: number;
@@ -19,9 +20,9 @@ export class Recipe {
     }
     static fromResponse(response: RecipeResponse): Recipe {
         const r = new Recipe();
-        r.entries = response.entries.map((e) => RecipeEntry.fromResponse(e));
-        r.id = response.id;
-        r.name = response.name;
+        r.entries = response.entries ? response.entries.map((e) => RecipeEntry.fromResponse(e)) : [];
+        r.id = response.id ?? 0;
+        r.name = response.name ?? "";
         return r;
     }
     static async add(request: RecipeRequest): Promise<Recipe | null> {
