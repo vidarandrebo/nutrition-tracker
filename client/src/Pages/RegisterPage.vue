@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { reactive } from "vue";
 import InputText from "../Components/Forms/InputText.vue";
-import { HttpRequest } from "http-methods-ts";
 import type { RegisterForm } from "../Models/Auth/RegisterForm.ts";
 import HeaderH1 from "../Components/Headings/HeaderH1.vue";
 import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";

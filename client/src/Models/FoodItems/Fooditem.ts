@@ -1,5 +1,3 @@
-import { HttpRequest } from "http-methods-ts";
-import { useUserStore } from "../../Stores/UserStore.ts";
 import type { Energy } from "../Common/Energy.ts";
 import { type FoodItemResponse } from "../../Gen";
 import { getFoodItemsClient } from "../Api.ts";
@@ -57,36 +55,23 @@ export class FoodItem {
     }
 
     static async get(): Promise<FoodItem[] | null> {
-        const userStore = useUserStore();
-        const user = userStore.user;
-        if (user === null) {
-            return null;
+        const client = getFoodItemsClient();
+        try {
+            const response = await client.apiFoodItemsGet();
+            const foodItems = response.map((item) => FoodItem.fromResponse(item));
+            return foodItems;
+        } catch {
+            console.log("failed to fetch food items");
         }
-        const api = getFoodItemsClient();
-        const response = await api.apiFoodItemsGet();
-
-        const foodItems = response.map((item) => FoodItem.fromResponse(item));
-        return foodItems;
+        return null;
     }
     static async getById(id: number): Promise<FoodItem | null> {
-        const userStore = useUserStore();
-        const user = userStore.user;
-        if (user === null) {
-            return null;
-        }
-        const request = new HttpRequest()
-            .setRoute(`/api/food-items/${id}`)
-            .setMethod("GET")
-            .addHeader("Content-Type", "application/json")
-            .setBearerToken(user.accessToken);
-        await request.send();
-        const response = request.getResponseData();
-        if (response === null) {
-            return null;
-        }
-        if (response.status === 200) {
-            const payload = response.body as FoodItemResponse;
-            return FoodItem.fromResponse(payload);
+        const client = getFoodItemsClient();
+        try {
+            const response = await client.apiFoodItemsIdGet({ id: id });
+            return FoodItem.fromResponse(response);
+        } catch {
+            console.log("failed to fetch food items");
         }
         return null;
     }
