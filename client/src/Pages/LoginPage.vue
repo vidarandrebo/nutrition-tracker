@@ -11,30 +11,46 @@ import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../Components/Forms/FormField.vue";
 import HeaderH1 from "../Components/Headings/HeaderH1.vue";
 import LabelPrimary from "../Components/Forms/LabelPrimary.vue";
+import { getClient } from "../Models/ApiClient.ts";
+import {LoginRequest} from "../Gen/models";
 
 const userStore = useUserStore();
 const loginForm = reactive<LoginForm>({ email: "", password: "" });
 
 async function login() {
-    const httpRequest = new HttpRequest()
-        .setRoute("/api/login")
-        .setMethod("POST")
-        .addHeader("Content-Type", "application/json")
-        .setRequestData(loginForm);
+    const apiClient = getClient();
 
-    await httpRequest.send();
-    const httpResponse = httpRequest.getResponseData();
-    let loginResponse: AccessTokenResponse | undefined = undefined;
-
-    if (httpResponse) {
-        if (httpResponse?.status == 200) {
-            loginResponse = httpResponse.body as AccessTokenResponse;
-            const user: User = { email: loginForm.email, accessToken: loginResponse.token };
-            User.writeToLocalStorage(user);
-            userStore.user = user;
-            await router.push("/");
-        }
+    const r : LoginRequest = {
+        email: loginForm.email,
+        password: loginForm.password,
     }
+    const response = await apiClient.api.login.post(r)
+    if (response?.token) {
+        const user: User = { email: loginForm.email, accessToken: response.token };
+        User.writeToLocalStorage(user);
+        userStore.user = user;
+        await router.push("/");
+    }
+
+//    const httpRequest = new HttpRequest()
+//        .setRoute("/api/login")
+//        .setMethod("POST")
+//        .addHeader("Content-Type", "application/json")
+//        .setRequestData(loginForm);
+//
+//    await httpRequest.send();
+//    const httpResponse = httpRequest.getResponseData();
+//    let loginResponse: AccessTokenResponse | undefined = undefined;
+//
+//    if (httpResponse) {
+//        if (httpResponse?.status == 200) {
+//            loginResponse = httpResponse.body as AccessTokenResponse;
+//            const user: User = { email: loginForm.email, accessToken: //loginResponse.token };
+//            User.writeToLocalStorage(user);
+//            userStore.user = user;
+//            await router.push("/");
+//        }
+    //}
 }
 </script>
 <template>

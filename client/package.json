@@ -12,6 +12,7 @@
         "format": "prettier . --write"
     },
     "dependencies": {
+        "@microsoft/kiota-bundle": "^1.0.0-preview.96",
         "bulma": "^1.0.4",
         "debounce": "^2.2.0",
         "http-methods-ts": "github:vidarandrebo/http-methods-ts#v0.3.0",

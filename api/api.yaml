@@ -8,8 +8,8 @@ info:
   version: 0.0.1
 
 # optional servers for public APIs
-servers:
-  - url: "https://nt.vidarboe.com"
+#servers:
+  #- url: "https://nt.vidarboe.com"
 
 # tags are used to group the endpoints
 tags:
@@ -65,6 +65,7 @@ paths:
       parameters:
         - name: id
           in: path
+          required: true
           schema:
             type: integer
             x-go-type: int64
@@ -124,6 +125,7 @@ paths:
       parameters:
         - name: id
           in: path
+          required: true
           schema:
             type: integer
             x-go-type: int64
@@ -142,6 +144,7 @@ paths:
       parameters:
         - name: id
           in: path
+          required: true
           schema:
             type: integer
             x-go-type: int64
