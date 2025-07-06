@@ -24,13 +24,14 @@ export interface PostMealRequest {
      * @type {Date}
      * @memberof PostMealRequest
      */
-    timestamp?: Date;
+    timestamp: Date;
 }
 
 /**
  * Check if a given object implements the PostMealRequest interface.
  */
 export function instanceOfPostMealRequest(value: object): value is PostMealRequest {
+    if (!("timestamp" in value) || value["timestamp"] === undefined) return false;
     return true;
 }
 
@@ -43,7 +44,7 @@ export function PostMealRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
         return json;
     }
     return {
-        timestamp: json["timestamp"] == null ? undefined : new Date(json["timestamp"]),
+        timestamp: new Date(json["timestamp"]),
     };
 }
 
@@ -57,6 +58,6 @@ export function PostMealRequestToJSONTyped(value?: PostMealRequest | null, ignor
     }
 
     return {
-        timestamp: value["timestamp"] == null ? undefined : value["timestamp"].toISOString(),
+        timestamp: value["timestamp"].toISOString(),
     };
 }

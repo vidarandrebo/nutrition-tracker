@@ -32,31 +32,35 @@ export interface MealResponse {
      * @type {number}
      * @memberof MealResponse
      */
-    id?: number;
+    id: number;
     /**
      *
      * @type {Date}
      * @memberof MealResponse
      */
-    timestamp?: Date;
+    timestamp: Date;
     /**
      *
      * @type {number}
      * @memberof MealResponse
      */
-    sequenceNumber?: number;
+    sequenceNumber: number;
     /**
      *
      * @type {Array<MealEntryResponse>}
      * @memberof MealResponse
      */
-    entries?: Array<MealEntryResponse>;
+    entries: Array<MealEntryResponse>;
 }
 
 /**
  * Check if a given object implements the MealResponse interface.
  */
 export function instanceOfMealResponse(value: object): value is MealResponse {
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("timestamp" in value) || value["timestamp"] === undefined) return false;
+    if (!("sequenceNumber" in value) || value["sequenceNumber"] === undefined) return false;
+    if (!("entries" in value) || value["entries"] === undefined) return false;
     return true;
 }
 
@@ -69,10 +73,10 @@ export function MealResponseFromJSONTyped(json: any, ignoreDiscriminator: boolea
         return json;
     }
     return {
-        id: json["id"] == null ? undefined : json["id"],
-        timestamp: json["timestamp"] == null ? undefined : new Date(json["timestamp"]),
-        sequenceNumber: json["sequenceNumber"] == null ? undefined : json["sequenceNumber"],
-        entries: json["entries"] == null ? undefined : (json["entries"] as Array<any>).map(MealEntryResponseFromJSON),
+        id: json["id"],
+        timestamp: new Date(json["timestamp"]),
+        sequenceNumber: json["sequenceNumber"],
+        entries: (json["entries"] as Array<any>).map(MealEntryResponseFromJSON),
     };
 }
 
@@ -87,8 +91,8 @@ export function MealResponseToJSONTyped(value?: MealResponse | null, ignoreDiscr
 
     return {
         id: value["id"],
-        timestamp: value["timestamp"] == null ? undefined : value["timestamp"].toISOString(),
+        timestamp: value["timestamp"].toISOString(),
         sequenceNumber: value["sequenceNumber"],
-        entries: value["entries"] == null ? undefined : (value["entries"] as Array<any>).map(MealEntryResponseToJSON),
+        entries: (value["entries"] as Array<any>).map(MealEntryResponseToJSON),
     };
 }

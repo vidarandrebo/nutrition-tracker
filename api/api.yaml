@@ -66,7 +66,7 @@ paths:
           required: true
           schema:
             type: integer
-            x-go-type: int64
+            format: int64
       responses:
         200:
           content:
@@ -126,7 +126,7 @@ paths:
           required: true
           schema:
             type: integer
-            x-go-type: int64
+            format: int64
       responses:
         200:
           content:
@@ -145,7 +145,7 @@ paths:
           required: true
           schema:
             type: integer
-            x-go-type: int64
+            format: int64
       requestBody:
         content:
           application/json:
@@ -242,6 +242,11 @@ components:
               type: boolean
             source:
               type: string
+          required:
+            - manufacturer
+            - product
+            - isPublic
+            - source
 
     PostFoodItemRequest:
       type: object
@@ -255,6 +260,10 @@ components:
               type: string
             isPublic:
               type: boolean
+          required:
+            - manufacturer
+            - product
+            - isPublic
 
     PostMealRequest:
       type: object
@@ -268,10 +277,11 @@ components:
         - properties:
             foodItemId:
               type: integer
-              x-go-type: int64
+              format: int64
             recipeId:
               type: integer
-              x-go-type: int64
+              format: int64
+
 
 
     MealEntryResponse:
@@ -282,10 +292,10 @@ components:
         - properties:
             foodItemId:
               type: integer
-              x-go-type: int64
+              format: int64
             recipeId:
               type: integer
-              x-go-type: int64
+              format: int64
 
     MealResponse:
       type: object
@@ -295,11 +305,14 @@ components:
         - properties:
             sequenceNumber:
               type: integer
-              x-go-type: int64
+              format: int64
             entries:
               type: array
               items:
                 $ref: "#/components/schemas/MealEntryResponse"
+          required:
+            - sequenceNumber
+            - entries
 
     PostRecipeRequest:
       type: object
@@ -310,6 +323,9 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/PostRecipeEntryRequest"
+      required:
+        - name
+        - entries
 
 
     PostRecipeEntryRequest:
@@ -319,7 +335,9 @@ components:
         - properties:
             foodItemId:
               type: integer
-              x-go-type: int64
+              format: int64
+          required:
+            - foodItemId
 
     RecipeResponse:
       type: object
@@ -332,6 +350,9 @@ components:
               type: array
               items:
                 $ref: "#/components/schemas/RecipeEntryResponse"
+          required:
+            - name
+            - entries
 
     RecipeEntryResponse:
       type: object
@@ -341,7 +362,9 @@ components:
         - properties:
             foodItemId:
               type: integer
-              x-go-type: int64
+              format: int64
+          required:
+            - foodItemId
 
     WithTimestamp:
       type: object
@@ -349,19 +372,25 @@ components:
         timestamp:
           type: string
           format: date-time
+      required:
+        - timestamp
 
     WithId:
       type: object
       properties:
         id:
           type: integer
-          x-go-type: int64
+          format: int64
+      required:
+        - id
 
     WithAmount:
       properties:
         amount:
           type: number
-          x-go-type: float64
+          format: double
+      required:
+        - amount
 
     WithEnergy:
       type: object
@@ -370,20 +399,26 @@ components:
         - properties:
             kCal:
               type: number
-              x-go-type: float64
+              format: double
+          required:
+            - kCal
 
     WithMacronutrients:
       type: object
       properties:
         protein:
           type: number
-          x-go-type: float64
+          format: double
         carbohydrate:
           type: number
-          x-go-type: float64
+          format: double
         fat:
           type: number
-          x-go-type: float64
+          format: double
+      required:
+        - protein
+        - carbohydrate
+        - fat
 
 
     LoginResponse:
@@ -391,6 +426,8 @@ components:
       properties:
         token:
           type: string
+      required:
+        - token
 
     RegisterRequest:
       type: object
@@ -410,7 +447,11 @@ components:
           example: "mail@example.com"
         password:
           type: string
+          format: password
           example: "pas$w0rd"
+      required:
+        - email
+        - password
 
   securitySchemes:
     bearerAuth: # arbitrary name for the security scheme

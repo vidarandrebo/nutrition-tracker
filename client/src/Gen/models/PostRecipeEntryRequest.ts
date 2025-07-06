@@ -24,19 +24,21 @@ export interface PostRecipeEntryRequest {
      * @type {number}
      * @memberof PostRecipeEntryRequest
      */
-    amount?: number;
+    amount: number;
     /**
      *
      * @type {number}
      * @memberof PostRecipeEntryRequest
      */
-    foodItemId?: number;
+    foodItemId: number;
 }
 
 /**
  * Check if a given object implements the PostRecipeEntryRequest interface.
  */
 export function instanceOfPostRecipeEntryRequest(value: object): value is PostRecipeEntryRequest {
+    if (!("amount" in value) || value["amount"] === undefined) return false;
+    if (!("foodItemId" in value) || value["foodItemId"] === undefined) return false;
     return true;
 }
 
@@ -49,8 +51,8 @@ export function PostRecipeEntryRequestFromJSONTyped(json: any, ignoreDiscriminat
         return json;
     }
     return {
-        amount: json["amount"] == null ? undefined : json["amount"],
-        foodItemId: json["foodItemId"] == null ? undefined : json["foodItemId"],
+        amount: json["amount"],
+        foodItemId: json["foodItemId"],
     };
 }
 

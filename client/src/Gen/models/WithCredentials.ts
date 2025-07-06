@@ -24,19 +24,21 @@ export interface WithCredentials {
      * @type {string}
      * @memberof WithCredentials
      */
-    email?: string;
+    email: string;
     /**
      *
      * @type {string}
      * @memberof WithCredentials
      */
-    password?: string;
+    password: string;
 }
 
 /**
  * Check if a given object implements the WithCredentials interface.
  */
 export function instanceOfWithCredentials(value: object): value is WithCredentials {
+    if (!("email" in value) || value["email"] === undefined) return false;
+    if (!("password" in value) || value["password"] === undefined) return false;
     return true;
 }
 
@@ -49,8 +51,8 @@ export function WithCredentialsFromJSONTyped(json: any, ignoreDiscriminator: boo
         return json;
     }
     return {
-        email: json["email"] == null ? undefined : json["email"],
-        password: json["password"] == null ? undefined : json["password"],
+        email: json["email"],
+        password: json["password"],
     };
 }
 

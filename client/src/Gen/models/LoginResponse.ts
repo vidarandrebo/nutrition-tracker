@@ -24,13 +24,14 @@ export interface LoginResponse {
      * @type {string}
      * @memberof LoginResponse
      */
-    token?: string;
+    token: string;
 }
 
 /**
  * Check if a given object implements the LoginResponse interface.
  */
 export function instanceOfLoginResponse(value: object): value is LoginResponse {
+    if (!("token" in value) || value["token"] === undefined) return false;
     return true;
 }
 
@@ -43,7 +44,7 @@ export function LoginResponseFromJSONTyped(json: any, ignoreDiscriminator: boole
         return json;
     }
     return {
-        token: json["token"] == null ? undefined : json["token"],
+        token: json["token"],
     };
 }
 

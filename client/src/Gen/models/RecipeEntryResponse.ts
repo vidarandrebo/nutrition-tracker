@@ -24,25 +24,28 @@ export interface RecipeEntryResponse {
      * @type {number}
      * @memberof RecipeEntryResponse
      */
-    id?: number;
+    id: number;
     /**
      *
      * @type {number}
      * @memberof RecipeEntryResponse
      */
-    amount?: number;
+    amount: number;
     /**
      *
      * @type {number}
      * @memberof RecipeEntryResponse
      */
-    foodItemId?: number;
+    foodItemId: number;
 }
 
 /**
  * Check if a given object implements the RecipeEntryResponse interface.
  */
 export function instanceOfRecipeEntryResponse(value: object): value is RecipeEntryResponse {
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("amount" in value) || value["amount"] === undefined) return false;
+    if (!("foodItemId" in value) || value["foodItemId"] === undefined) return false;
     return true;
 }
 
@@ -55,9 +58,9 @@ export function RecipeEntryResponseFromJSONTyped(json: any, ignoreDiscriminator:
         return json;
     }
     return {
-        id: json["id"] == null ? undefined : json["id"],
-        amount: json["amount"] == null ? undefined : json["amount"],
-        foodItemId: json["foodItemId"] == null ? undefined : json["foodItemId"],
+        id: json["id"],
+        amount: json["amount"],
+        foodItemId: json["foodItemId"],
     };
 }
 

@@ -22,15 +22,15 @@ import (
 
 // FoodItemResponse defines model for FoodItemResponse.
 type FoodItemResponse struct {
-	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
-	Fat          *float64 `json:"fat,omitempty"`
-	Id           *int64   `json:"id,omitempty"`
-	IsPublic     *bool    `json:"isPublic,omitempty"`
-	KCal         *float64 `json:"kCal,omitempty"`
-	Manufacturer *string  `json:"manufacturer,omitempty"`
-	Product      *string  `json:"product,omitempty"`
-	Protein      *float64 `json:"protein,omitempty"`
-	Source       *string  `json:"source,omitempty"`
+	Carbohydrate float64 `json:"carbohydrate"`
+	Fat          float64 `json:"fat"`
+	Id           int64   `json:"id"`
+	IsPublic     bool    `json:"isPublic"`
+	KCal         float64 `json:"kCal"`
+	Manufacturer string  `json:"manufacturer"`
+	Product      string  `json:"product"`
+	Protein      float64 `json:"protein"`
+	Source       string  `json:"source"`
 }
 
 // LoginRequest defines model for LoginRequest.
@@ -38,42 +38,42 @@ type LoginRequest = WithCredentials
 
 // LoginResponse defines model for LoginResponse.
 type LoginResponse struct {
-	Token *string `json:"token,omitempty"`
+	Token string `json:"token"`
 }
 
 // MealEntryResponse defines model for MealEntryResponse.
 type MealEntryResponse struct {
-	Amount     *float64 `json:"amount,omitempty"`
-	FoodItemId *int64   `json:"foodItemId,omitempty"`
-	Id         *int64   `json:"id,omitempty"`
-	RecipeId   *int64   `json:"recipeId,omitempty"`
+	Amount     float64 `json:"amount"`
+	FoodItemId *int64  `json:"foodItemId,omitempty"`
+	Id         int64   `json:"id"`
+	RecipeId   *int64  `json:"recipeId,omitempty"`
 }
 
 // MealResponse defines model for MealResponse.
 type MealResponse struct {
-	Entries        *[]MealEntryResponse `json:"entries,omitempty"`
-	Id             *int64               `json:"id,omitempty"`
-	SequenceNumber *int64               `json:"sequenceNumber,omitempty"`
-	Timestamp      *time.Time           `json:"timestamp,omitempty"`
+	Entries        []MealEntryResponse `json:"entries"`
+	Id             int64               `json:"id"`
+	SequenceNumber int64               `json:"sequenceNumber"`
+	Timestamp      time.Time           `json:"timestamp"`
 }
 
 // PostFoodItemRequest defines model for PostFoodItemRequest.
 type PostFoodItemRequest struct {
-	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
-	Fat          *float64 `json:"fat,omitempty"`
-	Id           *int64   `json:"id,omitempty"`
-	IsPublic     *bool    `json:"isPublic,omitempty"`
-	KCal         *float64 `json:"kCal,omitempty"`
-	Manufacturer *string  `json:"manufacturer,omitempty"`
-	Product      *string  `json:"product,omitempty"`
-	Protein      *float64 `json:"protein,omitempty"`
+	Carbohydrate float64 `json:"carbohydrate"`
+	Fat          float64 `json:"fat"`
+	Id           int64   `json:"id"`
+	IsPublic     bool    `json:"isPublic"`
+	KCal         float64 `json:"kCal"`
+	Manufacturer string  `json:"manufacturer"`
+	Product      string  `json:"product"`
+	Protein      float64 `json:"protein"`
 }
 
 // PostMealEntryRequest defines model for PostMealEntryRequest.
 type PostMealEntryRequest struct {
-	Amount     *float64 `json:"amount,omitempty"`
-	FoodItemId *int64   `json:"foodItemId,omitempty"`
-	RecipeId   *int64   `json:"recipeId,omitempty"`
+	Amount     float64 `json:"amount"`
+	FoodItemId *int64  `json:"foodItemId,omitempty"`
+	RecipeId   *int64  `json:"recipeId,omitempty"`
 }
 
 // PostMealRequest defines model for PostMealRequest.
@@ -81,28 +81,28 @@ type PostMealRequest = WithTimestamp
 
 // PostRecipeEntryRequest defines model for PostRecipeEntryRequest.
 type PostRecipeEntryRequest struct {
-	Amount     *float64 `json:"amount,omitempty"`
-	FoodItemId *int64   `json:"foodItemId,omitempty"`
+	Amount     float64 `json:"amount"`
+	FoodItemId int64   `json:"foodItemId"`
 }
 
 // PostRecipeRequest defines model for PostRecipeRequest.
 type PostRecipeRequest struct {
-	Entries *[]PostRecipeEntryRequest `json:"entries,omitempty"`
-	Name    *string                   `json:"name,omitempty"`
+	Entries []PostRecipeEntryRequest `json:"entries"`
+	Name    string                   `json:"name"`
 }
 
 // RecipeEntryResponse defines model for RecipeEntryResponse.
 type RecipeEntryResponse struct {
-	Amount     *float64 `json:"amount,omitempty"`
-	FoodItemId *int64   `json:"foodItemId,omitempty"`
-	Id         *int64   `json:"id,omitempty"`
+	Amount     float64 `json:"amount"`
+	FoodItemId int64   `json:"foodItemId"`
+	Id         int64   `json:"id"`
 }
 
 // RecipeResponse defines model for RecipeResponse.
 type RecipeResponse struct {
-	Entries *[]RecipeEntryResponse `json:"entries,omitempty"`
-	Id      *int64                 `json:"id,omitempty"`
-	Name    *string                `json:"name,omitempty"`
+	Entries []RecipeEntryResponse `json:"entries"`
+	Id      int64                 `json:"id"`
+	Name    string                `json:"name"`
 }
 
 // RegisterRequest defines model for RegisterRequest.
@@ -110,38 +110,38 @@ type RegisterRequest = WithCredentials
 
 // WithAmount defines model for WithAmount.
 type WithAmount struct {
-	Amount *float64 `json:"amount,omitempty"`
+	Amount float64 `json:"amount"`
 }
 
 // WithCredentials defines model for WithCredentials.
 type WithCredentials struct {
-	Email    *string `json:"email,omitempty"`
-	Password *string `json:"password,omitempty"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
 }
 
 // WithEnergy defines model for WithEnergy.
 type WithEnergy struct {
-	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
-	Fat          *float64 `json:"fat,omitempty"`
-	KCal         *float64 `json:"kCal,omitempty"`
-	Protein      *float64 `json:"protein,omitempty"`
+	Carbohydrate float64 `json:"carbohydrate"`
+	Fat          float64 `json:"fat"`
+	KCal         float64 `json:"kCal"`
+	Protein      float64 `json:"protein"`
 }
 
 // WithId defines model for WithId.
 type WithId struct {
-	Id *int64 `json:"id,omitempty"`
+	Id int64 `json:"id"`
 }
 
 // WithMacronutrients defines model for WithMacronutrients.
 type WithMacronutrients struct {
-	Carbohydrate *float64 `json:"carbohydrate,omitempty"`
-	Fat          *float64 `json:"fat,omitempty"`
-	Protein      *float64 `json:"protein,omitempty"`
+	Carbohydrate float64 `json:"carbohydrate"`
+	Fat          float64 `json:"fat"`
+	Protein      float64 `json:"protein"`
 }
 
 // WithTimestamp defines model for WithTimestamp.
 type WithTimestamp struct {
-	Timestamp *time.Time `json:"timestamp,omitempty"`
+	Timestamp time.Time `json:"timestamp"`
 }
 
 // PostApiFoodItemsJSONBody defines parameters for PostApiFoodItems.

@@ -24,19 +24,21 @@ export interface RegisterRequest {
      * @type {string}
      * @memberof RegisterRequest
      */
-    email?: string;
+    email: string;
     /**
      *
      * @type {string}
      * @memberof RegisterRequest
      */
-    password?: string;
+    password: string;
 }
 
 /**
  * Check if a given object implements the RegisterRequest interface.
  */
 export function instanceOfRegisterRequest(value: object): value is RegisterRequest {
+    if (!("email" in value) || value["email"] === undefined) return false;
+    if (!("password" in value) || value["password"] === undefined) return false;
     return true;
 }
 
@@ -49,8 +51,8 @@ export function RegisterRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
         return json;
     }
     return {
-        email: json["email"] == null ? undefined : json["email"],
-        password: json["password"] == null ? undefined : json["password"],
+        email: json["email"],
+        password: json["password"],
     };
 }
 
