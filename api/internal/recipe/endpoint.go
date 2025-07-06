@@ -44,14 +44,14 @@ func (e Endpoint) PostApiRecipes(ctx context.Context, request api.PostApiRecipes
 	if err != nil {
 		return nil, err
 	}
-	entries := make([]Entry, 0, len(*request.Body.Entries))
-	for _, e := range *request.Body.Entries {
+	entries := make([]Entry, 0, len(request.Body.Entries))
+	for _, e := range request.Body.Entries {
 		entries = append(entries, Entry{
-			Amount:     *e.Amount,
-			FoodItemID: *e.FoodItemId,
+			Amount:     e.Amount,
+			FoodItemID: e.FoodItemId,
 		})
 	}
-	recipe, err := e.store.Add(Recipe{Name: *request.Body.Name, Entries: entries, OwnerID: userID})
+	recipe, err := e.store.Add(Recipe{Name: request.Body.Name, Entries: entries, OwnerID: userID})
 	if err != nil {
 		return nil, err
 	}

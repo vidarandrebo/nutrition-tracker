@@ -251,6 +251,7 @@ components:
     PostFoodItemRequest:
       type: object
       allOf:
+        - $ref: "#/components/schemas/WithMacronutrients"
         - properties:
             kCal:
               type: number

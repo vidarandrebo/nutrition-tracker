@@ -15,8 +15,8 @@ func (r Recipe) ToResponse() api.RecipeResponse {
 		entries = append(entries, e.ToResponse())
 	}
 	return api.RecipeResponse{
-		Id:      &r.ID,
-		Name:    &r.Name,
-		Entries: &entries,
+		Id:      r.ID,
+		Name:    r.Name,
+		Entries: entries,
 	}
 }

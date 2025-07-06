@@ -48,7 +48,7 @@ func (e Endpoint) PostApiMeals(ctx context.Context, request api.PostApiMealsRequ
 
 	meal, err := e.store.Add(Meal{
 		SequenceNumber: e.last,
-		Timestamp:      *request.Body.Timestamp,
+		Timestamp:      request.Body.Timestamp,
 		OwnerID:        userID,
 	})
 	e.last++
@@ -81,7 +81,7 @@ func (e Endpoint) PostApiMealsIdEntries(ctx context.Context, request api.PostApi
 	r := PostMealEntryRequest{
 		FoodItemID: *request.Body.FoodItemId,
 		RecipeID:   *request.Body.RecipeId,
-		Amount:     *request.Body.Amount,
+		Amount:     request.Body.Amount,
 	}
 	if ok, err := r.Validate(); !ok {
 		return nil, err

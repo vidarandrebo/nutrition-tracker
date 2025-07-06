@@ -59,10 +59,13 @@ type MealResponse struct {
 
 // PostFoodItemRequest defines model for PostFoodItemRequest.
 type PostFoodItemRequest struct {
+	Carbohydrate float64  `json:"carbohydrate"`
+	Fat          float64  `json:"fat"`
 	IsPublic     bool     `json:"isPublic"`
 	KCal         *float64 `json:"kCal,omitempty"`
 	Manufacturer string   `json:"manufacturer"`
 	Product      string   `json:"product"`
+	Protein      float64  `json:"protein"`
 }
 
 // PostMealEntryRequest defines model for PostMealEntryRequest.
@@ -654,6 +657,7 @@ func NewGetApiMealsRequest(server string, params *GetApiMealsParams) (*http.Requ
 		queryValues := queryURL.Query()
 
 		if params.DateFrom != nil {
+
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dateFrom", runtime.ParamLocationQuery, *params.DateFrom); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
@@ -665,9 +669,11 @@ func NewGetApiMealsRequest(server string, params *GetApiMealsParams) (*http.Requ
 					}
 				}
 			}
+
 		}
 
 		if params.DateTo != nil {
+
 			if queryFrag, err := runtime.StyleParamWithLocation("form", true, "dateTo", runtime.ParamLocationQuery, *params.DateTo); err != nil {
 				return nil, err
 			} else if parsed, err := url.ParseQuery(queryFrag); err != nil {
@@ -679,6 +685,7 @@ func NewGetApiMealsRequest(server string, params *GetApiMealsParams) (*http.Requ
 					}
 				}
 			}
+
 		}
 
 		queryURL.RawQuery = queryValues.Encode()
@@ -1417,6 +1424,7 @@ func ParseGetApiFoodItemsResponse(rsp *http.Response) (*GetApiFoodItemsResponse,
 			return nil, err
 		}
 		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -1442,6 +1450,7 @@ func ParsePostApiFoodItemsResponse(rsp *http.Response) (*PostApiFoodItemsRespons
 			return nil, err
 		}
 		response.JSON201 = &dest
+
 	}
 
 	return response, nil
@@ -1467,6 +1476,7 @@ func ParseGetApiFoodItemsIdResponse(rsp *http.Response) (*GetApiFoodItemsIdRespo
 			return nil, err
 		}
 		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -1492,6 +1502,7 @@ func ParsePostApiLoginResponse(rsp *http.Response) (*PostApiLoginResponse, error
 			return nil, err
 		}
 		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -1517,6 +1528,7 @@ func ParseGetApiMealsResponse(rsp *http.Response) (*GetApiMealsResponse, error) 
 			return nil, err
 		}
 		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -1542,6 +1554,7 @@ func ParsePostApiMealsResponse(rsp *http.Response) (*PostApiMealsResponse, error
 			return nil, err
 		}
 		response.JSON201 = &dest
+
 	}
 
 	return response, nil
@@ -1567,6 +1580,7 @@ func ParseGetApiMealsIdResponse(rsp *http.Response) (*GetApiMealsIdResponse, err
 			return nil, err
 		}
 		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -1592,6 +1606,7 @@ func ParsePostApiMealsIdEntriesResponse(rsp *http.Response) (*PostApiMealsIdEntr
 			return nil, err
 		}
 		response.JSON201 = &dest
+
 	}
 
 	return response, nil
@@ -1617,6 +1632,7 @@ func ParseGetApiRecipesResponse(rsp *http.Response) (*GetApiRecipesResponse, err
 			return nil, err
 		}
 		response.JSON200 = &dest
+
 	}
 
 	return response, nil
@@ -1642,6 +1658,7 @@ func ParsePostApiRecipesResponse(rsp *http.Response) (*PostApiRecipesResponse, e
 			return nil, err
 		}
 		response.JSON201 = &dest
+
 	}
 
 	return response, nil
@@ -1665,6 +1682,7 @@ func ParsePostApiRegisterResponse(rsp *http.Response) (*PostApiRegisterResponse,
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
+
 	// (GET /api/food-items)
 	GetApiFoodItems(w http.ResponseWriter, r *http.Request)
 
@@ -1710,6 +1728,7 @@ type MiddlewareFunc func(http.Handler) http.Handler
 
 // GetApiFoodItems operation middleware
 func (siw *ServerInterfaceWrapper) GetApiFoodItems(w http.ResponseWriter, r *http.Request) {
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetApiFoodItems(w, r)
 	}))
@@ -1723,6 +1742,7 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItems(w http.ResponseWriter, r *htt
 
 // PostApiFoodItems operation middleware
 func (siw *ServerInterfaceWrapper) PostApiFoodItems(w http.ResponseWriter, r *http.Request) {
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiFoodItems(w, r)
 	}))
@@ -1736,6 +1756,7 @@ func (siw *ServerInterfaceWrapper) PostApiFoodItems(w http.ResponseWriter, r *ht
 
 // GetApiFoodItemsId operation middleware
 func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *http.Request) {
+
 	var err error
 
 	// ------------- Path parameter "id" -------------
@@ -1760,6 +1781,7 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *h
 
 // PostApiLogin operation middleware
 func (siw *ServerInterfaceWrapper) PostApiLogin(w http.ResponseWriter, r *http.Request) {
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiLogin(w, r)
 	}))
@@ -1773,6 +1795,7 @@ func (siw *ServerInterfaceWrapper) PostApiLogin(w http.ResponseWriter, r *http.R
 
 // GetApiMeals operation middleware
 func (siw *ServerInterfaceWrapper) GetApiMeals(w http.ResponseWriter, r *http.Request) {
+
 	var err error
 
 	// Parameter object where we will unmarshal all parameters from the context
@@ -1807,6 +1830,7 @@ func (siw *ServerInterfaceWrapper) GetApiMeals(w http.ResponseWriter, r *http.Re
 
 // PostApiMeals operation middleware
 func (siw *ServerInterfaceWrapper) PostApiMeals(w http.ResponseWriter, r *http.Request) {
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiMeals(w, r)
 	}))
@@ -1820,6 +1844,7 @@ func (siw *ServerInterfaceWrapper) PostApiMeals(w http.ResponseWriter, r *http.R
 
 // GetApiMealsId operation middleware
 func (siw *ServerInterfaceWrapper) GetApiMealsId(w http.ResponseWriter, r *http.Request) {
+
 	var err error
 
 	// ------------- Path parameter "id" -------------
@@ -1844,6 +1869,7 @@ func (siw *ServerInterfaceWrapper) GetApiMealsId(w http.ResponseWriter, r *http.
 
 // PostApiMealsIdEntries operation middleware
 func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, r *http.Request) {
+
 	var err error
 
 	// ------------- Path parameter "id" -------------
@@ -1868,6 +1894,7 @@ func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, 
 
 // GetApiRecipes operation middleware
 func (siw *ServerInterfaceWrapper) GetApiRecipes(w http.ResponseWriter, r *http.Request) {
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetApiRecipes(w, r)
 	}))
@@ -1881,6 +1908,7 @@ func (siw *ServerInterfaceWrapper) GetApiRecipes(w http.ResponseWriter, r *http.
 
 // PostApiRecipes operation middleware
 func (siw *ServerInterfaceWrapper) PostApiRecipes(w http.ResponseWriter, r *http.Request) {
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiRecipes(w, r)
 	}))
@@ -1894,6 +1922,7 @@ func (siw *ServerInterfaceWrapper) PostApiRecipes(w http.ResponseWriter, r *http
 
 // PostApiRegister operation middleware
 func (siw *ServerInterfaceWrapper) PostApiRegister(w http.ResponseWriter, r *http.Request) {
+
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiRegister(w, r)
 	}))
@@ -2040,7 +2069,8 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	return m
 }
 
-type GetApiFoodItemsRequestObject struct{}
+type GetApiFoodItemsRequestObject struct {
+}
 
 type GetApiFoodItemsResponseObject interface {
 	VisitGetApiFoodItemsResponse(w http.ResponseWriter) error
@@ -2175,7 +2205,8 @@ func (response PostApiMealsIdEntries201JSONResponse) VisitPostApiMealsIdEntriesR
 	return json.NewEncoder(w).Encode(response)
 }
 
-type GetApiRecipesRequestObject struct{}
+type GetApiRecipesRequestObject struct {
+}
 
 type GetApiRecipesResponseObject interface {
 	VisitGetApiRecipesResponse(w http.ResponseWriter) error
@@ -2215,7 +2246,8 @@ type PostApiRegisterResponseObject interface {
 	VisitPostApiRegisterResponse(w http.ResponseWriter) error
 }
 
-type PostApiRegister201Response struct{}
+type PostApiRegister201Response struct {
+}
 
 func (response PostApiRegister201Response) VisitPostApiRegisterResponse(w http.ResponseWriter) error {
 	w.WriteHeader(201)
@@ -2224,6 +2256,7 @@ func (response PostApiRegister201Response) VisitPostApiRegisterResponse(w http.R
 
 // StrictServerInterface represents all server handlers.
 type StrictServerInterface interface {
+
 	// (GET /api/food-items)
 	GetApiFoodItems(ctx context.Context, request GetApiFoodItemsRequestObject) (GetApiFoodItemsResponseObject, error)
 
@@ -2258,10 +2291,8 @@ type StrictServerInterface interface {
 	PostApiRegister(ctx context.Context, request PostApiRegisterRequestObject) (PostApiRegisterResponseObject, error)
 }
 
-type (
-	StrictHandlerFunc    = strictnethttp.StrictHTTPHandlerFunc
-	StrictMiddlewareFunc = strictnethttp.StrictHTTPMiddlewareFunc
-)
+type StrictHandlerFunc = strictnethttp.StrictHTTPHandlerFunc
+type StrictMiddlewareFunc = strictnethttp.StrictHTTPMiddlewareFunc
 
 type StrictHTTPServerOptions struct {
 	RequestErrorHandlerFunc  func(w http.ResponseWriter, r *http.Request, err error)

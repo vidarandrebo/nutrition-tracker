@@ -22,8 +22,8 @@ func (e Entry) IsValid() bool {
 
 func (e Entry) ToResponse() api.RecipeEntryResponse {
 	return api.RecipeEntryResponse{
-		Id:         &e.ID,
-		Amount:     &e.Amount,
-		FoodItemId: &e.FoodItemID,
+		Id:         e.ID,
+		Amount:     e.Amount,
+		FoodItemId: e.FoodItemID,
 	}
 }

@@ -31,8 +31,8 @@ func (e Entry) RecipeID() any {
 
 func (e Entry) ToResponse() api.MealEntryResponse {
 	return api.MealEntryResponse{
-		Id:         &e.ID,
-		Amount:     &e.Amount,
+		Id:         e.ID,
+		Amount:     e.Amount,
 		FoodItemId: &e.foodItemID.Int64,
 		RecipeId:   &e.recipeID.Int64,
 	}

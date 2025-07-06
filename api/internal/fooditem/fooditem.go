@@ -24,15 +24,15 @@ type FoodItem struct {
 
 func (fi FoodItem) ToFoodItemResponse() api.FoodItemResponse {
 	return api.FoodItemResponse{
-		Carbohydrate: &fi.Carbohydrate,
-		Fat:          &fi.Fat,
-		Id:           &fi.ID,
-		KCal:         &fi.KCal,
-		Manufacturer: &fi.Manufacturer,
-		Product:      &fi.Product,
-		Protein:      &fi.Protein,
-		IsPublic:     &fi.Public,
-		Source:       &fi.Source,
+		Carbohydrate: fi.Carbohydrate,
+		Fat:          fi.Fat,
+		Id:           fi.ID,
+		KCal:         fi.KCal,
+		Manufacturer: fi.Manufacturer,
+		Product:      fi.Product,
+		Protein:      fi.Protein,
+		IsPublic:     fi.Public,
+		Source:       fi.Source,
 	}
 }
 
