@@ -17,13 +17,15 @@ export class Recipe {
     static fromResponses(responses: RecipeResponse[]): Recipe[] {
         return responses.map((r) => this.fromResponse(r));
     }
+
     static fromResponse(response: RecipeResponse): Recipe {
         const r = new Recipe();
-        r.entries = response.entries ? response.entries.map((e) => RecipeEntry.fromResponse(e)) : [];
-        r.id = response.id ?? 0;
-        r.name = response.name ?? "";
+        r.entries = response.entries.map((e) => RecipeEntry.fromResponse(e));
+        r.id = response.id;
+        r.name = response.name;
         return r;
     }
+
     static async add(request: RecipeRequest): Promise<Recipe | null> {
         const client = getRecipesClient();
         try {
@@ -34,6 +36,7 @@ export class Recipe {
         }
         return null;
     }
+
     static async get(): Promise<Recipe[] | null> {
         const client = getRecipesClient();
         const response = await client.apiRecipesGet();

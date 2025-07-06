@@ -251,9 +251,10 @@ components:
     PostFoodItemRequest:
       type: object
       allOf:
-        - $ref: "#/components/schemas/WithEnergy"
-        - $ref: "#/components/schemas/WithId"
         - properties:
+            kCal:
+              type: number
+              format: double
             manufacturer:
               type: string
             product:

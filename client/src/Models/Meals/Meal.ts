@@ -24,6 +24,7 @@ export class Meal {
         }
         return ts;
     }
+
     static async add(day: Date): Promise<Meal | null> {
         const request: PostMealRequest = {
             timestamp: this.mealTimeStamp(day),
@@ -38,6 +39,7 @@ export class Meal {
         }
         return null;
     }
+
     static async getByDay(day: Date): Promise<Meal[] | null> {
         const dateFrom = startOfDay(day);
         const dateTo = addDays(dateFrom, 1);
@@ -50,6 +52,7 @@ export class Meal {
         }
         return null;
     }
+
     static async getById(id: number): Promise<Meal | null> {
         const client = getMealsClient();
         try {
@@ -63,10 +66,10 @@ export class Meal {
 
     static fromResponse(res: MealResponse): Meal {
         const m = new Meal();
-        m.id = res.id ?? 0;
-        m.timestamp = new Date(res.timestamp ?? "");
-        m.sequenceNumber = res.sequenceNumber ?? 0;
-        m.entries = MealEntry.fromResponses(res.entries ?? []);
+        m.id = res.id;
+        m.timestamp = new Date(res.timestamp);
+        m.sequenceNumber = res.sequenceNumber;
+        m.entries = MealEntry.fromResponses(res.entries);
         return m;
     }
 

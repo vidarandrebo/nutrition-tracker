@@ -12,6 +12,7 @@ export class FoodItem {
     kCal: number;
     public: boolean;
     source: string;
+
     get name(): string {
         let out = this.manufacturer;
         if (this.product.length > 0 && out.length > 0) {
@@ -19,6 +20,7 @@ export class FoodItem {
         }
         return out + this.product;
     }
+
     get energy(): Energy {
         return {
             protein: this.protein,
@@ -42,15 +44,15 @@ export class FoodItem {
 
     static fromResponse(res: FoodItemResponse): FoodItem {
         const foodItem = new FoodItem();
-        foodItem.id = res.id ?? 0;
-        foodItem.manufacturer = res.manufacturer ?? "";
-        foodItem.product = res.product ?? "";
-        foodItem.protein = res.protein ?? 0.0;
-        foodItem.carbohydrate = res.carbohydrate ?? 0.0;
-        foodItem.fat = res.fat ?? 0.0;
-        foodItem.kCal = res.kCal ?? 0.0;
-        foodItem.public = res.isPublic ?? false;
-        foodItem.source = res.source ?? "";
+        foodItem.id = res.id;
+        foodItem.manufacturer = res.manufacturer;
+        foodItem.product = res.product;
+        foodItem.protein = res.protein;
+        foodItem.carbohydrate = res.carbohydrate;
+        foodItem.fat = res.fat;
+        foodItem.kCal = res.kCal;
+        foodItem.public = res.isPublic;
+        foodItem.source = res.source;
         return foodItem;
     }
 
@@ -65,6 +67,7 @@ export class FoodItem {
         }
         return null;
     }
+
     static async getById(id: number): Promise<FoodItem | null> {
         const client = getFoodItemsClient();
         try {
