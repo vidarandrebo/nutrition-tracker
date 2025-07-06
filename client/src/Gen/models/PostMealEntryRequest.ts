@@ -24,7 +24,7 @@ export interface PostMealEntryRequest {
      * @type {number}
      * @memberof PostMealEntryRequest
      */
-    amount?: number;
+    amount: number;
     /**
      *
      * @type {number}
@@ -43,6 +43,7 @@ export interface PostMealEntryRequest {
  * Check if a given object implements the PostMealEntryRequest interface.
  */
 export function instanceOfPostMealEntryRequest(value: object): value is PostMealEntryRequest {
+    if (!("amount" in value) || value["amount"] === undefined) return false;
     return true;
 }
 
@@ -55,7 +56,7 @@ export function PostMealEntryRequestFromJSONTyped(json: any, ignoreDiscriminator
         return json;
     }
     return {
-        amount: json["amount"] == null ? undefined : json["amount"],
+        amount: json["amount"],
         foodItemId: json["foodItemId"] == null ? undefined : json["foodItemId"],
         recipeId: json["recipeId"] == null ? undefined : json["recipeId"],
     };

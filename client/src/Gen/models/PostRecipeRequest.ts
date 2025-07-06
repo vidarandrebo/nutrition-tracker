@@ -32,19 +32,21 @@ export interface PostRecipeRequest {
      * @type {string}
      * @memberof PostRecipeRequest
      */
-    name?: string;
+    name: string;
     /**
      *
      * @type {Array<PostRecipeEntryRequest>}
      * @memberof PostRecipeRequest
      */
-    entries?: Array<PostRecipeEntryRequest>;
+    entries: Array<PostRecipeEntryRequest>;
 }
 
 /**
  * Check if a given object implements the PostRecipeRequest interface.
  */
 export function instanceOfPostRecipeRequest(value: object): value is PostRecipeRequest {
+    if (!("name" in value) || value["name"] === undefined) return false;
+    if (!("entries" in value) || value["entries"] === undefined) return false;
     return true;
 }
 
@@ -57,9 +59,8 @@ export function PostRecipeRequestFromJSONTyped(json: any, ignoreDiscriminator: b
         return json;
     }
     return {
-        name: json["name"] == null ? undefined : json["name"],
-        entries:
-            json["entries"] == null ? undefined : (json["entries"] as Array<any>).map(PostRecipeEntryRequestFromJSON),
+        name: json["name"],
+        entries: (json["entries"] as Array<any>).map(PostRecipeEntryRequestFromJSON),
     };
 }
 
@@ -77,7 +78,6 @@ export function PostRecipeRequestToJSONTyped(
 
     return {
         name: value["name"],
-        entries:
-            value["entries"] == null ? undefined : (value["entries"] as Array<any>).map(PostRecipeEntryRequestToJSON),
+        entries: (value["entries"] as Array<any>).map(PostRecipeEntryRequestToJSON),
     };
 }

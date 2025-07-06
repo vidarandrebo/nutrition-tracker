@@ -32,25 +32,28 @@ export interface RecipeResponse {
      * @type {number}
      * @memberof RecipeResponse
      */
-    id?: number;
+    id: number;
     /**
      *
      * @type {string}
      * @memberof RecipeResponse
      */
-    name?: string;
+    name: string;
     /**
      *
      * @type {Array<RecipeEntryResponse>}
      * @memberof RecipeResponse
      */
-    entries?: Array<RecipeEntryResponse>;
+    entries: Array<RecipeEntryResponse>;
 }
 
 /**
  * Check if a given object implements the RecipeResponse interface.
  */
 export function instanceOfRecipeResponse(value: object): value is RecipeResponse {
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("name" in value) || value["name"] === undefined) return false;
+    if (!("entries" in value) || value["entries"] === undefined) return false;
     return true;
 }
 
@@ -63,9 +66,9 @@ export function RecipeResponseFromJSONTyped(json: any, ignoreDiscriminator: bool
         return json;
     }
     return {
-        id: json["id"] == null ? undefined : json["id"],
-        name: json["name"] == null ? undefined : json["name"],
-        entries: json["entries"] == null ? undefined : (json["entries"] as Array<any>).map(RecipeEntryResponseFromJSON),
+        id: json["id"],
+        name: json["name"],
+        entries: (json["entries"] as Array<any>).map(RecipeEntryResponseFromJSON),
     };
 }
 
@@ -81,6 +84,6 @@ export function RecipeResponseToJSONTyped(value?: RecipeResponse | null, ignoreD
     return {
         id: value["id"],
         name: value["name"],
-        entries: value["entries"] == null ? undefined : (value["entries"] as Array<any>).map(RecipeEntryResponseToJSON),
+        entries: (value["entries"] as Array<any>).map(RecipeEntryResponseToJSON),
     };
 }

@@ -41,11 +41,11 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 	}
 
 	r := PostFoodItemRequest{
-		Manufacturer: *request.Body.Manufacturer,
-		Product:      *request.Body.Product,
-		Protein:      *request.Body.Protein,
-		Carbohydrate: *request.Body.Carbohydrate,
-		Fat:          *request.Body.Fat,
+		Manufacturer: request.Body.Manufacturer,
+		Product:      request.Body.Product,
+		Protein:      request.Body.Protein,
+		Carbohydrate: request.Body.Carbohydrate,
+		Fat:          request.Body.Fat,
 		Public:       false,
 	}
 	if request.Body.KCal == nil {

@@ -33,8 +33,8 @@ export class MealEntry {
 
     static fromResponse(res: MealEntryResponse): MealEntry {
         const me = new MealEntry();
-        me.id = res.id ?? 0;
-        me.amount = res.amount ?? 0.0;
+        me.id = res.id;
+        me.amount = res.amount;
         me.foodItemId = res.foodItemId ?? null;
         me.recipeId = res.recipeId ?? null;
         return me;

@@ -24,13 +24,14 @@ export interface WithId {
      * @type {number}
      * @memberof WithId
      */
-    id?: number;
+    id: number;
 }
 
 /**
  * Check if a given object implements the WithId interface.
  */
 export function instanceOfWithId(value: object): value is WithId {
+    if (!("id" in value) || value["id"] === undefined) return false;
     return true;
 }
 
@@ -43,7 +44,7 @@ export function WithIdFromJSONTyped(json: any, ignoreDiscriminator: boolean): Wi
         return json;
     }
     return {
-        id: json["id"] == null ? undefined : json["id"],
+        id: json["id"],
     };
 }
 

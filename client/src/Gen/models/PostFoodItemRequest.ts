@@ -24,19 +24,19 @@ export interface PostFoodItemRequest {
      * @type {number}
      * @memberof PostFoodItemRequest
      */
-    protein?: number;
+    protein: number;
     /**
      *
      * @type {number}
      * @memberof PostFoodItemRequest
      */
-    carbohydrate?: number;
+    carbohydrate: number;
     /**
      *
      * @type {number}
      * @memberof PostFoodItemRequest
      */
-    fat?: number;
+    fat: number;
     /**
      *
      * @type {number}
@@ -45,34 +45,34 @@ export interface PostFoodItemRequest {
     kCal?: number;
     /**
      *
-     * @type {number}
+     * @type {string}
      * @memberof PostFoodItemRequest
      */
-    id?: number;
+    manufacturer: string;
     /**
      *
      * @type {string}
      * @memberof PostFoodItemRequest
      */
-    manufacturer?: string;
-    /**
-     *
-     * @type {string}
-     * @memberof PostFoodItemRequest
-     */
-    product?: string;
+    product: string;
     /**
      *
      * @type {boolean}
      * @memberof PostFoodItemRequest
      */
-    isPublic?: boolean;
+    isPublic: boolean;
 }
 
 /**
  * Check if a given object implements the PostFoodItemRequest interface.
  */
 export function instanceOfPostFoodItemRequest(value: object): value is PostFoodItemRequest {
+    if (!("protein" in value) || value["protein"] === undefined) return false;
+    if (!("carbohydrate" in value) || value["carbohydrate"] === undefined) return false;
+    if (!("fat" in value) || value["fat"] === undefined) return false;
+    if (!("manufacturer" in value) || value["manufacturer"] === undefined) return false;
+    if (!("product" in value) || value["product"] === undefined) return false;
+    if (!("isPublic" in value) || value["isPublic"] === undefined) return false;
     return true;
 }
 
@@ -85,14 +85,13 @@ export function PostFoodItemRequestFromJSONTyped(json: any, ignoreDiscriminator:
         return json;
     }
     return {
-        protein: json["protein"] == null ? undefined : json["protein"],
-        carbohydrate: json["carbohydrate"] == null ? undefined : json["carbohydrate"],
-        fat: json["fat"] == null ? undefined : json["fat"],
+        protein: json["protein"],
+        carbohydrate: json["carbohydrate"],
+        fat: json["fat"],
         kCal: json["kCal"] == null ? undefined : json["kCal"],
-        id: json["id"] == null ? undefined : json["id"],
-        manufacturer: json["manufacturer"] == null ? undefined : json["manufacturer"],
-        product: json["product"] == null ? undefined : json["product"],
-        isPublic: json["isPublic"] == null ? undefined : json["isPublic"],
+        manufacturer: json["manufacturer"],
+        product: json["product"],
+        isPublic: json["isPublic"],
     };
 }
 
@@ -113,7 +112,6 @@ export function PostFoodItemRequestToJSONTyped(
         carbohydrate: value["carbohydrate"],
         fat: value["fat"],
         kCal: value["kCal"],
-        id: value["id"],
         manufacturer: value["manufacturer"],
         product: value["product"],
         isPublic: value["isPublic"],

@@ -24,13 +24,13 @@ export interface MealEntryResponse {
      * @type {number}
      * @memberof MealEntryResponse
      */
-    id?: number;
+    id: number;
     /**
      *
      * @type {number}
      * @memberof MealEntryResponse
      */
-    amount?: number;
+    amount: number;
     /**
      *
      * @type {number}
@@ -49,6 +49,8 @@ export interface MealEntryResponse {
  * Check if a given object implements the MealEntryResponse interface.
  */
 export function instanceOfMealEntryResponse(value: object): value is MealEntryResponse {
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("amount" in value) || value["amount"] === undefined) return false;
     return true;
 }
 
@@ -61,8 +63,8 @@ export function MealEntryResponseFromJSONTyped(json: any, ignoreDiscriminator: b
         return json;
     }
     return {
-        id: json["id"] == null ? undefined : json["id"],
-        amount: json["amount"] == null ? undefined : json["amount"],
+        id: json["id"],
+        amount: json["amount"],
         foodItemId: json["foodItemId"] == null ? undefined : json["foodItemId"],
         recipeId: json["recipeId"] == null ? undefined : json["recipeId"],
     };

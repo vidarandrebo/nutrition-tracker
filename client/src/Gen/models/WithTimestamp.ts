@@ -24,13 +24,14 @@ export interface WithTimestamp {
      * @type {Date}
      * @memberof WithTimestamp
      */
-    timestamp?: Date;
+    timestamp: Date;
 }
 
 /**
  * Check if a given object implements the WithTimestamp interface.
  */
 export function instanceOfWithTimestamp(value: object): value is WithTimestamp {
+    if (!("timestamp" in value) || value["timestamp"] === undefined) return false;
     return true;
 }
 
@@ -43,7 +44,7 @@ export function WithTimestampFromJSONTyped(json: any, ignoreDiscriminator: boole
         return json;
     }
     return {
-        timestamp: json["timestamp"] == null ? undefined : new Date(json["timestamp"]),
+        timestamp: new Date(json["timestamp"]),
     };
 }
 
@@ -57,6 +58,6 @@ export function WithTimestampToJSONTyped(value?: WithTimestamp | null, ignoreDis
     }
 
     return {
-        timestamp: value["timestamp"] == null ? undefined : value["timestamp"].toISOString(),
+        timestamp: value["timestamp"].toISOString(),
     };
 }

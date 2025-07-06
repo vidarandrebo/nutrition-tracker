@@ -21,9 +21,9 @@ func (m Meal) ToResponse() api.MealResponse {
 		entries = append(entries, e.ToResponse())
 	}
 	return api.MealResponse{
-		Id:             &m.ID,
-		SequenceNumber: &m.SequenceNumber,
-		Timestamp:      &m.Timestamp,
-		Entries:        &entries,
+		Id:             m.ID,
+		SequenceNumber: m.SequenceNumber,
+		Timestamp:      m.Timestamp,
+		Entries:        entries,
 	}
 }

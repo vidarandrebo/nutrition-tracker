@@ -24,61 +24,70 @@ export interface FoodItemResponse {
      * @type {number}
      * @memberof FoodItemResponse
      */
-    protein?: number;
+    protein: number;
     /**
      *
      * @type {number}
      * @memberof FoodItemResponse
      */
-    carbohydrate?: number;
+    carbohydrate: number;
     /**
      *
      * @type {number}
      * @memberof FoodItemResponse
      */
-    fat?: number;
+    fat: number;
     /**
      *
      * @type {number}
      * @memberof FoodItemResponse
      */
-    kCal?: number;
+    kCal: number;
     /**
      *
      * @type {number}
      * @memberof FoodItemResponse
      */
-    id?: number;
+    id: number;
     /**
      *
      * @type {string}
      * @memberof FoodItemResponse
      */
-    manufacturer?: string;
+    manufacturer: string;
     /**
      *
      * @type {string}
      * @memberof FoodItemResponse
      */
-    product?: string;
+    product: string;
     /**
      *
      * @type {boolean}
      * @memberof FoodItemResponse
      */
-    isPublic?: boolean;
+    isPublic: boolean;
     /**
      *
      * @type {string}
      * @memberof FoodItemResponse
      */
-    source?: string;
+    source: string;
 }
 
 /**
  * Check if a given object implements the FoodItemResponse interface.
  */
 export function instanceOfFoodItemResponse(value: object): value is FoodItemResponse {
+    if (!("protein" in value) || value["protein"] === undefined) return false;
+    if (!("carbohydrate" in value) || value["carbohydrate"] === undefined) return false;
+    if (!("fat" in value) || value["fat"] === undefined) return false;
+    if (!("kCal" in value) || value["kCal"] === undefined) return false;
+    if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("manufacturer" in value) || value["manufacturer"] === undefined) return false;
+    if (!("product" in value) || value["product"] === undefined) return false;
+    if (!("isPublic" in value) || value["isPublic"] === undefined) return false;
+    if (!("source" in value) || value["source"] === undefined) return false;
     return true;
 }
 
@@ -91,15 +100,15 @@ export function FoodItemResponseFromJSONTyped(json: any, ignoreDiscriminator: bo
         return json;
     }
     return {
-        protein: json["protein"] == null ? undefined : json["protein"],
-        carbohydrate: json["carbohydrate"] == null ? undefined : json["carbohydrate"],
-        fat: json["fat"] == null ? undefined : json["fat"],
-        kCal: json["kCal"] == null ? undefined : json["kCal"],
-        id: json["id"] == null ? undefined : json["id"],
-        manufacturer: json["manufacturer"] == null ? undefined : json["manufacturer"],
-        product: json["product"] == null ? undefined : json["product"],
-        isPublic: json["isPublic"] == null ? undefined : json["isPublic"],
-        source: json["source"] == null ? undefined : json["source"],
+        protein: json["protein"],
+        carbohydrate: json["carbohydrate"],
+        fat: json["fat"],
+        kCal: json["kCal"],
+        id: json["id"],
+        manufacturer: json["manufacturer"],
+        product: json["product"],
+        isPublic: json["isPublic"],
+        source: json["source"],
     };
 }
 

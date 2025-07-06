@@ -24,13 +24,14 @@ export interface WithAmount {
      * @type {number}
      * @memberof WithAmount
      */
-    amount?: number;
+    amount: number;
 }
 
 /**
  * Check if a given object implements the WithAmount interface.
  */
 export function instanceOfWithAmount(value: object): value is WithAmount {
+    if (!("amount" in value) || value["amount"] === undefined) return false;
     return true;
 }
 
@@ -43,7 +44,7 @@ export function WithAmountFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         return json;
     }
     return {
-        amount: json["amount"] == null ? undefined : json["amount"],
+        amount: json["amount"],
     };
 }
 

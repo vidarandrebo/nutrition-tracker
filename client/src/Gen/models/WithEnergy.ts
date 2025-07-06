@@ -24,31 +24,35 @@ export interface WithEnergy {
      * @type {number}
      * @memberof WithEnergy
      */
-    protein?: number;
+    protein: number;
     /**
      *
      * @type {number}
      * @memberof WithEnergy
      */
-    carbohydrate?: number;
+    carbohydrate: number;
     /**
      *
      * @type {number}
      * @memberof WithEnergy
      */
-    fat?: number;
+    fat: number;
     /**
      *
      * @type {number}
      * @memberof WithEnergy
      */
-    kCal?: number;
+    kCal: number;
 }
 
 /**
  * Check if a given object implements the WithEnergy interface.
  */
 export function instanceOfWithEnergy(value: object): value is WithEnergy {
+    if (!("protein" in value) || value["protein"] === undefined) return false;
+    if (!("carbohydrate" in value) || value["carbohydrate"] === undefined) return false;
+    if (!("fat" in value) || value["fat"] === undefined) return false;
+    if (!("kCal" in value) || value["kCal"] === undefined) return false;
     return true;
 }
 
@@ -61,10 +65,10 @@ export function WithEnergyFromJSONTyped(json: any, ignoreDiscriminator: boolean)
         return json;
     }
     return {
-        protein: json["protein"] == null ? undefined : json["protein"],
-        carbohydrate: json["carbohydrate"] == null ? undefined : json["carbohydrate"],
-        fat: json["fat"] == null ? undefined : json["fat"],
-        kCal: json["kCal"] == null ? undefined : json["kCal"],
+        protein: json["protein"],
+        carbohydrate: json["carbohydrate"],
+        fat: json["fat"],
+        kCal: json["kCal"],
     };
 }
 

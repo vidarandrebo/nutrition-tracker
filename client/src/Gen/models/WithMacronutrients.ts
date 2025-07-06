@@ -24,25 +24,28 @@ export interface WithMacronutrients {
      * @type {number}
      * @memberof WithMacronutrients
      */
-    protein?: number;
+    protein: number;
     /**
      *
      * @type {number}
      * @memberof WithMacronutrients
      */
-    carbohydrate?: number;
+    carbohydrate: number;
     /**
      *
      * @type {number}
      * @memberof WithMacronutrients
      */
-    fat?: number;
+    fat: number;
 }
 
 /**
  * Check if a given object implements the WithMacronutrients interface.
  */
 export function instanceOfWithMacronutrients(value: object): value is WithMacronutrients {
+    if (!("protein" in value) || value["protein"] === undefined) return false;
+    if (!("carbohydrate" in value) || value["carbohydrate"] === undefined) return false;
+    if (!("fat" in value) || value["fat"] === undefined) return false;
     return true;
 }
 
@@ -55,9 +58,9 @@ export function WithMacronutrientsFromJSONTyped(json: any, ignoreDiscriminator: 
         return json;
     }
     return {
-        protein: json["protein"] == null ? undefined : json["protein"],
-        carbohydrate: json["carbohydrate"] == null ? undefined : json["carbohydrate"],
-        fat: json["fat"] == null ? undefined : json["fat"],
+        protein: json["protein"],
+        carbohydrate: json["carbohydrate"],
+        fat: json["fat"],
     };
 }
 
