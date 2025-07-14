@@ -6,8 +6,12 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
+	"regexp"
 
 	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
+	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
@@ -52,10 +56,11 @@ type Endpoints struct {
 type Middlewares struct {
 	Auth            *middleware.Auth
 	RequestMetadata *middleware.RequestMetadata
+	Instrumentation *middleware.Instrumentation
 }
 
 func (a *Application) GetMiddlewares() []nethttp.StrictHTTPMiddlewareFunc {
-	return []nethttp.StrictHTTPMiddlewareFunc{a.Middlewares.Auth.TokenToContext, a.Middlewares.RequestMetadata.Time}
+	return []nethttp.StrictHTTPMiddlewareFunc{a.Middlewares.Auth.TokenToContext, a.Middlewares.RequestMetadata.Time, a.Middlewares.Instrumentation.Instrument}
 }
 
 func NewApplication() *Application {
@@ -111,6 +116,7 @@ func (a *Application) addMiddlewares() {
 	a.Middlewares = &Middlewares{}
 	a.Middlewares.RequestMetadata = middleware.NewRequestMetadata(a.Logger)
 	a.Middlewares.Auth = middleware.NewAuth(a.Logger, a.Services.JwtService)
+	a.Middlewares.Instrumentation = middleware.NewInstrumentation(a.Logger)
 }
 
 func (a *Application) addEndpoints() {
@@ -128,9 +134,41 @@ func (a *Application) staticFS() http.Handler {
 	return notFoundInterceptor.RespondWithFallback(fs, "/")
 }
 
+func (a *Application) prometheusRegistry() *prometheus.Registry {
+	reg := prometheus.NewRegistry()
+
+	// Register metrics from GoCollector collecting statistics from the Go Runtime.
+	// This enabled default, recommended metrics with the additional, recommended metric for
+	// goroutine scheduling latencies histogram that is currently bit too expensive for default option.
+	//
+	// See the related GopherConUK talk to learn more: https://www.youtube.com/watch?v=18dyI_8VFa0
+	reg.MustRegister(
+		collectors.NewGoCollector(
+			collectors.WithGoCollectorRuntimeMetrics(
+				collectors.GoRuntimeMetricsRule{Matcher: regexp.MustCompile("/sched/latencies:seconds")},
+			),
+		),
+		middleware.HttpRequestsTotal,
+		middleware.HttpRequestDuration,
+		middleware.ActiveConnections,
+	)
+	return reg
+}
+
 func (a *Application) rootMux() *http.ServeMux {
 	mux := http.NewServeMux()
 	mux.Handle("/", a.staticFS())
+
+	reg := a.prometheusRegistry()
+
+	// Expose the registered metrics via HTTP.
+	mux.Handle("/metrics", promhttp.HandlerFor(
+		reg,
+		promhttp.HandlerOpts{
+			// Opt into OpenMetrics to support exemplars.
+			EnableOpenMetrics: true,
+		},
+	))
 
 	return mux
 }
