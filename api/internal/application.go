@@ -135,7 +135,6 @@ func (a *Application) staticFS() http.Handler {
 }
 
 func (a *Application) prometheusRegistry() *prometheus.Registry {
-
 	reg := prometheus.NewRegistry()
 
 	// Register metrics from GoCollector collecting statistics from the Go Runtime.
