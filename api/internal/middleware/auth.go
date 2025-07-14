@@ -19,16 +19,16 @@ func NewAuth(log *slog.Logger, js *auth.JwtService) *Auth {
 	return &Auth{log: log.With(slog.String("module", "middleware.Auth")), js: js}
 }
 
-func (rt *Auth) TokenToContext(next nethttp.StrictHTTPHandlerFunc, operationID string) nethttp.StrictHTTPHandlerFunc {
+func (a *Auth) TokenToContext(next nethttp.StrictHTTPHandlerFunc, operationID string) nethttp.StrictHTTPHandlerFunc {
 	return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (response interface{}, err error) {
 		authHeader := r.Header.Get("Authorization")
 		token := strings.TrimPrefix(authHeader, "Bearer")
 		token = strings.TrimSpace(token)
-		claims, err := rt.js.ValidateToken(token)
+		claims, err := a.js.ValidateToken(token)
 
 		if err != nil {
 			// keep ctx as is if no valid token is found
-			rt.log.Warn("authentication failure", slog.Any("error", err))
+			a.log.Warn("authentication failure", slog.Any("error", err))
 			return next(ctx, w, r, request)
 		} else {
 			newCtx := context.WithValue(ctx, "user", claims)
