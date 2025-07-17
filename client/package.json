@@ -10,7 +10,8 @@
         "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
         "lint-fix": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
         "format": "prettier . --write",
-        "open-api": "openapi-generator-cli generate -i ../api/api.yaml -g typescript-fetch -o src/Gen/ --additional-properties=withInterfaces=true",
+        "openapi": "openapi-generator-cli generate -i ../api.yaml -g typescript-fetch -o src/Gen/ --additional-properties=withInterfaces=true",
+        "generate": "npm run openapi && npm run lint-fix && npm run format",
         "test": "vitest run"
     },
     "dependencies": {
@@ -22,19 +23,19 @@
         "vue-router": "^4.5.1"
     },
     "devDependencies": {
-        "@openapitools/openapi-generator-cli": "^2.21.0",
+        "@openapitools/openapi-generator-cli": "^2.21.2",
         "@types/debounce": "^1.2.4",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vue/tsconfig": "^0.7.0",
-        "eslint": "^9.30.1",
+        "eslint": "^9.31.0",
         "eslint-config-prettier": "^10.1.5",
         "eslint-plugin-vue": "^10.3.0",
         "globals": "^16.3.0",
         "prettier": "^3.6.2",
         "sass": "^1.89.2",
         "typescript": "~5.8.3",
-        "typescript-eslint": "^8.35.1",
-        "vite": "^7.0.2",
+        "typescript-eslint": "^8.37.0",
+        "vite": "^7.0.5",
         "vitest": "^3.2.4",
         "vue-tsc": "^3.0.1"
     }

@@ -66,7 +66,7 @@ const estKCal = computed(() => {
             <FormField>
                 <LabelPrimary>
                     <p>Fat</p>
-                    <InputNumber v-model.number="formModel.fat" ></InputNumber>
+                    <InputNumber v-model.number="formModel.fat"></InputNumber>
                 </LabelPrimary>
             </FormField>
             <FormField>
