@@ -98,3 +98,29 @@ func (e Endpoint) PostApiMealsIdEntries(ctx context.Context, request api.PostApi
 
 	return api.PostApiMealsIdEntries201JSONResponse(entry.ToResponse()), nil
 }
+
+func (e Endpoint) DeleteApiMealsId(ctx context.Context, request api.DeleteApiMealsIdRequestObject) (api.DeleteApiMealsIdResponseObject, error) {
+	userId, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = e.store.DeleteMeal(request.Id, userId)
+	if err != nil {
+		return nil, err
+	}
+	return api.DeleteApiMealsId204Response{}, nil
+}
+
+func (e Endpoint) DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, request api.DeleteApiMealsMealIdEntriesEntryIdRequestObject) (api.DeleteApiMealsMealIdEntriesEntryIdResponseObject, error) {
+	userId, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	err = e.store.DeleteMealEntry(request.EntryId, request.MealId, userId)
+	if err != nil {
+		return nil, err
+	}
+	return api.DeleteApiMealsMealIdEntriesEntryId204Response{}, nil
+}

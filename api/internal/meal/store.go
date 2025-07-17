@@ -128,3 +128,33 @@ func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, e
 
 	return entry, nil
 }
+
+func (s *Store) DeleteMeal(id int64, ownerID int64) error {
+	_, err := s.DB.Query(`
+		DELETE FROM meals WHERE id = $1 AND owner_id = $2
+	`, id, ownerID)
+	if err != nil {
+		s.Logger.Error("failed to delete meal", slog.Int64("mealID", id), slog.Any("err", err))
+		return err
+	}
+	return nil
+}
+
+func (s *Store) DeleteMealEntry(entryID int64, mealID int64, ownerID int64) error {
+	_, err := s.DB.Query(`
+		WITH owned_meals AS (
+			SELECT id
+			FROM meals
+			WHERE id = $2 
+  			  AND owner_id = $3
+		)
+		DELETE FROM meal_entries
+		WHERE id = $1 
+		  AND meal_id IN (SELECT id FROM owned_meals)
+	`, entryID, mealID, ownerID)
+	if err != nil {
+		s.Logger.Error("failed to delete meal entry", slog.Int64("mealID", entryID), slog.Any("err", err))
+		return err
+	}
+	return nil
+}

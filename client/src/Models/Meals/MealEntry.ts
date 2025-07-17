@@ -1,6 +1,7 @@
 import type { PostMealEntryRequest } from "./Requests.ts";
 import { getMealsClient } from "../Api.ts";
 import type { MealEntryResponse } from "../../Gen";
+import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
 
 export class MealEntry {
     id: number;
@@ -25,6 +26,16 @@ export class MealEntry {
             console.log("failed to add entry to meal");
         }
         return null;
+    }
+    static async delete(id: number, mealId: number): Promise<Result<void>> {
+        const client = getMealsClient();
+
+        return await tryCatch(
+            client.apiMealsMealIdEntriesEntryIdDelete({
+                entryId: id,
+                mealId: mealId,
+            }),
+        );
     }
 
     static fromResponses(res: MealEntryResponse[]): MealEntry[] {

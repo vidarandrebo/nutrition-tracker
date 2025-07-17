@@ -3,6 +3,7 @@ import { addDays, isToday, startOfDay } from "../../Utilities/Date.ts";
 import type { PostMealRequest } from "./Requests.ts";
 import type { MealResponse } from "../../Gen";
 import { getMealsClient } from "../Api.ts";
+import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
 
 export class Meal {
     id: number;
@@ -38,6 +39,15 @@ export class Meal {
             console.log("oi, ya goofed up");
         }
         return null;
+    }
+    static async delete(id: number): Promise<Result<void>> {
+        const client = getMealsClient();
+
+        return await tryCatch(
+            client.apiMealsIdDelete({
+                id: id,
+            }),
+        );
     }
 
     static async getByDay(day: Date): Promise<Meal[] | null> {

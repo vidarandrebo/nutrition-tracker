@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from "vue-router";
-import HomePage from "./Pages/HomePage.vue";
+import HomePage from "./Pages/HomePage/HomePage.vue";
 import LoginPage from "./Pages/LoginPage.vue";
 import RegisterPage from "./Pages/RegisterPage.vue";
 import SettingsPage from "./Pages/SettingsPage.vue";

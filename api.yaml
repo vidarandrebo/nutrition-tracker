@@ -134,6 +134,20 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealResponse"
           description: Meals with the provided id
+    delete:
+      tags:
+        - Meals
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+
+      responses:
+        204:
+          description: Meal with id is deleted
 
   /api/meals/{id}/entries:
     post:
@@ -158,6 +172,26 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealEntryResponse"
           description: Meals entry that was added
+  /api/meals/{mealId}/entries/{entryId}:
+    delete:
+      tags:
+        - Meals
+      parameters:
+        - name: mealId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: entryId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Meals entry is deleted
 
 
   /api/recipes:
