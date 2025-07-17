@@ -30,6 +30,10 @@ export interface ApiMealsGetRequest {
     dateTo?: Date;
 }
 
+export interface ApiMealsIdDeleteRequest {
+    id: number;
+}
+
 export interface ApiMealsIdEntriesPostRequest {
     id: number;
     postMealEntryRequest?: PostMealEntryRequest;
@@ -37,6 +41,11 @@ export interface ApiMealsIdEntriesPostRequest {
 
 export interface ApiMealsIdGetRequest {
     id: number;
+}
+
+export interface ApiMealsMealIdEntriesEntryIdDeleteRequest {
+    mealId: number;
+    entryId: number;
 }
 
 export interface ApiMealsPostRequest {
@@ -69,6 +78,25 @@ export interface MealsApiInterface {
         requestParameters: ApiMealsGetRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<Array<MealResponse>>;
+
+    /**
+     *
+     * @param {number} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsIdDeleteRaw(
+        requestParameters: ApiMealsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    apiMealsIdDelete(
+        requestParameters: ApiMealsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
 
     /**
      *
@@ -108,6 +136,26 @@ export interface MealsApiInterface {
         requestParameters: ApiMealsIdGetRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<MealResponse>;
+
+    /**
+     *
+     * @param {number} mealId
+     * @param {number} entryId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdEntriesEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    apiMealsMealIdEntriesEntryIdDelete(
+        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
 
     /**
      *
@@ -174,6 +222,48 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
     ): Promise<Array<MealResponse>> {
         const response = await this.apiMealsGetRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async apiMealsIdDeleteRaw(
+        requestParameters: ApiMealsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["id"] == null) {
+            throw new runtime.RequiredError(
+                "id",
+                'Required parameter "id" was null or undefined when calling apiMealsIdDelete().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        let urlPath = `/api/meals/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters["id"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "DELETE",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiMealsIdDelete(
+        requestParameters: ApiMealsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.apiMealsIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -263,6 +353,56 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
     ): Promise<MealResponse> {
         const response = await this.apiMealsIdGetRaw(requestParameters, initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async apiMealsMealIdEntriesEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdEntriesEntryIdDelete().',
+            );
+        }
+
+        if (requestParameters["entryId"] == null) {
+            throw new runtime.RequiredError(
+                "entryId",
+                'Required parameter "entryId" was null or undefined when calling apiMealsMealIdEntriesEntryIdDelete().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        let urlPath = `/api/meals/{mealId}/entries/{entryId}`;
+        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+        urlPath = urlPath.replace(`{${"entryId"}}`, encodeURIComponent(String(requestParameters["entryId"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "DELETE",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiMealsMealIdEntriesEntryIdDelete(
+        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.apiMealsMealIdEntriesEntryIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
