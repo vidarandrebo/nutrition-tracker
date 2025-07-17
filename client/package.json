@@ -10,7 +10,8 @@
         "lint": "eslint . --report-unused-disable-directives --max-warnings 0",
         "lint-fix": "eslint . --report-unused-disable-directives --max-warnings 0 --fix",
         "format": "prettier . --write",
-        "open-api": "openapi-generator-cli generate -i ../api/api.yaml -g typescript-fetch -o src/Gen/ --additional-properties=withInterfaces=true",
+        "openapi": "openapi-generator-cli generate -i ../api.yaml -g typescript-fetch -o src/Gen/ --additional-properties=withInterfaces=true",
+        "generate": "npm run openapi && npm run lint-fix && npm run format",
         "test": "vitest run"
     },
     "dependencies": {
