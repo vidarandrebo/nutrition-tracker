@@ -1,9 +1,12 @@
 <script setup lang="ts">
 import ButtonDanger from "../../Components/Buttons/ButtonDanger.vue";
 import type { MealView } from "../../Models/Meals/MealView.ts";
-import { ref } from "vue";
+import { onBeforeUnmount, onMounted, ref, useTemplateRef } from "vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 
+import { v4 as uuidv4 } from "uuid";
+const el = useTemplateRef("p");
+const dropDownId = uuidv4();
 const props = defineProps<{
     item: MealView;
 }>();
@@ -13,6 +16,21 @@ const emit = defineEmits<{
 }>();
 
 const kebabOpen = ref<boolean>(false);
+const mouseFunc = (e: MouseEvent) => {
+    if (e.target) {
+        if (el.value?.contains(e.target)) {
+            if (kebabOpen.value) {
+                kebabOpen.value = false;
+            }
+        }
+    }
+};
+onMounted(() => {
+    window.addEventListener("click", mouseFunc);
+});
+onBeforeUnmount(() => {
+    window.removeEventListener("click", mouseFunc);
+});
 </script>
 
 <template>
@@ -23,20 +41,24 @@ const kebabOpen = ref<boolean>(false);
             </div>
         </template>
         <template #right>
-            <div :class="kebabOpen ? 'dropdown is-active is-hoverable is-right' : 'dropdown is-hoverable is-right'">
-                <div class="dropdown-trigger">
-                    <button
-                        class="button"
-                        aria-haspopup="true"
-                        aria-controls="dropdown-menu"
-                        @click="() => (kebabOpen = !kebabOpen)"
-                    >
-                        <span>⋮</span>
-                    </button>
-                </div>
-                <div id="dropdown-menu" class="dropdown-menu" role="menu">
-                    <div class="dropdown-content">
-                        <a href="#" class="dropdown-item" @click="() => emit('deleteMeal', props.item.id)">Delete</a>
+            <div ref="p">
+                <div :class="kebabOpen ? 'dropdown is-active is-hoverable is-right' : 'dropdown is-hoverable is-right'">
+                    <div class="dropdown-trigger">
+                        <button
+                            class="button"
+                            aria-haspopup="true"
+                            aria-controls="dropdown-menu"
+                            @click="() => (kebabOpen = !kebabOpen)"
+                        >
+                            <span>⋮</span>
+                        </button>
+                    </div>
+                    <div :id="dropDownId" class="dropdown-menu" role="menu">
+                        <div class="dropdown-content">
+                            <a href="#" class="dropdown-item" @click="() => emit('deleteMeal', props.item.id)"
+                                >Delete</a
+                            >
+                        </div>
                     </div>
                 </div>
             </div>
