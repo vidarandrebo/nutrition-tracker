@@ -6,6 +6,10 @@ on:
       - main
 
 jobs:
+  zizmor:
+    name: "zizmor"
+    uses: "./.github/workflows/zizmor.yml"
+
   go:
     name: "Go"
     uses: "./.github/workflows/go.yml"
