@@ -267,6 +267,9 @@ type ClientInterface interface {
 
 	PostApiMeals(ctx context.Context, body PostApiMealsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// DeleteApiMealsId request
+	DeleteApiMealsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// GetApiMealsId request
 	GetApiMealsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -274,6 +277,9 @@ type ClientInterface interface {
 	PostApiMealsIdEntriesWithBody(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	PostApiMealsIdEntries(ctx context.Context, id int64, body PostApiMealsIdEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteApiMealsMealIdEntriesEntryId request
+	DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetApiRecipes request
 	GetApiRecipes(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -397,6 +403,18 @@ func (c *Client) PostApiMeals(ctx context.Context, body PostApiMealsJSONRequestB
 	return c.Client.Do(req)
 }
 
+func (c *Client) DeleteApiMealsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiMealsIdRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
 func (c *Client) GetApiMealsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetApiMealsIdRequest(c.Server, id)
 	if err != nil {
@@ -423,6 +441,18 @@ func (c *Client) PostApiMealsIdEntriesWithBody(ctx context.Context, id int64, co
 
 func (c *Client) PostApiMealsIdEntries(ctx context.Context, id int64, body PostApiMealsIdEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewPostApiMealsIdEntriesRequest(c.Server, id, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiMealsMealIdEntriesEntryIdRequest(c.Server, mealId, entryId)
 	if err != nil {
 		return nil, err
 	}
@@ -735,6 +765,40 @@ func NewPostApiMealsRequestWithBody(server string, contentType string, body io.R
 	return req, nil
 }
 
+// NewDeleteApiMealsIdRequest generates requests for DeleteApiMealsId
+func NewDeleteApiMealsIdRequest(server string, id int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals/%s", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
 // NewGetApiMealsIdRequest generates requests for GetApiMealsId
 func NewGetApiMealsIdRequest(server string, id int64) (*http.Request, error) {
 	var err error
@@ -812,6 +876,47 @@ func NewPostApiMealsIdEntriesRequestWithBody(server string, id int64, contentTyp
 	}
 
 	req.Header.Add("Content-Type", contentType)
+
+	return req, nil
+}
+
+// NewDeleteApiMealsMealIdEntriesEntryIdRequest generates requests for DeleteApiMealsMealIdEntriesEntryId
+func NewDeleteApiMealsMealIdEntriesEntryIdRequest(server string, mealId int64, entryId int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "mealId", runtime.ParamLocationPath, mealId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "entryId", runtime.ParamLocationPath, entryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals/%s/entries/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
 
 	return req, nil
 }
@@ -990,6 +1095,9 @@ type ClientWithResponsesInterface interface {
 
 	PostApiMealsWithResponse(ctx context.Context, body PostApiMealsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiMealsResponse, error)
 
+	// DeleteApiMealsIdWithResponse request
+	DeleteApiMealsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsIdResponse, error)
+
 	// GetApiMealsIdWithResponse request
 	GetApiMealsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*GetApiMealsIdResponse, error)
 
@@ -997,6 +1105,9 @@ type ClientWithResponsesInterface interface {
 	PostApiMealsIdEntriesWithBodyWithResponse(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiMealsIdEntriesResponse, error)
 
 	PostApiMealsIdEntriesWithResponse(ctx context.Context, id int64, body PostApiMealsIdEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiMealsIdEntriesResponse, error)
+
+	// DeleteApiMealsMealIdEntriesEntryIdWithResponse request
+	DeleteApiMealsMealIdEntriesEntryIdWithResponse(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdEntriesEntryIdResponse, error)
 
 	// GetApiRecipesWithResponse request
 	GetApiRecipesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiRecipesResponse, error)
@@ -1144,6 +1255,27 @@ func (r PostApiMealsResponse) StatusCode() int {
 	return 0
 }
 
+type DeleteApiMealsIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteApiMealsIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteApiMealsIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
 type GetApiMealsIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
@@ -1182,6 +1314,27 @@ func (r PostApiMealsIdEntriesResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r PostApiMealsIdEntriesResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteApiMealsMealIdEntriesEntryIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteApiMealsMealIdEntriesEntryIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteApiMealsMealIdEntriesEntryIdResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1331,6 +1484,15 @@ func (c *ClientWithResponses) PostApiMealsWithResponse(ctx context.Context, body
 	return ParsePostApiMealsResponse(rsp)
 }
 
+// DeleteApiMealsIdWithResponse request returning *DeleteApiMealsIdResponse
+func (c *ClientWithResponses) DeleteApiMealsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsIdResponse, error) {
+	rsp, err := c.DeleteApiMealsId(ctx, id, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteApiMealsIdResponse(rsp)
+}
+
 // GetApiMealsIdWithResponse request returning *GetApiMealsIdResponse
 func (c *ClientWithResponses) GetApiMealsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*GetApiMealsIdResponse, error) {
 	rsp, err := c.GetApiMealsId(ctx, id, reqEditors...)
@@ -1355,6 +1517,15 @@ func (c *ClientWithResponses) PostApiMealsIdEntriesWithResponse(ctx context.Cont
 		return nil, err
 	}
 	return ParsePostApiMealsIdEntriesResponse(rsp)
+}
+
+// DeleteApiMealsMealIdEntriesEntryIdWithResponse request returning *DeleteApiMealsMealIdEntriesEntryIdResponse
+func (c *ClientWithResponses) DeleteApiMealsMealIdEntriesEntryIdWithResponse(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdEntriesEntryIdResponse, error) {
+	rsp, err := c.DeleteApiMealsMealIdEntriesEntryId(ctx, mealId, entryId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteApiMealsMealIdEntriesEntryIdResponse(rsp)
 }
 
 // GetApiRecipesWithResponse request returning *GetApiRecipesResponse
@@ -1550,6 +1721,22 @@ func ParsePostApiMealsResponse(rsp *http.Response) (*PostApiMealsResponse, error
 	return response, nil
 }
 
+// ParseDeleteApiMealsIdResponse parses an HTTP response from a DeleteApiMealsIdWithResponse call
+func ParseDeleteApiMealsIdResponse(rsp *http.Response) (*DeleteApiMealsIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteApiMealsIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
 // ParseGetApiMealsIdResponse parses an HTTP response from a GetApiMealsIdWithResponse call
 func ParseGetApiMealsIdResponse(rsp *http.Response) (*GetApiMealsIdResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
@@ -1595,6 +1782,22 @@ func ParsePostApiMealsIdEntriesResponse(rsp *http.Response) (*PostApiMealsIdEntr
 			return nil, err
 		}
 		response.JSON201 = &dest
+	}
+
+	return response, nil
+}
+
+// ParseDeleteApiMealsMealIdEntriesEntryIdResponse parses an HTTP response from a DeleteApiMealsMealIdEntriesEntryIdWithResponse call
+func ParseDeleteApiMealsMealIdEntriesEntryIdResponse(rsp *http.Response) (*DeleteApiMealsMealIdEntriesEntryIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteApiMealsMealIdEntriesEntryIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
 	}
 
 	return response, nil
@@ -1686,11 +1889,17 @@ type ServerInterface interface {
 	// (POST /api/meals)
 	PostApiMeals(w http.ResponseWriter, r *http.Request)
 
+	// (DELETE /api/meals/{id})
+	DeleteApiMealsId(w http.ResponseWriter, r *http.Request, id int64)
+
 	// (GET /api/meals/{id})
 	GetApiMealsId(w http.ResponseWriter, r *http.Request, id int64)
 
 	// (POST /api/meals/{id}/entries)
 	PostApiMealsIdEntries(w http.ResponseWriter, r *http.Request, id int64)
+
+	// (DELETE /api/meals/{mealId}/entries/{entryId})
+	DeleteApiMealsMealIdEntriesEntryId(w http.ResponseWriter, r *http.Request, mealId int64, entryId int64)
 
 	// (GET /api/recipes)
 	GetApiRecipes(w http.ResponseWriter, r *http.Request)
@@ -1821,6 +2030,30 @@ func (siw *ServerInterfaceWrapper) PostApiMeals(w http.ResponseWriter, r *http.R
 	handler.ServeHTTP(w, r)
 }
 
+// DeleteApiMealsId operation middleware
+func (siw *ServerInterfaceWrapper) DeleteApiMealsId(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteApiMealsId(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
 // GetApiMealsId operation middleware
 func (siw *ServerInterfaceWrapper) GetApiMealsId(w http.ResponseWriter, r *http.Request) {
 	var err error
@@ -1860,6 +2093,39 @@ func (siw *ServerInterfaceWrapper) PostApiMealsIdEntries(w http.ResponseWriter, 
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.PostApiMealsIdEntries(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteApiMealsMealIdEntriesEntryId operation middleware
+func (siw *ServerInterfaceWrapper) DeleteApiMealsMealIdEntriesEntryId(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	// ------------- Path parameter "mealId" -------------
+	var mealId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "mealId", r.PathValue("mealId"), &mealId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "mealId", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "entryId" -------------
+	var entryId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "entryId", r.PathValue("entryId"), &entryId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "entryId", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteApiMealsMealIdEntriesEntryId(w, r, mealId, entryId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -2034,8 +2300,10 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc("POST "+options.BaseURL+"/api/login", wrapper.PostApiLogin)
 	m.HandleFunc("GET "+options.BaseURL+"/api/meals", wrapper.GetApiMeals)
 	m.HandleFunc("POST "+options.BaseURL+"/api/meals", wrapper.PostApiMeals)
+	m.HandleFunc("DELETE "+options.BaseURL+"/api/meals/{id}", wrapper.DeleteApiMealsId)
 	m.HandleFunc("GET "+options.BaseURL+"/api/meals/{id}", wrapper.GetApiMealsId)
 	m.HandleFunc("POST "+options.BaseURL+"/api/meals/{id}/entries", wrapper.PostApiMealsIdEntries)
+	m.HandleFunc("DELETE "+options.BaseURL+"/api/meals/{mealId}/entries/{entryId}", wrapper.DeleteApiMealsMealIdEntriesEntryId)
 	m.HandleFunc("GET "+options.BaseURL+"/api/recipes", wrapper.GetApiRecipes)
 	m.HandleFunc("POST "+options.BaseURL+"/api/recipes", wrapper.PostApiRecipes)
 	m.HandleFunc("POST "+options.BaseURL+"/api/register", wrapper.PostApiRegister)
@@ -2143,6 +2411,21 @@ func (response PostApiMeals201JSONResponse) VisitPostApiMealsResponse(w http.Res
 	return json.NewEncoder(w).Encode(response)
 }
 
+type DeleteApiMealsIdRequestObject struct {
+	Id int64 `json:"id"`
+}
+
+type DeleteApiMealsIdResponseObject interface {
+	VisitDeleteApiMealsIdResponse(w http.ResponseWriter) error
+}
+
+type DeleteApiMealsId204Response struct{}
+
+func (response DeleteApiMealsId204Response) VisitDeleteApiMealsIdResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
 type GetApiMealsIdRequestObject struct {
 	Id int64 `json:"id"`
 }
@@ -2176,6 +2459,22 @@ func (response PostApiMealsIdEntries201JSONResponse) VisitPostApiMealsIdEntriesR
 	w.WriteHeader(201)
 
 	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsMealIdEntriesEntryIdRequestObject struct {
+	MealId  int64 `json:"mealId"`
+	EntryId int64 `json:"entryId"`
+}
+
+type DeleteApiMealsMealIdEntriesEntryIdResponseObject interface {
+	VisitDeleteApiMealsMealIdEntriesEntryIdResponse(w http.ResponseWriter) error
+}
+
+type DeleteApiMealsMealIdEntriesEntryId204Response struct{}
+
+func (response DeleteApiMealsMealIdEntriesEntryId204Response) VisitDeleteApiMealsMealIdEntriesEntryIdResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
 }
 
 type GetApiRecipesRequestObject struct{}
@@ -2245,11 +2544,17 @@ type StrictServerInterface interface {
 	// (POST /api/meals)
 	PostApiMeals(ctx context.Context, request PostApiMealsRequestObject) (PostApiMealsResponseObject, error)
 
+	// (DELETE /api/meals/{id})
+	DeleteApiMealsId(ctx context.Context, request DeleteApiMealsIdRequestObject) (DeleteApiMealsIdResponseObject, error)
+
 	// (GET /api/meals/{id})
 	GetApiMealsId(ctx context.Context, request GetApiMealsIdRequestObject) (GetApiMealsIdResponseObject, error)
 
 	// (POST /api/meals/{id}/entries)
 	PostApiMealsIdEntries(ctx context.Context, request PostApiMealsIdEntriesRequestObject) (PostApiMealsIdEntriesResponseObject, error)
+
+	// (DELETE /api/meals/{mealId}/entries/{entryId})
+	DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, request DeleteApiMealsMealIdEntriesEntryIdRequestObject) (DeleteApiMealsMealIdEntriesEntryIdResponseObject, error)
 
 	// (GET /api/recipes)
 	GetApiRecipes(ctx context.Context, request GetApiRecipesRequestObject) (GetApiRecipesResponseObject, error)
@@ -2461,6 +2766,32 @@ func (sh *strictHandler) PostApiMeals(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// DeleteApiMealsId operation middleware
+func (sh *strictHandler) DeleteApiMealsId(w http.ResponseWriter, r *http.Request, id int64) {
+	var request DeleteApiMealsIdRequestObject
+
+	request.Id = id
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteApiMealsId(ctx, request.(DeleteApiMealsIdRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteApiMealsId")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteApiMealsIdResponseObject); ok {
+		if err := validResponse.VisitDeleteApiMealsIdResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
 // GetApiMealsId operation middleware
 func (sh *strictHandler) GetApiMealsId(w http.ResponseWriter, r *http.Request, id int64) {
 	var request GetApiMealsIdRequestObject
@@ -2513,6 +2844,33 @@ func (sh *strictHandler) PostApiMealsIdEntries(w http.ResponseWriter, r *http.Re
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(PostApiMealsIdEntriesResponseObject); ok {
 		if err := validResponse.VisitPostApiMealsIdEntriesResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteApiMealsMealIdEntriesEntryId operation middleware
+func (sh *strictHandler) DeleteApiMealsMealIdEntriesEntryId(w http.ResponseWriter, r *http.Request, mealId int64, entryId int64) {
+	var request DeleteApiMealsMealIdEntriesEntryIdRequestObject
+
+	request.MealId = mealId
+	request.EntryId = entryId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteApiMealsMealIdEntriesEntryId(ctx, request.(DeleteApiMealsMealIdEntriesEntryIdRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteApiMealsMealIdEntriesEntryId")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteApiMealsMealIdEntriesEntryIdResponseObject); ok {
+		if err := validResponse.VisitDeleteApiMealsMealIdEntriesEntryIdResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {

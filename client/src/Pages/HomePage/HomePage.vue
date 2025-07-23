@@ -1,14 +1,17 @@
 <script setup lang="ts">
-import HeaderH1 from "../Components/Headings/HeaderH1.vue";
-import { useUserStore } from "../Stores/UserStore.ts";
-import InputDate from "../Components/Forms/InputDate.vue";
-import ButtonPrimary from "../Components/Buttons/ButtonPrimary.vue";
-import { useMealStore } from "../Stores/MealStore.ts";
+import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
+import { useUserStore } from "../../Stores/UserStore.ts";
+import InputDate from "../../Components/Forms/InputDate.vue";
+import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
+import { useMealStore } from "../../Stores/MealStore.ts";
 import { computed, onMounted, watch } from "vue";
-import { useFoodItemStore } from "../Stores/FoodItemStore.ts";
-import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
-import { useMealViewStore } from "../Stores/MealViewStore.ts";
-import { addDays } from "../Utilities/Date.ts";
+import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
+import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
+import { useMealViewStore } from "../../Stores/MealViewStore.ts";
+import { addDays } from "../../Utilities/Date.ts";
+import { MealEntry } from "../../Models/Meals/MealEntry.ts";
+import { Meal } from "../../Models/Meals/Meal.ts";
+import MealView from "./MealView.vue";
 
 const userStore = useUserStore();
 const mealStore = useMealStore();
@@ -22,10 +25,10 @@ onMounted(async () => {
     await mealStore.loadMealsForDay();
     await mealViewStore.init();
 });
-watch(foodItemIds, () => {
+watch(foodItemIds, async () => {
     for (const id of foodItemIds.value) {
         if (id && !foodItemStore.getFoodItem(id)) {
-            FoodItem.getById(id).then((f) => {
+            await FoodItem.getById(id).then((f) => {
                 if (f) {
                     foodItemStore.collection.push(f);
                 }
@@ -36,6 +39,30 @@ watch(foodItemIds, () => {
 
 function bumpDay(n: number) {
     mealStore.selectedDay = addDays(mealStore.selectedDay, n);
+}
+
+async function onDeleteEntry(entryId: number, mealId: number) {
+    const { error } = await MealEntry.delete(entryId, mealId);
+    if (error) {
+        console.log("failed to delete meal entry");
+        return;
+    }
+    const { error: rmEntryErr } = mealStore.removeMealEntry(entryId, mealId);
+    if (rmEntryErr) {
+        console.log(rmEntryErr.message);
+    }
+}
+
+async function onDeleteMeal(mealId: number) {
+    const { error } = await Meal.delete(mealId);
+    if (error) {
+        return;
+    }
+
+    const { error: rmMealErr } = mealStore.removeMeal(mealId);
+    if (rmMealErr) {
+        console.log(rmMealErr.message);
+    }
 }
 </script>
 <template>
@@ -70,21 +97,7 @@ function bumpDay(n: number) {
         </div>
         <ul class="">
             <li v-for="item in mealViewStore.mealsView" :key="item.id" class="box">
-                <div>
-                    <RouterLink :to="{ path: '/meals/' + item.id }">Meal {{ item.id }}</RouterLink>
-                </div>
-                <div>
-                    {{ item.timestamp }}
-                </div>
-                <ul class="content">
-                    <li v-for="entry in item.entries" :key="entry.id" class="box">
-                        <p>{{ entry.name }}, {{ entry.amount }}</p>
-                        <p>
-                            KCal: {{ entry.KCal }}, Protein: {{ entry.Protein }}, Carbohydrate:
-                            {{ entry.Carbohydrate }}, Fat: {{ entry.Fat }}
-                        </p>
-                    </li>
-                </ul>
+                <MealView :item="item" @delete-meal="onDeleteMeal" @delete-meal-entry="onDeleteEntry"></MealView>
             </li>
         </ul>
     </section>
