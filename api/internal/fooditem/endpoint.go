@@ -72,3 +72,8 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 
 	return api.GetApiFoodItemsId200JSONResponse(item.ToFoodItemResponse()), nil
 }
+
+func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteApiFoodItemsIdRequestObject) (api.DeleteApiFoodItemsIdResponseObject, error) {
+	// TODO implement me
+	panic("implement me")
+}
