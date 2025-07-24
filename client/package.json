@@ -15,7 +15,7 @@
         "test": "vitest run"
     },
     "devDependencies": {
-        "@openapitools/openapi-generator-cli": "^2.21.3",
+        "@openapitools/openapi-generator-cli": "^2.21.4",
         "@types/debounce": "^1.2.4",
         "@vitejs/plugin-vue": "^6.0.0",
         "@vue/tsconfig": "^0.7.0",
