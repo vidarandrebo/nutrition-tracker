@@ -57,3 +57,8 @@ func (e Endpoint) PostApiRecipes(ctx context.Context, request api.PostApiRecipes
 	}
 	return api.PostApiRecipes201JSONResponse(recipe.ToResponse()), nil
 }
+
+func (e Endpoint) DeleteApiRecipesId(ctx context.Context, request api.DeleteApiRecipesIdRequestObject) (api.DeleteApiRecipesIdResponseObject, error) {
+	// TODO implement me
+	panic("implement me")
+}
