@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import ButtonDanger from "../../Components/Buttons/ButtonDanger.vue";
 import type { MealView } from "../../Models/Meals/MealView.ts";
 import { ref } from "vue";
 import { OnClickOutside } from "@vueuse/components";
@@ -59,7 +58,7 @@ function onClickOutsideHandler() {
         <li v-for="entry in props.item.entries" :key="entry.id" class="box">
             <MealEntryView
                 :entry="entry"
-                @deleteMealEntry="(entryId) => emit('deleteMealEntry', entryId, props.item.id)"
+                @delete-meal-entry="(entryId) => emit('deleteMealEntry', entryId, props.item.id)"
             ></MealEntryView>
         </li>
     </ul>

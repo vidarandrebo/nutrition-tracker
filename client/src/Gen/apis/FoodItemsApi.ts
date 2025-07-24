@@ -21,6 +21,10 @@ import {
     PostFoodItemRequestToJSON,
 } from "../models/index";
 
+export interface ApiFoodItemsIdDeleteRequest {
+    id: number;
+}
+
 export interface ApiFoodItemsIdGetRequest {
     id: number;
 }
@@ -49,6 +53,25 @@ export interface FoodItemsApiInterface {
     /**
      */
     apiFoodItemsGet(initOverrides?: RequestInit | runtime.InitOverrideFunction): Promise<Array<FoodItemResponse>>;
+
+    /**
+     *
+     * @param {number} id
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FoodItemsApiInterface
+     */
+    apiFoodItemsIdDeleteRaw(
+        requestParameters: ApiFoodItemsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    apiFoodItemsIdDelete(
+        requestParameters: ApiFoodItemsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
 
     /**
      *
@@ -124,6 +147,48 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
     ): Promise<Array<FoodItemResponse>> {
         const response = await this.apiFoodItemsGetRaw(initOverrides);
         return await response.value();
+    }
+
+    /**
+     */
+    async apiFoodItemsIdDeleteRaw(
+        requestParameters: ApiFoodItemsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["id"] == null) {
+            throw new runtime.RequiredError(
+                "id",
+                'Required parameter "id" was null or undefined when calling apiFoodItemsIdDelete().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        let urlPath = `/api/food-items/{id}`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters["id"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "DELETE",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiFoodItemsIdDelete(
+        requestParameters: ApiFoodItemsIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.apiFoodItemsIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
