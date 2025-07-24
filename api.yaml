@@ -74,6 +74,22 @@ paths:
               schema:
                 $ref: "#/components/schemas/FoodItemResponse"
           description: FoodItem with the provided id
+    delete:
+      tags:
+        - Food Items
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+
+      responses:
+        204:
+          description: Food Item with id is deleted
+        409:
+          description: The food item is referenced by a meal entry or a recipe, and cannot be deleted
 
   /api/meals:
     get:
@@ -222,6 +238,24 @@ paths:
               schema:
                 $ref: "#/components/schemas/RecipeResponse"
           description: Recipe created
+
+  /api/recipes/{id}:
+    delete:
+      tags:
+        - Recipes
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+
+      responses:
+        204:
+          description: Recipe with id is deleted
+        409:
+          description: The recipe is referenced by a meal entry and cannot be deleted
 
   /api/login:
     post:
