@@ -6,7 +6,7 @@ import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import { useMealStore } from "../../Stores/MealStore.ts";
 import { computed, onMounted, watch } from "vue";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
-import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
+import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import { useMealViewStore } from "../../Stores/MealViewStore.ts";
 import { addDays } from "../../Utilities/Date.ts";
 import { MealEntry } from "../../Models/Meals/MealEntry.ts";

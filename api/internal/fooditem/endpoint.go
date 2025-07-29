@@ -74,6 +74,13 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 }
 
 func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteApiFoodItemsIdRequestObject) (api.DeleteApiFoodItemsIdResponseObject, error) {
-	// TODO implement me
-	panic("implement me")
+	userID, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	err = e.store.Delete(request.Id, userID)
+	if err != nil {
+		return api.DeleteApiFoodItemsId409Response{}, nil
+	}
+	return api.DeleteApiFoodItemsId204Response{}, nil
 }

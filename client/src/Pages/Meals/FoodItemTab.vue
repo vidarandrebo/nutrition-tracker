@@ -6,7 +6,7 @@ import ModalPrimary from "../../Components/ModalPrimary.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import { computed, ref, watch } from "vue";
 import type { Energy } from "../../Models/Common/Energy.ts";
-import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
+import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import debounce from "debounce";
 import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";

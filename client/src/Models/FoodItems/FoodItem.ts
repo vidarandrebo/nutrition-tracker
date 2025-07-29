@@ -1,6 +1,7 @@
 import type { Energy } from "../Common/Energy.ts";
 import { type FoodItemResponse } from "../../Gen";
-import { getFoodItemsClient } from "../Api.ts";
+import { getFoodItemsClient, getMealsClient } from "../Api.ts";
+import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
 
 export class FoodItem {
     id: number;
@@ -77,5 +78,14 @@ export class FoodItem {
             console.log("failed to fetch food items");
         }
         return null;
+    }
+    static async delete(id: number): Promise<Result<void>> {
+        const client = getFoodItemsClient();
+
+        return await tryCatch(
+            client.apiFoodItemsIdDelete({
+                id: id,
+            }),
+        );
     }
 }

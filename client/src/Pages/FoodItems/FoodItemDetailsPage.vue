@@ -3,7 +3,7 @@ import { useRoute } from "vue-router";
 import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import { onMounted } from "vue";
-import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
+import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import { ref } from "vue";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";

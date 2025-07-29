@@ -59,6 +59,13 @@ func (e Endpoint) PostApiRecipes(ctx context.Context, request api.PostApiRecipes
 }
 
 func (e Endpoint) DeleteApiRecipesId(ctx context.Context, request api.DeleteApiRecipesIdRequestObject) (api.DeleteApiRecipesIdResponseObject, error) {
-	// TODO implement me
-	panic("implement me")
+	userID, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+	err = e.store.Delete(request.Id, userID)
+	if err != nil {
+		return api.DeleteApiRecipesId409Response{}, nil
+	}
+	return api.DeleteApiRecipesId204Response{}, nil
 }
