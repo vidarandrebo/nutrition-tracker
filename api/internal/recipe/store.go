@@ -90,6 +90,7 @@ func (s *Store) Add(recipe Recipe) (Recipe, error) {
 }
 
 func (s *Store) Delete(id int64, ownerID int64) error {
+	s.logger.Info("deleting recipe", slog.Int64("recipeID", id), slog.Int64("ownerId", ownerID))
 	_, err := s.db.Query(`
 		DELETE FROM recipes
 		WHERE id = $1

@@ -1,6 +1,6 @@
 import type { Energy } from "../Common/Energy.ts";
 import { type FoodItemResponse } from "../../Gen";
-import { getFoodItemsClient, getMealsClient } from "../Api.ts";
+import { getFoodItemsClient } from "../Api.ts";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
 
 export class FoodItem {

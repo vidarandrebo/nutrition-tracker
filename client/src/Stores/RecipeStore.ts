@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { Recipe } from "../Models/Recipes/Recipe.ts";
 import { ref } from "vue";
 import type { RecipeRequest } from "../Models/Recipes/Requests.ts";
+import { Failure, type Result, Success } from "../Utilities/tryCatch.ts";
 
 export const useRecipeStore = defineStore("recipeStore", () => {
     const collection = ref<Recipe[]>([]);
@@ -25,6 +26,14 @@ export const useRecipeStore = defineStore("recipeStore", () => {
             collection.value.push(newRecipe);
         }
     }
+    function removeRecipe(id: number): Result<void> {
+        const idx = collection.value.findIndex((m) => m.id === id);
+        if (idx !== -1) {
+            collection.value.splice(idx, 1);
+            return Success.empty();
+        }
+        return Failure.new(new Error("failed to remove recipe"));
+    }
 
-    return { collection, addRecipe, init };
+    return { collection, addRecipe, init, removeRecipe };
 });

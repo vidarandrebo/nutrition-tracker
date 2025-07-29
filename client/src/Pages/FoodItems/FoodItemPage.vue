@@ -55,8 +55,8 @@ async function onDeleteFoodItem(foodItemId: number) {
             <FoodItemDisplay
                 v-for="foodItem in foodItemStore.filteredFoodItems"
                 :key="foodItem.id"
-                @deleteFoodItem="onDeleteFoodItem"
                 :item="foodItem"
+                @delete-food-item="onDeleteFoodItem"
             ></FoodItemDisplay>
         </ul>
     </section>

@@ -7,6 +7,8 @@ import LevelPrimary from "../../Components/LevelPrimary.vue";
 import { onMounted } from "vue";
 import { useRecipeViewStore } from "../../Stores/RecipeViewStore.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
+import RecipeView from "./RecipeView.vue";
+import { Recipe } from "../../Models/Recipes/Recipe.ts";
 
 const recipeStore = useRecipeStore();
 const foodItemStore = useFoodItemStore();
@@ -18,6 +20,17 @@ onMounted(async () => {
 
 async function addRecipe() {
     await router.push("/recipes/add");
+}
+async function onDeleteRecipe(recipeId: number) {
+    const { error } = await Recipe.delete(recipeId);
+    if (error) {
+        return;
+    }
+
+    const { error: rmRecipeErr } = recipeStore.removeRecipe(recipeId);
+    if (rmRecipeErr) {
+        console.log(rmRecipeErr.message);
+    }
 }
 </script>
 
@@ -32,11 +45,7 @@ async function addRecipe() {
             </template>
         </LevelPrimary>
         <article v-for="item in recipeViewStore.recipesView" :key="item.id" class="box">
-            <b>{{ item.name }}</b>
-            <p>
-                KCal: {{ item.KCal }}, Protein: {{ item.Protein }} g, Carbohydrate: {{ item.Carbohydrate }} g, Fat:
-                {{ item.Fat }} g
-            </p>
+            <RecipeView :item="item" @delete-recipe="onDeleteRecipe"></RecipeView>
         </article>
     </div>
 </template>
