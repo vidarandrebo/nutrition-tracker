@@ -2,6 +2,7 @@ import { RecipeEntry } from "./RecipeEntry.ts";
 import type { RecipeRequest } from "./Requests.ts";
 import type { RecipeResponse } from "../../Gen";
 import { getRecipesClient } from "../Api.ts";
+import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
 
 export class Recipe {
     id: number;
@@ -44,5 +45,15 @@ export class Recipe {
             return Recipe.fromResponses(response);
         }
         return null;
+    }
+
+    static async delete(id: number): Promise<Result<void>> {
+        const client = getRecipesClient();
+
+        return await tryCatch(
+            client.apiRecipesIdDelete({
+                id: id,
+            }),
+        );
     }
 }

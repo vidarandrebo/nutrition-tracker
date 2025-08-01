@@ -1,18 +1,14 @@
 <script setup lang="ts">
-import type { MealView } from "../../Models/Meals/MealView.ts";
-import { ref } from "vue";
-import { OnClickOutside } from "@vueuse/components";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
-import MealEntryView from "./MealEntryView.vue";
-
+import { OnClickOutside } from "@vueuse/components";
+import type { RecipeView } from "../../Models/Recipes/RecipeView.ts";
+import { ref } from "vue";
 const props = defineProps<{
-    item: MealView;
+    item: RecipeView;
 }>();
 const emit = defineEmits<{
-    deleteMeal: [id: number];
-    deleteMealEntry: [entryId: number, mealId: number];
+    deleteRecipe: [id: number];
 }>();
-
 const kebabOpen = ref<boolean>(false);
 
 function onClickOutsideHandler() {
@@ -23,9 +19,7 @@ function onClickOutsideHandler() {
 <template>
     <LevelPrimary>
         <template #left>
-            <div>
-                <RouterLink :to="{ path: '/meals/' + props.item.id }">Meal {{ props.item.id }}</RouterLink>
-            </div>
+            <b>{{ item.name }}</b>
         </template>
         <template #right>
             <OnClickOutside @trigger="onClickOutsideHandler">
@@ -42,8 +36,8 @@ function onClickOutsideHandler() {
                     </div>
                     <div class="dropdown-menu" role="menu">
                         <div class="dropdown-content">
-                            <a href="#" class="dropdown-item" @click="() => emit('deleteMeal', props.item.id)"
-                                >Delete meal</a
+                            <a href="#" class="dropdown-item" @click="() => emit('deleteRecipe', props.item.id)"
+                                >Delete recipe</a
                             >
                         </div>
                     </div>
@@ -51,16 +45,9 @@ function onClickOutsideHandler() {
             </OnClickOutside>
         </template>
     </LevelPrimary>
-    <div>
-        {{ props.item.timestamp }}
-    </div>
-    <ul class="content">
-        <li v-for="entry in props.item.entries" :key="entry.id" class="box">
-            <MealEntryView
-                :entry="entry"
-                @delete-meal-entry="(entryId) => emit('deleteMealEntry', entryId, props.item.id)"
-            ></MealEntryView>
-        </li>
-    </ul>
+    <p>
+        KCal: {{ item.KCal }}, Protein: {{ item.Protein }} g, Carbohydrate: {{ item.Carbohydrate }} g, Fat:
+        {{ item.Fat }} g
+    </p>
 </template>
 <style scoped></style>

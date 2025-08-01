@@ -7,6 +7,7 @@ import InputText from "../../Components/Forms/InputText.vue";
 import FormField from "../../Components/Forms/FormField.vue";
 import debounce from "debounce";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
+import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 
 const foodItemStore = useFoodItemStore();
 const searchTerm = ref<string>("");
@@ -22,6 +23,17 @@ const updateSearchTermDb = debounce(() => {
 watch(searchTerm, () => {
     updateSearchTermDb();
 });
+async function onDeleteFoodItem(foodItemId: number) {
+    const { error } = await FoodItem.delete(foodItemId);
+    if (error) {
+        return;
+    }
+
+    const { error: rmFoodItemErr } = foodItemStore.removeFoodItem(foodItemId);
+    if (rmFoodItemErr) {
+        console.log(rmFoodItemErr.message);
+    }
+}
 </script>
 
 <template>
@@ -44,6 +56,7 @@ watch(searchTerm, () => {
                 v-for="foodItem in foodItemStore.filteredFoodItems"
                 :key="foodItem.id"
                 :item="foodItem"
+                @delete-food-item="onDeleteFoodItem"
             ></FoodItemDisplay>
         </ul>
     </section>

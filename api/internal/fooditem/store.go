@@ -109,3 +109,16 @@ func (s *Store) Get(ownerID int64) []FoodItem {
 	}
 	return items
 }
+func (s *Store) Delete(id int64, ownerID int64) error {
+	_, err := s.db.Query(`
+		DELETE FROM food_items
+		WHERE id = $1
+		  AND owner_id = $2
+	`, id, ownerID,
+	)
+	if err != nil {
+		s.logger.Error("failed to delete foodItem", slog.Int64("foodItemId", id))
+		return err
+	}
+	return nil
+}

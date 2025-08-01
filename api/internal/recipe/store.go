@@ -8,17 +8,17 @@ import (
 
 type Store struct {
 	logger *slog.Logger
-	DB     *sql.DB
+	db     *sql.DB
 }
 
 func NewStore(db *sql.DB, logger *slog.Logger) *Store {
-	s := Store{DB: db}
+	s := Store{db: db}
 	s.logger = logger.With(slog.Any("module", reflect.TypeOf(s)))
 	return &s
 }
 
 func (s *Store) Get(ownerID int64) ([]Recipe, error) {
-	rows, err := s.DB.Query(`
+	rows, err := s.db.Query(`
 		WITH owners_recipes AS (
 		    SELECT id, name, owner_id 
 			FROM recipes
@@ -57,7 +57,7 @@ func (s *Store) Get(ownerID int64) ([]Recipe, error) {
 }
 
 func (s *Store) Add(recipe Recipe) (Recipe, error) {
-	tx, err := s.DB.Begin()
+	tx, err := s.db.Begin()
 
 	err = tx.QueryRow(`
 		INSERT INTO recipes AS r (name, owner_id)
@@ -87,4 +87,19 @@ func (s *Store) Add(recipe Recipe) (Recipe, error) {
 	s.logger.Info("added new recipe", slog.Any("recipe", recipe))
 
 	return recipe, nil
+}
+
+func (s *Store) Delete(id int64, ownerID int64) error {
+	s.logger.Info("deleting recipe", slog.Int64("recipeID", id), slog.Int64("ownerId", ownerID))
+	_, err := s.db.Query(`
+		DELETE FROM recipes
+		WHERE id = $1
+		  AND owner_id = $2
+	`, id, ownerID,
+	)
+	if err != nil {
+		s.logger.Error("failed to delete recipe", slog.Int64("recipeID", id))
+		return err
+	}
+	return nil
 }

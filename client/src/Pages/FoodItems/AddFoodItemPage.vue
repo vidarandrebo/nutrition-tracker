@@ -5,7 +5,7 @@ import { PostFoodItemRequest } from "../../Models/FoodItems/Requests.ts";
 import router from "../../Router.ts";
 import InputText from "../../Components/Forms/InputText.vue";
 import InputNumber from "../../Components/Forms/InputNumber.vue";
-import { FoodItem } from "../../Models/FoodItems/Fooditem.ts";
+import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import FormField from "../../Components/Forms/FormField.vue";

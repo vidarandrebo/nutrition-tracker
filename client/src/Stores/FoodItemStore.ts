@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-import { FoodItem } from "../Models/FoodItems/Fooditem.ts";
+import { Failure, type Result, Success } from "../Utilities/tryCatch.ts";
+import { FoodItem } from "../Models/FoodItems/FoodItem.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
@@ -37,6 +38,14 @@ export const useFoodItemStore = defineStore("foodItems", () => {
             collection.value = items;
         }
     }
+    function removeFoodItem(id: number): Result<void> {
+        const idx = collection.value.findIndex((m) => m.id === id);
+        if (idx !== -1) {
+            collection.value.splice(idx, 1);
+            return Success.empty();
+        }
+        return Failure.new(new Error("failed to remove foodItem"));
+    }
 
     const filteredFoodItems = computed(() => {
         if (searchTerm.value.length < 3) {
@@ -70,5 +79,15 @@ export const useFoodItemStore = defineStore("foodItems", () => {
             })
             .slice(0, 50);
     });
-    return { clear, collection, init, refresh, filteredFoodItems, searchTerm, getFoodItem, initialized };
+    return {
+        clear,
+        collection,
+        init,
+        refresh,
+        removeFoodItem,
+        filteredFoodItems,
+        searchTerm,
+        getFoodItem,
+        initialized,
+    };
 });
