@@ -36,11 +36,20 @@ func (s *Store) Add(item FoodItem) FoodItem {
 	if err != nil {
 		panic(err)
 	}
-	for _, microNutrient := range item.Micronutrients {
+	for _, micronutrient := range item.Micronutrients {
 		_, err = tx.Exec(`
 			INSERT INTO micronutrients (name, amount, food_item_id) 
 			VALUES ($1, $2, $3)`,
-			microNutrient.Name, microNutrient.Amount, item.ID)
+			micronutrient.Name, micronutrient.Amount, item.ID)
+		if err != nil {
+			panic(err)
+		}
+	}
+	for _, portionSize := range item.PortionSizes {
+		_, err = tx.Exec(`
+			INSERT INTO portion_sizes (name, amount, food_item_id) 
+			VALUES ($1, $2,$3)
+    	`, portionSize.Name, portionSize.Amount, item.ID)
 		if err != nil {
 			panic(err)
 		}
@@ -55,24 +64,33 @@ func (s *Store) Add(item FoodItem) FoodItem {
 }
 
 func (s *Store) GetByID(id int64) (FoodItem, error) {
-	item := FoodItem{}
-	err := s.db.QueryRow(`
-		SELECT id, manufacturer, product, protein, carbohydrate, fat, kcal, public, source, owner_id 
-		FROM food_items 
-		WHERE id = $1`,
+	rows, err := s.db.Query(`
+		SELECT fi.id, fi.manufacturer, fi.product, fi.protein, fi.carbohydrate, fi.fat, fi.kcal, fi.public, fi.source, fi.owner_id, ps.id, ps.amount, ps.name
+		FROM food_items fi
+		JOIN public.portion_sizes ps ON fi.id = ps.food_item_id
+		WHERE fi.id = $1`,
 		id,
-	).Scan(
-		&item.ID,
-		&item.Manufacturer,
-		&item.Product,
-		&item.Protein,
-		&item.Carbohydrate,
-		&item.Fat,
-		&item.KCal,
-		&item.Public,
-		&item.Source,
-		&item.OwnerID,
 	)
+	items := make([]TableFoodItemAndPortion, 0)
+	for rows.Next() {
+		item := TableFoodItemAndPortion{}
+		rows.Scan(
+			&item.FI.ID,
+			&item.FI.Manufacturer,
+			&item.FI.Product,
+			&item.FI.Protein,
+			&item.FI.Carbohydrate,
+			&item.FI.Fat,
+			&item.FI.KCal,
+			&item.FI.Public,
+			&item.FI.Source,
+			&item.FI.OwnerID,
+			&item.P.ID,
+			&item.P.Amount,
+			&item.P.Name,
+		)
+		items = append(items, item)
+	}
 	if err != nil {
 		return FoodItem{}, err
 	}

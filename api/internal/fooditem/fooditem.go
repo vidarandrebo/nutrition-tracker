@@ -18,6 +18,7 @@ type FoodItem struct {
 	KCal           float64
 	Public         bool
 	Micronutrients []Micronutrient
+	PortionSizes   []PortionSize
 	Source         string
 	OwnerID        int64
 }
@@ -95,6 +96,12 @@ func CalcAmount(amount float64, unit string) float64 {
 }
 
 type Micronutrient struct {
+	ID     int64
+	Name   string
+	Amount float64
+}
+
+type PortionSize struct {
 	ID     int64
 	Name   string
 	Amount float64
