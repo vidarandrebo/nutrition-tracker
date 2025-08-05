@@ -13,6 +13,21 @@
  */
 
 import { mapValues } from "../runtime";
+import type { PortionSizeResponse } from "./PortionSizeResponse";
+import {
+    PortionSizeResponseFromJSON,
+    PortionSizeResponseFromJSONTyped,
+    PortionSizeResponseToJSON,
+    PortionSizeResponseToJSONTyped,
+} from "./PortionSizeResponse";
+import type { MicronutrientResponse } from "./MicronutrientResponse";
+import {
+    MicronutrientResponseFromJSON,
+    MicronutrientResponseFromJSONTyped,
+    MicronutrientResponseToJSON,
+    MicronutrientResponseToJSONTyped,
+} from "./MicronutrientResponse";
+
 /**
  *
  * @export
@@ -73,6 +88,18 @@ export interface FoodItemResponse {
      * @memberof FoodItemResponse
      */
     source: string;
+    /**
+     *
+     * @type {Array<PortionSizeResponse>}
+     * @memberof FoodItemResponse
+     */
+    portionSizes?: Array<PortionSizeResponse>;
+    /**
+     *
+     * @type {Array<MicronutrientResponse>}
+     * @memberof FoodItemResponse
+     */
+    micronutrients?: Array<MicronutrientResponse>;
 }
 
 /**
@@ -109,6 +136,14 @@ export function FoodItemResponseFromJSONTyped(json: any, ignoreDiscriminator: bo
         product: json["product"],
         isPublic: json["isPublic"],
         source: json["source"],
+        portionSizes:
+            json["portionSizes"] == null
+                ? undefined
+                : (json["portionSizes"] as Array<any>).map(PortionSizeResponseFromJSON),
+        micronutrients:
+            json["micronutrients"] == null
+                ? undefined
+                : (json["micronutrients"] as Array<any>).map(MicronutrientResponseFromJSON),
     };
 }
 
@@ -134,5 +169,13 @@ export function FoodItemResponseToJSONTyped(
         product: value["product"],
         isPublic: value["isPublic"],
         source: value["source"],
+        portionSizes:
+            value["portionSizes"] == null
+                ? undefined
+                : (value["portionSizes"] as Array<any>).map(PortionSizeResponseToJSON),
+        micronutrients:
+            value["micronutrients"] == null
+                ? undefined
+                : (value["micronutrients"] as Array<any>).map(MicronutrientResponseToJSON),
     };
 }

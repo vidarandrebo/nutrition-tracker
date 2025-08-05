@@ -1,10 +1,5 @@
 package fooditem
 
-import (
-	"maps"
-	"slices"
-)
-
 type TableFoodItemComplete struct {
 	FI TableFoodItem
 	M  TableMicronutrient
@@ -15,64 +10,37 @@ type TableFoodItemAndPortion struct {
 	P  TablePortionSize
 }
 
-func fromFoodItemComplete(complete ...TableFoodItemComplete) []FoodItem {
+func fromFoodItemComplete(rows []TableFoodItemComplete) []FoodItem {
 	portionSizes := make(map[int64]map[int64]PortionSize)
 	micronutrients := make(map[int64]map[int64]Micronutrient)
 	foodItems := make(map[int64]FoodItem)
-	for _, item := range complete {
+	for _, item := range rows {
 		_, ok := foodItems[item.FI.ID]
 		if !ok {
-			foodItems[item.FI.ID] = FoodItem{
-				ID:             item.FI.ID,
-				Manufacturer:   item.FI.Manufacturer,
-				Product:        item.FI.Product,
-				Protein:        item.FI.Protein,
-				Carbohydrate:   item.FI.Carbohydrate,
-				Fat:            item.FI.Fat,
-				KCal:           item.FI.KCal,
-				Public:         item.FI.Public,
-				Micronutrients: make([]Micronutrient, 0),
-				PortionSizes:   make([]PortionSize, 0),
-				Source:         item.FI.Source,
-				OwnerID:        item.FI.OwnerID,
-			}
+			foodItems[item.FI.ID] = item.FI.ToFoodItem()
 			portionSizes[item.FI.ID] = make(map[int64]PortionSize)
 			micronutrients[item.FI.ID] = make(map[int64]Micronutrient)
 		}
 		_, ok = portionSizes[item.FI.ID][item.PS.ID]
 		if !ok {
-			portionSizes[item.PS.ID][item.PS.ID] = PortionSize{
-				ID:     item.PS.ID,
-				Name:   item.PS.Name,
-				Amount: item.PS.Amount,
-			}
+			portionSizes[item.FI.ID][item.PS.ID] = item.PS.ToPortionSize()
 		}
 		_, ok = micronutrients[item.FI.ID][item.M.ID]
 		if !ok {
-			portionSizes[item.FI.ID][item.M.ID] = PortionSize{
-				ID:     item.M.ID,
-				Name:   item.M.Name,
-				Amount: item.M.Amount,
-			}
+			micronutrients[item.FI.ID][item.M.ID] = item.M.ToMicronutrient()
 		}
 	}
+	out := make([]FoodItem, 0, len(foodItems))
 	for _, item := range foodItems {
 		for _, micronutrient := range micronutrients[item.ID] {
-			item.Micronutrients = append(item.Micronutrients, Micronutrient{
-				ID:     micronutrient.ID,
-				Name:   micronutrient.Name,
-				Amount: micronutrient.Amount,
-			})
+			item.Micronutrients = append(item.Micronutrients, micronutrient)
 		}
 		for _, portion := range portionSizes[item.ID] {
-			item.PortionSizes = append(item.PortionSizes, PortionSize{
-				ID:     portion.ID,
-				Name:   portion.Name,
-				Amount: portion.Amount,
-			})
+			item.PortionSizes = append(item.PortionSizes, portion)
 		}
+		out = append(out, item)
 	}
-	return slices.Collect(maps.Values(foodItems))
+	return out
 }
 
 type TableFoodItem struct {
@@ -88,13 +56,47 @@ type TableFoodItem struct {
 	OwnerID      int64
 }
 
+func (tf TableFoodItem) ToFoodItem() FoodItem {
+	return FoodItem{
+		ID:             tf.ID,
+		Manufacturer:   tf.Manufacturer,
+		Product:        tf.Product,
+		Protein:        tf.Protein,
+		Carbohydrate:   tf.Carbohydrate,
+		Fat:            tf.Fat,
+		KCal:           tf.KCal,
+		Public:         tf.Public,
+		Micronutrients: make([]Micronutrient, 0),
+		PortionSizes:   make([]PortionSize, 0),
+		Source:         tf.Source,
+		OwnerID:        tf.OwnerID,
+	}
+}
+
 type TablePortionSize struct {
 	ID     int64
 	Amount float64
 	Name   string
 }
+
+func (tp TablePortionSize) ToPortionSize() PortionSize {
+	return PortionSize{
+		ID:     tp.ID,
+		Name:   tp.Name,
+		Amount: tp.Amount,
+	}
+}
+
 type TableMicronutrient struct {
 	ID     int64
 	Amount float64
 	Name   string
+}
+
+func (tm TableMicronutrient) ToMicronutrient() Micronutrient {
+	return Micronutrient{
+		ID:     tm.ID,
+		Name:   tm.Name,
+		Amount: tm.Amount,
+	}
 }

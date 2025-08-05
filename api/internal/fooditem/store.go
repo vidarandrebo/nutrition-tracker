@@ -65,15 +65,16 @@ func (s *Store) Add(item FoodItem) FoodItem {
 
 func (s *Store) GetByID(id int64) (FoodItem, error) {
 	rows, err := s.db.Query(`
-		SELECT fi.id, fi.manufacturer, fi.product, fi.protein, fi.carbohydrate, fi.fat, fi.kcal, fi.public, fi.source, fi.owner_id, ps.id, ps.amount, ps.name
+		SELECT fi.id, fi.manufacturer, fi.product, fi.protein, fi.carbohydrate, fi.fat, fi.kcal, fi.public, fi.source, fi.owner_id, ps.id, ps.amount, ps.name, m.id, m.amount, m.name
 		FROM food_items fi
-		JOIN public.portion_sizes ps ON fi.id = ps.food_item_id
+		LEFT JOIN public.portion_sizes ps ON fi.id = ps.food_item_id
+		LEFT JOIN micronutrients m ON fi.id = m.food_item_id
 		WHERE fi.id = $1`,
 		id,
 	)
-	items := make([]TableFoodItemAndPortion, 0)
+	items := make([]TableFoodItemComplete, 0)
 	for rows.Next() {
-		item := TableFoodItemAndPortion{}
+		item := TableFoodItemComplete{}
 		rows.Scan(
 			&item.FI.ID,
 			&item.FI.Manufacturer,
@@ -85,16 +86,19 @@ func (s *Store) GetByID(id int64) (FoodItem, error) {
 			&item.FI.Public,
 			&item.FI.Source,
 			&item.FI.OwnerID,
-			&item.P.ID,
-			&item.P.Amount,
-			&item.P.Name,
+			&item.PS.ID,
+			&item.PS.Amount,
+			&item.PS.Name,
+			&item.M.ID,
+			&item.M.Amount,
+			&item.M.Name,
 		)
 		items = append(items, item)
 	}
 	if err != nil {
 		return FoodItem{}, err
 	}
-	return item, nil
+	return fromFoodItemComplete(items)[0], nil
 }
 
 func (s *Store) Get(ownerID int64) []FoodItem {
@@ -127,6 +131,7 @@ func (s *Store) Get(ownerID int64) []FoodItem {
 	}
 	return items
 }
+
 func (s *Store) Delete(id int64, ownerID int64) error {
 	_, err := s.db.Query(`
 		DELETE FROM food_items

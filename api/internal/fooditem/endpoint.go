@@ -2,6 +2,7 @@ package fooditem
 
 import (
 	"context"
+	"fmt"
 	"log/slog"
 	"reflect"
 
@@ -65,6 +66,9 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 		return nil, err
 	}
 	item, err := e.store.GetByID(request.Id)
+	fmt.Println(item)
+	fmt.Println(item.Micronutrients[0])
+	fmt.Println(item.PortionSizes[0])
 	if err != nil || !item.HasAccess(userID) {
 		e.logger.Info("fooditem not found", slog.Any("err", err))
 		return nil, err
@@ -83,4 +87,9 @@ func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteAp
 		return api.DeleteApiFoodItemsId409Response{}, nil
 	}
 	return api.DeleteApiFoodItemsId204Response{}, nil
+}
+
+func (e Endpoint) PostApiFoodItemsIdPortions(ctx context.Context, request api.PostApiFoodItemsIdPortionsRequestObject) (api.PostApiFoodItemsIdPortionsResponseObject, error) {
+	// TODO implement me
+	panic("implement me")
 }

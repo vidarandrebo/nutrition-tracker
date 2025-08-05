@@ -337,6 +337,15 @@ components:
               type: boolean
             source:
               type: string
+            portionSizes:
+              type: array
+              items:
+                $ref: "#/components/schemas/PortionSizeResponse"
+            micronutrients:
+              type: array
+              items:
+                $ref: "#/components/schemas/MicronutrientResponse"
+
           required:
             - manufacturer
             - product
@@ -473,6 +482,30 @@ components:
               type: string
           required:
             - name
+
+    MicronutrientResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+
+
+    PortionSizeResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+
 
     WithTimestamp:
       type: object
