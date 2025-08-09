@@ -2,7 +2,6 @@ package fooditem
 
 import (
 	"context"
-	"fmt"
 	"log/slog"
 	"reflect"
 
@@ -66,9 +65,6 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 		return nil, err
 	}
 	item, err := e.store.GetByID(request.Id)
-	fmt.Println(item)
-	fmt.Println(item.Micronutrients[0])
-	fmt.Println(item.PortionSizes[0])
 	if err != nil || !item.HasAccess(userID) {
 		e.logger.Info("fooditem not found", slog.Any("err", err))
 		return nil, err

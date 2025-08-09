@@ -42,6 +42,29 @@ func fromFoodItemComplete(rows []TableFoodItemComplete) []FoodItem {
 	}
 	return out
 }
+func fromFoodItemAndPortion(rows []TableFoodItemAndPortion) []FoodItem {
+	portionSizes := make(map[int64]map[int64]PortionSize)
+	foodItems := make(map[int64]FoodItem)
+	for _, item := range rows {
+		_, ok := foodItems[item.FI.ID]
+		if !ok {
+			foodItems[item.FI.ID] = item.FI.ToFoodItem()
+			portionSizes[item.FI.ID] = make(map[int64]PortionSize)
+		}
+		_, ok = portionSizes[item.FI.ID][item.P.ID]
+		if !ok {
+			portionSizes[item.FI.ID][item.P.ID] = item.P.ToPortionSize()
+		}
+	}
+	out := make([]FoodItem, 0, len(foodItems))
+	for _, item := range foodItems {
+		for _, portion := range portionSizes[item.ID] {
+			item.PortionSizes = append(item.PortionSizes, portion)
+		}
+		out = append(out, item)
+	}
+	return out
+}
 
 type TableFoodItem struct {
 	ID           int64

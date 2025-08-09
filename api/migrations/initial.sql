@@ -78,13 +78,12 @@ CREATE TABLE IF NOT EXISTS recipe_entries
 
 CREATE TABLE IF NOT EXISTS portion_sizes
 (
-    id           bigserial PRIMARY KEY,
-    name         varchar(128),
-    amount       double precision,
+    id            bigserial PRIMARY KEY,
+    name          varchar(128),
+    amount        double precision not NULL ,
     date_created  timestamp,
     date_modified timestamp,
-    food_item_id bigint REFERENCES food_items (id),
-    recipe_id    bigint REFERENCES recipes (id)
+    food_item_id  bigint REFERENCES food_items (id) ON DELETE CASCADE
 );
 
 /* functions */

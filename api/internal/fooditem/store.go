@@ -65,13 +65,22 @@ func (s *Store) Add(item FoodItem) FoodItem {
 
 func (s *Store) GetByID(id int64) (FoodItem, error) {
 	rows, err := s.db.Query(`
+		WITH owners_fi AS (
+			SELECT * 
+			FROM food_items
+			WHERE id = $1
+		)
 		SELECT fi.id, fi.manufacturer, fi.product, fi.protein, fi.carbohydrate, fi.fat, fi.kcal, fi.public, fi.source, fi.owner_id, ps.id, ps.amount, ps.name, m.id, m.amount, m.name
-		FROM food_items fi
+		FROM owners_fi fi
 		LEFT JOIN public.portion_sizes ps ON fi.id = ps.food_item_id
 		LEFT JOIN micronutrients m ON fi.id = m.food_item_id
-		WHERE fi.id = $1`,
+		`,
 		id,
 	)
+	if err != nil {
+		s.logger.Error("failed to get fooditem from database", slog.Any("err", err))
+		return FoodItem{}, err
+	}
 	items := make([]TableFoodItemComplete, 0)
 	for rows.Next() {
 		item := TableFoodItemComplete{}
@@ -95,41 +104,47 @@ func (s *Store) GetByID(id int64) (FoodItem, error) {
 		)
 		items = append(items, item)
 	}
-	if err != nil {
-		return FoodItem{}, err
-	}
 	return fromFoodItemComplete(items)[0], nil
 }
 
 func (s *Store) Get(ownerID int64) []FoodItem {
-	items := make([]FoodItem, 0)
+	items := make([]TableFoodItemAndPortion, 0)
 	rows, err := s.db.Query(`
-		SELECT id, manufacturer, product, protein, carbohydrate, fat, kcal, public, source, owner_id 
-		FROM food_items f
-		WHERE f.public = TRUE 
-		  OR f.owner_id = $1`,
+		WITH owned_fi AS (
+		    SELECT *
+			FROM food_items
+			WHERE public = TRUE 
+ 			  OR owner_id = $1
+        )		
+		SELECT fi.id, fi.manufacturer, fi.product, fi.protein, fi.carbohydrate, fi.fat, fi.kcal, fi.public, fi.source, fi.owner_id, ps.id, ps.name, ps.amount
+		FROM owned_fi fi
+		LEFT JOIN portion_sizes ps ON fi.id = ps.food_item_id
+		`,
 		ownerID,
 	)
-	for rows.Next() {
-		item := FoodItem{}
-		rows.Scan(
-			&item.ID,
-			&item.Manufacturer,
-			&item.Product,
-			&item.Protein,
-			&item.Carbohydrate,
-			&item.Fat,
-			&item.KCal,
-			&item.Public,
-			&item.Source,
-			&item.OwnerID,
-		)
-		items = append(items, item)
-	}
 	if err != nil {
 		panic(err)
 	}
-	return items
+	for rows.Next() {
+		item := TableFoodItemAndPortion{}
+		err = rows.Scan(
+			&item.FI.ID,
+			&item.FI.Manufacturer,
+			&item.FI.Product,
+			&item.FI.Protein,
+			&item.FI.Carbohydrate,
+			&item.FI.Fat,
+			&item.FI.KCal,
+			&item.FI.Public,
+			&item.FI.Source,
+			&item.FI.OwnerID,
+			&item.P.ID,
+			&item.P.Name,
+			&item.P.Amount,
+		)
+		items = append(items, item)
+	}
+	return fromFoodItemAndPortion(items)
 }
 
 func (s *Store) Delete(id int64, ownerID int64) error {
