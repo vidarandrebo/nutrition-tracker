@@ -1,5 +1,10 @@
 package fooditem
 
+import (
+	"database/sql"
+	"errors"
+)
+
 type TableFoodItemComplete struct {
 	FI TableFoodItem
 	M  TableMicronutrient
@@ -21,9 +26,11 @@ func fromFoodItemComplete(rows []TableFoodItemComplete) []FoodItem {
 			portionSizes[item.FI.ID] = make(map[int64]PortionSize)
 			micronutrients[item.FI.ID] = make(map[int64]Micronutrient)
 		}
-		_, ok = portionSizes[item.FI.ID][item.PS.ID]
-		if !ok {
-			portionSizes[item.FI.ID][item.PS.ID] = item.PS.ToPortionSize()
+		ps, err := item.PS.ToPortionSize()
+		if err == nil {
+			if _, ok = portionSizes[item.FI.ID][ps.ID]; !ok {
+				portionSizes[item.FI.ID][ps.ID] = ps
+			}
 		}
 		_, ok = micronutrients[item.FI.ID][item.M.ID]
 		if !ok {
@@ -51,9 +58,11 @@ func fromFoodItemAndPortion(rows []TableFoodItemAndPortion) []FoodItem {
 			foodItems[item.FI.ID] = item.FI.ToFoodItem()
 			portionSizes[item.FI.ID] = make(map[int64]PortionSize)
 		}
-		_, ok = portionSizes[item.FI.ID][item.P.ID]
-		if !ok {
-			portionSizes[item.FI.ID][item.P.ID] = item.P.ToPortionSize()
+		ps, err := item.P.ToPortionSize()
+		if err == nil {
+			if _, ok = portionSizes[item.FI.ID][ps.ID]; ok {
+				portionSizes[item.FI.ID][ps.ID] = ps
+			}
 		}
 	}
 	out := make([]FoodItem, 0, len(foodItems))
@@ -97,17 +106,20 @@ func (tf TableFoodItem) ToFoodItem() FoodItem {
 }
 
 type TablePortionSize struct {
-	ID     int64
+	ID     sql.NullInt64
 	Amount float64
 	Name   string
 }
 
-func (tp TablePortionSize) ToPortionSize() PortionSize {
-	return PortionSize{
-		ID:     tp.ID,
-		Name:   tp.Name,
-		Amount: tp.Amount,
+func (tp TablePortionSize) ToPortionSize() (PortionSize, error) {
+	if tp.ID.Valid {
+		return PortionSize{
+			ID:     tp.ID.Int64,
+			Name:   tp.Name,
+			Amount: tp.Amount,
+		}, nil
 	}
+	return PortionSize{}, errors.New("portion is null")
 }
 
 type TableMicronutrient struct {
