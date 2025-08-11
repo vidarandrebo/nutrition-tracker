@@ -53,7 +53,7 @@ onMounted(async () => {
             </div>
             <div class="container">
                 <HeaderH2>Portions</HeaderH2>
-                <div v-for="portion in foodItem.portionSizes">
+                <div v-for="portion in foodItem.portionSizes" :key="portion.id">
                     <p>{{ portion.name }} - {{ portion.amount }}g</p>
                 </div>
             </div>

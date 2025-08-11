@@ -49,6 +49,7 @@ func fromFoodItemComplete(rows []TableFoodItemComplete) []FoodItem {
 	}
 	return out
 }
+
 func fromFoodItemAndPortion(rows []TableFoodItemAndPortion) []FoodItem {
 	portionSizes := make(map[int64]map[int64]PortionSize)
 	foodItems := make(map[int64]FoodItem)
