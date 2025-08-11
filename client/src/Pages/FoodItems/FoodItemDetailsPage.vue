@@ -2,11 +2,11 @@
 import { useRoute } from "vue-router";
 import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
-import { ref } from "vue";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
+import HeaderH2 from "../../Components/Headings/HeaderH2.vue";
 
 const route = useRoute();
 let foodItemId = 0;
@@ -45,8 +45,17 @@ onMounted(async () => {
                 </template>
             </LevelPrimary>
             <div class="container">
-                <p>Protein</p>
-                <p>{{ foodItem.protein }}</p>
+                <HeaderH2>Nutrients</HeaderH2>
+                <p>Protein: {{ foodItem.protein }}</p>
+                <p>Carbohydrate: {{ foodItem.carbohydrate }}</p>
+                <p>Fat: {{ foodItem.fat }}</p>
+                <p>KCal: {{ foodItem.kCal }}</p>
+            </div>
+            <div class="container">
+                <HeaderH2>Portions</HeaderH2>
+                <div v-for="portion in foodItem.portionSizes">
+                    <p>{{ portion.name }} - {{ portion.amount }}g</p>
+                </div>
             </div>
         </template>
     </section>

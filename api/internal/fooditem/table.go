@@ -60,7 +60,7 @@ func fromFoodItemAndPortion(rows []TableFoodItemAndPortion) []FoodItem {
 		}
 		ps, err := item.P.ToPortionSize()
 		if err == nil {
-			if _, ok = portionSizes[item.FI.ID][ps.ID]; ok {
+			if _, ok = portionSizes[item.FI.ID][ps.ID]; !ok {
 				portionSizes[item.FI.ID][ps.ID] = ps
 			}
 		}

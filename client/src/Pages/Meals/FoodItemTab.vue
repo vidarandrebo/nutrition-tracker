@@ -5,13 +5,15 @@ import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import ModalPrimary from "../../Components/ModalPrimary.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import { computed, ref, watch } from "vue";
-import type { Energy } from "../../Models/Common/Energy.ts";
 import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import debounce from "debounce";
 import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
+import { EnergyView } from "../../Models/Common/EnergyView.ts";
 
 const foodItemStore = useFoodItemStore();
+const amount = ref<number>(1.0);
+const unitMultiplier = ref<number>(100);
 const searchTerm = ref<string>("");
 const selectedFoodItem = ref<FoodItem | undefined>(undefined);
 const modalActive = ref<boolean>(false);
@@ -33,24 +35,34 @@ const updateSearchTermDb = debounce(() => {
 }, 400);
 
 function showItemDialog(itemId: number) {
-    foodItemForm.value.amount = 100;
+    amount.value = 1;
+    updateFoodItemAmount();
     foodItemForm.value.foodItemId = itemId;
     selectedFoodItem.value = foodItemStore.getFoodItem(itemId);
     modalActive.value = true;
 }
 
-const nutrients = computed((): Energy => {
+const nutrients = computed((): EnergyView => {
     if (selectedFoodItem.value) {
-        return {
+        return EnergyView.fromEnergy({
             kCal: (selectedFoodItem.value.kCal * foodItemForm.value.amount) / 100,
             protein: (selectedFoodItem.value.protein * foodItemForm.value.amount) / 100,
             carbohydrate: (selectedFoodItem.value.carbohydrate * foodItemForm.value.amount) / 100,
             fat: (selectedFoodItem.value.fat * foodItemForm.value.amount) / 100,
-        };
+        });
     }
-    return { kCal: 0, protein: 0, carbohydrate: 0, fat: 0 };
+    return new EnergyView(0, 0, 0, 0);
 });
+function updateFoodItemAmount() {
+    foodItemForm.value.amount = amount.value * unitMultiplier.value;
+}
 
+watch(amount, () => {
+    updateFoodItemAmount();
+});
+watch(unitMultiplier, () => {
+    updateFoodItemAmount();
+});
 function submit() {
     emit("addEntry", foodItemForm.value);
     modalActive.value = false;
@@ -62,15 +74,27 @@ function submit() {
     <ModalPrimary v-model="modalActive" :title="selectedFoodItem?.name">
         <template #default>
             <div class="is-flex is-flex-direction-column">
-                <LabelPrimary>
-                    <p>Amount (g)</p>
-                    <InputNumber v-model="foodItemForm.amount"></InputNumber>
-                </LabelPrimary>
+                <div class="grid">
+                    <LabelPrimary>
+                        <p>Amount</p>
+                        <InputNumber v-model="amount"></InputNumber>
+                    </LabelPrimary>
+                    <LabelPrimary>
+                        <p>Unit</p>
+                        <select v-if="selectedFoodItem" v-model="unitMultiplier" class="select">
+                            <option selected :value="100">100 Grams</option>
+                            <option :value="1">Grams</option>
+                            <option v-for="p in selectedFoodItem.portionSizes" :key="p.id" :value="p.amount">
+                                {{ p.name }} ({{ p.amount }}g)
+                            </option>
+                        </select>
+                    </LabelPrimary>
+                </div>
                 <div class="is-flex is-flex-direction-row is-justify-content-space-between is-flex-wrap-wrap">
-                    <p class="pr-2"><b>KCal:</b> {{ nutrients.kCal }}</p>
-                    <p class="pr-2"><b>Protein:</b> {{ nutrients.protein }}&nbsp;g</p>
-                    <p class="pr-2"><b>Carbohydrate:</b> {{ nutrients.carbohydrate }}&nbsp;g</p>
-                    <p class="pr-2"><b>Fat:</b> {{ nutrients.fat }}&nbsp;g</p>
+                    <p class="pr-2"><b>KCal:</b> {{ nutrients.KCal }}</p>
+                    <p class="pr-2"><b>Protein:</b> {{ nutrients.Protein }}&nbsp;g</p>
+                    <p class="pr-2"><b>Carbohydrate:</b> {{ nutrients.Carbohydrate }}&nbsp;g</p>
+                    <p class="pr-2"><b>Fat:</b> {{ nutrients.Fat }}&nbsp;g</p>
                 </div>
             </div>
         </template>

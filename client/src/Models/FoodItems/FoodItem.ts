@@ -2,6 +2,7 @@ import type { Energy } from "../Common/Energy.ts";
 import { type FoodItemResponse } from "../../Gen";
 import { getFoodItemsClient } from "../Api.ts";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
+import { PortionSize } from "./PortionSize.ts";
 
 export class FoodItem {
     id: number;
@@ -13,6 +14,7 @@ export class FoodItem {
     kCal: number;
     public: boolean;
     source: string;
+    portionSizes: PortionSize[];
 
     get name(): string {
         let out = this.manufacturer;
@@ -41,6 +43,7 @@ export class FoodItem {
         this.kCal = 0.0;
         this.public = false;
         this.source = "";
+        this.portionSizes = [];
     }
 
     static fromResponse(res: FoodItemResponse): FoodItem {
@@ -54,6 +57,7 @@ export class FoodItem {
         foodItem.kCal = res.kCal;
         foodItem.public = res.isPublic;
         foodItem.source = res.source;
+        foodItem.portionSizes = PortionSize.fromResponses(res.portionSizes ?? []);
         return foodItem;
     }
 
