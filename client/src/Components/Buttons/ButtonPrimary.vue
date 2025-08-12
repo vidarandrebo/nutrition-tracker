@@ -1,5 +1,9 @@
 <template>
-    <button class="button is-primary" :disabled="!props.enabled" :title="!props.enabled ? props.disabledText : ''">
+    <button
+        class="button is-primary is-soft"
+        :disabled="!props.enabled"
+        :title="!props.enabled ? props.disabledText : ''"
+    >
         <slot></slot>
     </button>
 </template>

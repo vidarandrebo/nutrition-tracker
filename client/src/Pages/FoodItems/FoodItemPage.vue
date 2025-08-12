@@ -44,7 +44,7 @@ async function onDeleteFoodItem(foodItemId: number) {
             </template>
             <template #right>
                 <FormField>
-                    <RouterLink class="button is-primary" to="/food-items/add">Add</RouterLink>
+                    <RouterLink class="button is-primary is-soft" to="/food-items/add">Add</RouterLink>
                 </FormField>
             </template>
         </LevelPrimary>

@@ -38,11 +38,12 @@ async function logout() {
 
     await router.push("/login");
 }
+//rgb(0, 209, 178)
 </script>
 
 <template>
     <header class="">
-        <nav class="navbar is-transparent is-active has-background-primary-light">
+        <nav class="navbar is-active has-background-primary-soft">
             <div class="navbar-brand">
                 <div :class="navbarBurgerClass" data-target="navbarExampleTransparentExample" @click="flipBurger">
                     <span></span>
@@ -65,7 +66,7 @@ async function logout() {
                     <MenuBarRouterLink v-if="userStore.user" to="/settings"
                         >{{ userStore.user.email }}
                     </MenuBarRouterLink>
-                    <a v-if="userStore.user" href="#" class="button" @click="logout">Logout</a>
+                    <a v-if="userStore.user" href="#" class="navbar-item has-text-black-bold" @click="logout">Logout</a>
                 </div>
             </div>
         </nav>

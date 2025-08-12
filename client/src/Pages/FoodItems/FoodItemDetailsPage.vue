@@ -7,6 +7,7 @@ import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import HeaderH2 from "../../Components/Headings/HeaderH2.vue";
+import ButtonDanger from "../../Components/Buttons/ButtonDanger.vue";
 
 const route = useRoute();
 let foodItemId = 0;
@@ -41,7 +42,7 @@ onMounted(async () => {
                 </template>
                 <template #right>
                     <ButtonPrimary>Edit</ButtonPrimary>
-                    <ButtonPrimary>Delete</ButtonPrimary>
+                    <ButtonDanger>Delete</ButtonDanger>
                 </template>
             </LevelPrimary>
             <div class="container">
