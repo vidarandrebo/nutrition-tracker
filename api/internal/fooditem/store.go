@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log/slog"
 	"reflect"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Store struct {
@@ -159,4 +161,43 @@ func (s *Store) Delete(id int64, ownerID int64) error {
 		return err
 	}
 	return nil
+}
+
+func (s *Store) AddPortionSize(foodItemID int64, portionSize PortionSize, ownerID int64) (PortionSize, error) {
+	if ok, err := s.ownsFoodItem(foodItemID, ownerID); !ok {
+		if err != nil {
+			return PortionSize{}, err
+		}
+		return PortionSize{}, err
+
+	}
+	err := s.db.QueryRow(`
+			INSERT INTO portion_sizes AS ps (name, amount, food_item_id)
+			VALUES ($1,$2,$3)
+			RETURNING ps.id
+		`, portionSize.Name, portionSize.Amount, foodItemID).Scan(&portionSize.ID)
+	if err != nil {
+		s.logger.Error("failed to add portionSize to foodItem", slog.Int64("foodItemId", foodItemID))
+		return PortionSize{}, err
+	}
+	return portionSize, nil
+}
+
+func (s *Store) ownsFoodItem(id int64, ownerID int64) (bool, error) {
+	foodItem := FoodItem{}
+	err := s.db.QueryRow(`
+		SELECT id, owner_id 
+		FROM food_items 
+		WHERE id = $1
+	`, id).Scan(
+		&foodItem.ID,
+		&foodItem.OwnerID,
+	)
+	if err != nil {
+		return false, utils.ErrEntityNotFound
+	}
+	if foodItem.OwnerID == ownerID {
+		return true, nil
+	}
+	return false, utils.ErrEntityNotOwned
 }

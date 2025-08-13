@@ -113,7 +113,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FoodItemResponse"
+                $ref: "#/components/schemas/PortionSizeResponse"
           description: FoodItem portion added
         404:
           description: FoodItem not found

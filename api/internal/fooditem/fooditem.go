@@ -124,3 +124,11 @@ type PortionSize struct {
 	Name   string
 	Amount float64
 }
+
+func (ps PortionSize) ToResponse() api.PortionSizeResponse {
+	return api.PortionSizeResponse{
+		Amount: ps.Amount,
+		Id:     ps.ID,
+		Name:   ps.Name,
+	}
+}

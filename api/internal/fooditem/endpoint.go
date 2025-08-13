@@ -2,11 +2,13 @@ package fooditem
 
 import (
 	"context"
+	"errors"
 	"log/slog"
 	"reflect"
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Endpoint struct {
@@ -86,6 +88,21 @@ func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteAp
 }
 
 func (e Endpoint) PostApiFoodItemsIdPortions(ctx context.Context, request api.PostApiFoodItemsIdPortionsRequestObject) (api.PostApiFoodItemsIdPortionsResponseObject, error) {
-	// TODO implement me
-	panic("implement me")
+	userID, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, utils.ErrUnauthorized
+	}
+	portionSize := PortionSize{
+		Amount: request.Body.Amount,
+		Name:   request.Body.Name,
+	}
+	ps, err := e.store.AddPortionSize(request.Id, portionSize, userID)
+	if errors.Is(err, utils.ErrEntityNotFound) {
+		return api.PostApiFoodItemsIdPortions404Response{}, nil
+	} else if errors.Is(err, utils.ErrEntityNotOwned) {
+		return nil, utils.ErrEntityNotOwned
+	} else if err != nil {
+		return nil, utils.ErrUnknown
+	}
+	return api.PostApiFoodItemsIdPortions201JSONResponse(ps.ToResponse()), nil
 }
