@@ -13,10 +13,12 @@
  */
 
 import * as runtime from "../runtime";
-import type { FoodItemResponse, PostFoodItemPortion, PostFoodItemRequest } from "../models/index";
+import type { FoodItemResponse, PortionSizeResponse, PostFoodItemPortion, PostFoodItemRequest } from "../models/index";
 import {
     FoodItemResponseFromJSON,
     FoodItemResponseToJSON,
+    PortionSizeResponseFromJSON,
+    PortionSizeResponseToJSON,
     PostFoodItemPortionFromJSON,
     PostFoodItemPortionToJSON,
     PostFoodItemRequestFromJSON,
@@ -110,14 +112,14 @@ export interface FoodItemsApiInterface {
     apiFoodItemsIdPortionsPostRaw(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<FoodItemResponse>>;
+    ): Promise<runtime.ApiResponse<PortionSizeResponse>>;
 
     /**
      */
     apiFoodItemsIdPortionsPost(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<FoodItemResponse>;
+    ): Promise<PortionSizeResponse>;
 
     /**
      *
@@ -266,7 +268,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
     async apiFoodItemsIdPortionsPostRaw(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<FoodItemResponse>> {
+    ): Promise<runtime.ApiResponse<PortionSizeResponse>> {
         if (requestParameters["id"] == null) {
             throw new runtime.RequiredError(
                 "id",
@@ -294,7 +296,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
             initOverrides,
         );
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => FoodItemResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => PortionSizeResponseFromJSON(jsonValue));
     }
 
     /**
@@ -302,7 +304,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
     async apiFoodItemsIdPortionsPost(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<FoodItemResponse> {
+    ): Promise<PortionSizeResponse> {
         const response = await this.apiFoodItemsIdPortionsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
