@@ -2,19 +2,16 @@
 import { computed } from "vue";
 
 const props = defineProps<{
-    modelValue: boolean;
     title?: string;
 }>();
-const emit = defineEmits<{
-    (e: "update:modelValue", payload: boolean): void;
-}>();
+const model = defineModel<boolean>();
 
 function close() {
-    emit("update:modelValue", false);
+    model.value = false;
 }
 
 const modalActiveClass = computed(() => {
-    if (props.modelValue) {
+    if (model.value) {
         return "modal is-active";
     }
     return "modal";

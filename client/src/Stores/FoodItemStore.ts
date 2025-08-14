@@ -2,6 +2,7 @@ import { defineStore } from "pinia";
 import { computed, ref } from "vue";
 import { Failure, type Result, Success } from "../Utilities/tryCatch.ts";
 import { FoodItem } from "../Models/FoodItems/FoodItem.ts";
+import { PortionSize, type PortionSizeForm } from "../Models/FoodItems/PortionSize.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
@@ -79,15 +80,27 @@ export const useFoodItemStore = defineStore("foodItems", () => {
             })
             .slice(0, 50);
     });
+    async function addPortionSize(foodItemId: number, ps: PortionSizeForm) {
+        const result = await PortionSize.add(ps, foodItemId);
+        if (!result.error) {
+            const data = result.data;
+            const portionSize = PortionSize.fromResponse(data);
+            const fi = collection.value.find((f) => f.id === foodItemId);
+            if (fi) {
+                fi.portionSizes.push(portionSize);
+            }
+        }
+    }
     return {
+        addPortionSize,
         clear,
         collection,
+        filteredFoodItems,
+        getFoodItem,
         init,
+        initialized,
         refresh,
         removeFoodItem,
-        filteredFoodItems,
         searchTerm,
-        getFoodItem,
-        initialized,
     };
 });
