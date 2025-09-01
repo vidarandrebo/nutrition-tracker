@@ -23,7 +23,7 @@ async function addToMeal(foodItemForm: PostMealEntryRequest) {
 const route = useRoute();
 let mealId = 0;
 
-if (!Array.isArray(route.params.id)) {
+if (route.params.id && !Array.isArray(route.params.id)) {
     mealId = parseInt(route.params.id);
 }
 

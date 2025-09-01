@@ -14,7 +14,7 @@ import AddFoodItemPortion from "./AddFoodItemPortion.vue";
 const route = useRoute();
 let foodItemId = 0;
 
-if (!Array.isArray(route.params.id)) {
+if (route.params.id && !Array.isArray(route.params.id)) {
     foodItemId = parseInt(route.params.id);
 }
 

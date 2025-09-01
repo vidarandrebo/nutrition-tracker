@@ -63,10 +63,15 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         return collection.value
             .filter((x) => {
                 for (let i = 0; i < terms.length; i++) {
-                    if (!x.name.toLowerCase().includes(terms[i])) {
+                    const term = terms[i];
+                    if (!term) {
+                        continue;
+                    }
+                    if (!x.name.toLowerCase().includes(term)) {
                         return false;
                     }
                 }
+
                 return true;
             })
             .sort((a, b) => {
