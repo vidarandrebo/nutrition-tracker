@@ -53,8 +53,8 @@ func main() {
 			foodItem.PortionSizes = make([]fooditem.PortionSize, 0, 3)
 			for i := 0; i < 3; i++ {
 				foodItem.PortionSizes = append(foodItem.PortionSizes, fooditem.PortionSize{
-					Name:   "Portion " + strconv.Itoa(i),
-					Amount: float64((i + 1) * 10),
+					Name:   "100g " + strconv.Itoa(i),
+					Amount: float64(100),
 				})
 			}
 			app.Stores.FoodItemStore.Add(foodItem)
