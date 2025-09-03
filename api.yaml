@@ -91,6 +91,33 @@ paths:
         409:
           description: The food item is referenced by a meal entry or a recipe, and cannot be deleted
 
+  /api/food-items/{id}/portions:
+    post:
+      tags:
+        - Food Items
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/PostFoodItemPortion"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PortionSizeResponse"
+          description: FoodItem portion added
+        404:
+          description: FoodItem not found
+
   /api/meals:
     get:
       tags:
@@ -310,6 +337,15 @@ components:
               type: boolean
             source:
               type: string
+            portionSizes:
+              type: array
+              items:
+                $ref: "#/components/schemas/PortionSizeResponse"
+            micronutrients:
+              type: array
+              items:
+                $ref: "#/components/schemas/MicronutrientResponse"
+
           required:
             - manufacturer
             - product
@@ -435,6 +471,41 @@ components:
               format: int64
           required:
             - foodItemId
+
+
+    PostFoodItemPortion:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+
+    MicronutrientResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+
+
+    PortionSizeResponse:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithId"
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+
 
     WithTimestamp:
       type: object

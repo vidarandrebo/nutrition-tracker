@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS micronutrients
 );
 
 
+
 CREATE TABLE IF NOT EXISTS meals
 (
     id              bigserial PRIMARY KEY,
@@ -73,6 +74,16 @@ CREATE TABLE IF NOT EXISTS recipe_entries
     date_created  timestamp,
     date_modified timestamp,
     recipe_id     bigint REFERENCES recipes (id) ON DELETE CASCADE NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS portion_sizes
+(
+    id            bigserial PRIMARY KEY,
+    name          varchar(128),
+    amount        double precision not NULL ,
+    date_created  timestamp,
+    date_modified timestamp,
+    food_item_id  bigint REFERENCES food_items (id) ON DELETE CASCADE
 );
 
 /* functions */
@@ -136,6 +147,12 @@ CREATE TRIGGER set_created
     FOR EACH ROW
 EXECUTE PROCEDURE set_date_created();
 
+CREATE TRIGGER set_created
+    BEFORE INSERT
+    ON portion_sizes
+    FOR EACH ROW
+EXECUTE PROCEDURE set_date_created();
+
 
 /* date_modified when updating*/
 CREATE TRIGGER set_modified
@@ -177,5 +194,11 @@ EXECUTE PROCEDURE set_date_modified();
 CREATE TRIGGER set_modified
     BEFORE UPDATE
     ON users
+    FOR EACH ROW
+EXECUTE PROCEDURE set_date_modified();
+
+CREATE TRIGGER set_modified
+    BEFORE UPDATE
+    ON portion_sizes
     FOR EACH ROW
 EXECUTE PROCEDURE set_date_modified();

@@ -1,0 +1,26 @@
+meta {
+  name: post-portion
+  type: http
+  seq: 4
+}
+
+post {
+  url: http://localhost:8080/api/food-items/:id/portions
+  body: json
+  auth: bearer
+}
+
+params:path {
+  id: 2138
+}
+
+auth:bearer {
+  token: {{token}}
+}
+
+body:json {
+  {
+    "name": "portion2",
+    "amount": 300
+  }
+}

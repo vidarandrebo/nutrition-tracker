@@ -61,16 +61,16 @@ const saveHelpText = computed((): string => {
             @select="onFoodItemSelected"
             @cancel="showFoodItemSelector = false"
         ></FoodItemSelector>
-        <template v-for="(_, id) in item.entries" v-else :key="id">
+        <template v-for="(entry, i) in item.entries" v-else :key="i">
             <div class="box is-flex is-flex-direction-row is-justify-content-space-between">
                 <LabelPrimary>
                     FoodItem
-                    <InputNumber v-model="item.entries[id].foodItemId" disabled></InputNumber>
-                    {{ foodItemStore.getFoodItem(item.entries[id].foodItemId)?.name }}
+                    <InputNumber v-model="entry.foodItemId" disabled></InputNumber>
+                    {{ foodItemStore.getFoodItem(entry.foodItemId)?.name }}
                 </LabelPrimary>
                 <LabelPrimary>
                     Amount
-                    <InputNumber v-model="item.entries[id].amount"></InputNumber>
+                    <InputNumber v-model="entry.amount"></InputNumber>
                 </LabelPrimary>
             </div>
         </template>

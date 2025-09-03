@@ -13,10 +13,14 @@
  */
 
 import * as runtime from "../runtime";
-import type { FoodItemResponse, PostFoodItemRequest } from "../models/index";
+import type { FoodItemResponse, PortionSizeResponse, PostFoodItemPortion, PostFoodItemRequest } from "../models/index";
 import {
     FoodItemResponseFromJSON,
     FoodItemResponseToJSON,
+    PortionSizeResponseFromJSON,
+    PortionSizeResponseToJSON,
+    PostFoodItemPortionFromJSON,
+    PostFoodItemPortionToJSON,
     PostFoodItemRequestFromJSON,
     PostFoodItemRequestToJSON,
 } from "../models/index";
@@ -27,6 +31,11 @@ export interface ApiFoodItemsIdDeleteRequest {
 
 export interface ApiFoodItemsIdGetRequest {
     id: number;
+}
+
+export interface ApiFoodItemsIdPortionsPostRequest {
+    id: number;
+    postFoodItemPortion?: PostFoodItemPortion;
 }
 
 export interface ApiFoodItemsPostRequest {
@@ -91,6 +100,26 @@ export interface FoodItemsApiInterface {
         requestParameters: ApiFoodItemsIdGetRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<FoodItemResponse>;
+
+    /**
+     *
+     * @param {number} id
+     * @param {PostFoodItemPortion} [postFoodItemPortion]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FoodItemsApiInterface
+     */
+    apiFoodItemsIdPortionsPostRaw(
+        requestParameters: ApiFoodItemsIdPortionsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<PortionSizeResponse>>;
+
+    /**
+     */
+    apiFoodItemsIdPortionsPost(
+        requestParameters: ApiFoodItemsIdPortionsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<PortionSizeResponse>;
 
     /**
      *
@@ -231,6 +260,52 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<FoodItemResponse> {
         const response = await this.apiFoodItemsIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiFoodItemsIdPortionsPostRaw(
+        requestParameters: ApiFoodItemsIdPortionsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<PortionSizeResponse>> {
+        if (requestParameters["id"] == null) {
+            throw new runtime.RequiredError(
+                "id",
+                'Required parameter "id" was null or undefined when calling apiFoodItemsIdPortionsPost().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        let urlPath = `/api/food-items/{id}/portions`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters["id"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: PostFoodItemPortionToJSON(requestParameters["postFoodItemPortion"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => PortionSizeResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiFoodItemsIdPortionsPost(
+        requestParameters: ApiFoodItemsIdPortionsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<PortionSizeResponse> {
+        const response = await this.apiFoodItemsIdPortionsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

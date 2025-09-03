@@ -1,5 +1,5 @@
 <template>
-    <RouterLink class="navbar-item is-primary" :to="to">
+    <RouterLink class="navbar-item has-text-black-bold" :to="to">
         <slot></slot>
     </RouterLink>
 </template>

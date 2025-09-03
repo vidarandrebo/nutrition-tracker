@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strconv"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	. "github.com/vidarandrebo/nutrition-tracker/api/internal"
@@ -49,6 +50,13 @@ func main() {
 			foodItem := fooditem.FromMatvareTabellen(item)
 			foodItem.OwnerID = matvareTabellenUser.ID
 			fmt.Println(foodItem.Product, "Protein:", foodItem.Protein, "Carbo:", foodItem.Carbohydrate, "Fat:", foodItem.Fat)
+			foodItem.PortionSizes = make([]fooditem.PortionSize, 0, 3)
+			for i := 0; i < 3; i++ {
+				foodItem.PortionSizes = append(foodItem.PortionSizes, fooditem.PortionSize{
+					Name:   "100g " + strconv.Itoa(i),
+					Amount: float64(100),
+				})
+			}
 			app.Stores.FoodItemStore.Add(foodItem)
 		}
 	}

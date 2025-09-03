@@ -18,21 +18,40 @@ type FoodItem struct {
 	KCal           float64
 	Public         bool
 	Micronutrients []Micronutrient
+	PortionSizes   []PortionSize
 	Source         string
 	OwnerID        int64
 }
 
 func (fi FoodItem) ToFoodItemResponse() api.FoodItemResponse {
+	micronutrients := make([]api.MicronutrientResponse, 0, len(fi.Micronutrients))
+	for _, item := range fi.Micronutrients {
+		micronutrients = append(micronutrients, api.MicronutrientResponse{
+			Amount: item.Amount,
+			Id:     item.ID,
+			Name:   item.Name,
+		})
+	}
+	portionSizes := make([]api.PortionSizeResponse, 0, len(fi.PortionSizes))
+	for _, item := range fi.PortionSizes {
+		portionSizes = append(portionSizes, api.PortionSizeResponse{
+			Amount: item.Amount,
+			Id:     item.ID,
+			Name:   item.Name,
+		})
+	}
 	return api.FoodItemResponse{
-		Carbohydrate: fi.Carbohydrate,
-		Fat:          fi.Fat,
-		Id:           fi.ID,
-		KCal:         fi.KCal,
-		Manufacturer: fi.Manufacturer,
-		Product:      fi.Product,
-		Protein:      fi.Protein,
-		IsPublic:     fi.Public,
-		Source:       fi.Source,
+		Carbohydrate:   fi.Carbohydrate,
+		Fat:            fi.Fat,
+		Id:             fi.ID,
+		KCal:           fi.KCal,
+		Manufacturer:   fi.Manufacturer,
+		Product:        fi.Product,
+		Protein:        fi.Protein,
+		IsPublic:       fi.Public,
+		Source:         fi.Source,
+		Micronutrients: &micronutrients,
+		PortionSizes:   &portionSizes,
 	}
 }
 
@@ -98,4 +117,18 @@ type Micronutrient struct {
 	ID     int64
 	Name   string
 	Amount float64
+}
+
+type PortionSize struct {
+	ID     int64
+	Name   string
+	Amount float64
+}
+
+func (ps PortionSize) ToResponse() api.PortionSizeResponse {
+	return api.PortionSizeResponse{
+		Amount: ps.Amount,
+		Id:     ps.ID,
+		Name:   ps.Name,
+	}
 }
