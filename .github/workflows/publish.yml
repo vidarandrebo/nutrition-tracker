@@ -7,9 +7,9 @@ on:
         required: true
       SSH_KEY:
         required: true
-      HOST:
+      SSH_HOST:
         required: true
-      USERNAME:
+      SSH_USERNAME:
         required: true
 
 
