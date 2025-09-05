@@ -27,4 +27,8 @@ jobs:
     needs: [go, vue]
     name: "Publish"
     uses: "./.github/workflows/publish.yml"
-    secrets: inherit
+    secrets:
+      KNOWN_HOSTS: ${{secrets.KNOWN_HOSTS}}
+      SSH_KEY: ${{secrets.SSH_KEY}}
+      HOST: ${{secrets.SSH_HOST}}
+      USERNAME: ${{secrets.SSH_USERNAME}}
