@@ -7,8 +7,11 @@ import { onMounted } from "vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import ButtonPlain from "../../Components/Buttons/ButtonPlain.vue";
 import HeaderH2 from "../../Components/Headings/HeaderH2.vue";
+import { useFilterStore } from "../../Stores/FilterStore.ts";
+import FormField from "../../Components/Forms/FormField.vue";
 
 const foodItemStore = useFoodItemStore();
+const filterStore = useFilterStore();
 
 const emit = defineEmits<{
     select: [id: number];
@@ -34,10 +37,20 @@ onMounted(async () => {
                 <ButtonPlain class="level-item" @click="cancel">Cancel</ButtonPlain>
             </template>
         </LevelPrimary>
-        <LabelPrimary>
-            Search (showing {{ foodItemStore.filteredFoodItems.length }} entries)
-            <InputText v-model="foodItemStore.searchTerm" placeholder="Search"></InputText>
-        </LabelPrimary>
+        <div class="is-flex is-align-items-center is-gap-1">
+            <FormField class="is-flex-grow-1">
+                <LabelPrimary>
+                    Search (showing {{ foodItemStore.filteredFoodItems.length }} entries)
+                    <InputText v-model="filterStore.foodItem.searchTerm" placeholder="Search"></InputText>
+                </LabelPrimary>
+            </FormField>
+            <FormField>
+                <label class="checkbox">
+                    Show public
+                    <input v-model="filterStore.foodItem.showPublic" type="checkbox" />
+                </label>
+            </FormField>
+        </div>
         <div
             v-for="item in foodItemStore.filteredFoodItems"
             :key="item.id"

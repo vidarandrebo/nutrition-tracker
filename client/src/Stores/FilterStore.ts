@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { ref } from "vue";
+import { ref, watch } from "vue";
 import { type FoodItem } from "../Models/FoodItems/FoodItem.ts";
 
 interface IFilter<T> {
@@ -8,26 +8,25 @@ interface IFilter<T> {
 
 type FoodItemFilterOptions = {
     ownerId: number;
-    searchTerm: string;
 };
 
 class FoodItemFilter implements IFilter<FoodItem> {
     showPublic: boolean;
+    searchTerm: string;
     constructor() {
+        this.searchTerm = "";
         this.showPublic = false;
     }
 
     applyFilter(elements: FoodItem[], filterOptions: FoodItemFilterOptions): FoodItem[] {
-        const terms = filterOptions.searchTerm
+        const terms = this.searchTerm
             .split(" ")
             .filter((s) => s !== "")
             .map((t) => t.toLowerCase());
 
-        console.log(terms);
-        console.log(filterOptions);
         return elements
             .filter((fi) => {
-                if (filterOptions.searchTerm.length < 3) {
+                if (this.searchTerm.length < 3) {
                     return true;
                 }
                 for (let i = 0; i < terms.length; i++) {
@@ -62,33 +61,29 @@ class FoodItemFilter implements IFilter<FoodItem> {
 
         return filter;
     }
+    writeToLocalStorage() {
+        localStorage.setItem("foodItemFilter", JSON.stringify(this));
+    }
+    static readFromLocalStorage(): FoodItemFilter | null {
+        const f = localStorage.getItem("foodItemFilter");
+        if (!f) {
+            return null;
+        }
+        return this.fromJson(f);
+    }
 }
 
-export const useFilterStore = defineStore("filterStore", () => {
-    const loaded = ref<boolean>(false);
-    const foodItem = ref<FoodItemFilter>(new FoodItemFilter());
+export const useFilterStore = defineStore("filter", () => {
+    const foodItem = ref<FoodItemFilter>(FoodItemFilter.readFromLocalStorage() ?? new FoodItemFilter());
 
-    function init() {
-        if (loaded.value) {
-            loadFoodItemFilter();
-        }
-        loaded.value = true;
-    }
-
-    function setFoodItemFilter(foodItemFilter: FoodItemFilter) {
-        foodItem.value = foodItemFilter;
-        localStorage.setItem("foodItemFilter", JSON.stringify(foodItem.value));
-    }
-    function loadFoodItemFilter() {
-        const f = localStorage.getItem("foodItemFilter");
-        if (f) {
-            foodItem.value = FoodItemFilter.fromJson(f);
-        }
-    }
+    watch(
+        foodItem,
+        () => {
+            foodItem.value.writeToLocalStorage();
+        },
+        { deep: true },
+    );
     return {
-        init,
-        setFoodItemFilter,
-        loadFoodItemFilter,
         foodItem,
     };
 });

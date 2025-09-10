@@ -9,10 +9,8 @@ import { useUserStore } from "./UserStore.ts";
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
     const initialized = ref<boolean>(false);
-    const searchTerm = ref<string>("");
     const filterStore = useFilterStore();
     const userStore = useUserStore();
-    filterStore.init();
 
     function clear() {
         collection.value = [];
@@ -20,7 +18,6 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     }
 
     async function init() {
-        searchTerm.value = "";
         if (!initialized.value) {
             const items = await FoodItem.get();
             if (items === null) {
@@ -56,7 +53,6 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     const filteredFoodItems = computed(() => {
         const items = filterStore.foodItem.applyFilter(collection.value, {
             ownerId: userStore.user?.id ?? 0,
-            searchTerm: searchTerm.value,
         });
         return items
             .sort((a, b) => {
@@ -91,6 +87,5 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         initialized,
         refresh,
         removeFoodItem,
-        searchTerm,
     };
 });
