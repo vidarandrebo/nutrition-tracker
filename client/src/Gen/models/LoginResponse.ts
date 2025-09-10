@@ -25,6 +25,12 @@ export interface LoginResponse {
      * @memberof LoginResponse
      */
     token: string;
+    /**
+     *
+     * @type {number}
+     * @memberof LoginResponse
+     */
+    id: number;
 }
 
 /**
@@ -32,6 +38,7 @@ export interface LoginResponse {
  */
 export function instanceOfLoginResponse(value: object): value is LoginResponse {
     if (!("token" in value) || value["token"] === undefined) return false;
+    if (!("id" in value) || value["id"] === undefined) return false;
     return true;
 }
 
@@ -45,6 +52,7 @@ export function LoginResponseFromJSONTyped(json: any, ignoreDiscriminator: boole
     }
     return {
         token: json["token"],
+        id: json["id"],
     };
 }
 
@@ -59,5 +67,6 @@ export function LoginResponseToJSONTyped(value?: LoginResponse | null, ignoreDis
 
     return {
         token: value["token"],
+        id: value["id"],
     };
 }

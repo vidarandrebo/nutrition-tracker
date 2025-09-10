@@ -8,16 +8,18 @@ import FormField from "../../Components/Forms/FormField.vue";
 import debounce from "debounce";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
+import { useFilterStore } from "../../Stores/FilterStore.ts";
 
 const foodItemStore = useFoodItemStore();
-const searchTerm = ref<string>("");
+const filterStore = useFilterStore();
+const searchTerm = ref<string>(filterStore.foodItem.searchTerm);
 
 onMounted(async () => {
     await foodItemStore.init();
 });
 
 const updateSearchTermDb = debounce(() => {
-    foodItemStore.searchTerm = searchTerm.value;
+    filterStore.foodItem.searchTerm = searchTerm.value;
 }, 400);
 
 watch(searchTerm, () => {
@@ -48,9 +50,17 @@ async function onDeleteFoodItem(foodItemId: number) {
                 </FormField>
             </template>
         </LevelPrimary>
-        <FormField>
-            <InputText v-model="searchTerm" placeholder="Search"></InputText>
-        </FormField>
+        <div class="is-flex is-align-items-center is-gap-1">
+            <FormField class="is-flex-grow-1">
+                <InputText v-model="searchTerm" placeholder="Search"></InputText>
+            </FormField>
+            <FormField>
+                <label class="checkbox">
+                    Show public
+                    <input v-model="filterStore.foodItem.showPublic" type="checkbox" />
+                </label>
+            </FormField>
+        </div>
         <ul>
             <FoodItemDisplay
                 v-for="foodItem in foodItemStore.filteredFoodItems"

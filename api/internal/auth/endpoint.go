@@ -21,15 +21,14 @@ func NewEndpoint(authService *Service, logger *slog.Logger) *Endpoint {
 }
 
 func (e Endpoint) PostApiLogin(ctx context.Context, request api.PostApiLoginRequestObject) (api.PostApiLoginResponseObject, error) {
-	token, err := e.AuthService.LoginUser(Login{
+	result, err := e.AuthService.LoginUser(Login{
 		Email:    request.Body.Email,
 		Password: request.Body.Password,
 	})
 	if err != nil {
 		return nil, err
 	}
-	e.Logger.Info(token)
-	return api.PostApiLogin200JSONResponse(api.LoginResponse{Token: token}), nil
+	return api.PostApiLogin200JSONResponse(api.LoginResponse{Token: result.Token, Id: result.UserID}), nil
 }
 
 func (e Endpoint) PostApiRegister(ctx context.Context, request api.PostApiRegisterRequestObject) (api.PostApiRegisterResponseObject, error) {

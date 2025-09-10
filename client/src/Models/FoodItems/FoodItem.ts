@@ -14,6 +14,7 @@ export class FoodItem {
     kCal: number;
     public: boolean;
     source: string;
+    ownerId: number;
     portionSizes: PortionSize[];
 
     get name(): string {
@@ -43,6 +44,7 @@ export class FoodItem {
         this.kCal = 0.0;
         this.public = false;
         this.source = "";
+        this.ownerId = 0;
         this.portionSizes = [];
     }
 
@@ -57,6 +59,7 @@ export class FoodItem {
         foodItem.kCal = res.kCal;
         foodItem.public = res.isPublic;
         foodItem.source = res.source;
+        foodItem.ownerId = res.ownerId;
         foodItem.portionSizes = PortionSize.fromResponses(res.portionSizes ?? []);
         return foodItem;
     }

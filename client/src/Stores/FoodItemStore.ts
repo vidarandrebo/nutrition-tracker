@@ -3,11 +3,14 @@ import { computed, ref } from "vue";
 import { Failure, type Result, Success } from "../Utilities/tryCatch.ts";
 import { FoodItem } from "../Models/FoodItems/FoodItem.ts";
 import { PortionSize, type PortionSizeForm } from "../Models/FoodItems/PortionSize.ts";
+import { useFilterStore } from "./FilterStore.ts";
+import { useUserStore } from "./UserStore.ts";
 
 export const useFoodItemStore = defineStore("foodItems", () => {
     const collection = ref<FoodItem[]>([]);
     const initialized = ref<boolean>(false);
-    const searchTerm = ref<string>("");
+    const filterStore = useFilterStore();
+    const userStore = useUserStore();
 
     function clear() {
         collection.value = [];
@@ -15,7 +18,6 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     }
 
     async function init() {
-        searchTerm.value = "";
         if (!initialized.value) {
             const items = await FoodItem.get();
             if (items === null) {
@@ -49,31 +51,10 @@ export const useFoodItemStore = defineStore("foodItems", () => {
     }
 
     const filteredFoodItems = computed(() => {
-        if (searchTerm.value.length < 3) {
-            return collection.value;
-        }
-        const terms = searchTerm.value
-            .split(" ")
-            .filter((s) => s !== "")
-            .map((t) => t.toLowerCase());
-
-        if (searchTerm.value === "") {
-            return collection.value;
-        }
-        return collection.value
-            .filter((x) => {
-                for (let i = 0; i < terms.length; i++) {
-                    const term = terms[i];
-                    if (!term) {
-                        continue;
-                    }
-                    if (!x.name.toLowerCase().includes(term)) {
-                        return false;
-                    }
-                }
-
-                return true;
-            })
+        const items = filterStore.foodItem.applyFilter(collection.value, {
+            ownerId: userStore.user?.id ?? 0,
+        });
+        return items
             .sort((a, b) => {
                 if (a.product.length < b.product.length) {
                     return -1;
@@ -106,6 +87,5 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         initialized,
         refresh,
         removeFoodItem,
-        searchTerm,
     };
 });
