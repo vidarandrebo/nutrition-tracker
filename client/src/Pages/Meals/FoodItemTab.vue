@@ -6,7 +6,6 @@ import ModalPrimary from "../../Components/ModalPrimary.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import { computed, ref, watch } from "vue";
 import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
-import debounce from "debounce";
 import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import { EnergyView } from "../../Models/Common/EnergyView.ts";
@@ -14,7 +13,6 @@ import { EnergyView } from "../../Models/Common/EnergyView.ts";
 const foodItemStore = useFoodItemStore();
 const amount = ref<number>(1.0);
 const unitMultiplier = ref<number>(100);
-const searchTerm = ref<string>("");
 const selectedFoodItem = ref<FoodItem | undefined>(undefined);
 const modalActive = ref<boolean>(false);
 const foodItemForm = ref<PostMealEntryRequest>({
@@ -26,13 +24,6 @@ const foodItemForm = ref<PostMealEntryRequest>({
 const emit = defineEmits<{
     addEntry: [entry: PostMealEntryRequest];
 }>();
-
-watch(searchTerm, () => {
-    updateSearchTermDb();
-});
-const updateSearchTermDb = debounce(() => {
-    foodItemStore.searchTerm = searchTerm.value;
-}, 400);
 
 function showItemDialog(itemId: number) {
     amount.value = 1;
