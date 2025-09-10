@@ -66,6 +66,12 @@ export interface FoodItemResponse {
     id: number;
     /**
      *
+     * @type {number}
+     * @memberof FoodItemResponse
+     */
+    ownerId: number;
+    /**
+     *
      * @type {string}
      * @memberof FoodItemResponse
      */
@@ -111,6 +117,7 @@ export function instanceOfFoodItemResponse(value: object): value is FoodItemResp
     if (!("fat" in value) || value["fat"] === undefined) return false;
     if (!("kCal" in value) || value["kCal"] === undefined) return false;
     if (!("id" in value) || value["id"] === undefined) return false;
+    if (!("ownerId" in value) || value["ownerId"] === undefined) return false;
     if (!("manufacturer" in value) || value["manufacturer"] === undefined) return false;
     if (!("product" in value) || value["product"] === undefined) return false;
     if (!("isPublic" in value) || value["isPublic"] === undefined) return false;
@@ -132,6 +139,7 @@ export function FoodItemResponseFromJSONTyped(json: any, ignoreDiscriminator: bo
         fat: json["fat"],
         kCal: json["kCal"],
         id: json["id"],
+        ownerId: json["ownerId"],
         manufacturer: json["manufacturer"],
         product: json["product"],
         isPublic: json["isPublic"],
@@ -165,6 +173,7 @@ export function FoodItemResponseToJSONTyped(
         fat: value["fat"],
         kCal: value["kCal"],
         id: value["id"],
+        ownerId: value["ownerId"],
         manufacturer: value["manufacturer"],
         product: value["product"],
         isPublic: value["isPublic"],

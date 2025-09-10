@@ -329,6 +329,9 @@ components:
         - $ref: "#/components/schemas/WithEnergy"
         - $ref: "#/components/schemas/WithId"
         - properties:
+            ownerId:
+              type: integer
+              format: int64
             manufacturer:
               type: string
             product:
@@ -347,6 +350,7 @@ components:
                 $ref: "#/components/schemas/MicronutrientResponse"
 
           required:
+            - ownerId
             - manufacturer
             - product
             - isPublic
@@ -567,8 +571,12 @@ components:
       properties:
         token:
           type: string
+        id:
+          type: integer
+          format: int64
       required:
         - token
+        - id
 
     RegisterRequest:
       type: object

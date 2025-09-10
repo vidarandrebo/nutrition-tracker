@@ -29,6 +29,7 @@ type FoodItemResponse struct {
 	KCal           float64                  `json:"kCal"`
 	Manufacturer   string                   `json:"manufacturer"`
 	Micronutrients *[]MicronutrientResponse `json:"micronutrients,omitempty"`
+	OwnerId        int64                    `json:"ownerId"`
 	PortionSizes   *[]PortionSizeResponse   `json:"portionSizes,omitempty"`
 	Product        string                   `json:"product"`
 	Protein        float64                  `json:"protein"`
@@ -40,6 +41,7 @@ type LoginRequest = WithCredentials
 
 // LoginResponse defines model for LoginResponse.
 type LoginResponse struct {
+	Id    int64  `json:"id"`
 	Token string `json:"token"`
 }
 

@@ -42,14 +42,19 @@ func (s *Service) RegisterUser(rr Register) error {
 	return nil
 }
 
-func (s *Service) LoginUser(lr Login) (string, error) {
-	user, err := s.userStore.GetUserByEmail(lr.Email)
+func (s *Service) LoginUser(lr Login) (LoginResult, error) {
+	u, err := s.userStore.GetUserByEmail(lr.Email)
 	if err != nil {
-		return "", errors.New("incorrect credentials")
+		return LoginResult{}, errors.New("incorrect credentials")
 	}
-	if s.hashingService.CheckPassword(lr.Password, user.PasswordHash) {
-		token, err := s.jwtService.CreateToken(user.ID)
-		return token, err
+	if !s.hashingService.CheckPassword(lr.Password, u.PasswordHash) {
+		return LoginResult{}, errors.New("incorrect credentials")
 	}
-	return "", errors.New("incorrect credentials")
+	token, err := s.jwtService.CreateToken(u.ID)
+	return LoginResult{token, u.ID}, err
+}
+
+type LoginResult struct {
+	Token  string
+	UserID int64
 }

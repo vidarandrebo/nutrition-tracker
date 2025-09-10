@@ -24,7 +24,7 @@ async function login() {
     });
 
     if (response.token) {
-        const user: User = { email: loginForm.email, accessToken: response.token };
+        const user = User.fromObject({ id: response.id, email: loginForm.email, accessToken: response.token });
         User.writeToLocalStorage(user);
         userStore.user = user;
         await router.push("/");

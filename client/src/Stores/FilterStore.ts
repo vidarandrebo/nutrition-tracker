@@ -3,8 +3,13 @@ import { ref } from "vue";
 import { type FoodItem } from "../Models/FoodItems/FoodItem.ts";
 
 interface IFilter<T> {
-    applyFilter(elements: T[]): T[];
+    applyFilter(elements: T[], filterOptions: never): T[];
 }
+
+type FoodItemFilterOptions = {
+    ownerId: number;
+    searchTerm: string;
+};
 
 class FoodItemFilter implements IFilter<FoodItem> {
     showPublic: boolean;
@@ -12,14 +17,39 @@ class FoodItemFilter implements IFilter<FoodItem> {
         this.showPublic = false;
     }
 
-    applyFilter(elements: FoodItem[]): FoodItem[] {
-        return elements.filter((fi) => {
-            if (this.)
-            if (this.showPublic) {
+    applyFilter(elements: FoodItem[], filterOptions: FoodItemFilterOptions): FoodItem[] {
+        const terms = filterOptions.searchTerm
+            .split(" ")
+            .filter((s) => s !== "")
+            .map((t) => t.toLowerCase());
+
+        console.log(terms);
+        console.log(filterOptions);
+        return elements
+            .filter((fi) => {
+                if (filterOptions.searchTerm.length < 3) {
+                    return true;
+                }
+                for (let i = 0; i < terms.length; i++) {
+                    const term = terms[i];
+                    if (!term) {
+                        continue;
+                    }
+                    if (!fi.name.toLowerCase().includes(term)) {
+                        return false;
+                    }
+                }
                 return true;
-            } else if (fi.public {
-            }
-        });
+            })
+            .filter((fi) => {
+                if (fi.ownerId === filterOptions.ownerId) {
+                    return true;
+                }
+                if (this.showPublic) {
+                    return true;
+                }
+                return false;
+            });
     }
     static fromJson(s: string): FoodItemFilter {
         const filter = new FoodItemFilter();
@@ -35,10 +65,14 @@ class FoodItemFilter implements IFilter<FoodItem> {
 }
 
 export const useFilterStore = defineStore("filterStore", () => {
+    const loaded = ref<boolean>(false);
     const foodItem = ref<FoodItemFilter>(new FoodItemFilter());
 
     function init() {
-        loadFoodItemFilter();
+        if (loaded.value) {
+            loadFoodItemFilter();
+        }
+        loaded.value = true;
     }
 
     function setFoodItemFilter(foodItemFilter: FoodItemFilter) {

@@ -50,6 +50,7 @@ func (fi FoodItem) ToFoodItemResponse() api.FoodItemResponse {
 		Protein:        fi.Protein,
 		IsPublic:       fi.Public,
 		Source:         fi.Source,
+		OwnerId:        fi.OwnerID,
 		Micronutrients: &micronutrients,
 		PortionSizes:   &portionSizes,
 	}
