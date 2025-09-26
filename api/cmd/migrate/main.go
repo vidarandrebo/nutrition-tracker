@@ -30,7 +30,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Flags:\n")
 		flag.PrintDefaults()
 		fmt.Fprintf(os.Stderr, "Commands:\n")
-		fmt.Fprintf(os.Stderr, "\tmigrate\n")
+		fmt.Fprintf(os.Stderr, "\tupdate\n")
 		fmt.Fprintf(os.Stderr, "\tdestroy\n")
 	}
 	flag.StringVar(&args.MigrationDir, "migration-dir", "./", "path to migration directory")
@@ -134,7 +134,4 @@ func (ma *DbMigrationApp) applyMigration(query string, name string) bool {
 		panic(insertMigErr)
 	}
 	return true
-
-	return true
-
 }
