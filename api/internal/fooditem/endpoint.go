@@ -48,8 +48,9 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 		Protein:      request.Body.Protein,
 		Carbohydrate: request.Body.Carbohydrate,
 		Fat:          request.Body.Fat,
-		Public:       false,
+		Public:       request.Body.IsPublic,
 	}
+	e.logger.Info("new foodItem", slog.Bool("isPublic", r.Public))
 	if request.Body.KCal == nil {
 		r.KCal = 0.0
 	} else {

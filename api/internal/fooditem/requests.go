@@ -23,7 +23,7 @@ func (fr *PostFoodItemRequest) ToFoodItem() FoodItem {
 		Carbohydrate:   fr.Carbohydrate,
 		Fat:            fr.Fat,
 		KCal:           kCal,
-		Public:         false,
+		Public:         fr.Public,
 		Micronutrients: nil,
 	}
 	return item
