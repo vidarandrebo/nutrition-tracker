@@ -25,3 +25,4 @@ DROP TABLE IF EXISTS meal_entries;
 DROP TABLE IF EXISTS food_items;
 DROP TABLE IF EXISTS meals;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS migration_history;

@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS users
+CREATE TABLE users
 (
     id            bigserial PRIMARY KEY,
     name          varchar(128) NOT NULL,
@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS users
     date_modified timestamp
 );
 
-CREATE TABLE IF NOT EXISTS food_items
+CREATE TABLE food_items
 (
     id            bigserial PRIMARY KEY,
     manufacturer  varchar(128),
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS food_items
     owner_id      bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS micronutrients
+CREATE TABLE micronutrients
 (
     id            bigserial PRIMARY KEY,
     name          varchar(128),
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS micronutrients
 
 
 
-CREATE TABLE IF NOT EXISTS meals
+CREATE TABLE meals
 (
     id              bigserial PRIMARY KEY,
     sequence_number integer,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS meals
     owner_id        bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS meal_entries
+CREATE TABLE meal_entries
 (
     id            bigserial PRIMARY KEY,
     amount        double precision                               NOT NULL,
@@ -57,7 +57,7 @@ CREATE TABLE IF NOT EXISTS meal_entries
     meal_id       bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS recipes
+CREATE TABLE recipes
 (
     id            bigserial PRIMARY KEY,
     name          varchar(128),
@@ -66,7 +66,7 @@ CREATE TABLE IF NOT EXISTS recipes
     owner_id      bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS recipe_entries
+CREATE TABLE recipe_entries
 (
     id            bigserial PRIMARY KEY,
     amount        double precision,
@@ -76,7 +76,7 @@ CREATE TABLE IF NOT EXISTS recipe_entries
     recipe_id     bigint REFERENCES recipes (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS portion_sizes
+CREATE TABLE portion_sizes
 (
     id            bigserial PRIMARY KEY,
     name          varchar(128),
