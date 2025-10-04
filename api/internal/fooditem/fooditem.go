@@ -120,6 +120,14 @@ type Micronutrient struct {
 	Amount float64
 }
 
+func (mn Micronutrient) ToResponse() api.MicronutrientResponse {
+	return api.MicronutrientResponse{
+		Amount: mn.Amount,
+		Id:     mn.ID,
+		Name:   mn.Name,
+	}
+}
+
 type PortionSize struct {
 	ID     int64
 	Name   string

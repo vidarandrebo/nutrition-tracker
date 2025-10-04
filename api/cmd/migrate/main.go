@@ -80,6 +80,7 @@ func (ma *DbMigrationApp) destroy() {
 	ma.db.Exec(query)
 	fmt.Println("destroying db")
 }
+
 func (ma *DbMigrationApp) update() {
 	fmt.Println("migrating to new version of db")
 
@@ -89,7 +90,6 @@ func (ma *DbMigrationApp) update() {
 	}
 
 	validMigrationExpr, err := regexp.Compile("^(([12]\\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])-([a-zA-Z\\-]*).sql)$")
-
 	if err != nil {
 		panic(err)
 	}

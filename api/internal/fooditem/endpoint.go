@@ -107,3 +107,24 @@ func (e Endpoint) PostApiFoodItemsIdPortions(ctx context.Context, request api.Po
 	}
 	return api.PostApiFoodItemsIdPortions201JSONResponse(ps.ToResponse()), nil
 }
+
+func (e Endpoint) PostApiFoodItemsIdMicronutrients(ctx context.Context, request api.PostApiFoodItemsIdMicronutrientsRequestObject) (api.PostApiFoodItemsIdMicronutrientsResponseObject, error) {
+	userID, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, utils.ErrUnauthorized
+	}
+	micronutrient := Micronutrient{
+		Amount: request.Body.Amount,
+		Name:   request.Body.Name,
+	}
+	ps, err := e.store.AddMicronutrient(request.Id, micronutrient, userID)
+	if errors.Is(err, utils.ErrEntityNotFound) {
+		return api.PostApiFoodItemsIdMicronutrients404Response{}, nil
+	} else if errors.Is(err, utils.ErrEntityNotOwned) {
+		return nil, utils.ErrEntityNotOwned
+	} else if err != nil {
+		return nil, utils.ErrUnknown
+	}
+	return api.PostApiFoodItemsIdMicronutrients201JSONResponse(ps.ToResponse()), nil
+
+}

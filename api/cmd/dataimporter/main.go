@@ -51,7 +51,7 @@ func main() {
 
 	hc := http.Client{}
 
-	c, err := api.NewClientWithResponses("https://nt.vidarboe.com", api.WithHTTPClient(&hc))
+	c, err := api.NewClientWithResponses("http://localhost:8080", api.WithHTTPClient(&hc))
 	response, err := c.PostApiLoginWithResponse(context.Background(), api.LoginRequest{
 		Email:    matvareTabellenCredentials.Email,
 		Password: matvareTabellenCredentials.Password,
@@ -64,7 +64,7 @@ func main() {
 	}
 	fmt.Println(response)
 
-	sem := semaphore.NewWeighted(100)
+	sem := semaphore.NewWeighted(10)
 	var wg sync.WaitGroup
 	if err == nil {
 		for _, item := range foods.Items {
@@ -75,7 +75,7 @@ func main() {
 				foodItem.OwnerID = matvareTabellenUser.ID
 				fmt.Println(foodItem.Product, "Protein:", foodItem.Protein, "Carbo:", foodItem.Carbohydrate, "Fat:", foodItem.Fat)
 
-				r, _ := c.PostApiFoodItems(context.Background(), api.PostFoodItemRequest{
+				r, err := c.PostApiFoodItemsWithResponse(context.Background(), api.PostFoodItemRequest{
 					Carbohydrate: foodItem.Carbohydrate,
 					Fat:          foodItem.Fat,
 					IsPublic:     foodItem.Public,
@@ -84,11 +84,16 @@ func main() {
 					Product:      foodItem.Product,
 					Protein:      foodItem.Protein,
 				}, reqEdit)
-				fmt.Println(foodItem.Public)
-				fmt.Println(r.StatusCode)
-				//				for _, mn := range foodItem.Micronutrients {
-				//					r, _ := c.PostApiFoodItemsIdPortions(context.Background(), api.Post)
-				//				}
+
+				if err == nil {
+					for _, mn := range foodItem.Micronutrients {
+						c.PostApiFoodItemsIdMicronutrients(context.Background(), r.JSON201.Id, api.PostFoodItemMicronutrient{
+							Amount: mn.Amount,
+							Name:   mn.Name,
+						}, reqEdit)
+					}
+				}
+
 				wg.Done()
 				sem.Release(1)
 			}()
