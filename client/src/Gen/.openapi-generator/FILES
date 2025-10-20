@@ -11,6 +11,7 @@ models/MealEntryResponse.ts
 models/MealResponse.ts
 models/MicronutrientResponse.ts
 models/PortionSizeResponse.ts
+models/PostFoodItemMicronutrient.ts
 models/PostFoodItemPortion.ts
 models/PostFoodItemRequest.ts
 models/PostMealEntryRequest.ts
