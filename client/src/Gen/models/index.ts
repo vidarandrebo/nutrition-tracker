@@ -7,6 +7,7 @@ export * from "./MealEntryResponse";
 export * from "./MealResponse";
 export * from "./MicronutrientResponse";
 export * from "./PortionSizeResponse";
+export * from "./PostFoodItemMicronutrient";
 export * from "./PostFoodItemPortion";
 export * from "./PostFoodItemRequest";
 export * from "./PostMealEntryRequest";

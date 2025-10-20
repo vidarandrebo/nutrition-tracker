@@ -13,12 +13,23 @@
  */
 
 import * as runtime from "../runtime";
-import type { FoodItemResponse, PortionSizeResponse, PostFoodItemPortion, PostFoodItemRequest } from "../models/index";
+import type {
+    FoodItemResponse,
+    MicronutrientResponse,
+    PortionSizeResponse,
+    PostFoodItemMicronutrient,
+    PostFoodItemPortion,
+    PostFoodItemRequest,
+} from "../models/index";
 import {
     FoodItemResponseFromJSON,
     FoodItemResponseToJSON,
+    MicronutrientResponseFromJSON,
+    MicronutrientResponseToJSON,
     PortionSizeResponseFromJSON,
     PortionSizeResponseToJSON,
+    PostFoodItemMicronutrientFromJSON,
+    PostFoodItemMicronutrientToJSON,
     PostFoodItemPortionFromJSON,
     PostFoodItemPortionToJSON,
     PostFoodItemRequestFromJSON,
@@ -31,6 +42,11 @@ export interface ApiFoodItemsIdDeleteRequest {
 
 export interface ApiFoodItemsIdGetRequest {
     id: number;
+}
+
+export interface ApiFoodItemsIdMicronutrientsPostRequest {
+    id: number;
+    postFoodItemMicronutrient?: PostFoodItemMicronutrient;
 }
 
 export interface ApiFoodItemsIdPortionsPostRequest {
@@ -100,6 +116,26 @@ export interface FoodItemsApiInterface {
         requestParameters: ApiFoodItemsIdGetRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<FoodItemResponse>;
+
+    /**
+     *
+     * @param {number} id
+     * @param {PostFoodItemMicronutrient} [postFoodItemMicronutrient]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof FoodItemsApiInterface
+     */
+    apiFoodItemsIdMicronutrientsPostRaw(
+        requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MicronutrientResponse>>;
+
+    /**
+     */
+    apiFoodItemsIdMicronutrientsPost(
+        requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MicronutrientResponse>;
 
     /**
      *
@@ -260,6 +296,52 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<FoodItemResponse> {
         const response = await this.apiFoodItemsIdGetRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiFoodItemsIdMicronutrientsPostRaw(
+        requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MicronutrientResponse>> {
+        if (requestParameters["id"] == null) {
+            throw new runtime.RequiredError(
+                "id",
+                'Required parameter "id" was null or undefined when calling apiFoodItemsIdMicronutrientsPost().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        let urlPath = `/api/food-items/{id}/micronutrients`;
+        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters["id"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: PostFoodItemMicronutrientToJSON(requestParameters["postFoodItemMicronutrient"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MicronutrientResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiFoodItemsIdMicronutrientsPost(
+        requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MicronutrientResponse> {
+        const response = await this.apiFoodItemsIdMicronutrientsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
 

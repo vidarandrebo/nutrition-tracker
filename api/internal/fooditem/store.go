@@ -183,6 +183,26 @@ func (s *Store) AddPortionSize(foodItemID int64, portionSize PortionSize, ownerI
 	return portionSize, nil
 }
 
+func (s *Store) AddMicronutrient(foodItemID int64, micronutrient Micronutrient, ownerID int64) (Micronutrient, error) {
+	if ok, err := s.ownsFoodItem(foodItemID, ownerID); !ok {
+		if err != nil {
+			return Micronutrient{}, err
+		}
+		return Micronutrient{}, err
+
+	}
+	err := s.db.QueryRow(`
+			INSERT INTO micronutrients AS mn (name, amount, food_item_id)
+			VALUES ($1,$2,$3)
+			RETURNING mn.id
+		`, micronutrient.Name, micronutrient.Amount, foodItemID).Scan(&micronutrient.ID)
+	if err != nil {
+		s.logger.Error("failed to add micronutrient to foodItem", slog.Int64("foodItemId", foodItemID))
+		return Micronutrient{}, err
+	}
+	return micronutrient, nil
+}
+
 func (s *Store) ownsFoodItem(id int64, ownerID int64) (bool, error) {
 	foodItem := FoodItem{}
 	err := s.db.QueryRow(`

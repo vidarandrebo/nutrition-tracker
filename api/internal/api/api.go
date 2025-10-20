@@ -75,6 +75,12 @@ type PortionSizeResponse struct {
 	Name   string  `json:"name"`
 }
 
+// PostFoodItemMicronutrient defines model for PostFoodItemMicronutrient.
+type PostFoodItemMicronutrient struct {
+	Amount float64 `json:"amount"`
+	Name   string  `json:"name"`
+}
+
 // PostFoodItemPortion defines model for PostFoodItemPortion.
 type PostFoodItemPortion struct {
 	Amount float64 `json:"amount"`
@@ -170,6 +176,9 @@ type WithTimestamp struct {
 // PostApiFoodItemsJSONBody defines parameters for PostApiFoodItems.
 type PostApiFoodItemsJSONBody = PostFoodItemRequest
 
+// PostApiFoodItemsIdMicronutrientsJSONBody defines parameters for PostApiFoodItemsIdMicronutrients.
+type PostApiFoodItemsIdMicronutrientsJSONBody = PostFoodItemMicronutrient
+
 // PostApiFoodItemsIdPortionsJSONBody defines parameters for PostApiFoodItemsIdPortions.
 type PostApiFoodItemsIdPortionsJSONBody = PostFoodItemPortion
 
@@ -181,6 +190,9 @@ type GetApiMealsParams struct {
 
 // PostApiFoodItemsJSONRequestBody defines body for PostApiFoodItems for application/json ContentType.
 type PostApiFoodItemsJSONRequestBody = PostApiFoodItemsJSONBody
+
+// PostApiFoodItemsIdMicronutrientsJSONRequestBody defines body for PostApiFoodItemsIdMicronutrients for application/json ContentType.
+type PostApiFoodItemsIdMicronutrientsJSONRequestBody = PostApiFoodItemsIdMicronutrientsJSONBody
 
 // PostApiFoodItemsIdPortionsJSONRequestBody defines body for PostApiFoodItemsIdPortions for application/json ContentType.
 type PostApiFoodItemsIdPortionsJSONRequestBody = PostApiFoodItemsIdPortionsJSONBody
@@ -287,6 +299,11 @@ type ClientInterface interface {
 	// GetApiFoodItemsId request
 	GetApiFoodItemsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 
+	// PostApiFoodItemsIdMicronutrientsWithBody request with any body
+	PostApiFoodItemsIdMicronutrientsWithBody(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	PostApiFoodItemsIdMicronutrients(ctx context.Context, id int64, body PostApiFoodItemsIdMicronutrientsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
+
 	// PostApiFoodItemsIdPortionsWithBody request with any body
 	PostApiFoodItemsIdPortionsWithBody(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error)
 
@@ -386,6 +403,30 @@ func (c *Client) DeleteApiFoodItemsId(ctx context.Context, id int64, reqEditors 
 
 func (c *Client) GetApiFoodItemsId(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
 	req, err := NewGetApiFoodItemsIdRequest(c.Server, id)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiFoodItemsIdMicronutrientsWithBody(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiFoodItemsIdMicronutrientsRequestWithBody(c.Server, id, contentType, body)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) PostApiFoodItemsIdMicronutrients(ctx context.Context, id int64, body PostApiFoodItemsIdMicronutrientsJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewPostApiFoodItemsIdMicronutrientsRequest(c.Server, id, body)
 	if err != nil {
 		return nil, err
 	}
@@ -743,6 +784,53 @@ func NewGetApiFoodItemsIdRequest(server string, id int64) (*http.Request, error)
 	if err != nil {
 		return nil, err
 	}
+
+	return req, nil
+}
+
+// NewPostApiFoodItemsIdMicronutrientsRequest calls the generic PostApiFoodItemsIdMicronutrients builder with application/json body
+func NewPostApiFoodItemsIdMicronutrientsRequest(server string, id int64, body PostApiFoodItemsIdMicronutrientsJSONRequestBody) (*http.Request, error) {
+	var bodyReader io.Reader
+	buf, err := json.Marshal(body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(buf)
+	return NewPostApiFoodItemsIdMicronutrientsRequestWithBody(server, id, "application/json", bodyReader)
+}
+
+// NewPostApiFoodItemsIdMicronutrientsRequestWithBody generates requests for PostApiFoodItemsIdMicronutrients with any type of body
+func NewPostApiFoodItemsIdMicronutrientsRequestWithBody(server string, id int64, contentType string, body io.Reader) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "id", runtime.ParamLocationPath, id)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/food-items/%s/micronutrients", pathParam0)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("POST", queryURL.String(), body)
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Content-Type", contentType)
 
 	return req, nil
 }
@@ -1289,6 +1377,11 @@ type ClientWithResponsesInterface interface {
 	// GetApiFoodItemsIdWithResponse request
 	GetApiFoodItemsIdWithResponse(ctx context.Context, id int64, reqEditors ...RequestEditorFn) (*GetApiFoodItemsIdResponse, error)
 
+	// PostApiFoodItemsIdMicronutrientsWithBodyWithResponse request with any body
+	PostApiFoodItemsIdMicronutrientsWithBodyWithResponse(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiFoodItemsIdMicronutrientsResponse, error)
+
+	PostApiFoodItemsIdMicronutrientsWithResponse(ctx context.Context, id int64, body PostApiFoodItemsIdMicronutrientsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiFoodItemsIdMicronutrientsResponse, error)
+
 	// PostApiFoodItemsIdPortionsWithBodyWithResponse request with any body
 	PostApiFoodItemsIdPortionsWithBodyWithResponse(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiFoodItemsIdPortionsResponse, error)
 
@@ -1419,6 +1512,28 @@ func (r GetApiFoodItemsIdResponse) Status() string {
 
 // StatusCode returns HTTPResponse.StatusCode
 func (r GetApiFoodItemsIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type PostApiFoodItemsIdMicronutrientsResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+	JSON201      *MicronutrientResponse
+}
+
+// Status returns HTTPResponse.Status
+func (r PostApiFoodItemsIdMicronutrientsResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r PostApiFoodItemsIdMicronutrientsResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -1729,6 +1844,23 @@ func (c *ClientWithResponses) GetApiFoodItemsIdWithResponse(ctx context.Context,
 	return ParseGetApiFoodItemsIdResponse(rsp)
 }
 
+// PostApiFoodItemsIdMicronutrientsWithBodyWithResponse request with arbitrary body returning *PostApiFoodItemsIdMicronutrientsResponse
+func (c *ClientWithResponses) PostApiFoodItemsIdMicronutrientsWithBodyWithResponse(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiFoodItemsIdMicronutrientsResponse, error) {
+	rsp, err := c.PostApiFoodItemsIdMicronutrientsWithBody(ctx, id, contentType, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiFoodItemsIdMicronutrientsResponse(rsp)
+}
+
+func (c *ClientWithResponses) PostApiFoodItemsIdMicronutrientsWithResponse(ctx context.Context, id int64, body PostApiFoodItemsIdMicronutrientsJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiFoodItemsIdMicronutrientsResponse, error) {
+	rsp, err := c.PostApiFoodItemsIdMicronutrients(ctx, id, body, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParsePostApiFoodItemsIdMicronutrientsResponse(rsp)
+}
+
 // PostApiFoodItemsIdPortionsWithBodyWithResponse request with arbitrary body returning *PostApiFoodItemsIdPortionsResponse
 func (c *ClientWithResponses) PostApiFoodItemsIdPortionsWithBodyWithResponse(ctx context.Context, id int64, contentType string, body io.Reader, reqEditors ...RequestEditorFn) (*PostApiFoodItemsIdPortionsResponse, error) {
 	rsp, err := c.PostApiFoodItemsIdPortionsWithBody(ctx, id, contentType, body, reqEditors...)
@@ -1971,6 +2103,31 @@ func ParseGetApiFoodItemsIdResponse(rsp *http.Response) (*GetApiFoodItemsIdRespo
 			return nil, err
 		}
 		response.JSON200 = &dest
+	}
+
+	return response, nil
+}
+
+// ParsePostApiFoodItemsIdMicronutrientsResponse parses an HTTP response from a PostApiFoodItemsIdMicronutrientsWithResponse call
+func ParsePostApiFoodItemsIdMicronutrientsResponse(rsp *http.Response) (*PostApiFoodItemsIdMicronutrientsResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &PostApiFoodItemsIdMicronutrientsResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
+		var dest MicronutrientResponse
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON201 = &dest
 	}
 
 	return response, nil
@@ -2254,6 +2411,9 @@ type ServerInterface interface {
 	// (GET /api/food-items/{id})
 	GetApiFoodItemsId(w http.ResponseWriter, r *http.Request, id int64)
 
+	// (POST /api/food-items/{id}/micronutrients)
+	PostApiFoodItemsIdMicronutrients(w http.ResponseWriter, r *http.Request, id int64)
+
 	// (POST /api/food-items/{id}/portions)
 	PostApiFoodItemsIdPortions(w http.ResponseWriter, r *http.Request, id int64)
 
@@ -2365,6 +2525,30 @@ func (siw *ServerInterfaceWrapper) GetApiFoodItemsId(w http.ResponseWriter, r *h
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		siw.Handler.GetApiFoodItemsId(w, r, id)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// PostApiFoodItemsIdMicronutrients operation middleware
+func (siw *ServerInterfaceWrapper) PostApiFoodItemsIdMicronutrients(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	// ------------- Path parameter "id" -------------
+	var id int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "id", r.PathValue("id"), &id, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.PostApiFoodItemsIdMicronutrients(w, r, id)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -2750,6 +2934,7 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc("POST "+options.BaseURL+"/api/food-items", wrapper.PostApiFoodItems)
 	m.HandleFunc("DELETE "+options.BaseURL+"/api/food-items/{id}", wrapper.DeleteApiFoodItemsId)
 	m.HandleFunc("GET "+options.BaseURL+"/api/food-items/{id}", wrapper.GetApiFoodItemsId)
+	m.HandleFunc("POST "+options.BaseURL+"/api/food-items/{id}/micronutrients", wrapper.PostApiFoodItemsIdMicronutrients)
 	m.HandleFunc("POST "+options.BaseURL+"/api/food-items/{id}/portions", wrapper.PostApiFoodItemsIdPortions)
 	m.HandleFunc("POST "+options.BaseURL+"/api/login", wrapper.PostApiLogin)
 	m.HandleFunc("GET "+options.BaseURL+"/api/meals", wrapper.GetApiMeals)
@@ -2835,6 +3020,31 @@ func (response GetApiFoodItemsId200JSONResponse) VisitGetApiFoodItemsIdResponse(
 	w.WriteHeader(200)
 
 	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItemsIdMicronutrientsRequestObject struct {
+	Id   int64 `json:"id"`
+	Body *PostApiFoodItemsIdMicronutrientsJSONRequestBody
+}
+
+type PostApiFoodItemsIdMicronutrientsResponseObject interface {
+	VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error
+}
+
+type PostApiFoodItemsIdMicronutrients201JSONResponse MicronutrientResponse
+
+func (response PostApiFoodItemsIdMicronutrients201JSONResponse) VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(201)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItemsIdMicronutrients404Response struct{}
+
+func (response PostApiFoodItemsIdMicronutrients404Response) VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error {
+	w.WriteHeader(404)
+	return nil
 }
 
 type PostApiFoodItemsIdPortionsRequestObject struct {
@@ -3062,6 +3272,9 @@ type StrictServerInterface interface {
 	// (GET /api/food-items/{id})
 	GetApiFoodItemsId(ctx context.Context, request GetApiFoodItemsIdRequestObject) (GetApiFoodItemsIdResponseObject, error)
 
+	// (POST /api/food-items/{id}/micronutrients)
+	PostApiFoodItemsIdMicronutrients(ctx context.Context, request PostApiFoodItemsIdMicronutrientsRequestObject) (PostApiFoodItemsIdMicronutrientsResponseObject, error)
+
 	// (POST /api/food-items/{id}/portions)
 	PostApiFoodItemsIdPortions(ctx context.Context, request PostApiFoodItemsIdPortionsRequestObject) (PostApiFoodItemsIdPortionsResponseObject, error)
 
@@ -3230,6 +3443,39 @@ func (sh *strictHandler) GetApiFoodItemsId(w http.ResponseWriter, r *http.Reques
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
 	} else if validResponse, ok := response.(GetApiFoodItemsIdResponseObject); ok {
 		if err := validResponse.VisitGetApiFoodItemsIdResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// PostApiFoodItemsIdMicronutrients operation middleware
+func (sh *strictHandler) PostApiFoodItemsIdMicronutrients(w http.ResponseWriter, r *http.Request, id int64) {
+	var request PostApiFoodItemsIdMicronutrientsRequestObject
+
+	request.Id = id
+
+	var body PostApiFoodItemsIdMicronutrientsJSONRequestBody
+	if err := json.NewDecoder(r.Body).Decode(&body); err != nil {
+		sh.options.RequestErrorHandlerFunc(w, r, fmt.Errorf("can't decode JSON body: %w", err))
+		return
+	}
+	request.Body = &body
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.PostApiFoodItemsIdMicronutrients(ctx, request.(PostApiFoodItemsIdMicronutrientsRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "PostApiFoodItemsIdMicronutrients")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(PostApiFoodItemsIdMicronutrientsResponseObject); ok {
+		if err := validResponse.VisitPostApiFoodItemsIdMicronutrientsResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {

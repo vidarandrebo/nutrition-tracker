@@ -118,6 +118,34 @@ paths:
         404:
           description: FoodItem not found
 
+  /api/food-items/{id}/micronutrients:
+    post:
+      tags:
+        - Food Items
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      requestBody:
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: "#/components/schemas/PostFoodItemMicronutrient"
+      responses:
+        201:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MicronutrientResponse"
+          description: Micronutrient added
+        404:
+          description: FoodItem not found
+
+
   /api/meals:
     get:
       tags:
@@ -478,6 +506,16 @@ components:
 
 
     PostFoodItemPortion:
+      type: object
+      allOf:
+        - $ref: "#/components/schemas/WithAmount"
+        - properties:
+            name:
+              type: string
+          required:
+            - name
+
+    PostFoodItemMicronutrient:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithAmount"
