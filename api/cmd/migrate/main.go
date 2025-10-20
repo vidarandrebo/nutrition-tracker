@@ -77,7 +77,10 @@ func (ma *DbMigrationApp) destroy() {
 		panic(err)
 	}
 	query := string(file)
-	ma.db.Exec(query)
+	_, err = ma.db.Exec(query)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Println("destroying db")
 }
 

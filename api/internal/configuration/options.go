@@ -16,6 +16,7 @@ type Options struct {
 	LogFile              string                           `json:"LogFile"`
 	DBConnectionString   string                           `json:"DBConnectionString"`
 	SystemUsers          map[string]SystemUserCredentials `json:"SystemUsers"`
+	DataImporterTarget   string                           `json:"DataImporterTarget"`
 }
 
 func ParseOptions(fileName string) (*Options, error) {

@@ -126,5 +126,4 @@ func (e Endpoint) PostApiFoodItemsIdMicronutrients(ctx context.Context, request 
 		return nil, utils.ErrUnknown
 	}
 	return api.PostApiFoodItemsIdMicronutrients201JSONResponse(ps.ToResponse()), nil
-
 }

@@ -51,7 +51,7 @@ func main() {
 
 	hc := http.Client{}
 
-	c, err := api.NewClientWithResponses("http://localhost:8080", api.WithHTTPClient(&hc))
+	c, err := api.NewClientWithResponses(app.Options.DataImporterTarget, api.WithHTTPClient(&hc))
 	response, err := c.PostApiLoginWithResponse(context.Background(), api.LoginRequest{
 		Email:    matvareTabellenCredentials.Email,
 		Password: matvareTabellenCredentials.Password,
@@ -100,20 +100,4 @@ func main() {
 		}
 	}
 	wg.Wait()
-
-	//	if err == nil {
-	//		for _, item := range foods.Items {
-	//			foodItem := fooditem.FromMatvareTabellen(item)
-	//			foodItem.OwnerID = matvareTabellenUser.ID
-	//			fmt.Println(foodItem.Product, "Protein:", foodItem.Protein, "Carbo:", foodItem.Carbohydrate, "Fat:", //foodItem.Fat)
-	//			foodItem.PortionSizes = make([]fooditem.PortionSize, 0, 3)
-	//			for i := 0; i < 3; i++ {
-	//				foodItem.PortionSizes = append(foodItem.PortionSizes, fooditem.PortionSize{
-	//					Name:   "100g " + strconv.Itoa(i),
-	//					Amount: float64(100),
-	//				})
-	//			}
-	//			app.Stores.FoodItemStore.Add(foodItem)
-	//		}
-	//}
 }
