@@ -9,6 +9,8 @@ import debounce from "debounce";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import { useFilterStore } from "../../Stores/FilterStore.ts";
+import FoodItemTab from "../Meals/FoodItemTab.vue";
+import FoodItemTable from "./FoodItemTable.vue";
 
 const foodItemStore = useFoodItemStore();
 const filterStore = useFilterStore();
@@ -61,14 +63,15 @@ async function onDeleteFoodItem(foodItemId: number) {
                 </label>
             </FormField>
         </div>
-        <ul>
+        <FoodItemTable :food-items="foodItemStore.filteredFoodItems"></FoodItemTable>
+        <!--<ul>
             <FoodItemDisplay
                 v-for="foodItem in foodItemStore.filteredFoodItems"
                 :key="foodItem.id"
                 :item="foodItem"
                 @delete-food-item="onDeleteFoodItem"
             ></FoodItemDisplay>
-        </ul>
+        </ul>-->
     </section>
 </template>
 

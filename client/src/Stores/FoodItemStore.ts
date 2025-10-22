@@ -54,17 +54,15 @@ export const useFoodItemStore = defineStore("foodItems", () => {
         const items = filterStore.foodItem.applyFilter(collection.value, {
             ownerId: userStore.user?.id ?? 0,
         });
-        return items
-            .sort((a, b) => {
-                if (a.product.length < b.product.length) {
-                    return -1;
-                } else if (a.product.length > b.product.length) {
-                    return 1;
-                } else {
-                    return 0;
-                }
-            })
-            .slice(0, 50);
+        return items.sort((a, b) => {
+            if (a.product.length < b.product.length) {
+                return -1;
+            } else if (a.product.length > b.product.length) {
+                return 1;
+            } else {
+                return 0;
+            }
+        });
     });
     async function addPortionSize(foodItemId: number, ps: PortionSizeForm) {
         const result = await PortionSize.add(ps, foodItemId);
