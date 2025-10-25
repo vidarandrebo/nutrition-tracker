@@ -12,8 +12,6 @@ const sortIcon = ref<string>("menu-up");
 const currentPage = ref<number>(1);
 const perPage = 20;
 
-const checked = ref<FoodItem[]>([]);
-
 function flipSortCaret(_field?: string, order?: string) {
     if (order === "asc") {
         sortIcon.value = "menu-up";
@@ -27,9 +25,7 @@ function flipSortCaret(_field?: string, order?: string) {
 <template>
     <BTable
         v-model:current-page="currentPage"
-        v-model:checked-rows.sync="checked"
         hoverable
-        checkable
         :data="foodItems"
         paginated
         :per-page="perPage"
@@ -42,28 +38,20 @@ function flipSortCaret(_field?: string, order?: string) {
         aria-current-label="Current page"
         @sort="flipSortCaret"
     >
-        <BTableColumn v-slot="slotProps" label="Id" sortable field="id" width="40">
-            {{ slotProps.row.id }}
-        </BTableColumn>
         <BTableColumn v-slot="slotProps" label="Name" sortable field="name">
             {{ slotProps.row.name }}
         </BTableColumn>
-        <BTableColumn v-slot="slotProps" sortable field="protein" label="Protein">
+        <BTableColumn v-slot="slotProps" width="80" sortable field="protein" label="Protein">
             {{ slotProps.row.protein }}
         </BTableColumn>
-        <BTableColumn v-slot="slotProps" sortable field="carbohydrate" label="Carbohydrate">
+        <BTableColumn v-slot="slotProps" width="130" sortable field="carbohydrate" label="Carbohydrate">
             {{ slotProps.row.carbohydrate }}
         </BTableColumn>
-        <BTableColumn v-slot="slotProps" sortable field="fat" label="Fat">
+        <BTableColumn v-slot="slotProps" width="50" sortable field="fat" label="Fat">
             {{ slotProps.row.fat }}
         </BTableColumn>
-        <BTableColumn v-slot="slotProps" sortable field="kCal" label="KCal">
+        <BTableColumn v-slot="slotProps" width="60" sortable field="kCal" label="KCal">
             {{ slotProps.row.kCal }}
         </BTableColumn>
     </BTable>
 </template>
-
-<style>
-table {
-}
-</style>
