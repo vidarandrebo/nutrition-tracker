@@ -43,4 +43,5 @@ import MenuBar from "./Components/MenuBar.vue";
         $weight-bold: 600,
         $weight-extrabold: 700
     );
+@use "buefy/src/scss/buefy";
 </style>

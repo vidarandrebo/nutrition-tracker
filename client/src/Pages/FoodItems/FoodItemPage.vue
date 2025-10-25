@@ -2,13 +2,12 @@
 import HeaderH1 from "../../Components/Headings/HeaderH1.vue";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import { onMounted, ref, watch } from "vue";
-import FoodItemDisplay from "./FoodItemDisplay.vue";
-import InputText from "../../Components/Forms/InputText.vue";
 import FormField from "../../Components/Forms/FormField.vue";
 import debounce from "debounce";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
-import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import { useFilterStore } from "../../Stores/FilterStore.ts";
+import FoodItemTable from "./FoodItemTable.vue";
+import { BCheckbox, BInput } from "buefy";
 
 const foodItemStore = useFoodItemStore();
 const filterStore = useFilterStore();
@@ -25,17 +24,17 @@ const updateSearchTermDb = debounce(() => {
 watch(searchTerm, () => {
     updateSearchTermDb();
 });
-async function onDeleteFoodItem(foodItemId: number) {
-    const { error } = await FoodItem.delete(foodItemId);
-    if (error) {
-        return;
-    }
-
-    const { error: rmFoodItemErr } = foodItemStore.removeFoodItem(foodItemId);
-    if (rmFoodItemErr) {
-        console.log(rmFoodItemErr.message);
-    }
-}
+//async function onDeleteFoodItem(foodItemId: number) {
+//    const { error } = await FoodItem.delete(foodItemId);
+//    if (error) {
+//        return;
+//    }
+//
+//    const { error: rmFoodItemErr } = foodItemStore.removeFoodItem(foodItemId);
+//    if (rmFoodItemErr) {
+//        console.log(rmFoodItemErr.message);
+//    }
+//}
 </script>
 
 <template>
@@ -52,23 +51,24 @@ async function onDeleteFoodItem(foodItemId: number) {
         </LevelPrimary>
         <div class="is-flex is-align-items-center is-gap-1">
             <FormField class="is-flex-grow-1">
-                <InputText v-model="searchTerm" placeholder="Search"></InputText>
+                <BInput v-model="searchTerm" placeholder="Search"></BInput>
             </FormField>
             <FormField>
                 <label class="checkbox">
                     Show public
-                    <input v-model="filterStore.foodItem.showPublic" type="checkbox" />
+                    <b-checkbox v-model="filterStore.foodItem.showPublic" />
                 </label>
             </FormField>
         </div>
-        <ul>
+        <FoodItemTable :food-items="foodItemStore.filteredFoodItems"></FoodItemTable>
+        <!--<ul>
             <FoodItemDisplay
                 v-for="foodItem in foodItemStore.filteredFoodItems"
                 :key="foodItem.id"
                 :item="foodItem"
                 @delete-food-item="onDeleteFoodItem"
             ></FoodItemDisplay>
-        </ul>
+        </ul>-->
     </section>
 </template>
 
