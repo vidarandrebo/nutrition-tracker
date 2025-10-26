@@ -69,7 +69,7 @@ func (a *Importer) configureServices() {
 
 func (a *Importer) configureStores() {
 	a.Stores = &Stores{}
-	a.Stores.FoodItemStore = fooditem.NewStore(a.DB, a.Logger)
+	a.Stores.FoodItemStore = fooditem.NewService(a.DB, a.Logger)
 	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
 }
 

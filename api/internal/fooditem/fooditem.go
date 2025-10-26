@@ -17,28 +17,20 @@ type FoodItem struct {
 	Fat            float64
 	KCal           float64
 	Public         bool
-	Micronutrients []Micronutrient
-	PortionSizes   []PortionSize
+	Micronutrients []*Micronutrient
+	PortionSizes   []*PortionSize
 	Source         string
 	OwnerID        int64
 }
 
-func (fi FoodItem) ToFoodItemResponse() api.FoodItemResponse {
+func (fi *FoodItem) ToResponse() api.FoodItemResponse {
 	micronutrients := make([]api.MicronutrientResponse, 0, len(fi.Micronutrients))
 	for _, item := range fi.Micronutrients {
-		micronutrients = append(micronutrients, api.MicronutrientResponse{
-			Amount: item.Amount,
-			Id:     item.ID,
-			Name:   item.Name,
-		})
+		micronutrients = append(micronutrients, item.ToResponse())
 	}
 	portionSizes := make([]api.PortionSizeResponse, 0, len(fi.PortionSizes))
 	for _, item := range fi.PortionSizes {
-		portionSizes = append(portionSizes, api.PortionSizeResponse{
-			Amount: item.Amount,
-			Id:     item.ID,
-			Name:   item.Name,
-		})
+		portionSizes = append(portionSizes, item.ToResponse())
 	}
 	return api.FoodItemResponse{
 		Carbohydrate:   fi.Carbohydrate,
@@ -56,28 +48,28 @@ func (fi FoodItem) ToFoodItemResponse() api.FoodItemResponse {
 	}
 }
 
-func (fi FoodItem) HasAccess(userId int64) bool {
+func (fi *FoodItem) HasAccess(userId int64) bool {
 	if fi.Public || fi.OwnerID == userId {
 		return true
 	}
 	return false
 }
 
-func FromMatvareTabellen(item matvaretabellen.Food) FoodItem {
+func FromMatvareTabellen(item matvaretabellen.Food) *FoodItem {
 	macroNames := []string{"Protein", "Karbo", "Fett"}
-	micronutrients := make([]Micronutrient, 0)
+	micronutrients := make([]*Micronutrient, 0)
 	for _, constituent := range item.Constituents {
 		if constituent.Quantity == 0.0 {
 			continue
 		}
 		if !slices.Contains(macroNames, constituent.NutrientID) {
-			micronutrients = append(micronutrients, Micronutrient{
+			micronutrients = append(micronutrients, &Micronutrient{
 				Name:   constituent.NutrientID,
 				Amount: CalcAmount(constituent.Quantity, constituent.Unit),
 			})
 		}
 	}
-	foodItem := FoodItem{
+	foodItem := &FoodItem{
 		ID:             0,
 		Manufacturer:   "",
 		Product:        item.FoodName,
@@ -114,30 +106,34 @@ func CalcAmount(amount float64, unit string) float64 {
 	}
 }
 
-type Micronutrient struct {
-	ID     int64
-	Name   string
-	Amount float64
-}
-
-func (mn Micronutrient) ToResponse() api.MicronutrientResponse {
-	return api.MicronutrientResponse{
-		Amount: mn.Amount,
-		Id:     mn.ID,
-		Name:   mn.Name,
+func (fi *FoodItem) ToTable() TableFoodItem {
+	return TableFoodItem{
+		ID:           fi.ID,
+		Manufacturer: fi.Manufacturer,
+		Product:      fi.Product,
+		Protein:      fi.Protein,
+		Carbohydrate: fi.Carbohydrate,
+		Fat:          fi.Fat,
+		KCal:         fi.KCal,
+		Public:       fi.Public,
+		Source:       fi.Source,
+		OwnerID:      fi.OwnerID,
 	}
 }
 
-type PortionSize struct {
-	ID     int64
-	Name   string
-	Amount float64
-}
-
-func (ps PortionSize) ToResponse() api.PortionSizeResponse {
-	return api.PortionSizeResponse{
-		Amount: ps.Amount,
-		Id:     ps.ID,
-		Name:   ps.Name,
+func FromFoodItemTable(item TableFoodItem) *FoodItem {
+	return &FoodItem{
+		ID:             item.ID,
+		Manufacturer:   item.Manufacturer,
+		Product:        item.Product,
+		Protein:        item.Protein,
+		Carbohydrate:   item.Carbohydrate,
+		Fat:            item.Fat,
+		KCal:           item.KCal,
+		Public:         item.Public,
+		Micronutrients: make([]*Micronutrient, 0),
+		PortionSizes:   make([]*PortionSize, 0),
+		Source:         item.Source,
+		OwnerID:        item.OwnerID,
 	}
 }

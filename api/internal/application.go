@@ -40,7 +40,7 @@ type Services struct {
 	HashingService *auth.HashingService
 }
 type Stores struct {
-	FoodItemStore *fooditem.Store
+	FoodItemStore *fooditem.Service
 	UserStore     *user.Store
 	MealStore     *meal.Store
 	RecipeStore   *recipe.Store
@@ -106,7 +106,7 @@ func (a *Application) addServices() {
 
 func (a *Application) addStores() {
 	a.Stores = &Stores{}
-	a.Stores.FoodItemStore = fooditem.NewStore(a.DB, a.Logger)
+	a.Stores.FoodItemStore = fooditem.NewService(a.DB, a.Logger)
 	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
 	a.Stores.MealStore = meal.NewStore(a.DB, a.Logger)
 	a.Stores.RecipeStore = recipe.NewStore(a.DB, a.Logger)
