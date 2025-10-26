@@ -32,3 +32,10 @@ func FromPortionSizeTable(item TablePortionSize) *PortionSize {
 		Amount: item.Amount,
 	}
 }
+
+func FromPortionSizePost(r *api.PostFoodItemPortion) *PortionSize {
+	return &PortionSize{
+		Name:   r.Name,
+		Amount: r.Amount,
+	}
+}

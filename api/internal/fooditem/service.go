@@ -1,28 +1,26 @@
 package fooditem
 
 import (
-	"database/sql"
 	"log/slog"
 	"reflect"
-
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type IService interface {
-	Get(id int64) ([]*FoodItem, error)
-	GetByID(id int64, ownerID int64) (*FoodItem, error)
+	Get(ownerID int64) ([]*FoodItem, error)
+	GetByID(id int64) (*FoodItem, error)
 	Add(item *FoodItem) (*FoodItem, error)
-	Delete(item *FoodItem, ownerID int64) error
+	AddPortionSize(item *PortionSize, foodItemID int64, ownerID int64) (*PortionSize, error)
+	AddMicronutrient(item *Micronutrient, foodItemID int64, ownerID int64) (*Micronutrient, error)
+	Delete(id int64, ownerID int64) error
 }
 
 type Service struct {
-	db         *sql.DB
 	logger     *slog.Logger
-	repository *Repository
+	repository IRepository
 }
 
-func NewService(db *sql.DB, repository *Repository, logger *slog.Logger) *Service {
-	s := Service{db: db, repository: repository}
+func NewService(repository IRepository, logger *slog.Logger) *Service {
+	s := Service{repository: repository}
 	s.logger = logger.With(slog.Any("module", reflect.TypeOf(s)))
 	return &s
 }
@@ -53,48 +51,20 @@ func (s *Service) Add(item *FoodItem) (*FoodItem, error) {
 	return item, nil
 }
 
-func (s *Service) GetByID(id int64) (FoodItem, error) {
-	rows, err := s.db.Query(`
-		WITH owners_fi AS (
-			SELECT * 
-			FROM food_items
-			WHERE id = $1
-		)
-		SELECT fi.id, fi.manufacturer, fi.product, fi.protein, fi.carbohydrate, fi.fat, fi.kcal, fi.public, fi.source, fi.owner_id, ps.id, ps.amount, ps.name, m.id, m.amount, m.name
-		FROM owners_fi fi
-		LEFT JOIN public.portion_sizes ps ON fi.id = ps.food_item_id
-		LEFT JOIN micronutrients m ON fi.id = m.food_item_id
-		`,
-		id,
-	)
+func (s *Service) GetByID(id int64) (*FoodItem, error) {
+	item, err := s.repository.GetByID(id)
 	if err != nil {
-		s.logger.Error("failed to get fooditem from database", slog.Any("err", err))
-		return FoodItem{}, err
+		return nil, err
 	}
-	items := make([]TableFoodItemComplete, 0)
-	for rows.Next() {
-		item := TableFoodItemComplete{}
-		rows.Scan(
-			&item.FI.ID,
-			&item.FI.Manufacturer,
-			&item.FI.Product,
-			&item.FI.Protein,
-			&item.FI.Carbohydrate,
-			&item.FI.Fat,
-			&item.FI.KCal,
-			&item.FI.Public,
-			&item.FI.Source,
-			&item.FI.OwnerID,
-			&item.PS.ID,
-			&item.PS.Amount,
-			&item.PS.Name,
-			&item.M.ID,
-			&item.M.Amount,
-			&item.M.Name,
-		)
-		items = append(items, item)
+	foodItem := FromFoodItemTable(item)
+	portionSizes, err := s.repository.GetPortionSizes(id)
+	if err != nil {
+		return nil, err
 	}
-	return fromFoodItemComplete(items)[0], nil
+	for _, ps := range portionSizes {
+		foodItem.PortionSizes = append(foodItem.PortionSizes, FromPortionSizeTable(ps))
+	}
+	return foodItem, nil
 }
 
 func (s *Service) Get(ownerID int64) ([]*FoodItem, error) {
@@ -102,79 +72,51 @@ func (s *Service) Get(ownerID int64) ([]*FoodItem, error) {
 	if err != nil {
 		return nil, err
 	}
-
-	return nil, nil
-}
-
-func (s *Service) Delete(id int64, ownerID int64) error {
-	_, err := s.db.Query(`
-		DELETE FROM food_items
-		WHERE id = $1
-		  AND owner_id = $2
-	`, id, ownerID,
-	)
-	if err != nil {
-		s.logger.Error("failed to delete foodItem", slog.Int64("foodItemId", id))
-		return err
-	}
-	return nil
-}
-
-func (s *Service) AddPortionSize(foodItemID int64, portionSize PortionSize, ownerID int64) (PortionSize, error) {
-	if ok, err := s.ownsFoodItem(foodItemID, ownerID); !ok {
+	foodItems := make([]*FoodItem, 0, len(items))
+	for _, item := range items {
+		foodItem := FromFoodItemTable(item)
+		portionSizes, err := s.repository.GetPortionSizes(item.ID)
 		if err != nil {
-			return PortionSize{}, err
+			return nil, err
 		}
-		return PortionSize{}, err
+		for _, ps := range portionSizes {
+			foodItem.PortionSizes = append(foodItem.PortionSizes, FromPortionSizeTable(ps))
+		}
+		foodItems = append(foodItems, foodItem)
+	}
 
+	return foodItems, nil
+}
+
+func (s *Service) AddPortionSize(portionSize *PortionSize, foodItemID int64, ownerID int64) (*PortionSize, error) {
+	if err := s.repository.CheckOwnership(foodItemID, ownerID); err != nil {
+		return nil, err
 	}
-	err := s.db.QueryRow(`
-			INSERT INTO portion_sizes AS ps (name, amount, food_item_id)
-			VALUES ($1,$2,$3)
-			RETURNING ps.id
-		`, portionSize.Name, portionSize.Amount, foodItemID).Scan(&portionSize.ID)
+
+	item, err := s.repository.AddPortionSize(portionSize.ToTable(foodItemID))
 	if err != nil {
-		s.logger.Error("failed to add portionSize to foodItem", slog.Int64("foodItemId", foodItemID))
-		return PortionSize{}, err
+		return nil, err
 	}
+	portionSize.ID = item.ID
 	return portionSize, nil
 }
 
-func (s *Service) AddMicronutrient(foodItemID int64, micronutrient Micronutrient, ownerID int64) (Micronutrient, error) {
-	if ok, err := s.ownsFoodItem(foodItemID, ownerID); !ok {
-		if err != nil {
-			return Micronutrient{}, err
-		}
-		return Micronutrient{}, err
+func (s *Service) AddMicronutrient(micronutrient *Micronutrient, foodItemID int64, ownerID int64) (*Micronutrient, error) {
+	if err := s.repository.CheckOwnership(foodItemID, ownerID); err != nil {
+		return nil, err
+	}
 
-	}
-	err := s.db.QueryRow(`
-			INSERT INTO micronutrients AS mn (name, amount, food_item_id)
-			VALUES ($1,$2,$3)
-			RETURNING mn.id
-		`, micronutrient.Name, micronutrient.Amount, foodItemID).Scan(&micronutrient.ID)
+	item, err := s.repository.AddMicronutrient(micronutrient.ToTable(foodItemID))
 	if err != nil {
-		s.logger.Error("failed to add micronutrient to foodItem", slog.Int64("foodItemId", foodItemID))
-		return Micronutrient{}, err
+		return nil, err
 	}
+	micronutrient.ID = item.ID
 	return micronutrient, nil
 }
 
-func (s *Service) ownsFoodItem(id int64, ownerID int64) (bool, error) {
-	foodItem := FoodItem{}
-	err := s.db.QueryRow(`
-		SELECT id, owner_id 
-		FROM food_items 
-		WHERE id = $1
-	`, id).Scan(
-		&foodItem.ID,
-		&foodItem.OwnerID,
-	)
-	if err != nil {
-		return false, utils.ErrEntityNotFound
+func (s *Service) Delete(id int64, ownerID int64) error {
+	if err := s.repository.CheckOwnership(id, ownerID); err != nil {
+		return err
 	}
-	if foodItem.OwnerID == ownerID {
-		return true, nil
-	}
-	return false, utils.ErrEntityNotOwned
+	return s.repository.Delete(id)
 }

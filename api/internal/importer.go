@@ -19,7 +19,7 @@ type Importer struct {
 	Options  *configuration.Options
 	Logger   *slog.Logger
 	Services *Services
-	Stores   *Stores
+	Stores   *Repositories
 }
 
 func (a *Importer) CloseDB() {
@@ -68,8 +68,8 @@ func (a *Importer) configureServices() {
 }
 
 func (a *Importer) configureStores() {
-	a.Stores = &Stores{}
-	a.Stores.FoodItemStore = fooditem.NewService(a.DB, a.Logger)
+	a.Stores = &Repositories{}
+	a.Stores.FoodItemRepository = fooditem.NewRepository(a.DB, a.Logger)
 	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
 }
 

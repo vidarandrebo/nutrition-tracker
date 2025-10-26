@@ -29,21 +29,22 @@ type Application struct {
 	Options     *configuration.Options
 	Logger      *slog.Logger
 	Services    *Services
-	Stores      *Stores
+	Stores      *Repositories
 	Endpoints   *Endpoints
 	Middlewares *Middlewares
 }
 
 type Services struct {
-	JwtService     *auth.JwtService
-	AuthService    *auth.Service
-	HashingService *auth.HashingService
+	JwtService      *auth.JwtService
+	AuthService     *auth.Service
+	HashingService  *auth.HashingService
+	FoodItemService fooditem.IService
 }
-type Stores struct {
-	FoodItemStore *fooditem.Service
-	UserStore     *user.Store
-	MealStore     *meal.Store
-	RecipeStore   *recipe.Store
+type Repositories struct {
+	FoodItemRepository fooditem.IRepository
+	UserStore          *user.Store
+	MealStore          *meal.Store
+	RecipeStore        *recipe.Store
 }
 
 type Endpoints struct {
@@ -102,11 +103,12 @@ func (a *Application) addServices() {
 	a.Services.JwtService = auth.NewJwtService(a.Options)
 	a.Services.HashingService = auth.NewHashingService()
 	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService, a.Services.JwtService)
+	a.Services.FoodItemService = fooditem.NewService(a.Stores.FoodItemRepository, a.Logger)
 }
 
 func (a *Application) addStores() {
-	a.Stores = &Stores{}
-	a.Stores.FoodItemStore = fooditem.NewService(a.DB, a.Logger)
+	a.Stores = &Repositories{}
+	a.Stores.FoodItemRepository = fooditem.NewRepository(a.DB, a.Logger)
 	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
 	a.Stores.MealStore = meal.NewStore(a.DB, a.Logger)
 	a.Stores.RecipeStore = recipe.NewStore(a.DB, a.Logger)
@@ -121,7 +123,7 @@ func (a *Application) addMiddlewares() {
 
 func (a *Application) addEndpoints() {
 	a.Endpoints = &Endpoints{
-		FoodItemEndpoint: fooditem.NewEndpoint(a.Stores.FoodItemStore, a.Logger),
+		FoodItemEndpoint: fooditem.NewEndpoint(a.Services.FoodItemService, a.Logger),
 		RecipeEndpoint:   recipe.NewEndpoint(a.Stores.RecipeStore, a.Logger),
 		AuthEndpoint:     auth.NewEndpoint(a.Services.AuthService, a.Logger),
 		MealEndpoint:     meal.NewEndpoint(a.Stores.MealStore, a.Logger),

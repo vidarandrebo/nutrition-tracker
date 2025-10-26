@@ -32,3 +32,10 @@ func FromMicronutrientTable(item TableMicronutrient) *Micronutrient {
 		Amount: item.Amount,
 	}
 }
+
+func FromMicronutrientPost(r *api.PostFoodItemMicronutrient) *Micronutrient {
+	return &Micronutrient{
+		Name:   r.Name,
+		Amount: r.Amount,
+	}
+}

@@ -48,6 +48,27 @@ func (fi *FoodItem) ToResponse() api.FoodItemResponse {
 	}
 }
 
+func FromRequest(r *api.PostFoodItemRequest) *FoodItem {
+	kCal := 0.0
+	if r.KCal == nil {
+		kCal = r.Protein*4 + r.Carbohydrate*4 + r.Fat*9
+	} else {
+		kCal = *r.KCal
+	}
+	item := &FoodItem{
+		Manufacturer:   r.Manufacturer,
+		Product:        r.Product,
+		Protein:        r.Protein,
+		Carbohydrate:   r.Carbohydrate,
+		Fat:            r.Fat,
+		KCal:           kCal,
+		Public:         r.IsPublic,
+		Micronutrients: make([]*Micronutrient, 0),
+		PortionSizes:   make([]*PortionSize, 0),
+	}
+	return item
+}
+
 func (fi *FoodItem) HasAccess(userId int64) bool {
 	if fi.Public || fi.OwnerID == userId {
 		return true

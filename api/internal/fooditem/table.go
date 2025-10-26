@@ -1,7 +1,7 @@
 package fooditem
 
 type TableFoodItem struct {
-	ID           int64
+	ID           int64 `db: "db"`
 	Manufacturer string
 	Product      string
 	Protein      float64
