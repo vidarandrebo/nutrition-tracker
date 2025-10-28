@@ -2,16 +2,17 @@ package user
 
 import (
 	"database/sql"
-	"errors"
 	"log/slog"
 	"reflect"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
-type IStore interface {
-	AddUser(user *User) error
-	ListUsers() ([]*User, error)
-	GetUserByEmail(string) (*User, error)
+type IRepository interface {
+	Add(item TableUser) (TableUser, error)
+	GetByEmail(email string) (TableUser, error)
 }
+
 type Repository struct {
 	db  *sql.DB
 	log *slog.Logger
@@ -25,47 +26,38 @@ func NewRepository(db *sql.DB, log *slog.Logger) *Repository {
 	return &r
 }
 
-func (s *Repository) AddUser(user *User) error {
-	_, err := s.db.Exec(`
+func (s *Repository) Add(item TableUser) (TableUser, error) {
+	scanErr := s.db.QueryRow(`
 		INSERT INTO users(name, email, password_hash) 
 		VALUES ($1, $2, $3)`,
-		user.Name, user.Email, user.PasswordHash)
-	if err != nil {
-		panic(err)
-		return err
+		item.Name, item.Email, item.PasswordHash,
+	).Scan(&item.ID)
+
+	if scanErr != nil {
+		return TableUser{}, utils.ErrUnknown
 	}
-	return nil
+
+	return item, nil
 }
 
-func (s *Repository) ListUsers() ([]*User, error) {
-	users := make([]*User, 0)
-	rows, err := s.db.Query("SELECT id, name, password_hash FROM users")
-	if err != nil {
-		return nil, err
-	}
-
-	for rows.Next() {
-		user := User{}
-		rows.Scan(&user.ID, &user.Name, &user.PasswordHash)
-		users = append(users, &user)
-	}
-
-	return users, nil
-}
-
-func (s *Repository) GetUserByEmail(email string) (*User, error) {
-	row := s.db.QueryRow(`
+func (s *Repository) GetByEmail(email string) (TableUser, error) {
+	user := TableUser{}
+	scanErr := s.db.QueryRow(`
 		SELECT id, name, email, password_hash 
 		FROM users AS u 
 		WHERE u.email=$1`,
-		email)
+		email,
+	).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Email,
+		&user.PasswordHash,
+	)
 
-	user := User{}
-	err := row.Scan(&user.ID, &user.Name, &user.Email, &user.PasswordHash)
-	if err != nil {
-		s.log.Info("no user matching the credentials", slog.String("email", email))
-		return nil, errors.New("no user matching the email")
+	if scanErr != nil {
+		s.log.Error("no user matching the credentials", slog.String("email", email))
+		return TableUser{}, utils.ErrEntityNotFound
 	}
 
-	return &user, nil
+	return user, nil
 }
