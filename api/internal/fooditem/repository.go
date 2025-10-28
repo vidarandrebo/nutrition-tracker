@@ -50,6 +50,8 @@ func (r *Repository) Add(item TableFoodItem) (TableFoodItem, error) {
 		r.logger.Error("failed to add food item", slog.Int64("userID", item.OwnerID), slog.Any("err", err))
 		return TableFoodItem{}, err
 	}
+	r.logger.Info("added new food item", slog.Any("food item", item))
+
 	return item, nil
 }
 
@@ -61,7 +63,6 @@ func (r *Repository) AddMicronutrient(item TableMicronutrient) (TableMicronutrie
 		item.Amount,
 		item.FoodItemID,
 	).Scan(&item.ID)
-
 	if err != nil {
 		r.logger.Error("failed to add micronutrient to food item", slog.Int64("foodItemID", item.FoodItemID), slog.Any("err", err))
 		return TableMicronutrient{}, err
@@ -76,7 +77,6 @@ func (r *Repository) AddPortionSize(item TablePortionSize) (TablePortionSize, er
 			VALUES ($1, $2,$3)
     	`, item.Name, item.Amount, item.ID,
 	).Scan(&item.ID)
-
 	if err != nil {
 		r.logger.Error("failed to add portion size to food item", slog.Int64("foodItemID", item.FoodItemID), slog.Any("err", err))
 		return TablePortionSize{}, err
@@ -136,7 +136,7 @@ func (r *Repository) GetByID(id int64) (TableFoodItem, error) {
 	).Scan(&item.ID, &item.Manufacturer, &item.Product, &item.Protein, &item.Carbohydrate, &item.Fat, &item.KCal, &item.Public, &item.Source, &item.OwnerID)
 	if err != nil {
 		r.logger.Error("failed to query rows of food items", slog.Any("err", err))
-		return TableFoodItem{}, err
+		return TableFoodItem{}, utils.ErrEntityNotFound
 	}
 	return item, nil
 }
@@ -232,7 +232,6 @@ func (r *Repository) CheckOwnership(id int64, ownerID int64) error {
 		&foodItem.ID,
 		&foodItem.OwnerID,
 	)
-
 	if err != nil {
 		return utils.ErrEntityNotFound
 	}

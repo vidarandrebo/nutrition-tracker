@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"log/slog"
+	"reflect"
 )
 
 type IStore interface {
@@ -11,19 +12,20 @@ type IStore interface {
 	ListUsers() ([]*User, error)
 	GetUserByEmail(string) (*User, error)
 }
-type Store struct {
+type Repository struct {
 	db  *sql.DB
 	log *slog.Logger
 }
 
-func NewStore(db *sql.DB, log *slog.Logger) *Store {
-	return &Store{
-		db:  db,
-		log: log.With(slog.String("module", "user.Store")),
+func NewRepository(db *sql.DB, log *slog.Logger) *Repository {
+	r := Repository{
+		db: db,
 	}
+	r.log = log.With(slog.Any("module", reflect.TypeOf(r)))
+	return &r
 }
 
-func (s *Store) AddUser(user *User) error {
+func (s *Repository) AddUser(user *User) error {
 	_, err := s.db.Exec(`
 		INSERT INTO users(name, email, password_hash) 
 		VALUES ($1, $2, $3)`,
@@ -35,7 +37,7 @@ func (s *Store) AddUser(user *User) error {
 	return nil
 }
 
-func (s *Store) ListUsers() ([]*User, error) {
+func (s *Repository) ListUsers() ([]*User, error) {
 	users := make([]*User, 0)
 	rows, err := s.db.Query("SELECT id, name, password_hash FROM users")
 	if err != nil {
@@ -51,7 +53,7 @@ func (s *Store) ListUsers() ([]*User, error) {
 	return users, nil
 }
 
-func (s *Store) GetUserByEmail(email string) (*User, error) {
+func (s *Repository) GetUserByEmail(email string) (*User, error) {
 	row := s.db.QueryRow(`
 		SELECT id, name, email, password_hash 
 		FROM users AS u 

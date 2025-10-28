@@ -24,14 +24,14 @@ import (
 )
 
 type Application struct {
-	Server      http.Server
-	DB          *sql.DB
-	Options     *configuration.Options
-	Logger      *slog.Logger
-	Services    *Services
-	Stores      *Repositories
-	Endpoints   *Endpoints
-	Middlewares *Middlewares
+	Server       http.Server
+	DB           *sql.DB
+	Options      *configuration.Options
+	Logger       *slog.Logger
+	Services     *Services
+	Repositories *Repositories
+	Endpoints    *Endpoints
+	Middlewares  *Middlewares
 }
 
 type Services struct {
@@ -39,12 +39,13 @@ type Services struct {
 	AuthService     *auth.Service
 	HashingService  *auth.HashingService
 	FoodItemService fooditem.IService
+	RecipeService   recipe.IService
 }
 type Repositories struct {
 	FoodItemRepository fooditem.IRepository
-	UserStore          *user.Store
-	MealStore          *meal.Store
-	RecipeStore        *recipe.Store
+	UserRepository     *user.Repository
+	MealRepository     *meal.Repository
+	RecipeRepository   recipe.IRepository
 }
 
 type Endpoints struct {
@@ -102,16 +103,17 @@ func (a *Application) addServices() {
 	a.Services = &Services{}
 	a.Services.JwtService = auth.NewJwtService(a.Options)
 	a.Services.HashingService = auth.NewHashingService()
-	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService, a.Services.JwtService)
-	a.Services.FoodItemService = fooditem.NewService(a.Stores.FoodItemRepository, a.Logger)
+	a.Services.AuthService = auth.NewAuthService(a.Repositories.UserRepository, a.Services.HashingService, a.Services.JwtService)
+	a.Services.FoodItemService = fooditem.NewService(a.Repositories.FoodItemRepository, a.Logger)
+	a.Services.RecipeService = recipe.NewService(a.Repositories.RecipeRepository, a.Logger)
 }
 
 func (a *Application) addStores() {
-	a.Stores = &Repositories{}
-	a.Stores.FoodItemRepository = fooditem.NewRepository(a.DB, a.Logger)
-	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
-	a.Stores.MealStore = meal.NewStore(a.DB, a.Logger)
-	a.Stores.RecipeStore = recipe.NewStore(a.DB, a.Logger)
+	a.Repositories = &Repositories{}
+	a.Repositories.FoodItemRepository = fooditem.NewRepository(a.DB, a.Logger)
+	a.Repositories.UserRepository = user.NewRepository(a.DB, a.Logger)
+	a.Repositories.MealRepository = meal.NewRepository(a.DB, a.Logger)
+	a.Repositories.RecipeRepository = recipe.NewRepository(a.DB, a.Logger)
 }
 
 func (a *Application) addMiddlewares() {
@@ -124,9 +126,9 @@ func (a *Application) addMiddlewares() {
 func (a *Application) addEndpoints() {
 	a.Endpoints = &Endpoints{
 		FoodItemEndpoint: fooditem.NewEndpoint(a.Services.FoodItemService, a.Logger),
-		RecipeEndpoint:   recipe.NewEndpoint(a.Stores.RecipeStore, a.Logger),
+		RecipeEndpoint:   recipe.NewEndpoint(a.Services.RecipeService, a.Logger),
 		AuthEndpoint:     auth.NewEndpoint(a.Services.AuthService, a.Logger),
-		MealEndpoint:     meal.NewEndpoint(a.Stores.MealStore, a.Logger),
+		MealEndpoint:     meal.NewEndpoint(a.Repositories.MealRepository, a.Logger),
 	}
 }
 

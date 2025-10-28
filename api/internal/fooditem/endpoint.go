@@ -46,7 +46,6 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 	item := FromRequest(request.Body)
 	item.OwnerID = userID
 	newItem, err := e.service.Add(item)
-
 	if err != nil {
 		return nil, err
 	}

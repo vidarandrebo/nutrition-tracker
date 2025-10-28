@@ -38,14 +38,14 @@ func main() {
 	if !ok {
 		panic("no systemuser config registered for matvaretabellen")
 	}
-	matvareTabellenUser, err := app.Stores.UserStore.GetUserByEmail(matvareTabellenCredentials.Email)
+	matvareTabellenUser, err := app.Stores.UserRepository.GetUserByEmail(matvareTabellenCredentials.Email)
 	if err != nil {
 		app.Services.AuthService.RegisterUser(auth.Register{
 			Email:    matvareTabellenCredentials.Email,
 			Password: matvareTabellenCredentials.Password,
 		})
 	}
-	matvareTabellenUser, err = app.Stores.UserStore.GetUserByEmail("post@matvaretabellen.no")
+	matvareTabellenUser, err = app.Stores.UserRepository.GetUserByEmail("post@matvaretabellen.no")
 
 	foods, err := utils.ParseJson[matvaretabellen.Foods](file)
 
