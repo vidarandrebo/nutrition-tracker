@@ -2,7 +2,7 @@ template: testify
 packages:
   github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem:
     config:
-      dir: internal/fixtures
+      dir: .
       filename: "fooditem_mocks.go"
       pkgname: "test"
       structname: "Mock{{.InterfaceName}}"

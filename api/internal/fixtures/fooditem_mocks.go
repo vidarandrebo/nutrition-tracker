@@ -14,7 +14,8 @@ import (
 func NewMockIRepository(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockIRepository {
+},
+) *MockIRepository {
 	mock := &MockIRepository{}
 	mock.Mock.Test(t)
 
@@ -575,7 +576,8 @@ func (_c *MockIRepository_GetPortionSizes_Call) RunAndReturn(run func(foodItemID
 func NewMockIService(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockIService {
+},
+) *MockIService {
 	mock := &MockIService{}
 	mock.Mock.Test(t)
 
