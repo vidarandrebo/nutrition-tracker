@@ -1,11 +1,20 @@
+all: false
+dir: '{{.InterfaceDir}}'
+filename: mocks_test.go
+force-file-write: true
+formatter: goimports
+include-auto-generated: false
+log-level: info
+structname: '{{.Mock}}{{.InterfaceName}}'
+pkgname: '{{.SrcPackageName}}_test'
+recursive: false
+require-template-schema-exists: true
 template: testify
+template-schema: '{{.Template}}.schema.json'
 packages:
+  github.com/vidarandrebo/nutrition-tracker/api:
+    config:
+      all: true
   github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem:
     config:
-      dir: .
-      filename: "fooditem_mocks.go"
-      pkgname: "test"
-      structname: "Mock{{.InterfaceName}}"
-    interfaces:
-      IRepository: {}
-      IService: {}
+      all: true

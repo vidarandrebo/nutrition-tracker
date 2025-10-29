@@ -1,3 +1,3 @@
-package test
+package internal
 
 //go:generate mockery

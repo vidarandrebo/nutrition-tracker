@@ -2,7 +2,7 @@
 // github.com/vektra/mockery
 // template: testify
 
-package test
+package fooditem_test
 
 import (
 	mock "github.com/stretchr/testify/mock"
