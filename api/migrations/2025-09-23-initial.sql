@@ -35,6 +35,15 @@ CREATE TABLE micronutrients
 );
 
 
+CREATE TABLE macronutrient_meal_entry
+(
+    id           bigserial PRIMARY KEY,
+    protein      double precision,
+    carbohydrate double precision,
+    fat          double precision,
+    kcal         double precision
+);
+
 
 CREATE TABLE meals
 (
@@ -48,13 +57,15 @@ CREATE TABLE meals
 
 CREATE TABLE meal_entries
 (
-    id            bigserial PRIMARY KEY,
-    amount        double precision                               NOT NULL,
-    food_item_id  bigint REFERENCES food_items (id),
-    recipe_id     bigint REFERENCES food_items (id),
-    date_created  timestamp,
-    date_modified timestamp,
-    meal_id       bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
+    id               bigserial PRIMARY KEY,
+    amount           double precision                               NOT NULL,
+    sequence_number  integer                                        NOT NULL,
+    food_item_id     bigint REFERENCES food_items (id),
+    recipe_id        bigint REFERENCES recipes (id),
+    macronutrient_id bigint REFERENCES macronutrient_records (id),
+    date_created     timestamp,
+    date_modified    timestamp,
+    meal_id          bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE recipes
@@ -80,7 +91,7 @@ CREATE TABLE portion_sizes
 (
     id            bigserial PRIMARY KEY,
     name          varchar(128),
-    amount        double precision not NULL ,
+    amount        double precision NOT NULL,
     date_created  timestamp,
     date_modified timestamp,
     food_item_id  bigint REFERENCES food_items (id) ON DELETE CASCADE
