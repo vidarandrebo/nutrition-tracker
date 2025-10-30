@@ -1,3 +1,3 @@
 package internal
 
-//go:generate mockery
+//go:generate go tool mockery

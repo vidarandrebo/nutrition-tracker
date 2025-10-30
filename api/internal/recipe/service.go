@@ -36,7 +36,7 @@ func (s *Service) Get(ownerID int64) ([]*Recipe, error) {
 			return nil, err
 		}
 		for _, re := range recipeEntries {
-			recipe.Entries = append(recipe.Entries, FromRecipeEntryTable(re))
+			recipe.FoodItemEntries = append(recipe.FoodItemEntries, FromRecipeEntryTable(re))
 		}
 		recipes = append(recipes, recipe)
 	}
@@ -60,7 +60,7 @@ func (s *Service) GetById(id int64, ownerID int64) (*Recipe, error) {
 	}
 
 	for _, re := range recipeEntries {
-		recipe.Entries = append(recipe.Entries, FromRecipeEntryTable(re))
+		recipe.FoodItemEntries = append(recipe.FoodItemEntries, FromRecipeEntryTable(re))
 	}
 
 	return recipe, nil
@@ -74,7 +74,7 @@ func (s *Service) Add(item *Recipe) (*Recipe, error) {
 	}
 	item.ID = recipe.ID
 
-	for _, re := range item.Entries {
+	for _, re := range item.FoodItemEntries {
 		recipeEntry, reErr := s.repository.AddEntry(re.ToTable(item.ID))
 		if reErr != nil {
 			return nil, reErr

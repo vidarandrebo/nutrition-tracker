@@ -10,11 +10,11 @@ import (
 
 type IRepository interface {
 	Add(item TableRecipe) (TableRecipe, error)
-	AddEntry(item TableRecipeEntry) (TableRecipeEntry, error)
+	AddEntry(item TableFoodItemRecipeEntry) (TableFoodItemRecipeEntry, error)
 	Delete(id int64) error
 	Get(ownerID int64) ([]TableRecipe, error)
 	GetByID(id int64) (TableRecipe, error)
-	GetEntries(id int64) ([]TableRecipeEntry, error)
+	GetEntries(id int64) ([]TableFoodItemRecipeEntry, error)
 	CheckOwnership(id int64, ownerID int64) error
 }
 
@@ -48,7 +48,7 @@ func (r *Repository) Add(item TableRecipe) (TableRecipe, error) {
 	return item, nil
 }
 
-func (r *Repository) AddEntry(item TableRecipeEntry) (TableRecipeEntry, error) {
+func (r *Repository) AddEntry(item TableFoodItemRecipeEntry) (TableFoodItemRecipeEntry, error) {
 	scanErr := r.db.QueryRow(`
 		INSERT INTO recipe_entries (amount, food_item_id, recipe_id)
 		VALUES ($1, $2, $3)
@@ -60,7 +60,7 @@ func (r *Repository) AddEntry(item TableRecipeEntry) (TableRecipeEntry, error) {
 
 	if scanErr != nil {
 		r.logger.Error("failed to add recipe entry", slog.Any("err", scanErr), slog.Int64("recipeID", item.RecipeID))
-		return TableRecipeEntry{}, utils.ErrUnknown
+		return TableFoodItemRecipeEntry{}, utils.ErrUnknown
 	}
 
 	r.logger.Info("added new recipe entry", slog.Any("recipeEntry", item))
@@ -132,7 +132,7 @@ func (r *Repository) GetByID(id int64) (TableRecipe, error) {
 	return recipe, nil
 }
 
-func (r *Repository) GetEntries(id int64) ([]TableRecipeEntry, error) {
+func (r *Repository) GetEntries(id int64) ([]TableFoodItemRecipeEntry, error) {
 	rows, queryErr := r.db.Query(`
 		SELECT id, amount, food_item_id, recipe_id
 		FROM recipe_entries r
@@ -143,9 +143,9 @@ func (r *Repository) GetEntries(id int64) ([]TableRecipeEntry, error) {
 		r.logger.Error("failed to query rows of recipe entries", slog.Any("err", queryErr))
 		return nil, utils.ErrUnknown
 	}
-	entries := make([]TableRecipeEntry, 0)
+	entries := make([]TableFoodItemRecipeEntry, 0)
 	for rows.Next() {
-		entry := TableRecipeEntry{}
+		entry := TableFoodItemRecipeEntry{}
 		scanErr := rows.Scan(
 			&entry.ID,
 			&entry.Amount,

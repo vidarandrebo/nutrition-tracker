@@ -10,7 +10,7 @@ type TableRecipe struct {
 	OwnerID      int64
 }
 
-type TableRecipeEntry struct {
+type TableFoodItemRecipeEntry struct {
 	ID           int64
 	Amount       float64
 	FoodItemID   int64
