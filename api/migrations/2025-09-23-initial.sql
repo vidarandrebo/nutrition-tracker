@@ -34,16 +34,24 @@ CREATE TABLE micronutrients
     food_item_id  bigint REFERENCES food_items (id) ON DELETE CASCADE NOT NULL
 );
 
-
-CREATE TABLE macronutrient_meal_entry
+CREATE TABLE recipes
 (
-    id           bigserial PRIMARY KEY,
-    protein      double precision,
-    carbohydrate double precision,
-    fat          double precision,
-    kcal         double precision
+    id            bigserial PRIMARY KEY,
+    name          varchar(128),
+    date_created  timestamp,
+    date_modified timestamp,
+    owner_id      bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL
 );
 
+CREATE TABLE food_item_recipe_entries
+(
+    id            bigserial PRIMARY KEY,
+    amount        double precision,
+    food_item_id  bigint REFERENCES food_items (id),
+    date_created  timestamp,
+    date_modified timestamp,
+    recipe_id     bigint REFERENCES recipes (id) ON DELETE CASCADE NOT NULL
+);
 
 CREATE TABLE meals
 (
@@ -55,36 +63,37 @@ CREATE TABLE meals
     owner_id        bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE meal_entries
+CREATE TABLE macronutrient_meal_entries
 (
-    id               bigserial PRIMARY KEY,
-    amount           double precision                               NOT NULL,
-    sequence_number  integer                                        NOT NULL,
-    food_item_id     bigint REFERENCES food_items (id),
-    recipe_id        bigint REFERENCES recipes (id),
-    macronutrient_id bigint REFERENCES macronutrient_records (id),
-    date_created     timestamp,
-    date_modified    timestamp,
-    meal_id          bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
+    id              bigserial PRIMARY KEY,
+    protein         double precision,
+    carbohydrate    double precision,
+    fat             double precision,
+    kcal            double precision,
+    sequence_number integer                                        NOT NULL,
+    meal_id         bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE recipes
+CREATE TABLE recipe_meal_entries
 (
-    id            bigserial PRIMARY KEY,
-    name          varchar(128),
-    date_created  timestamp,
-    date_modified timestamp,
-    owner_id      bigint REFERENCES users (id) ON DELETE CASCADE NOT NULL
+    id              bigserial PRIMARY KEY,
+    recipe_id       bigint REFERENCES recipes (id)                 NOT NULL,
+    amount          double precision                               NOT NULL,
+    sequence_number integer                                        NOT NULL,
+    date_created    timestamp,
+    date_modified   timestamp,
+    meal_id         bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
 );
 
-CREATE TABLE recipe_entries
+CREATE TABLE food_item_meal_entries
 (
-    id            bigserial PRIMARY KEY,
-    amount        double precision,
-    food_item_id  bigint REFERENCES food_items (id),
-    date_created  timestamp,
-    date_modified timestamp,
-    recipe_id     bigint REFERENCES recipes (id) ON DELETE CASCADE NOT NULL
+    id              bigserial PRIMARY KEY,
+    food_item_id    bigint REFERENCES food_items (id)              NOT NULL,
+    amount          double precision                               NOT NULL,
+    sequence_number integer                                        NOT NULL,
+    date_created    timestamp,
+    date_modified   timestamp,
+    meal_id         bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
 );
 
 CREATE TABLE portion_sizes
@@ -118,7 +127,7 @@ $$ LANGUAGE plpgsql;
 /* date_created when inserting */
 CREATE TRIGGER set_created
     BEFORE INSERT
-    ON recipe_entries
+    ON food_item_recipe_entries
     FOR EACH ROW
 EXECUTE PROCEDURE set_date_created();
 
@@ -136,7 +145,19 @@ EXECUTE PROCEDURE set_date_created();
 
 CREATE TRIGGER set_created
     BEFORE INSERT
-    ON meal_entries
+    ON recipe_meal_entries
+    FOR EACH ROW
+EXECUTE PROCEDURE set_date_created();
+
+CREATE TRIGGER set_created
+    BEFORE INSERT
+    ON food_item_meal_entries
+    FOR EACH ROW
+EXECUTE PROCEDURE set_date_created();
+
+CREATE TRIGGER set_created
+    BEFORE INSERT
+    ON macronutrient_meal_entries
     FOR EACH ROW
 EXECUTE PROCEDURE set_date_created();
 
@@ -168,7 +189,7 @@ EXECUTE PROCEDURE set_date_created();
 /* date_modified when updating*/
 CREATE TRIGGER set_modified
     BEFORE UPDATE
-    ON recipe_entries
+    ON food_item_recipe_entries
     FOR EACH ROW
 EXECUTE PROCEDURE set_date_modified();
 
@@ -186,7 +207,19 @@ EXECUTE PROCEDURE set_date_modified();
 
 CREATE TRIGGER set_modified
     BEFORE UPDATE
-    ON meal_entries
+    ON recipe_meal_entries
+    FOR EACH ROW
+EXECUTE PROCEDURE set_date_modified();
+
+CREATE TRIGGER set_modified
+    BEFORE UPDATE
+    ON food_item_meal_entries
+    FOR EACH ROW
+EXECUTE PROCEDURE set_date_modified();
+
+CREATE TRIGGER set_modified
+    BEFORE UPDATE
+    ON macronutrient_meal_entries
     FOR EACH ROW
 EXECUTE PROCEDURE set_date_modified();
 
