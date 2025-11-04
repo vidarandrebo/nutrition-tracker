@@ -10,12 +10,35 @@ type TableMeal struct {
 	DateModified   time.Time
 	OwnerID        int64
 }
-type TableMealEntry struct {
-	ID           int64
-	Amount       float64
-	FoodItemID   int64
-	RecipeID     int64
-	DateCreated  time.Time
-	DateModified time.Time
-	MealID       int64
+
+type TableRecipeMealEntry struct {
+	ID             int64
+	RecipeID       int64
+	Amount         float64
+	SequenceNumber int
+	DateCreated    time.Time
+	DateModified   time.Time
+	MealID         int64
+}
+
+type TableFoodItemMealEntry struct {
+	ID             int64
+	FoodItemID     int64
+	Amount         float64
+	SequenceNumber int
+	DateCreated    time.Time
+	DateModified   time.Time
+	MealID         int64
+}
+
+type TableMacronutrientMealEntry struct {
+	ID             int64
+	SequenceNumber int
+	Protein        float64
+	Carbohydrate   float64
+	Fat            float64
+	KCal           float64
+	DateCreated    time.Time
+	DateModified   time.Time
+	MealID         int64
 }
