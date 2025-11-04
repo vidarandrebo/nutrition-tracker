@@ -7,20 +7,20 @@ import (
 	"time"
 )
 
-type Store struct {
+type Repository struct {
 	DB     *sql.DB
 	Logger *slog.Logger
 }
 
-func NewStore(db *sql.DB, logger *slog.Logger) *Store {
-	return &Store{
+func NewRepository(db *sql.DB, logger *slog.Logger) *Repository {
+	return &Repository{
 		DB:     db,
 		Logger: logger,
 	}
 }
 
-func (s *Store) Add(meal Meal) (Meal, error) {
-	tx, err := s.DB.Begin()
+func (r *Repository) Add(meal Meal) (Meal, error) {
+	tx, err := r.DB.Begin()
 	err = tx.QueryRow(`
 		INSERT INTO meals AS m (sequence_number, meal_time, owner_id) 
 		VALUES ($1, $2, $3) 
@@ -51,8 +51,8 @@ func (s *Store) Add(meal Meal) (Meal, error) {
 	return meal, nil
 }
 
-func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) ([]Meal, error) {
-	rows, err := s.DB.Query(`
+func (r *Repository) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) ([]Meal, error) {
+	rows, err := r.DB.Query(`
 	WITH meal_for_day AS (
 		SELECT id, meal_time, sequence_number, owner_id 
 		FROM meals 
@@ -84,7 +84,7 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) (
 		if entry.IsValid() {
 			entries[meal.ID] = append(entries[meal.ID], entry)
 		} else {
-			s.Logger.Error("failed to load entry", slog.Any("e", entry))
+			r.Logger.Error("failed to load entry", slog.Any("e", entry))
 		}
 		lastMealId = meal.ID
 	}
@@ -95,8 +95,8 @@ func (s *Store) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) (
 	return meals, nil
 }
 
-func (s *Store) GetById(id int64, ownerID int64) (Meal, error) {
-	row := s.DB.QueryRow(`
+func (r *Repository) GetById(id int64, ownerID int64) (Meal, error) {
+	row := r.DB.QueryRow(`
 		SELECT m.id, m.meal_time, m.sequence_number, m.owner_id 
 		FROM meals m 
 		WHERE m.id = $1 
@@ -110,14 +110,14 @@ func (s *Store) GetById(id int64, ownerID int64) (Meal, error) {
 	return meal, nil
 }
 
-func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, error) {
+func (r *Repository) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, error) {
 	// only an ownership check
-	_, err := s.GetById(mealID, ownerID)
+	_, err := r.GetById(mealID, ownerID)
 	if err != nil {
 		return Entry{}, err
 	}
 
-	err = s.DB.QueryRow(`
+	err = r.DB.QueryRow(`
 		INSERT INTO meal_entries AS me (meal_id, food_item_id, recipe_id,amount) 
 		VALUES ($1, $2, $3, $4) 
 		RETURNING me.id`,
@@ -129,19 +129,19 @@ func (s *Store) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, e
 	return entry, nil
 }
 
-func (s *Store) DeleteMeal(id int64, ownerID int64) error {
-	_, err := s.DB.Query(`
+func (r *Repository) DeleteMeal(id int64, ownerID int64) error {
+	_, err := r.DB.Query(`
 		DELETE FROM meals WHERE id = $1 AND owner_id = $2
 	`, id, ownerID)
 	if err != nil {
-		s.Logger.Error("failed to delete meal", slog.Int64("mealID", id), slog.Any("err", err))
+		r.Logger.Error("failed to delete meal", slog.Int64("mealID", id), slog.Any("err", err))
 		return err
 	}
 	return nil
 }
 
-func (s *Store) DeleteMealEntry(entryID int64, mealID int64, ownerID int64) error {
-	_, err := s.DB.Query(`
+func (r *Repository) DeleteMealEntry(entryID int64, mealID int64, ownerID int64) error {
+	_, err := r.DB.Query(`
 		WITH owned_meals AS (
 			SELECT id
 			FROM meals
@@ -153,7 +153,7 @@ func (s *Store) DeleteMealEntry(entryID int64, mealID int64, ownerID int64) erro
 		  AND meal_id IN (SELECT id FROM owned_meals)
 	`, entryID, mealID, ownerID)
 	if err != nil {
-		s.Logger.Error("failed to delete meal entry", slog.Int64("mealID", entryID), slog.Any("err", err))
+		r.Logger.Error("failed to delete meal entry", slog.Int64("mealID", entryID), slog.Any("err", err))
 		return err
 	}
 	return nil

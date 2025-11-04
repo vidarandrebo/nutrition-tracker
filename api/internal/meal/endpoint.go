@@ -10,12 +10,12 @@ import (
 )
 
 type Endpoint struct {
-	store  *Store
+	store  *Repository
 	logger *slog.Logger
 	last   int64
 }
 
-func NewEndpoint(store *Store, logger *slog.Logger) *Endpoint {
+func NewEndpoint(store *Repository, logger *slog.Logger) *Endpoint {
 	e := Endpoint{store: store, last: 0}
 	e.logger = logger.With("module", reflect.TypeOf(e))
 	return &e
