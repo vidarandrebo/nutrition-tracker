@@ -10,13 +10,13 @@ import (
 )
 
 type Endpoint struct {
-	store  *Repository
+	store  IService
 	logger *slog.Logger
 	last   int64
 }
 
-func NewEndpoint(store *Repository, logger *slog.Logger) *Endpoint {
-	e := Endpoint{store: store, last: 0}
+func NewEndpoint(service IService, logger *slog.Logger) *Endpoint {
+	e := Endpoint{store: service, last: 0}
 	e.logger = logger.With("module", reflect.TypeOf(e))
 	return &e
 }
@@ -27,7 +27,7 @@ func (e Endpoint) GetApiMeals(ctx context.Context, request api.GetApiMealsReques
 		return nil, err
 	}
 
-	meals, err := e.store.GetByDate(userID, *request.Params.DateFrom, *request.Params.DateTo)
+	meals, err := e.store.GetByDate(*request.Params.DateFrom, *request.Params.DateTo, userID)
 	if err != nil {
 		return nil, err
 	}

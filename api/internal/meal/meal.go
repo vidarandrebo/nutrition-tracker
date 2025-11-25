@@ -30,3 +30,12 @@ func (m Meal) ToResponse() api.MealResponse {
 		Entries:        entries,
 	}
 }
+
+func FromRequest(r api.PostMealRequest) *Meal {
+	return &Meal{
+		Timestamp:       r.Timestamp,
+		FoodItemEntries: make([]Entry[*fooditem.FoodItem], 0),
+		RecipeEntries:   make([]Entry[*recipe.Recipe], 0),
+		OwnerID:         0,
+	}
+}
