@@ -7,6 +7,17 @@ import (
 	"time"
 )
 
+type IRepository interface {
+	Add(item TableMeal) (TableMeal, error)
+	AddRecipeEntry(item TableRecipeMealEntry) (TableRecipeMealEntry, error)
+	AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItemMealEntry, error)
+	AddMacronutrientEntry(item TableMacronutrientMealEntry) (TableMacronutrientMealEntry, error)
+	Delete(id int64) error
+	Get(ownerID int64) ([]TableMeal, error)
+	GetById(id int64) (TableMeal, error)
+	CheckOwnership(id int64, ownerID int64) error
+}
+
 type Repository struct {
 	DB     *sql.DB
 	Logger *slog.Logger
