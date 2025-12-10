@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"log/slog"
 	"reflect"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type IRepository interface {
@@ -114,8 +116,17 @@ func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (Tab
 }
 
 func (r Repository) Delete(id int64) error {
-	//TODO implement me
-	panic("implement me")
+	_, err := r.db.Query(`
+		DELETE FROM meals 
+		WHERE id = $1
+	`, id,
+	)
+	if err != nil {
+		r.logger.Error("failed to delete meal", slog.Int64("mealID", id))
+		return err
+	}
+
+	return nil
 }
 
 func (r Repository) Get(ownerID int64) ([]TableMeal, error) {
@@ -144,6 +155,22 @@ func (r Repository) GetRecipeEntries(mealID int64) ([]TableRecipeMealEntry, erro
 }
 
 func (r Repository) CheckOwnership(id int64, ownerID int64) error {
-	//TODO implement me
-	panic("implement me")
+	meal := TableMeal{}
+	err := r.db.QueryRow(`
+		SELECT id, owner_id 
+		FROM meals 
+		WHERE id = $1
+	`, id).Scan(
+		&meal.ID,
+		&meal.OwnerID,
+	)
+	if err != nil {
+		return utils.ErrEntityNotFound
+	}
+
+	if meal.OwnerID == ownerID {
+		return nil
+	}
+
+	return utils.ErrEntityNotOwned
 }
