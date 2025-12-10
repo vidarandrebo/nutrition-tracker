@@ -2,9 +2,8 @@ package meal
 
 import (
 	"database/sql"
-	"fmt"
 	"log/slog"
-	"time"
+	"reflect"
 )
 
 type IRepository interface {
@@ -15,157 +14,136 @@ type IRepository interface {
 	Delete(id int64) error
 	Get(ownerID int64) ([]TableMeal, error)
 	GetById(id int64) (TableMeal, error)
+	GetFoodItemEntries(mealID int64) ([]TableFoodItemMealEntry, error)
+	GetMacronutrientEntries(mealID int64) ([]TableMacronutrientMealEntry, error)
+	GetRecipeEntries(mealID int64) ([]TableRecipeMealEntry, error)
 	CheckOwnership(id int64, ownerID int64) error
 }
 
 type Repository struct {
-	DB     *sql.DB
-	Logger *slog.Logger
+	db     *sql.DB
+	logger *slog.Logger
 }
 
 func NewRepository(db *sql.DB, logger *slog.Logger) *Repository {
-	return &Repository{
-		DB:     db,
-		Logger: logger,
-	}
+	r := Repository{db: db}
+	r.logger = logger.With(slog.Any("module", reflect.TypeOf(r)))
+	return &r
 }
 
-func (r *Repository) Add(meal Meal) (Meal, error) {
-	tx, err := r.DB.Begin()
-	err = tx.QueryRow(`
-		INSERT INTO meals AS m (sequence_number, meal_time, owner_id) 
-		VALUES ($1, $2, $3) 
+func (r Repository) Add(item TableMeal) (TableMeal, error) {
+	err := r.db.QueryRow(`
+		INSERT INTO meals AS m (meal_time, sequence_number, owner_id)
+		VALUES  ($1,$2,3)
 		RETURNING m.id`,
-		meal.SequenceNumber, meal.Timestamp, meal.OwnerID).Scan(&meal.ID)
+		item.MealTime,
+		item.SequenceNumber,
+		item.OwnerID,
+	).Scan(&item.ID)
 	if err != nil {
-		return Meal{}, err
+		r.logger.Error("failed to add meal", slog.Int64("userID", item.OwnerID), slog.Any("err", err))
+		return TableMeal{}, err
 	}
+	r.logger.Info("added new meal", slog.Any("meal", item))
 
-	for _, entry := range meal.Entries {
-		err = tx.QueryRow(`
-			INSERT INTO meal_entries AS me (amount, food_item_id, recipe_id, meal_id) 
-			VALUES ($1, $2, $3) 
-			RETURNING me.id`,
-			entry.Amount,
-			entry.foodItemID,
-			entry.recipeID,
-			meal.ID,
-		).Scan(&entry.ID)
-		if err != nil {
-			return Meal{}, err
-		}
-	}
-	err = tx.Commit()
-	if err != nil {
-		return Meal{}, err
-	}
-	return meal, nil
+	return item, nil
 }
 
-func (r *Repository) GetByDate(ownerID int64, dateFrom time.Time, dateTo time.Time) ([]Meal, error) {
-	rows, err := r.DB.Query(`
-	WITH meal_for_day AS (
-		SELECT id, meal_time, sequence_number, owner_id 
-		FROM meals 
-		WHERE owner_id = $1 
-		  AND meal_time >= $2 
-		  AND meal_time < $3
-	) 
-	SELECT m.id, m.meal_time, m.sequence_number, m.owner_id, me.id, me.food_item_id, me.recipe_id, me.amount
-	FROM meal_for_day m 
-		LEFT JOIN meal_entries me ON me.meal_id = m.id`,
-		ownerID,
-		dateFrom,
-		dateTo,
-	)
+func (r Repository) AddRecipeEntry(item TableRecipeMealEntry) (TableRecipeMealEntry, error) {
+	err := r.db.QueryRow(`
+ 		INSERT INTO recipe_meal_entries AS rme (recipe_id, amount, sequence_number, meal_id)
+		VALUES ($1,$2,$3,$4)
+		RETURNING rme.id`,
+		item.RecipeID,
+		item.Amount,
+		item.SequenceNumber,
+		item.MealID,
+	).Scan(&item.ID)
 	if err != nil {
-		return nil, err
+		r.logger.Error("failed to add recipe entry to meal", slog.Int64("mealID", item.MealID), slog.Any("err", err))
+		return TableRecipeMealEntry{}, err
 	}
-	meals := make([]Meal, 0)
-	entries := make(map[int64][]Entry)
-	lastMealId := int64(0)
-	for rows.Next() {
-		meal := Meal{}
-		entry := Entry{}
-		rows.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID, &entry.ID, &entry.foodItemID, &entry.recipeID, &entry.Amount)
-		if lastMealId != meal.ID {
-			meals = append(meals, meal)
-			entries[meal.ID] = make([]Entry, 0)
-		}
-		if entry.IsValid() {
-			entries[meal.ID] = append(entries[meal.ID], entry)
-		} else {
-			r.Logger.Error("failed to load entry", slog.Any("e", entry))
-		}
-		lastMealId = meal.ID
-	}
+	r.logger.Info("added recipe entry to meal", slog.Any("entry", item))
 
-	for i := 0; i < len(meals); i++ {
-		meals[i].Entries = entries[meals[i].ID]
-	}
-	return meals, nil
+	return item, nil
 }
 
-func (r *Repository) GetById(id int64, ownerID int64) (Meal, error) {
-	row := r.DB.QueryRow(`
-		SELECT m.id, m.meal_time, m.sequence_number, m.owner_id 
-		FROM meals m 
-		WHERE m.id = $1 
-		  AND m.owner_id = $2`,
-		id, ownerID)
-	meal := Meal{}
-	err := row.Scan(&meal.ID, &meal.Timestamp, &meal.SequenceNumber, &meal.OwnerID)
+func (r Repository) AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItemMealEntry, error) {
+	err := r.db.QueryRow(`
+        INSERT INTO food_item_meal_entries AS fime (food_item_id, amount, sequence_number, meal_id)
+		VALUES ($1, $2, $3, $4)
+		RETURNING fime.id
+		`,
+		item.FoodItemID,
+		item.Amount,
+		item.SequenceNumber,
+		item.MealID,
+	).Scan(&item.ID)
 	if err != nil {
-		return Meal{}, fmt.Errorf("no meal with id %d", id)
+		r.logger.Error("failed to add food item entry to meal", slog.Int64("mealID", item.MealID), slog.Any("err", err))
+		return TableFoodItemMealEntry{}, err
 	}
-	return meal, nil
+	r.logger.Info("added food item entry to meal", slog.Any("entry", item))
+
+	return item, nil
+
 }
 
-func (r *Repository) AddMealEntry(entry Entry, mealID int64, ownerID int64) (Entry, error) {
-	// only an ownership check
-	_, err := r.GetById(mealID, ownerID)
-	if err != nil {
-		return Entry{}, err
-	}
+func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (TableMacronutrientMealEntry, error) {
+	err := r.db.QueryRow(`
+		INSERT INTO macronutrient_meal_entries AS mme (protein, carbohydrate, fat, carbohydrate, sequence_number, meal_id)
+		VALUES ($1,$2,$3,$4,$5,$6)
+		RETURNING mme.id
+		`,
+		item.Protein,
+		item.Carbohydrate,
+		item.Fat,
+		item.KCal,
+		item.SequenceNumber,
+		item.MealID,
+	).Scan(&item.ID)
 
-	err = r.DB.QueryRow(`
-		INSERT INTO meal_entries AS me (meal_id, food_item_id, recipe_id,amount) 
-		VALUES ($1, $2, $3, $4) 
-		RETURNING me.id`,
-		mealID, entry.FoodItemID(), entry.RecipeID(), entry.Amount).Scan(&entry.ID)
 	if err != nil {
-		return Entry{}, err
+		r.logger.Error("failed to add macronutrient entry to meal", slog.Int64("mealID", item.MealID), slog.Any("err", err))
+		return TableMacronutrientMealEntry{}, err
 	}
+	r.logger.Info("added macronutrient entry to meal", slog.Any("entry", item))
 
-	return entry, nil
+	return item, nil
+
 }
 
-func (r *Repository) DeleteMeal(id int64, ownerID int64) error {
-	_, err := r.DB.Query(`
-		DELETE FROM meals WHERE id = $1 AND owner_id = $2
-	`, id, ownerID)
-	if err != nil {
-		r.Logger.Error("failed to delete meal", slog.Int64("mealID", id), slog.Any("err", err))
-		return err
-	}
-	return nil
+func (r Repository) Delete(id int64) error {
+	//TODO implement me
+	panic("implement me")
 }
 
-func (r *Repository) DeleteMealEntry(entryID int64, mealID int64, ownerID int64) error {
-	_, err := r.DB.Query(`
-		WITH owned_meals AS (
-			SELECT id
-			FROM meals
-			WHERE id = $2 
-  			  AND owner_id = $3
-		)
-		DELETE FROM meal_entries
-		WHERE id = $1 
-		  AND meal_id IN (SELECT id FROM owned_meals)
-	`, entryID, mealID, ownerID)
-	if err != nil {
-		r.Logger.Error("failed to delete meal entry", slog.Int64("mealID", entryID), slog.Any("err", err))
-		return err
-	}
-	return nil
+func (r Repository) Get(ownerID int64) ([]TableMeal, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r Repository) GetById(id int64) (TableMeal, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r Repository) GetFoodItemEntries(mealID int64) ([]TableFoodItemMealEntry, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r Repository) GetMacronutrientEntries(mealID int64) ([]TableMacronutrientMealEntry, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r Repository) GetRecipeEntries(mealID int64) ([]TableRecipeMealEntry, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (r Repository) CheckOwnership(id int64, ownerID int64) error {
+	//TODO implement me
+	panic("implement me")
 }

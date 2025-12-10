@@ -2,10 +2,6 @@ package meal
 
 import (
 	"time"
-
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/fooditem"
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/recipe"
 )
 
 type Meal struct {
@@ -18,28 +14,28 @@ type Meal struct {
 	OwnerID              int64
 }
 
-func (m Meal) ToResponse() api.MealResponse {
-	entries := make([]api.MealEntryResponse, 0, len(m.Entries))
+//func (m Meal) ToResponse() api.MealResponse {
+//	entries := make([]api.MealEntryResponse, 0, len(m.Entries))
+//
+//	for _, e := range m.Entries {
+//		entries = append(entries, e.ToResponse())
+//	}
+//	return api.MealResponse{
+//		Id:             m.ID,
+//		SequenceNumber: m.SequenceNumber,
+//		Timestamp:      m.Timestamp,
+//		Entries:        entries,
+//	}
+//}
 
-	for _, e := range m.Entries {
-		entries = append(entries, e.ToResponse())
-	}
-	return api.MealResponse{
-		Id:             m.ID,
-		SequenceNumber: m.SequenceNumber,
-		Timestamp:      m.Timestamp,
-		Entries:        entries,
-	}
-}
-
-func FromRequest(r api.PostMealRequest) *Meal {
-	return &Meal{
-		Timestamp:       r.Timestamp,
-		FoodItemEntries: make([]Entry[*fooditem.FoodItem], 0),
-		RecipeEntries:   make([]Entry[*recipe.Recipe], 0),
-		OwnerID:         0,
-	}
-}
+//func FromRequest(r api.PostMealRequest) *Meal {
+//	return &Meal{
+//		Timestamp:       r.Timestamp,
+//		FoodItemEntries: make([]Entry[*fooditem.FoodItem], 0),
+//		RecipeEntries:   make([]Entry[*recipe.Recipe], 0),
+//		OwnerID:         0,
+//	}
+//}
 
 func (m *Meal) ToTable() TableMeal {
 	return TableMeal{
