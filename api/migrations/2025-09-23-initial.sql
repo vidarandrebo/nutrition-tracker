@@ -71,6 +71,8 @@ CREATE TABLE macronutrient_meal_entries
     fat             double precision,
     kcal            double precision,
     sequence_number integer                                        NOT NULL,
+    date_created    timestamp,
+    date_modified   timestamp,
     meal_id         bigint REFERENCES meals (id) ON DELETE CASCADE NOT NULL
 );
 
