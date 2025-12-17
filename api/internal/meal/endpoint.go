@@ -15,6 +15,41 @@ type Endpoint struct {
 	last   int64
 }
 
+func (e Endpoint) PostApiMealsIdFoodItemEntries(ctx context.Context, request api.PostApiMealsIdFoodItemEntriesRequestObject) (api.PostApiMealsIdFoodItemEntriesResponseObject, error) {
+	userID, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	entry, err := e.store.AddFoodItemEntry(FIMEFromRequest(*request.Body), request.Id, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return api.PostApiMealsIdFoodItemEntries201JSONResponse(entry.ToResponse()), nil
+}
+
+func (e Endpoint) PostApiMealsIdMacronutrientEntries(ctx context.Context, request api.PostApiMealsIdMacronutrientEntriesRequestObject) (api.PostApiMealsIdMacronutrientEntriesResponseObject, error) {
+	userID, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	entry, err := e.store.AddMacroEntry(MNEFromRequest(*request.Body), request.Id, userID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return api.PostApiMealsIdMacronutrientEntries201JSONResponse(entry.ToResponse()), nil
+}
+
+func (e Endpoint) PostApiMealsIdRecipeEntries(ctx context.Context, request api.PostApiMealsIdRecipeEntriesRequestObject) (api.PostApiMealsIdRecipeEntriesResponseObject, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
 func NewEndpoint(service IService, logger *slog.Logger) *Endpoint {
 	e := Endpoint{store: service, last: 0}
 	e.logger = logger.With("module", reflect.TypeOf(e))
@@ -46,8 +81,8 @@ func (e Endpoint) PostApiMeals(ctx context.Context, request api.PostApiMealsRequ
 		return nil, err
 	}
 
-	meal, err := e.store.Add(Meal{
-		SequenceNumber: e.last,
+	meal, err := e.store.Add(&Meal{
+		SequenceNumber: 0,
 		Timestamp:      request.Body.Timestamp,
 		OwnerID:        userID,
 	})
@@ -72,40 +107,13 @@ func (e Endpoint) GetApiMealsId(ctx context.Context, request api.GetApiMealsIdRe
 	return api.GetApiMealsId200JSONResponse(meal.ToResponse()), nil
 }
 
-func (e Endpoint) PostApiMealsIdEntries(ctx context.Context, request api.PostApiMealsIdEntriesRequestObject) (api.PostApiMealsIdEntriesResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
-	if err != nil {
-		return nil, err
-	}
-
-	r := PostMealEntryRequest{
-		FoodItemID: *request.Body.FoodItemId,
-		RecipeID:   *request.Body.RecipeId,
-		Amount:     request.Body.Amount,
-	}
-	if ok, err := r.Validate(); !ok {
-		return nil, err
-	}
-
-	entry, err := e.store.AddMealEntry(
-		EntryFromRequest(r),
-		request.Id,
-		userID,
-	)
-	if err != nil {
-		return nil, err
-	}
-
-	return api.PostApiMealsIdEntries201JSONResponse(entry.ToResponse()), nil
-}
-
 func (e Endpoint) DeleteApiMealsId(ctx context.Context, request api.DeleteApiMealsIdRequestObject) (api.DeleteApiMealsIdResponseObject, error) {
 	userId, err := auth.UserIDFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	err = e.store.DeleteMeal(request.Id, userId)
+	err = e.store.Delete(request.Id, userId)
 	if err != nil {
 		return nil, err
 	}
@@ -117,10 +125,13 @@ func (e Endpoint) DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, reques
 	if err != nil {
 		return nil, err
 	}
-
-	err = e.store.DeleteMealEntry(request.EntryId, request.MealId, userId)
-	if err != nil {
-		return nil, err
+	if userId != 0 {
+		panic("")
 	}
+
+	//	err = e.store.DeleteMealEntry(request.EntryId, request.MealId, userId)
+	//	if err != nil {
+	//		return nil, err
+	//	}
 	return api.DeleteApiMealsMealIdEntriesEntryId204Response{}, nil
 }

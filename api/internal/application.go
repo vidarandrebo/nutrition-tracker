@@ -40,6 +40,7 @@ type Services struct {
 	HashingService  *auth.HashingService
 	FoodItemService fooditem.IService
 	RecipeService   recipe.IService
+	MealService     meal.IService
 }
 type Repositories struct {
 	FoodItemRepository fooditem.IRepository
@@ -106,6 +107,7 @@ func (a *Application) addServices() {
 	a.Services.AuthService = auth.NewAuthService(a.Repositories.UserRepository, a.Services.HashingService, a.Services.JwtService)
 	a.Services.FoodItemService = fooditem.NewService(a.Repositories.FoodItemRepository, a.Logger)
 	a.Services.RecipeService = recipe.NewService(a.Repositories.RecipeRepository, a.Logger)
+	a.Services.MealService = meal.NewService(a.Repositories.MealRepository, a.Logger)
 }
 
 func (a *Application) addStores() {
@@ -128,7 +130,7 @@ func (a *Application) addEndpoints() {
 		FoodItemEndpoint: fooditem.NewEndpoint(a.Services.FoodItemService, a.Logger),
 		RecipeEndpoint:   recipe.NewEndpoint(a.Services.RecipeService, a.Logger),
 		AuthEndpoint:     auth.NewEndpoint(a.Services.AuthService, a.Logger),
-		MealEndpoint:     meal.NewEndpoint(a.Repositories.MealRepository, a.Logger),
+		MealEndpoint:     meal.NewEndpoint(a.Services.MealService, a.Logger),
 	}
 }
 

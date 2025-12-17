@@ -2,6 +2,8 @@ package meal
 
 import (
 	"time"
+
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 )
 
 type Meal struct {
@@ -14,28 +16,40 @@ type Meal struct {
 	OwnerID              int64
 }
 
-//func (m Meal) ToResponse() api.MealResponse {
-//	entries := make([]api.MealEntryResponse, 0, len(m.Entries))
-//
-//	for _, e := range m.Entries {
-//		entries = append(entries, e.ToResponse())
-//	}
-//	return api.MealResponse{
-//		Id:             m.ID,
-//		SequenceNumber: m.SequenceNumber,
-//		Timestamp:      m.Timestamp,
-//		Entries:        entries,
-//	}
-//}
+func (m *Meal) ToResponse() api.MealResponse {
+	foodItemEntries := make([]api.FoodItemMealEntryResponse, 0, len(m.FoodItemEntries))
+	for _, fie := range m.FoodItemEntries {
+		foodItemEntries = append(foodItemEntries, fie.ToResponse())
+	}
+	recipeEntries := make([]api.RecipeMealEntryResponse, 0, len(m.RecipeEntries))
+	for _, re := range m.RecipeEntries {
+		recipeEntries = append(recipeEntries, re.ToResponse())
+	}
+	macroEntries := make([]api.MacronutrientMealEntryResponse, 0, len(m.MacronutrientEntries))
+	for _, me := range m.MacronutrientEntries {
+		macroEntries = append(macroEntries, me.ToResponse())
+	}
+	return api.MealResponse{
+		Id:                   m.ID,
+		SequenceNumber:       m.SequenceNumber,
+		Timestamp:            m.Timestamp,
+		FoodItemEntries:      &foodItemEntries,
+		MacronutrientEntries: &macroEntries,
+		RecipeEntries:        &recipeEntries,
+	}
+}
 
-//func FromRequest(r api.PostMealRequest) *Meal {
-//	return &Meal{
-//		Timestamp:       r.Timestamp,
-//		FoodItemEntries: make([]Entry[*fooditem.FoodItem], 0),
-//		RecipeEntries:   make([]Entry[*recipe.Recipe], 0),
-//		OwnerID:         0,
-//	}
-//}
+func FromRequest(r api.PostMealRequest) *Meal {
+	return &Meal{
+		ID:                   0,
+		SequenceNumber:       0,
+		Timestamp:            r.Timestamp,
+		FoodItemEntries:      nil,
+		RecipeEntries:        nil,
+		MacronutrientEntries: nil,
+		OwnerID:              0,
+	}
+}
 
 func (m *Meal) ToTable() TableMeal {
 	return TableMeal{
@@ -53,6 +67,15 @@ type RecipeMealEntry struct {
 	SequenceNumber int
 }
 
+func RMEFromRequest(r api.PostRecipeMealEntryRequest) *RecipeMealEntry {
+	return &RecipeMealEntry{
+		ID:             0,
+		RecipeID:       r.RecipeId,
+		Amount:         r.Amount,
+		SequenceNumber: 0,
+	}
+}
+
 func (rme *RecipeMealEntry) ToTable(mealID int64) TableRecipeMealEntry {
 	return TableRecipeMealEntry{
 		ID:             rme.ID,
@@ -63,6 +86,15 @@ func (rme *RecipeMealEntry) ToTable(mealID int64) TableRecipeMealEntry {
 	}
 }
 
+func (rme *RecipeMealEntry) ToResponse() api.RecipeMealEntryResponse {
+	return api.RecipeMealEntryResponse{
+		Id:             rme.ID,
+		Amount:         rme.Amount,
+		RecipeId:       rme.RecipeID,
+		SequenceNumber: rme.SequenceNumber,
+	}
+}
+
 type FoodItemMealEntry struct {
 	ID             int64
 	FoodItemID     int64
@@ -70,6 +102,14 @@ type FoodItemMealEntry struct {
 	SequenceNumber int
 }
 
+func FIMEFromRequest(r api.PostFoodItemMealEntryRequest) *FoodItemMealEntry {
+	return &FoodItemMealEntry{
+		ID:             0,
+		FoodItemID:     r.FoodItemId,
+		Amount:         r.Amount,
+		SequenceNumber: 0,
+	}
+}
 func (fime *FoodItemMealEntry) ToTable(mealID int64) TableFoodItemMealEntry {
 	return TableFoodItemMealEntry{
 		ID:             fime.ID,
@@ -77,6 +117,15 @@ func (fime *FoodItemMealEntry) ToTable(mealID int64) TableFoodItemMealEntry {
 		Amount:         fime.Amount,
 		SequenceNumber: fime.SequenceNumber,
 		MealID:         mealID,
+	}
+}
+
+func (fime *FoodItemMealEntry) ToResponse() api.FoodItemMealEntryResponse {
+	return api.FoodItemMealEntryResponse{
+		Id:             fime.ID,
+		Amount:         fime.Amount,
+		FoodItemId:     fime.FoodItemID,
+		SequenceNumber: fime.SequenceNumber,
 	}
 }
 
@@ -89,6 +138,17 @@ type MacronutrientMealEntry struct {
 	KCal           float64
 }
 
+func MNEFromRequest(r api.PostMacronutrientMealEntryRequest) *MacronutrientMealEntry {
+	return &MacronutrientMealEntry{
+		ID:             0,
+		SequenceNumber: 0,
+		Protein:        r.Protein,
+		Carbohydrate:   r.Carbohydrate,
+		Fat:            r.Fat,
+		KCal:           r.Fat,
+	}
+}
+
 func (mme *MacronutrientMealEntry) ToTable(mealID int64) TableMacronutrientMealEntry {
 	return TableMacronutrientMealEntry{
 		ID:             mme.ID,
@@ -99,4 +159,15 @@ func (mme *MacronutrientMealEntry) ToTable(mealID int64) TableMacronutrientMealE
 		KCal:           mme.KCal,
 		MealID:         mealID,
 	}
+}
+func (mme *MacronutrientMealEntry) ToResponse() api.MacronutrientMealEntryResponse {
+	return api.MacronutrientMealEntryResponse{
+		Id:             mme.ID,
+		Protein:        mme.Protein,
+		Carbohydrate:   mme.Carbohydrate,
+		Fat:            mme.Fat,
+		KCal:           mme.KCal,
+		SequenceNumber: mme.SequenceNumber,
+	}
+
 }
