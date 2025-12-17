@@ -89,7 +89,6 @@ func (r Repository) AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItem
 	r.logger.Info("added food item entry to meal", slog.Any("entry", item))
 
 	return item, nil
-
 }
 
 func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (TableMacronutrientMealEntry, error) {
@@ -105,7 +104,6 @@ func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (Tab
 		item.SequenceNumber,
 		item.MealID,
 	).Scan(&item.ID)
-
 	if err != nil {
 		r.logger.Error("failed to add macronutrient entry to meal", slog.Int64("mealID", item.MealID), slog.Any("err", err))
 		return TableMacronutrientMealEntry{}, err
@@ -113,7 +111,6 @@ func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (Tab
 	r.logger.Info("added macronutrient entry to meal", slog.Any("entry", item))
 
 	return item, nil
-
 }
 
 func (r Repository) Delete(id int64) error {

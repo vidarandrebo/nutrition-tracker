@@ -60,6 +60,18 @@ func (m *Meal) ToTable() TableMeal {
 	}
 }
 
+func FromMealTable(meal TableMeal) *Meal {
+	return &Meal{
+		ID:                   meal.ID,
+		SequenceNumber:       meal.SequenceNumber,
+		Timestamp:            meal.MealTime,
+		FoodItemEntries:      nil,
+		RecipeEntries:        nil,
+		MacronutrientEntries: nil,
+		OwnerID:              meal.OwnerID,
+	}
+}
+
 type RecipeMealEntry struct {
 	ID             int64
 	RecipeID       int64
@@ -83,6 +95,15 @@ func (rme *RecipeMealEntry) ToTable(mealID int64) TableRecipeMealEntry {
 		Amount:         rme.Amount,
 		SequenceNumber: rme.SequenceNumber,
 		MealID:         mealID,
+	}
+}
+
+func FromRecipeMealEntryTable(entry TableRecipeMealEntry) *RecipeMealEntry {
+	return &RecipeMealEntry{
+		ID:             entry.ID,
+		RecipeID:       entry.RecipeID,
+		Amount:         entry.Amount,
+		SequenceNumber: entry.SequenceNumber,
 	}
 }
 
@@ -110,6 +131,7 @@ func FIMEFromRequest(r api.PostFoodItemMealEntryRequest) *FoodItemMealEntry {
 		SequenceNumber: 0,
 	}
 }
+
 func (fime *FoodItemMealEntry) ToTable(mealID int64) TableFoodItemMealEntry {
 	return TableFoodItemMealEntry{
 		ID:             fime.ID,
@@ -117,6 +139,15 @@ func (fime *FoodItemMealEntry) ToTable(mealID int64) TableFoodItemMealEntry {
 		Amount:         fime.Amount,
 		SequenceNumber: fime.SequenceNumber,
 		MealID:         mealID,
+	}
+}
+
+func FromFoodItemMealEntryTable(entry TableFoodItemMealEntry) *FoodItemMealEntry {
+	return &FoodItemMealEntry{
+		ID:             entry.ID,
+		FoodItemID:     entry.FoodItemID,
+		Amount:         entry.Amount,
+		SequenceNumber: entry.SequenceNumber,
 	}
 }
 
@@ -160,6 +191,7 @@ func (mme *MacronutrientMealEntry) ToTable(mealID int64) TableMacronutrientMealE
 		MealID:         mealID,
 	}
 }
+
 func (mme *MacronutrientMealEntry) ToResponse() api.MacronutrientMealEntryResponse {
 	return api.MacronutrientMealEntryResponse{
 		Id:             mme.ID,
@@ -169,5 +201,15 @@ func (mme *MacronutrientMealEntry) ToResponse() api.MacronutrientMealEntryRespon
 		KCal:           mme.KCal,
 		SequenceNumber: mme.SequenceNumber,
 	}
+}
 
+func FromMacronutrientMealEntryTable(entry TableMacronutrientMealEntry) *MacronutrientMealEntry {
+	return &MacronutrientMealEntry{
+		ID:             entry.ID,
+		SequenceNumber: entry.SequenceNumber,
+		Protein:        entry.Protein,
+		Carbohydrate:   entry.Carbohydrate,
+		Fat:            entry.Fat,
+		KCal:           entry.KCal,
+	}
 }

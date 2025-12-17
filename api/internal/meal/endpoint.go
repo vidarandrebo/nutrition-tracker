@@ -22,7 +22,6 @@ func (e Endpoint) PostApiMealsIdFoodItemEntries(ctx context.Context, request api
 	}
 
 	entry, err := e.store.AddFoodItemEntry(FIMEFromRequest(*request.Body), request.Id, userID)
-
 	if err != nil {
 		return nil, err
 	}
@@ -37,7 +36,6 @@ func (e Endpoint) PostApiMealsIdMacronutrientEntries(ctx context.Context, reques
 	}
 
 	entry, err := e.store.AddMacroEntry(MNEFromRequest(*request.Body), request.Id, userID)
-
 	if err != nil {
 		return nil, err
 	}
@@ -46,7 +44,7 @@ func (e Endpoint) PostApiMealsIdMacronutrientEntries(ctx context.Context, reques
 }
 
 func (e Endpoint) PostApiMealsIdRecipeEntries(ctx context.Context, request api.PostApiMealsIdRecipeEntriesRequestObject) (api.PostApiMealsIdRecipeEntriesResponseObject, error) {
-	//TODO implement me
+	// TODO implement me
 	panic("implement me")
 }
 
