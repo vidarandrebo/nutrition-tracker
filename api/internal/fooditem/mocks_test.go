@@ -14,7 +14,8 @@ import (
 func NewMockIRepository(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockIRepository {
+},
+) *MockIRepository {
 	mock := &MockIRepository{}
 	mock.Mock.Test(t)
 
@@ -97,24 +98,24 @@ func (_c *MockIRepository_Add_Call) RunAndReturn(run func(item fooditem.TableFoo
 }
 
 // AddMicronutrient provides a mock function for the type MockIRepository
-func (_mock *MockIRepository) AddMicronutrient(item fooditem.TableMicronutrient) (fooditem.TableMicronutrient, error) {
+func (_mock *MockIRepository) AddMicronutrient(item fooditem.TableFoodItemMacronutrient) (fooditem.TableFoodItemMacronutrient, error) {
 	ret := _mock.Called(item)
 
 	if len(ret) == 0 {
 		panic("no return value specified for AddMicronutrient")
 	}
 
-	var r0 fooditem.TableMicronutrient
+	var r0 fooditem.TableFoodItemMacronutrient
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(fooditem.TableMicronutrient) (fooditem.TableMicronutrient, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(fooditem.TableFoodItemMacronutrient) (fooditem.TableFoodItemMacronutrient, error)); ok {
 		return returnFunc(item)
 	}
-	if returnFunc, ok := ret.Get(0).(func(fooditem.TableMicronutrient) fooditem.TableMicronutrient); ok {
+	if returnFunc, ok := ret.Get(0).(func(fooditem.TableFoodItemMacronutrient) fooditem.TableFoodItemMacronutrient); ok {
 		r0 = returnFunc(item)
 	} else {
-		r0 = ret.Get(0).(fooditem.TableMicronutrient)
+		r0 = ret.Get(0).(fooditem.TableFoodItemMacronutrient)
 	}
-	if returnFunc, ok := ret.Get(1).(func(fooditem.TableMicronutrient) error); ok {
+	if returnFunc, ok := ret.Get(1).(func(fooditem.TableFoodItemMacronutrient) error); ok {
 		r1 = returnFunc(item)
 	} else {
 		r1 = ret.Error(1)
@@ -128,16 +129,16 @@ type MockIRepository_AddMicronutrient_Call struct {
 }
 
 // AddMicronutrient is a helper method to define mock.On call
-//   - item fooditem.TableMicronutrient
+//   - item fooditem.TableFoodItemMacronutrient
 func (_e *MockIRepository_Expecter) AddMicronutrient(item interface{}) *MockIRepository_AddMicronutrient_Call {
 	return &MockIRepository_AddMicronutrient_Call{Call: _e.mock.On("AddMicronutrient", item)}
 }
 
-func (_c *MockIRepository_AddMicronutrient_Call) Run(run func(item fooditem.TableMicronutrient)) *MockIRepository_AddMicronutrient_Call {
+func (_c *MockIRepository_AddMicronutrient_Call) Run(run func(item fooditem.TableFoodItemMacronutrient)) *MockIRepository_AddMicronutrient_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 fooditem.TableMicronutrient
+		var arg0 fooditem.TableFoodItemMacronutrient
 		if args[0] != nil {
-			arg0 = args[0].(fooditem.TableMicronutrient)
+			arg0 = args[0].(fooditem.TableFoodItemMacronutrient)
 		}
 		run(
 			arg0,
@@ -146,35 +147,35 @@ func (_c *MockIRepository_AddMicronutrient_Call) Run(run func(item fooditem.Tabl
 	return _c
 }
 
-func (_c *MockIRepository_AddMicronutrient_Call) Return(tableMicronutrient fooditem.TableMicronutrient, err error) *MockIRepository_AddMicronutrient_Call {
+func (_c *MockIRepository_AddMicronutrient_Call) Return(tableMicronutrient fooditem.TableFoodItemMacronutrient, err error) *MockIRepository_AddMicronutrient_Call {
 	_c.Call.Return(tableMicronutrient, err)
 	return _c
 }
 
-func (_c *MockIRepository_AddMicronutrient_Call) RunAndReturn(run func(item fooditem.TableMicronutrient) (fooditem.TableMicronutrient, error)) *MockIRepository_AddMicronutrient_Call {
+func (_c *MockIRepository_AddMicronutrient_Call) RunAndReturn(run func(item fooditem.TableFoodItemMacronutrient) (fooditem.TableFoodItemMacronutrient, error)) *MockIRepository_AddMicronutrient_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // AddPortionSize provides a mock function for the type MockIRepository
-func (_mock *MockIRepository) AddPortionSize(item fooditem.TablePortionSize) (fooditem.TablePortionSize, error) {
+func (_mock *MockIRepository) AddPortionSize(item fooditem.TableFoodItemPortionSize) (fooditem.TableFoodItemPortionSize, error) {
 	ret := _mock.Called(item)
 
 	if len(ret) == 0 {
 		panic("no return value specified for AddPortionSize")
 	}
 
-	var r0 fooditem.TablePortionSize
+	var r0 fooditem.TableFoodItemPortionSize
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(fooditem.TablePortionSize) (fooditem.TablePortionSize, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(fooditem.TableFoodItemPortionSize) (fooditem.TableFoodItemPortionSize, error)); ok {
 		return returnFunc(item)
 	}
-	if returnFunc, ok := ret.Get(0).(func(fooditem.TablePortionSize) fooditem.TablePortionSize); ok {
+	if returnFunc, ok := ret.Get(0).(func(fooditem.TableFoodItemPortionSize) fooditem.TableFoodItemPortionSize); ok {
 		r0 = returnFunc(item)
 	} else {
-		r0 = ret.Get(0).(fooditem.TablePortionSize)
+		r0 = ret.Get(0).(fooditem.TableFoodItemPortionSize)
 	}
-	if returnFunc, ok := ret.Get(1).(func(fooditem.TablePortionSize) error); ok {
+	if returnFunc, ok := ret.Get(1).(func(fooditem.TableFoodItemPortionSize) error); ok {
 		r1 = returnFunc(item)
 	} else {
 		r1 = ret.Error(1)
@@ -188,16 +189,16 @@ type MockIRepository_AddPortionSize_Call struct {
 }
 
 // AddPortionSize is a helper method to define mock.On call
-//   - item fooditem.TablePortionSize
+//   - item fooditem.TableFoodItemPortionSize
 func (_e *MockIRepository_Expecter) AddPortionSize(item interface{}) *MockIRepository_AddPortionSize_Call {
 	return &MockIRepository_AddPortionSize_Call{Call: _e.mock.On("AddPortionSize", item)}
 }
 
-func (_c *MockIRepository_AddPortionSize_Call) Run(run func(item fooditem.TablePortionSize)) *MockIRepository_AddPortionSize_Call {
+func (_c *MockIRepository_AddPortionSize_Call) Run(run func(item fooditem.TableFoodItemPortionSize)) *MockIRepository_AddPortionSize_Call {
 	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 fooditem.TablePortionSize
+		var arg0 fooditem.TableFoodItemPortionSize
 		if args[0] != nil {
-			arg0 = args[0].(fooditem.TablePortionSize)
+			arg0 = args[0].(fooditem.TableFoodItemPortionSize)
 		}
 		run(
 			arg0,
@@ -206,12 +207,12 @@ func (_c *MockIRepository_AddPortionSize_Call) Run(run func(item fooditem.TableP
 	return _c
 }
 
-func (_c *MockIRepository_AddPortionSize_Call) Return(tablePortionSize fooditem.TablePortionSize, err error) *MockIRepository_AddPortionSize_Call {
+func (_c *MockIRepository_AddPortionSize_Call) Return(tablePortionSize fooditem.TableFoodItemPortionSize, err error) *MockIRepository_AddPortionSize_Call {
 	_c.Call.Return(tablePortionSize, err)
 	return _c
 }
 
-func (_c *MockIRepository_AddPortionSize_Call) RunAndReturn(run func(item fooditem.TablePortionSize) (fooditem.TablePortionSize, error)) *MockIRepository_AddPortionSize_Call {
+func (_c *MockIRepository_AddPortionSize_Call) RunAndReturn(run func(item fooditem.TableFoodItemPortionSize) (fooditem.TableFoodItemPortionSize, error)) *MockIRepository_AddPortionSize_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -447,23 +448,23 @@ func (_c *MockIRepository_GetByID_Call) RunAndReturn(run func(id int64) (foodite
 }
 
 // GetMicronutrients provides a mock function for the type MockIRepository
-func (_mock *MockIRepository) GetMicronutrients(foodItemID int64) ([]fooditem.TableMicronutrient, error) {
+func (_mock *MockIRepository) GetMicronutrients(foodItemID int64) ([]fooditem.TableFoodItemMacronutrient, error) {
 	ret := _mock.Called(foodItemID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetMicronutrients")
 	}
 
-	var r0 []fooditem.TableMicronutrient
+	var r0 []fooditem.TableFoodItemMacronutrient
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(int64) ([]fooditem.TableMicronutrient, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(int64) ([]fooditem.TableFoodItemMacronutrient, error)); ok {
 		return returnFunc(foodItemID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(int64) []fooditem.TableMicronutrient); ok {
+	if returnFunc, ok := ret.Get(0).(func(int64) []fooditem.TableFoodItemMacronutrient); ok {
 		r0 = returnFunc(foodItemID)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]fooditem.TableMicronutrient)
+			r0 = ret.Get(0).([]fooditem.TableFoodItemMacronutrient)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(int64) error); ok {
@@ -498,34 +499,34 @@ func (_c *MockIRepository_GetMicronutrients_Call) Run(run func(foodItemID int64)
 	return _c
 }
 
-func (_c *MockIRepository_GetMicronutrients_Call) Return(tableMicronutrients []fooditem.TableMicronutrient, err error) *MockIRepository_GetMicronutrients_Call {
+func (_c *MockIRepository_GetMicronutrients_Call) Return(tableMicronutrients []fooditem.TableFoodItemMacronutrient, err error) *MockIRepository_GetMicronutrients_Call {
 	_c.Call.Return(tableMicronutrients, err)
 	return _c
 }
 
-func (_c *MockIRepository_GetMicronutrients_Call) RunAndReturn(run func(foodItemID int64) ([]fooditem.TableMicronutrient, error)) *MockIRepository_GetMicronutrients_Call {
+func (_c *MockIRepository_GetMicronutrients_Call) RunAndReturn(run func(foodItemID int64) ([]fooditem.TableFoodItemMacronutrient, error)) *MockIRepository_GetMicronutrients_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // GetPortionSizes provides a mock function for the type MockIRepository
-func (_mock *MockIRepository) GetPortionSizes(foodItemID int64) ([]fooditem.TablePortionSize, error) {
+func (_mock *MockIRepository) GetPortionSizes(foodItemID int64) ([]fooditem.TableFoodItemPortionSize, error) {
 	ret := _mock.Called(foodItemID)
 
 	if len(ret) == 0 {
 		panic("no return value specified for GetPortionSizes")
 	}
 
-	var r0 []fooditem.TablePortionSize
+	var r0 []fooditem.TableFoodItemPortionSize
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(int64) ([]fooditem.TablePortionSize, error)); ok {
+	if returnFunc, ok := ret.Get(0).(func(int64) ([]fooditem.TableFoodItemPortionSize, error)); ok {
 		return returnFunc(foodItemID)
 	}
-	if returnFunc, ok := ret.Get(0).(func(int64) []fooditem.TablePortionSize); ok {
+	if returnFunc, ok := ret.Get(0).(func(int64) []fooditem.TableFoodItemPortionSize); ok {
 		r0 = returnFunc(foodItemID)
 	} else {
 		if ret.Get(0) != nil {
-			r0 = ret.Get(0).([]fooditem.TablePortionSize)
+			r0 = ret.Get(0).([]fooditem.TableFoodItemPortionSize)
 		}
 	}
 	if returnFunc, ok := ret.Get(1).(func(int64) error); ok {
@@ -560,12 +561,12 @@ func (_c *MockIRepository_GetPortionSizes_Call) Run(run func(foodItemID int64)) 
 	return _c
 }
 
-func (_c *MockIRepository_GetPortionSizes_Call) Return(tablePortionSizes []fooditem.TablePortionSize, err error) *MockIRepository_GetPortionSizes_Call {
+func (_c *MockIRepository_GetPortionSizes_Call) Return(tablePortionSizes []fooditem.TableFoodItemPortionSize, err error) *MockIRepository_GetPortionSizes_Call {
 	_c.Call.Return(tablePortionSizes, err)
 	return _c
 }
 
-func (_c *MockIRepository_GetPortionSizes_Call) RunAndReturn(run func(foodItemID int64) ([]fooditem.TablePortionSize, error)) *MockIRepository_GetPortionSizes_Call {
+func (_c *MockIRepository_GetPortionSizes_Call) RunAndReturn(run func(foodItemID int64) ([]fooditem.TableFoodItemPortionSize, error)) *MockIRepository_GetPortionSizes_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -575,7 +576,8 @@ func (_c *MockIRepository_GetPortionSizes_Call) RunAndReturn(run func(foodItemID
 func NewMockIService(t interface {
 	mock.TestingT
 	Cleanup(func())
-}) *MockIService {
+},
+) *MockIService {
 	mock := &MockIService{}
 	mock.Mock.Test(t)
 

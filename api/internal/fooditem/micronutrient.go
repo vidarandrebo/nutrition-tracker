@@ -16,8 +16,8 @@ func (mn *Micronutrient) ToResponse() api.MicronutrientResponse {
 	}
 }
 
-func (mn *Micronutrient) ToTable(foodItemID int64) TableMicronutrient {
-	return TableMicronutrient{
+func (mn *Micronutrient) ToTable(foodItemID int64) TableFoodItemMacronutrient {
+	return TableFoodItemMacronutrient{
 		ID:         mn.ID,
 		Amount:     mn.Amount,
 		Name:       mn.Name,
@@ -25,7 +25,7 @@ func (mn *Micronutrient) ToTable(foodItemID int64) TableMicronutrient {
 	}
 }
 
-func FromMicronutrientTable(item TableMicronutrient) *Micronutrient {
+func FromMicronutrientTable(item TableFoodItemMacronutrient) *Micronutrient {
 	return &Micronutrient{
 		ID:     item.ID,
 		Name:   item.Name,

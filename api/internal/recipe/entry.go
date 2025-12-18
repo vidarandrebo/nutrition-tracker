@@ -25,8 +25,8 @@ func (e *Entry) ToResponse() api.RecipeEntryResponse {
 	}
 }
 
-func (e *Entry) ToTable(recipeID int64) TableFoodItemRecipeEntry {
-	return TableFoodItemRecipeEntry{
+func (e *Entry) ToTable(recipeID int64) TableRecipeFoodItemEntry {
+	return TableRecipeFoodItemEntry{
 		ID:         e.ID,
 		Amount:     e.Amount,
 		FoodItemID: e.FoodItemID,
@@ -34,7 +34,7 @@ func (e *Entry) ToTable(recipeID int64) TableFoodItemRecipeEntry {
 	}
 }
 
-func FromRecipeEntryTable(tbl TableFoodItemRecipeEntry) *Entry {
+func FromRecipeEntryTable(tbl TableRecipeFoodItemEntry) *Entry {
 	return &Entry{
 		ID:         tbl.ID,
 		Amount:     tbl.Amount,

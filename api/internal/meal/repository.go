@@ -11,15 +11,15 @@ import (
 
 type IRepository interface {
 	Add(item TableMeal) (TableMeal, error)
-	AddRecipeEntry(item TableRecipeMealEntry) (TableRecipeMealEntry, error)
-	AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItemMealEntry, error)
-	AddMacronutrientEntry(item TableMacronutrientMealEntry) (TableMacronutrientMealEntry, error)
+	AddRecipeEntry(item TableMealRecipeEntry) (TableMealRecipeEntry, error)
+	AddFoodItemEntry(item TableMealFoodItemEntry) (TableMealFoodItemEntry, error)
+	AddMacronutrientEntry(item TableMealMacronutrientEntry) (TableMealMacronutrientEntry, error)
 	Delete(id int64) error
 	GetByDate(from time.Time, to time.Time, ownerID int64) ([]TableMeal, error)
 	GetById(id int64) (TableMeal, error)
-	GetFoodItemEntries(mealID int64) ([]TableFoodItemMealEntry, error)
-	GetMacronutrientEntries(mealID int64) ([]TableMacronutrientMealEntry, error)
-	GetRecipeEntries(mealID int64) ([]TableRecipeMealEntry, error)
+	GetFoodItemEntries(mealID int64) ([]TableMealFoodItemEntry, error)
+	GetMacronutrientEntries(mealID int64) ([]TableMealMacronutrientEntry, error)
+	GetRecipeEntries(mealID int64) ([]TableMealRecipeEntry, error)
 	CheckOwnership(id int64, ownerID int64) error
 }
 
@@ -52,7 +52,7 @@ func (r Repository) Add(item TableMeal) (TableMeal, error) {
 	return item, nil
 }
 
-func (r Repository) AddRecipeEntry(item TableRecipeMealEntry) (TableRecipeMealEntry, error) {
+func (r Repository) AddRecipeEntry(item TableMealRecipeEntry) (TableMealRecipeEntry, error) {
 	err := r.db.QueryRow(`
  		INSERT INTO meal_recipe_entries AS rme (recipe_id, amount, sequence_number, meal_id)
 		VALUES ($1,$2,$3,$4)
@@ -64,14 +64,14 @@ func (r Repository) AddRecipeEntry(item TableRecipeMealEntry) (TableRecipeMealEn
 	).Scan(&item.ID)
 	if err != nil {
 		r.logger.Error("failed to add recipe entry to meal", slog.Int64("mealID", item.MealID), slog.Any("err", err))
-		return TableRecipeMealEntry{}, err
+		return TableMealRecipeEntry{}, err
 	}
 	r.logger.Info("added recipe entry to meal", slog.Any("entry", item))
 
 	return item, nil
 }
 
-func (r Repository) AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItemMealEntry, error) {
+func (r Repository) AddFoodItemEntry(item TableMealFoodItemEntry) (TableMealFoodItemEntry, error) {
 	err := r.db.QueryRow(`
         INSERT INTO meal_food_item_entries AS fime (food_item_id, amount, sequence_number, meal_id)
 		VALUES ($1, $2, $3, $4)
@@ -84,14 +84,14 @@ func (r Repository) AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItem
 	).Scan(&item.ID)
 	if err != nil {
 		r.logger.Error("failed to add food item entry to meal", slog.Int64("mealID", item.MealID), slog.Any("err", err))
-		return TableFoodItemMealEntry{}, err
+		return TableMealFoodItemEntry{}, err
 	}
 	r.logger.Info("added food item entry to meal", slog.Any("entry", item))
 
 	return item, nil
 }
 
-func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (TableMacronutrientMealEntry, error) {
+func (r Repository) AddMacronutrientEntry(item TableMealMacronutrientEntry) (TableMealMacronutrientEntry, error) {
 	err := r.db.QueryRow(`
 		INSERT INTO meal_macronutrient_entries AS mme (protein, carbohydrate, fat, carbohydrate, sequence_number, meal_id)
 		VALUES ($1,$2,$3,$4,$5,$6)
@@ -106,7 +106,7 @@ func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (Tab
 	).Scan(&item.ID)
 	if err != nil {
 		r.logger.Error("failed to add macronutrient entry to meal", slog.Int64("mealID", item.MealID), slog.Any("err", err))
-		return TableMacronutrientMealEntry{}, err
+		return TableMealMacronutrientEntry{}, err
 	}
 	r.logger.Info("added macronutrient entry to meal", slog.Any("entry", item))
 
@@ -189,8 +189,8 @@ func (r Repository) GetById(id int64) (TableMeal, error) {
 	return item, nil
 }
 
-func (r Repository) GetFoodItemEntries(mealID int64) ([]TableFoodItemMealEntry, error) {
-	items := make([]TableFoodItemMealEntry, 0)
+func (r Repository) GetFoodItemEntries(mealID int64) ([]TableMealFoodItemEntry, error) {
+	items := make([]TableMealFoodItemEntry, 0)
 	rows, err := r.db.Query(`
 		SELECT fime.id, fime.food_item_id, fime.amount, fime.sequence_number, fime.date_created, fime.date_modified, fime.meal_id
 		FROM meal_food_item_entries fime
@@ -203,7 +203,7 @@ func (r Repository) GetFoodItemEntries(mealID int64) ([]TableFoodItemMealEntry, 
 	}
 
 	for rows.Next() {
-		item := TableFoodItemMealEntry{}
+		item := TableMealFoodItemEntry{}
 		err = rows.Scan(
 			&item.ID,
 			&item.FoodItemID,
@@ -222,8 +222,8 @@ func (r Repository) GetFoodItemEntries(mealID int64) ([]TableFoodItemMealEntry, 
 	return items, nil
 }
 
-func (r Repository) GetMacronutrientEntries(mealID int64) ([]TableMacronutrientMealEntry, error) {
-	items := make([]TableMacronutrientMealEntry, 0)
+func (r Repository) GetMacronutrientEntries(mealID int64) ([]TableMealMacronutrientEntry, error) {
+	items := make([]TableMealMacronutrientEntry, 0)
 	rows, err := r.db.Query(`
 		SELECT mme.id, mme.sequence_number,mme.protein, mme.carbohydrate, mme.fat, mme.kcal, mme.date_created, mme.date_modified, mme.meal_id
 		FROM meal_macronutrient_entries mme
@@ -236,7 +236,7 @@ func (r Repository) GetMacronutrientEntries(mealID int64) ([]TableMacronutrientM
 	}
 
 	for rows.Next() {
-		item := TableMacronutrientMealEntry{}
+		item := TableMealMacronutrientEntry{}
 		err = rows.Scan(
 			&item.ID,
 			&item.SequenceNumber,
@@ -257,8 +257,8 @@ func (r Repository) GetMacronutrientEntries(mealID int64) ([]TableMacronutrientM
 	return items, nil
 }
 
-func (r Repository) GetRecipeEntries(mealID int64) ([]TableRecipeMealEntry, error) {
-	items := make([]TableRecipeMealEntry, 0)
+func (r Repository) GetRecipeEntries(mealID int64) ([]TableMealRecipeEntry, error) {
+	items := make([]TableMealRecipeEntry, 0)
 	rows, err := r.db.Query(`
 		SELECT rme.id, rme.recipe_id, rme.amount, rme.sequence_number, rme.date_created, rme.date_modified, rme.meal_id
 		FROM meal_recipe_entries rme
@@ -271,7 +271,7 @@ func (r Repository) GetRecipeEntries(mealID int64) ([]TableRecipeMealEntry, erro
 	}
 
 	for rows.Next() {
-		item := TableRecipeMealEntry{}
+		item := TableMealRecipeEntry{}
 		err = rows.Scan(
 			&item.ID,
 			&item.RecipeID,

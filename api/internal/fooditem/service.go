@@ -56,7 +56,7 @@ func (s *Service) GetByID(id int64) (*FoodItem, error) {
 	if err != nil {
 		return nil, err
 	}
-	foodItem := FromFoodItemTable(item)
+	foodItem := NewFoodItem().FromTable(item)
 	portionSizes, err := s.repository.GetPortionSizes(id)
 	if err != nil {
 		return nil, err
@@ -74,7 +74,7 @@ func (s *Service) Get(ownerID int64) ([]*FoodItem, error) {
 	}
 	foodItems := make([]*FoodItem, 0, len(items))
 	for _, item := range items {
-		foodItem := FromFoodItemTable(item)
+		foodItem := NewFoodItem().FromTable(item)
 		portionSizes, err := s.repository.GetPortionSizes(item.ID)
 		if err != nil {
 			return nil, err

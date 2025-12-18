@@ -11,7 +11,7 @@ type TableMeal struct {
 	OwnerID        int64
 }
 
-type TableRecipeMealEntry struct {
+type TableMealRecipeEntry struct {
 	ID             int64
 	RecipeID       int64
 	Amount         float64
@@ -21,7 +21,7 @@ type TableRecipeMealEntry struct {
 	MealID         int64
 }
 
-type TableFoodItemMealEntry struct {
+type TableMealFoodItemEntry struct {
 	ID             int64
 	FoodItemID     int64
 	Amount         float64
@@ -31,7 +31,7 @@ type TableFoodItemMealEntry struct {
 	MealID         int64
 }
 
-type TableMacronutrientMealEntry struct {
+type TableMealMacronutrientEntry struct {
 	ID             int64
 	SequenceNumber int
 	Protein        float64

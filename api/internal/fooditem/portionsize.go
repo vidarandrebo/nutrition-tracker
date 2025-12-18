@@ -16,8 +16,8 @@ func (ps *PortionSize) ToResponse() api.PortionSizeResponse {
 	}
 }
 
-func (ps *PortionSize) ToTable(foodItemID int64) TablePortionSize {
-	return TablePortionSize{
+func (ps *PortionSize) ToTable(foodItemID int64) TableFoodItemPortionSize {
+	return TableFoodItemPortionSize{
 		ID:         ps.ID,
 		Amount:     ps.Amount,
 		Name:       ps.Name,
@@ -25,7 +25,7 @@ func (ps *PortionSize) ToTable(foodItemID int64) TablePortionSize {
 	}
 }
 
-func FromPortionSizeTable(item TablePortionSize) *PortionSize {
+func FromPortionSizeTable(item TableFoodItemPortionSize) *PortionSize {
 	return &PortionSize{
 		ID:     item.ID,
 		Name:   item.Name,

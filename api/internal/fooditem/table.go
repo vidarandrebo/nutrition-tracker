@@ -1,7 +1,7 @@
 package fooditem
 
 type TableFoodItem struct {
-	ID           int64 `db: "db"`
+	ID           int64
 	Manufacturer string
 	Product      string
 	Protein      float64
@@ -13,14 +13,14 @@ type TableFoodItem struct {
 	OwnerID      int64
 }
 
-type TablePortionSize struct {
+type TableFoodItemPortionSize struct {
 	ID         int64
 	Amount     float64
 	Name       string
 	FoodItemID int64
 }
 
-type TableMicronutrient struct {
+type TableFoodItemMacronutrient struct {
 	ID         int64
 	Amount     float64
 	Name       string

@@ -23,6 +23,10 @@ type FoodItem struct {
 	OwnerID        int64
 }
 
+func NewFoodItem() *FoodItem {
+	return &FoodItem{}
+}
+
 func (fi *FoodItem) ToResponse() api.FoodItemResponse {
 	micronutrients := make([]api.MicronutrientResponse, 0, len(fi.Micronutrients))
 	for _, item := range fi.Micronutrients {
@@ -142,19 +146,18 @@ func (fi *FoodItem) ToTable() TableFoodItem {
 	}
 }
 
-func FromFoodItemTable(item TableFoodItem) *FoodItem {
-	return &FoodItem{
-		ID:             item.ID,
-		Manufacturer:   item.Manufacturer,
-		Product:        item.Product,
-		Protein:        item.Protein,
-		Carbohydrate:   item.Carbohydrate,
-		Fat:            item.Fat,
-		KCal:           item.KCal,
-		Public:         item.Public,
-		Micronutrients: make([]*Micronutrient, 0),
-		PortionSizes:   make([]*PortionSize, 0),
-		Source:         item.Source,
-		OwnerID:        item.OwnerID,
-	}
+func (fi *FoodItem) FromTable(item TableFoodItem) *FoodItem {
+	fi.ID = item.ID
+	fi.Manufacturer = item.Manufacturer
+	fi.Product = item.Product
+	fi.Protein = item.Protein
+	fi.Carbohydrate = item.Carbohydrate
+	fi.Fat = item.Fat
+	fi.KCal = item.KCal
+	fi.Public = item.Public
+	fi.Micronutrients = make([]*Micronutrient, 0)
+	fi.PortionSizes = make([]*PortionSize, 0)
+	fi.Source = item.Source
+	fi.OwnerID = item.OwnerID
+	return fi
 }

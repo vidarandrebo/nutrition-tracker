@@ -10,12 +10,12 @@ import (
 
 type IRepository interface {
 	Add(item TableFoodItem) (TableFoodItem, error)
-	AddMicronutrient(item TableMicronutrient) (TableMicronutrient, error)
-	AddPortionSize(item TablePortionSize) (TablePortionSize, error)
+	AddMicronutrient(item TableFoodItemMacronutrient) (TableFoodItemMacronutrient, error)
+	AddPortionSize(item TableFoodItemPortionSize) (TableFoodItemPortionSize, error)
 	Get(ownerID int64) ([]TableFoodItem, error)
 	GetByID(id int64) (TableFoodItem, error)
-	GetPortionSizes(foodItemID int64) ([]TablePortionSize, error)
-	GetMicronutrients(foodItemID int64) ([]TableMicronutrient, error)
+	GetPortionSizes(foodItemID int64) ([]TableFoodItemPortionSize, error)
+	GetMicronutrients(foodItemID int64) ([]TableFoodItemMacronutrient, error)
 	Delete(id int64) error
 	CheckOwnership(id int64, ownerID int64) error
 }
@@ -55,7 +55,7 @@ func (r *Repository) Add(item TableFoodItem) (TableFoodItem, error) {
 	return item, nil
 }
 
-func (r *Repository) AddMicronutrient(item TableMicronutrient) (TableMicronutrient, error) {
+func (r *Repository) AddMicronutrient(item TableFoodItemMacronutrient) (TableFoodItemMacronutrient, error) {
 	err := r.db.QueryRow(`
 			INSERT INTO food_item_micronutrients (name, amount, food_item_id) 
 			VALUES ($1, $2, $3)`,
@@ -65,13 +65,13 @@ func (r *Repository) AddMicronutrient(item TableMicronutrient) (TableMicronutrie
 	).Scan(&item.ID)
 	if err != nil {
 		r.logger.Error("failed to add micronutrient to food item", slog.Int64("foodItemID", item.FoodItemID), slog.Any("err", err))
-		return TableMicronutrient{}, err
+		return TableFoodItemMacronutrient{}, err
 	}
 
 	return item, nil
 }
 
-func (r *Repository) AddPortionSize(item TablePortionSize) (TablePortionSize, error) {
+func (r *Repository) AddPortionSize(item TableFoodItemPortionSize) (TableFoodItemPortionSize, error) {
 	err := r.db.QueryRow(`
 			INSERT INTO food_item_portion_sizes (name, amount, food_item_id) 
 			VALUES ($1, $2,$3)
@@ -79,7 +79,7 @@ func (r *Repository) AddPortionSize(item TablePortionSize) (TablePortionSize, er
 	).Scan(&item.ID)
 	if err != nil {
 		r.logger.Error("failed to add portion size to food item", slog.Int64("foodItemID", item.FoodItemID), slog.Any("err", err))
-		return TablePortionSize{}, err
+		return TableFoodItemPortionSize{}, err
 	}
 	return item, nil
 }
@@ -141,8 +141,8 @@ func (r *Repository) GetByID(id int64) (TableFoodItem, error) {
 	return item, nil
 }
 
-func (r *Repository) GetPortionSizes(foodItemID int64) ([]TablePortionSize, error) {
-	items := make([]TablePortionSize, 0)
+func (r *Repository) GetPortionSizes(foodItemID int64) ([]TableFoodItemPortionSize, error) {
+	items := make([]TableFoodItemPortionSize, 0)
 	rows, err := r.db.Query(`
 		WITH fi_portions AS (
 		    SELECT *
@@ -159,7 +159,7 @@ func (r *Repository) GetPortionSizes(foodItemID int64) ([]TablePortionSize, erro
 		return nil, err
 	}
 	for rows.Next() {
-		item := TablePortionSize{}
+		item := TableFoodItemPortionSize{}
 		err = rows.Scan(
 			&item.ID,
 			&item.Name,
@@ -175,8 +175,8 @@ func (r *Repository) GetPortionSizes(foodItemID int64) ([]TablePortionSize, erro
 	return items, nil
 }
 
-func (r *Repository) GetMicronutrients(foodItemID int64) ([]TableMicronutrient, error) {
-	items := make([]TableMicronutrient, 0)
+func (r *Repository) GetMicronutrients(foodItemID int64) ([]TableFoodItemMacronutrient, error) {
+	items := make([]TableFoodItemMacronutrient, 0)
 	rows, err := r.db.Query(`
 		WITH fi_micronutrients AS (
 		    SELECT *
@@ -193,7 +193,7 @@ func (r *Repository) GetMicronutrients(foodItemID int64) ([]TableMicronutrient, 
 		return nil, err
 	}
 	for rows.Next() {
-		item := TableMicronutrient{}
+		item := TableFoodItemMacronutrient{}
 		err = rows.Scan(
 			&item.ID,
 			&item.Name,

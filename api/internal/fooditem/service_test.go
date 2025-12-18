@@ -12,8 +12,8 @@ import (
 func TestService_Get(t *testing.T) {
 	repo := NewMockIRepository(t)
 	repo.EXPECT().Get(mock.Anything).Return(make([]fooditem.TableFoodItem, 0), nil)
-	repo.EXPECT().GetMicronutrients(mock.Anything).Return(make([]fooditem.TableMicronutrient, 0), nil).Maybe()
-	repo.EXPECT().GetPortionSizes(mock.Anything).Return(make([]fooditem.TablePortionSize, 0), nil).Maybe()
+	repo.EXPECT().GetMicronutrients(mock.Anything).Return(make([]fooditem.TableFoodItemMacronutrient, 0), nil).Maybe()
+	repo.EXPECT().GetPortionSizes(mock.Anything).Return(make([]fooditem.TableFoodItemPortionSize, 0), nil).Maybe()
 	service := fooditem.NewService(repo, slog.Default())
 	_, err := service.Get(1)
 	assert.Nil(t, err)
