@@ -1,20 +1,24 @@
 /* tslint:disable */
 
+export * from "./FoodItemMealEntryResponse";
 export * from "./FoodItemResponse";
 export * from "./LoginRequest";
 export * from "./LoginResponse";
-export * from "./MealEntryResponse";
+export * from "./MacronutrientMealEntryResponse";
 export * from "./MealResponse";
 export * from "./MicronutrientResponse";
 export * from "./PortionSizeResponse";
+export * from "./PostFoodItemMealEntryRequest";
 export * from "./PostFoodItemMicronutrient";
 export * from "./PostFoodItemPortion";
 export * from "./PostFoodItemRequest";
-export * from "./PostMealEntryRequest";
+export * from "./PostMacronutrientMealEntryRequest";
 export * from "./PostMealRequest";
 export * from "./PostRecipeEntryRequest";
+export * from "./PostRecipeMealEntryRequest";
 export * from "./PostRecipeRequest";
 export * from "./RecipeEntryResponse";
+export * from "./RecipeMealEntryResponse";
 export * from "./RecipeResponse";
 export * from "./RegisterRequest";
 export * from "./WithAmount";
@@ -22,4 +26,5 @@ export * from "./WithCredentials";
 export * from "./WithEnergy";
 export * from "./WithId";
 export * from "./WithMacronutrients";
+export * from "./WithSequenceNumber";
 export * from "./WithTimestamp";

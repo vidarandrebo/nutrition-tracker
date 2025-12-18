@@ -50,7 +50,7 @@ func (r *Repository) Add(item TableRecipe) (TableRecipe, error) {
 
 func (r *Repository) AddEntry(item TableFoodItemRecipeEntry) (TableFoodItemRecipeEntry, error) {
 	scanErr := r.db.QueryRow(`
-		INSERT INTO recipe_entries (amount, food_item_id, recipe_id)
+		INSERT INTO recipe_food_item_entries (amount, food_item_id, recipe_id)
 		VALUES ($1, $2, $3)
 		RETURNING id`,
 		item.Amount,
@@ -135,7 +135,7 @@ func (r *Repository) GetByID(id int64) (TableRecipe, error) {
 func (r *Repository) GetEntries(id int64) ([]TableFoodItemRecipeEntry, error) {
 	rows, queryErr := r.db.Query(`
 		SELECT id, amount, food_item_id, recipe_id
-		FROM recipe_entries r
+		FROM recipe_food_item_entries r
 		WHERE recipe_id = $1`,
 		id,
 	)

@@ -57,7 +57,7 @@ func (r *Repository) Add(item TableFoodItem) (TableFoodItem, error) {
 
 func (r *Repository) AddMicronutrient(item TableMicronutrient) (TableMicronutrient, error) {
 	err := r.db.QueryRow(`
-			INSERT INTO micronutrients (name, amount, food_item_id) 
+			INSERT INTO food_item_micronutrients (name, amount, food_item_id) 
 			VALUES ($1, $2, $3)`,
 		item.Name,
 		item.Amount,
@@ -73,7 +73,7 @@ func (r *Repository) AddMicronutrient(item TableMicronutrient) (TableMicronutrie
 
 func (r *Repository) AddPortionSize(item TablePortionSize) (TablePortionSize, error) {
 	err := r.db.QueryRow(`
-			INSERT INTO portion_sizes (name, amount, food_item_id) 
+			INSERT INTO food_item_portion_sizes (name, amount, food_item_id) 
 			VALUES ($1, $2,$3)
     	`, item.Name, item.Amount, item.ID,
 	).Scan(&item.ID)
@@ -146,7 +146,7 @@ func (r *Repository) GetPortionSizes(foodItemID int64) ([]TablePortionSize, erro
 	rows, err := r.db.Query(`
 		WITH fi_portions AS (
 		    SELECT *
-			FROM portion_sizes
+			FROM food_item_portion_sizes
 			WHERE food_item_id = $1
         )		
 		SELECT ps.id, ps.name, ps.amount, ps.food_item_id
@@ -180,7 +180,7 @@ func (r *Repository) GetMicronutrients(foodItemID int64) ([]TableMicronutrient, 
 	rows, err := r.db.Query(`
 		WITH fi_micronutrients AS (
 		    SELECT *
-			FROM micronutrients
+			FROM food_item_micronutrients
 			WHERE food_item_id = $1
         )		
 		SELECT mn.id, mn.name, mn.amount, mn.food_item_id

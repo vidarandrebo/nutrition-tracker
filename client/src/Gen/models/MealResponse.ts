@@ -13,13 +13,27 @@
  */
 
 import { mapValues } from "../runtime";
-import type { MealEntryResponse } from "./MealEntryResponse";
+import type { RecipeMealEntryResponse } from "./RecipeMealEntryResponse";
 import {
-    MealEntryResponseFromJSON,
-    MealEntryResponseFromJSONTyped,
-    MealEntryResponseToJSON,
-    MealEntryResponseToJSONTyped,
-} from "./MealEntryResponse";
+    RecipeMealEntryResponseFromJSON,
+    RecipeMealEntryResponseFromJSONTyped,
+    RecipeMealEntryResponseToJSON,
+    RecipeMealEntryResponseToJSONTyped,
+} from "./RecipeMealEntryResponse";
+import type { FoodItemMealEntryResponse } from "./FoodItemMealEntryResponse";
+import {
+    FoodItemMealEntryResponseFromJSON,
+    FoodItemMealEntryResponseFromJSONTyped,
+    FoodItemMealEntryResponseToJSON,
+    FoodItemMealEntryResponseToJSONTyped,
+} from "./FoodItemMealEntryResponse";
+import type { MacronutrientMealEntryResponse } from "./MacronutrientMealEntryResponse";
+import {
+    MacronutrientMealEntryResponseFromJSON,
+    MacronutrientMealEntryResponseFromJSONTyped,
+    MacronutrientMealEntryResponseToJSON,
+    MacronutrientMealEntryResponseToJSONTyped,
+} from "./MacronutrientMealEntryResponse";
 
 /**
  *
@@ -47,10 +61,22 @@ export interface MealResponse {
     sequenceNumber: number;
     /**
      *
-     * @type {Array<MealEntryResponse>}
+     * @type {Array<FoodItemMealEntryResponse>}
      * @memberof MealResponse
      */
-    entries: Array<MealEntryResponse>;
+    foodItemEntries?: Array<FoodItemMealEntryResponse>;
+    /**
+     *
+     * @type {Array<RecipeMealEntryResponse>}
+     * @memberof MealResponse
+     */
+    recipeEntries?: Array<RecipeMealEntryResponse>;
+    /**
+     *
+     * @type {Array<MacronutrientMealEntryResponse>}
+     * @memberof MealResponse
+     */
+    macronutrientEntries?: Array<MacronutrientMealEntryResponse>;
 }
 
 /**
@@ -60,7 +86,6 @@ export function instanceOfMealResponse(value: object): value is MealResponse {
     if (!("id" in value) || value["id"] === undefined) return false;
     if (!("timestamp" in value) || value["timestamp"] === undefined) return false;
     if (!("sequenceNumber" in value) || value["sequenceNumber"] === undefined) return false;
-    if (!("entries" in value) || value["entries"] === undefined) return false;
     return true;
 }
 
@@ -76,7 +101,18 @@ export function MealResponseFromJSONTyped(json: any, ignoreDiscriminator: boolea
         id: json["id"],
         timestamp: new Date(json["timestamp"]),
         sequenceNumber: json["sequenceNumber"],
-        entries: (json["entries"] as Array<any>).map(MealEntryResponseFromJSON),
+        foodItemEntries:
+            json["foodItemEntries"] == null
+                ? undefined
+                : (json["foodItemEntries"] as Array<any>).map(FoodItemMealEntryResponseFromJSON),
+        recipeEntries:
+            json["recipeEntries"] == null
+                ? undefined
+                : (json["recipeEntries"] as Array<any>).map(RecipeMealEntryResponseFromJSON),
+        macronutrientEntries:
+            json["macronutrientEntries"] == null
+                ? undefined
+                : (json["macronutrientEntries"] as Array<any>).map(MacronutrientMealEntryResponseFromJSON),
     };
 }
 
@@ -93,6 +129,17 @@ export function MealResponseToJSONTyped(value?: MealResponse | null, ignoreDiscr
         id: value["id"],
         timestamp: value["timestamp"].toISOString(),
         sequenceNumber: value["sequenceNumber"],
-        entries: (value["entries"] as Array<any>).map(MealEntryResponseToJSON),
+        foodItemEntries:
+            value["foodItemEntries"] == null
+                ? undefined
+                : (value["foodItemEntries"] as Array<any>).map(FoodItemMealEntryResponseToJSON),
+        recipeEntries:
+            value["recipeEntries"] == null
+                ? undefined
+                : (value["recipeEntries"] as Array<any>).map(RecipeMealEntryResponseToJSON),
+        macronutrientEntries:
+            value["macronutrientEntries"] == null
+                ? undefined
+                : (value["macronutrientEntries"] as Array<any>).map(MacronutrientMealEntryResponseToJSON),
     };
 }

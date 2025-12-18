@@ -37,7 +37,7 @@ func NewRepository(db *sql.DB, logger *slog.Logger) *Repository {
 func (r Repository) Add(item TableMeal) (TableMeal, error) {
 	err := r.db.QueryRow(`
 		INSERT INTO meals AS m (meal_time, sequence_number, owner_id)
-		VALUES  ($1,$2,3)
+		VALUES  ($1,$2,$3)
 		RETURNING m.id`,
 		item.MealTime,
 		item.SequenceNumber,
@@ -54,7 +54,7 @@ func (r Repository) Add(item TableMeal) (TableMeal, error) {
 
 func (r Repository) AddRecipeEntry(item TableRecipeMealEntry) (TableRecipeMealEntry, error) {
 	err := r.db.QueryRow(`
- 		INSERT INTO recipe_meal_entries AS rme (recipe_id, amount, sequence_number, meal_id)
+ 		INSERT INTO meal_recipe_entries AS rme (recipe_id, amount, sequence_number, meal_id)
 		VALUES ($1,$2,$3,$4)
 		RETURNING rme.id`,
 		item.RecipeID,
@@ -73,7 +73,7 @@ func (r Repository) AddRecipeEntry(item TableRecipeMealEntry) (TableRecipeMealEn
 
 func (r Repository) AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItemMealEntry, error) {
 	err := r.db.QueryRow(`
-        INSERT INTO food_item_meal_entries AS fime (food_item_id, amount, sequence_number, meal_id)
+        INSERT INTO meal_food_item_entries AS fime (food_item_id, amount, sequence_number, meal_id)
 		VALUES ($1, $2, $3, $4)
 		RETURNING fime.id
 		`,
@@ -93,7 +93,7 @@ func (r Repository) AddFoodItemEntry(item TableFoodItemMealEntry) (TableFoodItem
 
 func (r Repository) AddMacronutrientEntry(item TableMacronutrientMealEntry) (TableMacronutrientMealEntry, error) {
 	err := r.db.QueryRow(`
-		INSERT INTO macronutrient_meal_entries AS mme (protein, carbohydrate, fat, carbohydrate, sequence_number, meal_id)
+		INSERT INTO meal_macronutrient_entries AS mme (protein, carbohydrate, fat, carbohydrate, sequence_number, meal_id)
 		VALUES ($1,$2,$3,$4,$5,$6)
 		RETURNING mme.id
 		`,
@@ -193,7 +193,7 @@ func (r Repository) GetFoodItemEntries(mealID int64) ([]TableFoodItemMealEntry, 
 	items := make([]TableFoodItemMealEntry, 0)
 	rows, err := r.db.Query(`
 		SELECT fime.id, fime.food_item_id, fime.amount, fime.sequence_number, fime.date_created, fime.date_modified, fime.meal_id
-		FROM food_item_meal_entries fime
+		FROM meal_food_item_entries fime
 		WHERE fime.meal_id = $1
 		`,
 		mealID)
@@ -226,7 +226,7 @@ func (r Repository) GetMacronutrientEntries(mealID int64) ([]TableMacronutrientM
 	items := make([]TableMacronutrientMealEntry, 0)
 	rows, err := r.db.Query(`
 		SELECT mme.id, mme.sequence_number,mme.protein, mme.carbohydrate, mme.fat, mme.kcal, mme.date_created, mme.date_modified, mme.meal_id
-		FROM macronutrient_meal_entries mme
+		FROM meal_macronutrient_entries mme
 		WHERE mme.meal_id = $1
 		`,
 		mealID)
@@ -261,7 +261,7 @@ func (r Repository) GetRecipeEntries(mealID int64) ([]TableRecipeMealEntry, erro
 	items := make([]TableRecipeMealEntry, 0)
 	rows, err := r.db.Query(`
 		SELECT rme.id, rme.recipe_id, rme.amount, rme.sequence_number, rme.date_created, rme.date_modified, rme.meal_id
-		FROM recipe_meal_entries rme
+		FROM meal_recipe_entries rme
 		WHERE rme.meal_id = $1
 		`,
 		mealID)

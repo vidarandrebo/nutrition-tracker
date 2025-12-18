@@ -56,7 +56,7 @@ func (m *Meal) ToTable() TableMeal {
 		ID:             m.ID,
 		SequenceNumber: m.SequenceNumber,
 		MealTime:       m.Timestamp,
-		OwnerID:        0,
+		OwnerID:        m.OwnerID,
 	}
 }
 
