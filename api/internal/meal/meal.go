@@ -21,15 +21,15 @@ func NewMeal() *Meal {
 }
 
 func (m *Meal) ToResponse() api.MealResponse {
-	foodItemEntries := make([]api.FoodItemMealEntryResponse, 0, len(m.FoodItemEntries))
+	foodItemEntries := make([]api.MealFoodItemEntryResponse, 0, len(m.FoodItemEntries))
 	for _, fie := range m.FoodItemEntries {
 		foodItemEntries = append(foodItemEntries, fie.ToResponse())
 	}
-	recipeEntries := make([]api.RecipeMealEntryResponse, 0, len(m.RecipeEntries))
+	recipeEntries := make([]api.MealRecipeEntryResponse, 0, len(m.RecipeEntries))
 	for _, re := range m.RecipeEntries {
 		recipeEntries = append(recipeEntries, re.ToResponse())
 	}
-	macroEntries := make([]api.MacronutrientMealEntryResponse, 0, len(m.MacronutrientEntries))
+	macroEntries := make([]api.MealMacronutrientEntryResponse, 0, len(m.MacronutrientEntries))
 	for _, me := range m.MacronutrientEntries {
 		macroEntries = append(macroEntries, me.ToResponse())
 	}
@@ -43,7 +43,7 @@ func (m *Meal) ToResponse() api.MealResponse {
 	}
 }
 
-func FromRequest(r api.PostMealRequest) *Meal {
+func FromRequest(r api.MealPostRequest) *Meal {
 	return &Meal{
 		ID:                   0,
 		SequenceNumber:       0,

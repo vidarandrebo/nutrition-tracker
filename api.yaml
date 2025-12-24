@@ -45,7 +45,7 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/PostFoodItemRequest"
+                - $ref: "#/components/schemas/FoodItemPostRequest"
 
       responses:
         201:
@@ -107,13 +107,13 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/PostFoodItemPortion"
+                - $ref: "#/components/schemas/FoodItemPortionPostRequest"
       responses:
         201:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/PortionSizeResponse"
+                $ref: "#/components/schemas/FoodItemPortionSizeResponse"
           description: FoodItem portion added
         404:
           description: FoodItem not found
@@ -134,13 +134,13 @@ paths:
           application/json:
             schema:
               allOf:
-                - $ref: "#/components/schemas/PostFoodItemMicronutrient"
+                - $ref: "#/components/schemas/FoodItemMicronutrientPostRequest"
       responses:
         201:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MicronutrientResponse"
+                $ref: "#/components/schemas/FoodItemMicronutrientResponse"
           description: Micronutrient added
         404:
           description: FoodItem not found
@@ -178,7 +178,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostMealRequest"
+              $ref: "#/components/schemas/MealPostRequest"
       responses:
         201:
           content:
@@ -235,13 +235,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostRecipeMealEntryRequest"
+              $ref: "#/components/schemas/MealRecipeEntryPostRequest"
       responses:
         201:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/RecipeMealEntryResponse"
+                $ref: "#/components/schemas/MealRecipeEntryResponse"
           description: Meals entry that was added
 
   /api/meals/{id}/macronutrient-entries:
@@ -260,13 +260,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostMacronutrientMealEntryRequest"
+              $ref: "#/components/schemas/MealMacronutrientEntryPostRequest"
       responses:
         201:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MacronutrientMealEntryResponse"
+                $ref: "#/components/schemas/MealMacronutrientEntryResponse"
           description: Meals entry that was added
 
   /api/meals/{id}/food-item-entries:
@@ -284,13 +284,13 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostFoodItemMealEntryRequest"
+              $ref: "#/components/schemas/MealFoodItemEntryPostRequest"
       responses:
         201:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/FoodItemMealEntryResponse"
+                $ref: "#/components/schemas/MealFoodItemEntryResponse"
           description: Meals entry that was added
   /api/meals/{mealId}/entries/{entryId}:
     delete:
@@ -334,7 +334,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/PostRecipeRequest"
+              $ref: "#/components/schemas/RecipePostRequest"
       responses:
         201:
           content:
@@ -417,11 +417,11 @@ components:
             portionSizes:
               type: array
               items:
-                $ref: "#/components/schemas/PortionSizeResponse"
+                $ref: "#/components/schemas/FoodItemPortionSizeResponse"
             micronutrients:
               type: array
               items:
-                $ref: "#/components/schemas/MicronutrientResponse"
+                $ref: "#/components/schemas/FoodItemMicronutrientResponse"
 
           required:
             - ownerId
@@ -430,7 +430,7 @@ components:
             - isPublic
             - source
 
-    PostFoodItemRequest:
+    FoodItemPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithMacronutrients"
@@ -449,12 +449,12 @@ components:
             - product
             - isPublic
 
-    PostMealRequest:
+    MealPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithTimestamp"
 
-    PostFoodItemMealEntryRequest:
+    MealFoodItemEntryPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithAmount"
@@ -465,7 +465,7 @@ components:
           required:
             - foodItemId
 
-    PostRecipeMealEntryRequest:
+    MealRecipeEntryPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithAmount"
@@ -476,7 +476,7 @@ components:
           required:
             - recipeId
 
-    PostMacronutrientMealEntryRequest:
+    MealMacronutrientEntryPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithMacronutrients"
@@ -485,9 +485,7 @@ components:
               type: number
               format: double
 
-
-
-    RecipeMealEntryResponse:
+    MealRecipeEntryResponse:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithId"
@@ -500,7 +498,7 @@ components:
           required:
             - recipeId
 
-    FoodItemMealEntryResponse:
+    MealFoodItemEntryResponse:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithId"
@@ -513,7 +511,7 @@ components:
           required:
             - foodItemId
 
-    MacronutrientMealEntryResponse:
+    MealMacronutrientEntryResponse:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithId"
@@ -531,33 +529,33 @@ components:
             foodItemEntries:
               type: array
               items:
-                $ref: "#/components/schemas/FoodItemMealEntryResponse"
+                $ref: "#/components/schemas/MealFoodItemEntryResponse"
             recipeEntries:
               type: array
               items:
-                $ref: "#/components/schemas/RecipeMealEntryResponse"
+                $ref: "#/components/schemas/MealRecipeEntryResponse"
             macronutrientEntries:
               type: array
               items:
-                $ref: "#/components/schemas/MacronutrientMealEntryResponse"
+                $ref: "#/components/schemas/MealMacronutrientEntryResponse"
           required:
             - entries
 
-    PostRecipeRequest:
+    RecipePostRequest:
       type: object
       properties:
         name:
           type: string
-        entries:
+        food-item-entries:
           type: array
           items:
-            $ref: "#/components/schemas/PostRecipeEntryRequest"
+            $ref: "#/components/schemas/RecipeFoodItemEntryPostRequest"
       required:
         - name
-        - entries
+        - food-item-entries
 
 
-    PostRecipeEntryRequest:
+    RecipeFoodItemEntryPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithAmount"
@@ -596,7 +594,7 @@ components:
             - foodItemId
 
 
-    PostFoodItemPortion:
+    FoodItemPortionPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithAmount"
@@ -606,7 +604,7 @@ components:
           required:
             - name
 
-    PostFoodItemMicronutrient:
+    FoodItemMicronutrientPostRequest:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithAmount"
@@ -616,7 +614,7 @@ components:
           required:
             - name
 
-    MicronutrientResponse:
+    FoodItemMicronutrientResponse:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithId"
@@ -628,7 +626,7 @@ components:
             - name
 
 
-    PortionSizeResponse:
+    FoodItemPortionSizeResponse:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithId"

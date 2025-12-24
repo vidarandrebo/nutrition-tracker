@@ -13,7 +13,7 @@ func NewRecipeEntry() *RecipeEntry {
 	return &RecipeEntry{}
 }
 
-func RMEFromRequest(r api.PostRecipeMealEntryRequest) *RecipeEntry {
+func RMEFromRequest(r api.MealRecipeEntryPostRequest) *RecipeEntry {
 	return &RecipeEntry{
 		ID:             0,
 		RecipeID:       r.RecipeId,
@@ -40,8 +40,8 @@ func (rme *RecipeEntry) FromTable(entry TableMealRecipeEntry) *RecipeEntry {
 	return rme
 }
 
-func (rme *RecipeEntry) ToResponse() api.RecipeMealEntryResponse {
-	return api.RecipeMealEntryResponse{
+func (rme *RecipeEntry) ToResponse() api.MealRecipeEntryResponse {
+	return api.MealRecipeEntryResponse{
 		Id:             rme.ID,
 		Amount:         rme.Amount,
 		RecipeId:       rme.RecipeID,

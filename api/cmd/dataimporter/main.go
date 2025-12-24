@@ -71,7 +71,7 @@ func main() {
 			wg.Add(1)
 			sem.Acquire(context.Background(), 1)
 			go func() {
-				foodItem := fooditem.FromMatvareTabellen(item)
+				foodItem := fooditem.NewFoodItem().FromMatvareTabellen(item)
 				foodItem.OwnerID = matvareTabellenUser.ID
 				fmt.Println(foodItem.Product, "Protein:", foodItem.Protein, "Carbo:", foodItem.Carbohydrate, "Fat:", foodItem.Fat)
 

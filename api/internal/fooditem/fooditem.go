@@ -28,11 +28,11 @@ func NewFoodItem() *FoodItem {
 }
 
 func (fi *FoodItem) ToResponse() api.FoodItemResponse {
-	micronutrients := make([]api.MicronutrientResponse, 0, len(fi.Micronutrients))
+	micronutrients := make([]api.FoodItemMicronutrientResponse, 0, len(fi.Micronutrients))
 	for _, item := range fi.Micronutrients {
 		micronutrients = append(micronutrients, item.ToResponse())
 	}
-	portionSizes := make([]api.PortionSizeResponse, 0, len(fi.PortionSizes))
+	portionSizes := make([]api.FoodItemPortionSizeResponse, 0, len(fi.PortionSizes))
 	for _, item := range fi.PortionSizes {
 		portionSizes = append(portionSizes, item.ToResponse())
 	}
@@ -52,25 +52,24 @@ func (fi *FoodItem) ToResponse() api.FoodItemResponse {
 	}
 }
 
-func FromRequest(r *api.PostFoodItemRequest) *FoodItem {
+func (fi *FoodItem) FromRequest(r *api.FoodItemPostRequest) *FoodItem {
 	kCal := 0.0
 	if r.KCal == nil {
 		kCal = r.Protein*4 + r.Carbohydrate*4 + r.Fat*9
 	} else {
 		kCal = *r.KCal
 	}
-	item := &FoodItem{
-		Manufacturer:   r.Manufacturer,
-		Product:        r.Product,
-		Protein:        r.Protein,
-		Carbohydrate:   r.Carbohydrate,
-		Fat:            r.Fat,
-		KCal:           kCal,
-		Public:         r.IsPublic,
-		Micronutrients: make([]*Micronutrient, 0),
-		PortionSizes:   make([]*PortionSize, 0),
-	}
-	return item
+	fi.Manufacturer = r.Manufacturer
+	fi.Product = r.Product
+	fi.Protein = r.Protein
+	fi.Carbohydrate = r.Carbohydrate
+	fi.Fat = r.Fat
+	fi.KCal = kCal
+	fi.Public = r.IsPublic
+	fi.Micronutrients = make([]*Micronutrient, 0)
+	fi.PortionSizes = make([]*PortionSize, 0)
+
+	return fi
 }
 
 func (fi *FoodItem) HasAccess(userId int64) bool {
@@ -80,7 +79,7 @@ func (fi *FoodItem) HasAccess(userId int64) bool {
 	return false
 }
 
-func FromMatvareTabellen(item matvaretabellen.Food) *FoodItem {
+func (fi *FoodItem) FromMatvareTabellen(item matvaretabellen.Food) *FoodItem {
 	macroNames := []string{"Protein", "Karbo", "Fett"}
 	micronutrients := make([]*Micronutrient, 0)
 	for _, constituent := range item.Constituents {
@@ -94,20 +93,18 @@ func FromMatvareTabellen(item matvaretabellen.Food) *FoodItem {
 			})
 		}
 	}
-	foodItem := &FoodItem{
-		ID:             0,
-		Manufacturer:   "",
-		Product:        item.FoodName,
-		Protein:        item.Protein(),
-		Carbohydrate:   item.Carbohydrate(),
-		Fat:            item.Fat(),
-		KCal:           float64(item.Calories.Quantity),
-		Public:         true,
-		Micronutrients: micronutrients,
-		Source:         "matvaretabellen.no",
-		OwnerID:        0,
-	}
-	return foodItem
+	fi.ID = 0
+	fi.Manufacturer = ""
+	fi.Product = item.FoodName
+	fi.Protein = item.Protein()
+	fi.Carbohydrate = item.Carbohydrate()
+	fi.Fat = item.Fat()
+	fi.KCal = float64(item.Calories.Quantity)
+	fi.Public = true
+	fi.Micronutrients = micronutrients
+	fi.Source = "matvaretabellen.no"
+	fi.OwnerID = 0
+	return fi
 }
 
 func CalcAmount(amount float64, unit string) float64 {

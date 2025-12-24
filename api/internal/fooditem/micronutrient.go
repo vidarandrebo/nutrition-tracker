@@ -8,8 +8,8 @@ type Micronutrient struct {
 	Amount float64
 }
 
-func (mn *Micronutrient) ToResponse() api.MicronutrientResponse {
-	return api.MicronutrientResponse{
+func (mn *Micronutrient) ToResponse() api.FoodItemMicronutrientResponse {
+	return api.FoodItemMicronutrientResponse{
 		Amount: mn.Amount,
 		Id:     mn.ID,
 		Name:   mn.Name,
@@ -33,7 +33,7 @@ func FromMicronutrientTable(item TableFoodItemMacronutrient) *Micronutrient {
 	}
 }
 
-func FromMicronutrientPost(r *api.PostFoodItemMicronutrient) *Micronutrient {
+func FromMicronutrientPost(r *api.FoodItemMicronutrientPostRequest) *Micronutrient {
 	return &Micronutrient{
 		Name:   r.Name,
 		Amount: r.Amount,

@@ -15,7 +15,7 @@ func NewMacronutrientEntry() *MacronutrientEntry {
 	return &MacronutrientEntry{}
 }
 
-func MNEFromRequest(r api.PostMacronutrientMealEntryRequest) *MacronutrientEntry {
+func MNEFromRequest(r api.MealMacronutrientEntryPostRequest) *MacronutrientEntry {
 	return &MacronutrientEntry{
 		ID:             0,
 		SequenceNumber: 0,
@@ -38,8 +38,8 @@ func (mme *MacronutrientEntry) ToTable(mealID int64) TableMealMacronutrientEntry
 	}
 }
 
-func (mme *MacronutrientEntry) ToResponse() api.MacronutrientMealEntryResponse {
-	return api.MacronutrientMealEntryResponse{
+func (mme *MacronutrientEntry) ToResponse() api.MealMacronutrientEntryResponse {
+	return api.MealMacronutrientEntryResponse{
 		Id:             mme.ID,
 		Protein:        mme.Protein,
 		Carbohydrate:   mme.Carbohydrate,

@@ -42,7 +42,7 @@ func FromRecipeEntryTable(tbl TableRecipeFoodItemEntry) *Entry {
 	}
 }
 
-func FromEntryPost(r api.PostRecipeEntryRequest) *Entry {
+func FromEntryPost(r api.RecipeFoodItemEntryPostRequest) *Entry {
 	return &Entry{
 		Amount:     r.Amount,
 		FoodItemID: r.FoodItemId,

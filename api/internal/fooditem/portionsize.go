@@ -8,8 +8,8 @@ type PortionSize struct {
 	Amount float64
 }
 
-func (ps *PortionSize) ToResponse() api.PortionSizeResponse {
-	return api.PortionSizeResponse{
+func (ps *PortionSize) ToResponse() api.FoodItemPortionSizeResponse {
+	return api.FoodItemPortionSizeResponse{
 		Amount: ps.Amount,
 		Id:     ps.ID,
 		Name:   ps.Name,
@@ -33,7 +33,7 @@ func FromPortionSizeTable(item TableFoodItemPortionSize) *PortionSize {
 	}
 }
 
-func FromPortionSizePost(r *api.PostFoodItemPortion) *PortionSize {
+func FromPortionSizePost(r *api.FoodItemPortionPostRequest) *PortionSize {
 	return &PortionSize{
 		Name:   r.Name,
 		Amount: r.Amount,

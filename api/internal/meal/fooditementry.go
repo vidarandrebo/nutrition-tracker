@@ -13,7 +13,7 @@ func NewFoodItemEntry() *FoodItemEntry {
 	return &FoodItemEntry{}
 }
 
-func FIMEFromRequest(r api.PostFoodItemMealEntryRequest) *FoodItemEntry {
+func FIMEFromRequest(r api.MealFoodItemEntryPostRequest) *FoodItemEntry {
 	return &FoodItemEntry{
 		ID:             0,
 		FoodItemID:     r.FoodItemId,
@@ -40,8 +40,8 @@ func (fime *FoodItemEntry) FromTable(entry TableMealFoodItemEntry) *FoodItemEntr
 	return fime
 }
 
-func (fime *FoodItemEntry) ToResponse() api.FoodItemMealEntryResponse {
-	return api.FoodItemMealEntryResponse{
+func (fime *FoodItemEntry) ToResponse() api.MealFoodItemEntryResponse {
+	return api.MealFoodItemEntryResponse{
 		Id:             fime.ID,
 		Amount:         fime.Amount,
 		FoodItemId:     fime.FoodItemID,

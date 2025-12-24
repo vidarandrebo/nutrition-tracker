@@ -11,6 +11,10 @@ type Recipe struct {
 	OwnerID         int64
 }
 
+func NewRecipe() *Recipe {
+	return &Recipe{}
+}
+
 func (r *Recipe) ToResponse() api.RecipeResponse {
 	entries := make([]api.RecipeEntryResponse, 0, len(r.FoodItemEntries))
 	for _, e := range r.FoodItemEntries {
@@ -40,14 +44,12 @@ func FromRecipeTable(tbl TableRecipe) *Recipe {
 	}
 }
 
-func FromRecipePost(r *api.PostRecipeRequest) *Recipe {
-	entries := make([]*Entry, 0, len(r.Entries))
-	for _, e := range r.Entries {
+func (r *Recipe) FromPost(request *api.RecipePostRequest) *Recipe {
+	entries := make([]*Entry, 0, len(request.FoodItemEntries))
+	for _, e := range request.FoodItemEntries {
 		entries = append(entries, FromEntryPost(e))
 	}
-
-	return &Recipe{
-		Name:            r.Name,
-		FoodItemEntries: entries,
-	}
+	r.Name = request.Name
+	r.FoodItemEntries = entries
+	return r
 }

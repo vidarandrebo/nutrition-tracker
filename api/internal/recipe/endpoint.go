@@ -48,7 +48,7 @@ func (e Endpoint) PostApiRecipes(ctx context.Context, request api.PostApiRecipes
 		return nil, err
 	}
 
-	item := FromRecipePost(request.Body)
+	item := NewRecipe().FromPost(request.Body)
 	item.OwnerID = userID
 
 	newItem, err := e.service.Add(item)

@@ -20,28 +20,57 @@ import (
 	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 )
 
-// FoodItemMealEntryResponse defines model for FoodItemMealEntryResponse.
-type FoodItemMealEntryResponse struct {
-	Amount         float64 `json:"amount"`
-	FoodItemId     int64   `json:"foodItemId"`
-	Id             int64   `json:"id"`
-	SequenceNumber int     `json:"sequenceNumber"`
+// FoodItemMicronutrientPostRequest defines model for FoodItemMicronutrientPostRequest.
+type FoodItemMicronutrientPostRequest struct {
+	Amount float64 `json:"amount"`
+	Name   string  `json:"name"`
+}
+
+// FoodItemMicronutrientResponse defines model for FoodItemMicronutrientResponse.
+type FoodItemMicronutrientResponse struct {
+	Amount float64 `json:"amount"`
+	Id     int64   `json:"id"`
+	Name   string  `json:"name"`
+}
+
+// FoodItemPortionPostRequest defines model for FoodItemPortionPostRequest.
+type FoodItemPortionPostRequest struct {
+	Amount float64 `json:"amount"`
+	Name   string  `json:"name"`
+}
+
+// FoodItemPortionSizeResponse defines model for FoodItemPortionSizeResponse.
+type FoodItemPortionSizeResponse struct {
+	Amount float64 `json:"amount"`
+	Id     int64   `json:"id"`
+	Name   string  `json:"name"`
+}
+
+// FoodItemPostRequest defines model for FoodItemPostRequest.
+type FoodItemPostRequest struct {
+	Carbohydrate float64  `json:"carbohydrate"`
+	Fat          float64  `json:"fat"`
+	IsPublic     bool     `json:"isPublic"`
+	KCal         *float64 `json:"kCal,omitempty"`
+	Manufacturer string   `json:"manufacturer"`
+	Product      string   `json:"product"`
+	Protein      float64  `json:"protein"`
 }
 
 // FoodItemResponse defines model for FoodItemResponse.
 type FoodItemResponse struct {
-	Carbohydrate   float64                  `json:"carbohydrate"`
-	Fat            float64                  `json:"fat"`
-	Id             int64                    `json:"id"`
-	IsPublic       bool                     `json:"isPublic"`
-	KCal           float64                  `json:"kCal"`
-	Manufacturer   string                   `json:"manufacturer"`
-	Micronutrients *[]MicronutrientResponse `json:"micronutrients,omitempty"`
-	OwnerId        int64                    `json:"ownerId"`
-	PortionSizes   *[]PortionSizeResponse   `json:"portionSizes,omitempty"`
-	Product        string                   `json:"product"`
-	Protein        float64                  `json:"protein"`
-	Source         string                   `json:"source"`
+	Carbohydrate   float64                          `json:"carbohydrate"`
+	Fat            float64                          `json:"fat"`
+	Id             int64                            `json:"id"`
+	IsPublic       bool                             `json:"isPublic"`
+	KCal           float64                          `json:"kCal"`
+	Manufacturer   string                           `json:"manufacturer"`
+	Micronutrients *[]FoodItemMicronutrientResponse `json:"micronutrients,omitempty"`
+	OwnerId        int64                            `json:"ownerId"`
+	PortionSizes   *[]FoodItemPortionSizeResponse   `json:"portionSizes,omitempty"`
+	Product        string                           `json:"product"`
+	Protein        float64                          `json:"protein"`
+	Source         string                           `json:"source"`
 }
 
 // LoginRequest defines model for LoginRequest.
@@ -53,8 +82,30 @@ type LoginResponse struct {
 	Token string `json:"token"`
 }
 
-// MacronutrientMealEntryResponse defines model for MacronutrientMealEntryResponse.
-type MacronutrientMealEntryResponse struct {
+// MealFoodItemEntryPostRequest defines model for MealFoodItemEntryPostRequest.
+type MealFoodItemEntryPostRequest struct {
+	Amount     float64 `json:"amount"`
+	FoodItemId int64   `json:"foodItemId"`
+}
+
+// MealFoodItemEntryResponse defines model for MealFoodItemEntryResponse.
+type MealFoodItemEntryResponse struct {
+	Amount         float64 `json:"amount"`
+	FoodItemId     int64   `json:"foodItemId"`
+	Id             int64   `json:"id"`
+	SequenceNumber int     `json:"sequenceNumber"`
+}
+
+// MealMacronutrientEntryPostRequest defines model for MealMacronutrientEntryPostRequest.
+type MealMacronutrientEntryPostRequest struct {
+	Carbohydrate float64  `json:"carbohydrate"`
+	Fat          float64  `json:"fat"`
+	KCal         *float64 `json:"kCal,omitempty"`
+	Protein      float64  `json:"protein"`
+}
+
+// MealMacronutrientEntryResponse defines model for MealMacronutrientEntryResponse.
+type MealMacronutrientEntryResponse struct {
 	Carbohydrate   float64 `json:"carbohydrate"`
 	Fat            float64 `json:"fat"`
 	Id             int64   `json:"id"`
@@ -63,86 +114,31 @@ type MacronutrientMealEntryResponse struct {
 	SequenceNumber int     `json:"sequenceNumber"`
 }
 
-// MealResponse defines model for MealResponse.
-type MealResponse struct {
-	FoodItemEntries      *[]FoodItemMealEntryResponse      `json:"foodItemEntries,omitempty"`
-	Id                   int64                             `json:"id"`
-	MacronutrientEntries *[]MacronutrientMealEntryResponse `json:"macronutrientEntries,omitempty"`
-	RecipeEntries        *[]RecipeMealEntryResponse        `json:"recipeEntries,omitempty"`
-	SequenceNumber       int                               `json:"sequenceNumber"`
-	Timestamp            time.Time                         `json:"timestamp"`
-}
+// MealPostRequest defines model for MealPostRequest.
+type MealPostRequest = WithTimestamp
 
-// MicronutrientResponse defines model for MicronutrientResponse.
-type MicronutrientResponse struct {
-	Amount float64 `json:"amount"`
-	Id     int64   `json:"id"`
-	Name   string  `json:"name"`
-}
-
-// PortionSizeResponse defines model for PortionSizeResponse.
-type PortionSizeResponse struct {
-	Amount float64 `json:"amount"`
-	Id     int64   `json:"id"`
-	Name   string  `json:"name"`
-}
-
-// PostFoodItemMealEntryRequest defines model for PostFoodItemMealEntryRequest.
-type PostFoodItemMealEntryRequest struct {
-	Amount     float64 `json:"amount"`
-	FoodItemId int64   `json:"foodItemId"`
-}
-
-// PostFoodItemMicronutrient defines model for PostFoodItemMicronutrient.
-type PostFoodItemMicronutrient struct {
-	Amount float64 `json:"amount"`
-	Name   string  `json:"name"`
-}
-
-// PostFoodItemPortion defines model for PostFoodItemPortion.
-type PostFoodItemPortion struct {
-	Amount float64 `json:"amount"`
-	Name   string  `json:"name"`
-}
-
-// PostFoodItemRequest defines model for PostFoodItemRequest.
-type PostFoodItemRequest struct {
-	Carbohydrate float64  `json:"carbohydrate"`
-	Fat          float64  `json:"fat"`
-	IsPublic     bool     `json:"isPublic"`
-	KCal         *float64 `json:"kCal,omitempty"`
-	Manufacturer string   `json:"manufacturer"`
-	Product      string   `json:"product"`
-	Protein      float64  `json:"protein"`
-}
-
-// PostMacronutrientMealEntryRequest defines model for PostMacronutrientMealEntryRequest.
-type PostMacronutrientMealEntryRequest struct {
-	Carbohydrate float64  `json:"carbohydrate"`
-	Fat          float64  `json:"fat"`
-	KCal         *float64 `json:"kCal,omitempty"`
-	Protein      float64  `json:"protein"`
-}
-
-// PostMealRequest defines model for PostMealRequest.
-type PostMealRequest = WithTimestamp
-
-// PostRecipeEntryRequest defines model for PostRecipeEntryRequest.
-type PostRecipeEntryRequest struct {
-	Amount     float64 `json:"amount"`
-	FoodItemId int64   `json:"foodItemId"`
-}
-
-// PostRecipeMealEntryRequest defines model for PostRecipeMealEntryRequest.
-type PostRecipeMealEntryRequest struct {
+// MealRecipeEntryPostRequest defines model for MealRecipeEntryPostRequest.
+type MealRecipeEntryPostRequest struct {
 	Amount   float64 `json:"amount"`
 	RecipeId int64   `json:"recipeId"`
 }
 
-// PostRecipeRequest defines model for PostRecipeRequest.
-type PostRecipeRequest struct {
-	Entries []PostRecipeEntryRequest `json:"entries"`
-	Name    string                   `json:"name"`
+// MealRecipeEntryResponse defines model for MealRecipeEntryResponse.
+type MealRecipeEntryResponse struct {
+	Amount         float64 `json:"amount"`
+	Id             int64   `json:"id"`
+	RecipeId       int64   `json:"recipeId"`
+	SequenceNumber int     `json:"sequenceNumber"`
+}
+
+// MealResponse defines model for MealResponse.
+type MealResponse struct {
+	FoodItemEntries      *[]MealFoodItemEntryResponse      `json:"foodItemEntries,omitempty"`
+	Id                   int64                             `json:"id"`
+	MacronutrientEntries *[]MealMacronutrientEntryResponse `json:"macronutrientEntries,omitempty"`
+	RecipeEntries        *[]MealRecipeEntryResponse        `json:"recipeEntries,omitempty"`
+	SequenceNumber       int                               `json:"sequenceNumber"`
+	Timestamp            time.Time                         `json:"timestamp"`
 }
 
 // RecipeEntryResponse defines model for RecipeEntryResponse.
@@ -152,12 +148,16 @@ type RecipeEntryResponse struct {
 	Id         int64   `json:"id"`
 }
 
-// RecipeMealEntryResponse defines model for RecipeMealEntryResponse.
-type RecipeMealEntryResponse struct {
-	Amount         float64 `json:"amount"`
-	Id             int64   `json:"id"`
-	RecipeId       int64   `json:"recipeId"`
-	SequenceNumber int     `json:"sequenceNumber"`
+// RecipeFoodItemEntryPostRequest defines model for RecipeFoodItemEntryPostRequest.
+type RecipeFoodItemEntryPostRequest struct {
+	Amount     float64 `json:"amount"`
+	FoodItemId int64   `json:"foodItemId"`
+}
+
+// RecipePostRequest defines model for RecipePostRequest.
+type RecipePostRequest struct {
+	FoodItemEntries []RecipeFoodItemEntryPostRequest `json:"food-item-entries"`
+	Name            string                           `json:"name"`
 }
 
 // RecipeResponse defines model for RecipeResponse.
@@ -212,13 +212,13 @@ type WithTimestamp struct {
 }
 
 // PostApiFoodItemsJSONBody defines parameters for PostApiFoodItems.
-type PostApiFoodItemsJSONBody = PostFoodItemRequest
+type PostApiFoodItemsJSONBody = FoodItemPostRequest
 
 // PostApiFoodItemsIdMicronutrientsJSONBody defines parameters for PostApiFoodItemsIdMicronutrients.
-type PostApiFoodItemsIdMicronutrientsJSONBody = PostFoodItemMicronutrient
+type PostApiFoodItemsIdMicronutrientsJSONBody = FoodItemMicronutrientPostRequest
 
 // PostApiFoodItemsIdPortionsJSONBody defines parameters for PostApiFoodItemsIdPortions.
-type PostApiFoodItemsIdPortionsJSONBody = PostFoodItemPortion
+type PostApiFoodItemsIdPortionsJSONBody = FoodItemPortionPostRequest
 
 // GetApiMealsParams defines parameters for GetApiMeals.
 type GetApiMealsParams struct {
@@ -239,19 +239,19 @@ type PostApiFoodItemsIdPortionsJSONRequestBody = PostApiFoodItemsIdPortionsJSONB
 type PostApiLoginJSONRequestBody = LoginRequest
 
 // PostApiMealsJSONRequestBody defines body for PostApiMeals for application/json ContentType.
-type PostApiMealsJSONRequestBody = PostMealRequest
+type PostApiMealsJSONRequestBody = MealPostRequest
 
 // PostApiMealsIdFoodItemEntriesJSONRequestBody defines body for PostApiMealsIdFoodItemEntries for application/json ContentType.
-type PostApiMealsIdFoodItemEntriesJSONRequestBody = PostFoodItemMealEntryRequest
+type PostApiMealsIdFoodItemEntriesJSONRequestBody = MealFoodItemEntryPostRequest
 
 // PostApiMealsIdMacronutrientEntriesJSONRequestBody defines body for PostApiMealsIdMacronutrientEntries for application/json ContentType.
-type PostApiMealsIdMacronutrientEntriesJSONRequestBody = PostMacronutrientMealEntryRequest
+type PostApiMealsIdMacronutrientEntriesJSONRequestBody = MealMacronutrientEntryPostRequest
 
 // PostApiMealsIdRecipeEntriesJSONRequestBody defines body for PostApiMealsIdRecipeEntries for application/json ContentType.
-type PostApiMealsIdRecipeEntriesJSONRequestBody = PostRecipeMealEntryRequest
+type PostApiMealsIdRecipeEntriesJSONRequestBody = MealRecipeEntryPostRequest
 
 // PostApiRecipesJSONRequestBody defines body for PostApiRecipes for application/json ContentType.
-type PostApiRecipesJSONRequestBody = PostRecipeRequest
+type PostApiRecipesJSONRequestBody = RecipePostRequest
 
 // PostApiRegisterJSONRequestBody defines body for PostApiRegister for application/json ContentType.
 type PostApiRegisterJSONRequestBody = RegisterRequest
@@ -1727,7 +1727,7 @@ func (r GetApiFoodItemsIdResponse) StatusCode() int {
 type PostApiFoodItemsIdMicronutrientsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *MicronutrientResponse
+	JSON201      *FoodItemMicronutrientResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -1749,7 +1749,7 @@ func (r PostApiFoodItemsIdMicronutrientsResponse) StatusCode() int {
 type PostApiFoodItemsIdPortionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *PortionSizeResponse
+	JSON201      *FoodItemPortionSizeResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -1880,7 +1880,7 @@ func (r GetApiMealsIdResponse) StatusCode() int {
 type PostApiMealsIdFoodItemEntriesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *FoodItemMealEntryResponse
+	JSON201      *MealFoodItemEntryResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -1902,7 +1902,7 @@ func (r PostApiMealsIdFoodItemEntriesResponse) StatusCode() int {
 type PostApiMealsIdMacronutrientEntriesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *MacronutrientMealEntryResponse
+	JSON201      *MealMacronutrientEntryResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -1924,7 +1924,7 @@ func (r PostApiMealsIdMacronutrientEntriesResponse) StatusCode() int {
 type PostApiMealsIdRecipeEntriesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
-	JSON201      *RecipeMealEntryResponse
+	JSON201      *MealRecipeEntryResponse
 }
 
 // Status returns HTTPResponse.Status
@@ -2407,7 +2407,7 @@ func ParsePostApiFoodItemsIdMicronutrientsResponse(rsp *http.Response) (*PostApi
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest MicronutrientResponse
+		var dest FoodItemMicronutrientResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2432,7 +2432,7 @@ func ParsePostApiFoodItemsIdPortionsResponse(rsp *http.Response) (*PostApiFoodIt
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest PortionSizeResponse
+		var dest FoodItemPortionSizeResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2573,7 +2573,7 @@ func ParsePostApiMealsIdFoodItemEntriesResponse(rsp *http.Response) (*PostApiMea
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest FoodItemMealEntryResponse
+		var dest MealFoodItemEntryResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2598,7 +2598,7 @@ func ParsePostApiMealsIdMacronutrientEntriesResponse(rsp *http.Response) (*PostA
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest MacronutrientMealEntryResponse
+		var dest MealMacronutrientEntryResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -2623,7 +2623,7 @@ func ParsePostApiMealsIdRecipeEntriesResponse(rsp *http.Response) (*PostApiMeals
 
 	switch {
 	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 201:
-		var dest RecipeMealEntryResponse
+		var dest MealRecipeEntryResponse
 		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
 			return nil, err
 		}
@@ -3421,7 +3421,7 @@ type PostApiFoodItemsIdMicronutrientsResponseObject interface {
 	VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error
 }
 
-type PostApiFoodItemsIdMicronutrients201JSONResponse MicronutrientResponse
+type PostApiFoodItemsIdMicronutrients201JSONResponse FoodItemMicronutrientResponse
 
 func (response PostApiFoodItemsIdMicronutrients201JSONResponse) VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -3446,7 +3446,7 @@ type PostApiFoodItemsIdPortionsResponseObject interface {
 	VisitPostApiFoodItemsIdPortionsResponse(w http.ResponseWriter) error
 }
 
-type PostApiFoodItemsIdPortions201JSONResponse PortionSizeResponse
+type PostApiFoodItemsIdPortions201JSONResponse FoodItemPortionSizeResponse
 
 func (response PostApiFoodItemsIdPortions201JSONResponse) VisitPostApiFoodItemsIdPortionsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -3554,7 +3554,7 @@ type PostApiMealsIdFoodItemEntriesResponseObject interface {
 	VisitPostApiMealsIdFoodItemEntriesResponse(w http.ResponseWriter) error
 }
 
-type PostApiMealsIdFoodItemEntries201JSONResponse FoodItemMealEntryResponse
+type PostApiMealsIdFoodItemEntries201JSONResponse MealFoodItemEntryResponse
 
 func (response PostApiMealsIdFoodItemEntries201JSONResponse) VisitPostApiMealsIdFoodItemEntriesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -3572,7 +3572,7 @@ type PostApiMealsIdMacronutrientEntriesResponseObject interface {
 	VisitPostApiMealsIdMacronutrientEntriesResponse(w http.ResponseWriter) error
 }
 
-type PostApiMealsIdMacronutrientEntries201JSONResponse MacronutrientMealEntryResponse
+type PostApiMealsIdMacronutrientEntries201JSONResponse MealMacronutrientEntryResponse
 
 func (response PostApiMealsIdMacronutrientEntries201JSONResponse) VisitPostApiMealsIdMacronutrientEntriesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
@@ -3590,7 +3590,7 @@ type PostApiMealsIdRecipeEntriesResponseObject interface {
 	VisitPostApiMealsIdRecipeEntriesResponse(w http.ResponseWriter) error
 }
 
-type PostApiMealsIdRecipeEntries201JSONResponse RecipeMealEntryResponse
+type PostApiMealsIdRecipeEntries201JSONResponse MealRecipeEntryResponse
 
 func (response PostApiMealsIdRecipeEntries201JSONResponse) VisitPostApiMealsIdRecipeEntriesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")

@@ -147,8 +147,8 @@ func (_c *MockIRepository_AddMicronutrient_Call) Run(run func(item fooditem.Tabl
 	return _c
 }
 
-func (_c *MockIRepository_AddMicronutrient_Call) Return(tableMicronutrient fooditem.TableFoodItemMacronutrient, err error) *MockIRepository_AddMicronutrient_Call {
-	_c.Call.Return(tableMicronutrient, err)
+func (_c *MockIRepository_AddMicronutrient_Call) Return(tableFoodItemMacronutrient fooditem.TableFoodItemMacronutrient, err error) *MockIRepository_AddMicronutrient_Call {
+	_c.Call.Return(tableFoodItemMacronutrient, err)
 	return _c
 }
 
@@ -207,8 +207,8 @@ func (_c *MockIRepository_AddPortionSize_Call) Run(run func(item fooditem.TableF
 	return _c
 }
 
-func (_c *MockIRepository_AddPortionSize_Call) Return(tablePortionSize fooditem.TableFoodItemPortionSize, err error) *MockIRepository_AddPortionSize_Call {
-	_c.Call.Return(tablePortionSize, err)
+func (_c *MockIRepository_AddPortionSize_Call) Return(tableFoodItemPortionSize fooditem.TableFoodItemPortionSize, err error) *MockIRepository_AddPortionSize_Call {
+	_c.Call.Return(tableFoodItemPortionSize, err)
 	return _c
 }
 
@@ -499,8 +499,8 @@ func (_c *MockIRepository_GetMicronutrients_Call) Run(run func(foodItemID int64)
 	return _c
 }
 
-func (_c *MockIRepository_GetMicronutrients_Call) Return(tableMicronutrients []fooditem.TableFoodItemMacronutrient, err error) *MockIRepository_GetMicronutrients_Call {
-	_c.Call.Return(tableMicronutrients, err)
+func (_c *MockIRepository_GetMicronutrients_Call) Return(tableFoodItemMacronutrients []fooditem.TableFoodItemMacronutrient, err error) *MockIRepository_GetMicronutrients_Call {
+	_c.Call.Return(tableFoodItemMacronutrients, err)
 	return _c
 }
 
@@ -561,8 +561,8 @@ func (_c *MockIRepository_GetPortionSizes_Call) Run(run func(foodItemID int64)) 
 	return _c
 }
 
-func (_c *MockIRepository_GetPortionSizes_Call) Return(tablePortionSizes []fooditem.TableFoodItemPortionSize, err error) *MockIRepository_GetPortionSizes_Call {
-	_c.Call.Return(tablePortionSizes, err)
+func (_c *MockIRepository_GetPortionSizes_Call) Return(tableFoodItemPortionSizes []fooditem.TableFoodItemPortionSize, err error) *MockIRepository_GetPortionSizes_Call {
+	_c.Call.Return(tableFoodItemPortionSizes, err)
 	return _c
 }
 

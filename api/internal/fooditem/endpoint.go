@@ -43,7 +43,7 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 	}
 
 	e.logger.Info("new foodItem", slog.Bool("isPublic", request.Body.IsPublic))
-	item := FromRequest(request.Body)
+	item := NewFoodItem().FromRequest(request.Body)
 	item.OwnerID = userID
 	newItem, err := e.service.Add(item)
 	if err != nil {
