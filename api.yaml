@@ -573,15 +573,15 @@ components:
         - properties:
             name:
               type: string
-            entries:
+            food-item-entries:
               type: array
               items:
-                $ref: "#/components/schemas/RecipeEntryResponse"
+                $ref: "#/components/schemas/RecipeFoodItemEntryEntryResponse"
           required:
             - name
-            - entries
+            - food-item-entries
 
-    RecipeEntryResponse:
+    RecipeFoodItemEntryEntryResponse:
       type: object
       allOf:
         - $ref: "#/components/schemas/WithId"

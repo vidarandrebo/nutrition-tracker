@@ -1,7 +1,7 @@
 import type { PostMealEntryRequest } from "./Requests.ts";
 import { getMealsClient } from "../Api.ts";
-import type { MealEntryResponse } from "../../Gen";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
+import type { MealFoodItemEntryResponse } from "../../Gen";
 
 export class MealEntry {
     id: number;
@@ -20,7 +20,10 @@ export class MealEntry {
         const client = getMealsClient();
 
         try {
-            const response = await client.apiMealsIdEntriesPost({ id: mealId, postMealEntryRequest: entry });
+            const response = await client.apiMealsIdFoodItemEntriesPost({
+                id: mealId,
+                mealFoodItemEntryPostRequest: entry,
+            });
             return MealEntry.fromResponse(response);
         } catch {
             console.log("failed to add entry to meal");
@@ -38,16 +41,15 @@ export class MealEntry {
         );
     }
 
-    static fromResponses(res: MealEntryResponse[]): MealEntry[] {
+    static fromResponses(res: MealFoodItemEntryResponse[]): MealEntry[] {
         return res.map((v) => this.fromResponse(v));
     }
 
-    static fromResponse(res: MealEntryResponse): MealEntry {
+    static fromResponse(res: MealFoodItemEntryResponse): MealEntry {
         const me = new MealEntry();
         me.id = res.id;
         me.amount = res.amount;
-        me.foodItemId = res.foodItemId ?? null;
-        me.recipeId = res.recipeId ?? null;
+        me.foodItemId = res.foodItemId;
         return me;
     }
 }

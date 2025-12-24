@@ -33,7 +33,7 @@ export class Meal {
 
         const client = getMealsClient();
         try {
-            const response = await client.apiMealsPost({ postMealRequest: request });
+            const response = await client.apiMealsPost({ mealPostRequest: request });
             return Meal.fromResponse(response);
         } catch {
             console.log("oi, ya goofed up");
@@ -79,7 +79,7 @@ export class Meal {
         m.id = res.id;
         m.timestamp = new Date(res.timestamp);
         m.sequenceNumber = res.sequenceNumber;
-        m.entries = MealEntry.fromResponses(res.entries);
+        m.entries = MealEntry.fromResponses(res.foodItemEntries ?? []);
         return m;
     }
 

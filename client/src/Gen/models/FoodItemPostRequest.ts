@@ -16,57 +16,57 @@ import { mapValues } from "../runtime";
 /**
  *
  * @export
- * @interface PostFoodItemRequest
+ * @interface FoodItemPostRequest
  */
-export interface PostFoodItemRequest {
+export interface FoodItemPostRequest {
     /**
      *
      * @type {number}
-     * @memberof PostFoodItemRequest
+     * @memberof FoodItemPostRequest
      */
     protein: number;
     /**
      *
      * @type {number}
-     * @memberof PostFoodItemRequest
+     * @memberof FoodItemPostRequest
      */
     carbohydrate: number;
     /**
      *
      * @type {number}
-     * @memberof PostFoodItemRequest
+     * @memberof FoodItemPostRequest
      */
     fat: number;
     /**
      *
      * @type {number}
-     * @memberof PostFoodItemRequest
+     * @memberof FoodItemPostRequest
      */
     kCal?: number;
     /**
      *
      * @type {string}
-     * @memberof PostFoodItemRequest
+     * @memberof FoodItemPostRequest
      */
     manufacturer: string;
     /**
      *
      * @type {string}
-     * @memberof PostFoodItemRequest
+     * @memberof FoodItemPostRequest
      */
     product: string;
     /**
      *
      * @type {boolean}
-     * @memberof PostFoodItemRequest
+     * @memberof FoodItemPostRequest
      */
     isPublic: boolean;
 }
 
 /**
- * Check if a given object implements the PostFoodItemRequest interface.
+ * Check if a given object implements the FoodItemPostRequest interface.
  */
-export function instanceOfPostFoodItemRequest(value: object): value is PostFoodItemRequest {
+export function instanceOfFoodItemPostRequest(value: object): value is FoodItemPostRequest {
     if (!("protein" in value) || value["protein"] === undefined) return false;
     if (!("carbohydrate" in value) || value["carbohydrate"] === undefined) return false;
     if (!("fat" in value) || value["fat"] === undefined) return false;
@@ -76,11 +76,11 @@ export function instanceOfPostFoodItemRequest(value: object): value is PostFoodI
     return true;
 }
 
-export function PostFoodItemRequestFromJSON(json: any): PostFoodItemRequest {
-    return PostFoodItemRequestFromJSONTyped(json, false);
+export function FoodItemPostRequestFromJSON(json: any): FoodItemPostRequest {
+    return FoodItemPostRequestFromJSONTyped(json, false);
 }
 
-export function PostFoodItemRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): PostFoodItemRequest {
+export function FoodItemPostRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): FoodItemPostRequest {
     if (json == null) {
         return json;
     }
@@ -95,12 +95,12 @@ export function PostFoodItemRequestFromJSONTyped(json: any, ignoreDiscriminator:
     };
 }
 
-export function PostFoodItemRequestToJSON(json: any): PostFoodItemRequest {
-    return PostFoodItemRequestToJSONTyped(json, false);
+export function FoodItemPostRequestToJSON(json: any): FoodItemPostRequest {
+    return FoodItemPostRequestToJSONTyped(json, false);
 }
 
-export function PostFoodItemRequestToJSONTyped(
-    value?: PostFoodItemRequest | null,
+export function FoodItemPostRequestToJSONTyped(
+    value?: FoodItemPostRequest | null,
     ignoreDiscriminator: boolean = false,
 ): any {
     if (value == null) {

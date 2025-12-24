@@ -13,10 +13,10 @@
  */
 
 import * as runtime from "../runtime";
-import type { PostRecipeRequest, RecipeResponse } from "../models/index";
+import type { RecipePostRequest, RecipeResponse } from "../models/index";
 import {
-    PostRecipeRequestFromJSON,
-    PostRecipeRequestToJSON,
+    RecipePostRequestFromJSON,
+    RecipePostRequestToJSON,
     RecipeResponseFromJSON,
     RecipeResponseToJSON,
 } from "../models/index";
@@ -26,7 +26,7 @@ export interface ApiRecipesIdDeleteRequest {
 }
 
 export interface ApiRecipesPostRequest {
-    postRecipeRequest?: PostRecipeRequest;
+    recipePostRequest?: RecipePostRequest;
 }
 
 /**
@@ -71,7 +71,7 @@ export interface RecipesApiInterface {
 
     /**
      *
-     * @param {PostRecipeRequest} [postRecipeRequest]
+     * @param {RecipePostRequest} [recipePostRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof RecipesApiInterface
@@ -186,7 +186,7 @@ export class RecipesApi extends runtime.BaseAPI implements RecipesApiInterface {
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: PostRecipeRequestToJSON(requestParameters["postRecipeRequest"]),
+                body: RecipePostRequestToJSON(requestParameters["recipePostRequest"]),
             },
             initOverrides,
         );

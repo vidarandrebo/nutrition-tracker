@@ -1,8 +1,8 @@
 import { defineStore } from "pinia";
 import { Recipe } from "../Models/Recipes/Recipe.ts";
 import { ref } from "vue";
-import type { RecipeRequest } from "../Models/Recipes/Requests.ts";
 import { Failure, type Result, Success } from "../Utilities/tryCatch.ts";
+import type { RecipePostRequest } from "../Gen";
 
 export const useRecipeStore = defineStore("recipeStore", () => {
     const collection = ref<Recipe[]>([]);
@@ -20,7 +20,7 @@ export const useRecipeStore = defineStore("recipeStore", () => {
         }
     }
 
-    async function addRecipe(recipe: RecipeRequest) {
+    async function addRecipe(recipe: RecipePostRequest) {
         const newRecipe = await Recipe.add(recipe);
         if (newRecipe) {
             collection.value.push(newRecipe);

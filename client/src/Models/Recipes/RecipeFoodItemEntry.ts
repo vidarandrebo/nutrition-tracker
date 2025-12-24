@@ -1,6 +1,6 @@
-import type { RecipeEntryResponse } from "../../Gen";
+import type { RecipeFoodItemEntryEntryResponse } from "../../Gen";
 
-export class RecipeEntry {
+export class RecipeFoodItemEntry {
     id: number;
     amount: number;
     foodItemId: number;
@@ -11,8 +11,8 @@ export class RecipeEntry {
         this.foodItemId = 0;
     }
 
-    static fromResponse(request: RecipeEntryResponse): RecipeEntry {
-        const r = new RecipeEntry();
+    static fromResponse(request: RecipeFoodItemEntryEntryResponse): RecipeFoodItemEntry {
+        const r = new RecipeFoodItemEntry();
         r.id = request.id;
         r.amount = request.amount;
         r.foodItemId = request.foodItemId;

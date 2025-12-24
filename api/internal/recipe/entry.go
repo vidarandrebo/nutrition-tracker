@@ -17,8 +17,8 @@ func (e *Entry) FoodItemIDOrNil() any {
 	return e.FoodItemID
 }
 
-func (e *Entry) ToResponse() api.RecipeEntryResponse {
-	return api.RecipeEntryResponse{
+func (e *Entry) ToResponse() api.RecipeFoodItemEntryEntryResponse {
+	return api.RecipeFoodItemEntryEntryResponse{
 		Id:         e.ID,
 		Amount:     e.Amount,
 		FoodItemId: e.FoodItemID,

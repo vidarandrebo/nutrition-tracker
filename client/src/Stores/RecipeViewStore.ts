@@ -9,7 +9,7 @@ export const useRecipeViewStore = defineStore("recipeViewStore", () => {
     const foodItemStore = useFoodItemStore();
     const recipesView = computed(() => {
         return recipeStore.collection.map((r): RecipeView => {
-            const entries = r.entries.map((e): RecipeEntryView => {
+            const entries = r.foodItemEntries.map((e): RecipeEntryView => {
                 const fi = foodItemStore.getFoodItem(e.foodItemId);
                 return new RecipeEntryView(
                     e.id,
@@ -30,7 +30,7 @@ export const useRecipeViewStore = defineStore("recipeViewStore", () => {
         if (!recipe) {
             return undefined;
         }
-        const entries = recipe.entries.map((e): RecipeEntryView => {
+        const entries = recipe.foodItemEntries.map((e): RecipeEntryView => {
             const fi = foodItemStore.getFoodItem(e.foodItemId);
             return new RecipeEntryView(
                 e.id,

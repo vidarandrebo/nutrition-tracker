@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed, ref } from "vue";
-import type { RecipeRequest } from "../../Models/Recipes/Requests.ts";
 import InputText from "../../Components/Forms/InputText.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import HeaderH2 from "../../Components/Headings/HeaderH2.vue";
@@ -12,8 +11,9 @@ import { useRecipeStore } from "../../Stores/RecipeStore.ts";
 import router from "../../Router.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import FormField from "../../Components/Forms/FormField.vue";
+import type { RecipePostRequest } from "../../Gen";
 
-const item = ref<RecipeRequest>({ name: "", entries: [] });
+const item = ref<RecipePostRequest>({ name: "", foodItemEntries: [] });
 const showFoodItemSelector = ref<boolean>(false);
 const recipeStore = useRecipeStore();
 const foodItemStore = useFoodItemStore();
@@ -23,7 +23,7 @@ function addEntry() {
 }
 
 function onFoodItemSelected(id: number) {
-    item.value.entries.push({ amount: 100, foodItemId: id });
+    item.value.foodItemEntries.push({ amount: 100, foodItemId: id });
     showFoodItemSelector.value = false;
 }
 
@@ -33,7 +33,7 @@ async function submit() {
 }
 
 const saveEnabled = computed((): boolean => {
-    return item.value.name !== "" && item.value.entries.length > 0;
+    return item.value.name !== "" && item.value.foodItemEntries.length > 0;
 });
 const saveHelpText = computed((): string => {
     return "Recipe needs to have a name and have at least one foodItem";
@@ -61,7 +61,7 @@ const saveHelpText = computed((): string => {
             @select="onFoodItemSelected"
             @cancel="showFoodItemSelector = false"
         ></FoodItemSelector>
-        <template v-for="(entry, i) in item.entries" v-else :key="i">
+        <template v-for="(entry, i) in item.foodItemEntries" v-else :key="i">
             <div class="box is-flex is-flex-direction-row is-justify-content-space-between">
                 <LabelPrimary>
                     FoodItem

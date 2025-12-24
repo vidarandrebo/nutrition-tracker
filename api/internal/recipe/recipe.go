@@ -16,14 +16,14 @@ func NewRecipe() *Recipe {
 }
 
 func (r *Recipe) ToResponse() api.RecipeResponse {
-	entries := make([]api.RecipeEntryResponse, 0, len(r.FoodItemEntries))
+	entries := make([]api.RecipeFoodItemEntryEntryResponse, 0, len(r.FoodItemEntries))
 	for _, e := range r.FoodItemEntries {
 		entries = append(entries, e.ToResponse())
 	}
 	return api.RecipeResponse{
-		Id:      r.ID,
-		Name:    r.Name,
-		Entries: entries,
+		Id:              r.ID,
+		Name:            r.Name,
+		FoodItemEntries: entries,
 	}
 }
 

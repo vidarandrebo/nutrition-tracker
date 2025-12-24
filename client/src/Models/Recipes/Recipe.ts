@@ -1,18 +1,17 @@
-import { RecipeEntry } from "./RecipeEntry.ts";
-import type { RecipeRequest } from "./Requests.ts";
-import type { RecipeResponse } from "../../Gen";
+import { RecipeFoodItemEntry } from "./RecipeFoodItemEntry.ts";
+import type { RecipePostRequest, RecipeResponse } from "../../Gen";
 import { getRecipesClient } from "../Api.ts";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
 
 export class Recipe {
     id: number;
     name: string;
-    entries: RecipeEntry[];
+    foodItemEntries: RecipeFoodItemEntry[];
 
     constructor() {
         this.id = 0;
         this.name = "";
-        this.entries = [];
+        this.foodItemEntries = [];
     }
 
     static fromResponses(responses: RecipeResponse[]): Recipe[] {
@@ -21,16 +20,16 @@ export class Recipe {
 
     static fromResponse(response: RecipeResponse): Recipe {
         const r = new Recipe();
-        r.entries = response.entries.map((e) => RecipeEntry.fromResponse(e));
+        r.foodItemEntries = response.foodItemEntries.map((e) => RecipeFoodItemEntry.fromResponse(e));
         r.id = response.id;
         r.name = response.name;
         return r;
     }
 
-    static async add(request: RecipeRequest): Promise<Recipe | null> {
+    static async add(request: RecipePostRequest): Promise<Recipe | null> {
         const client = getRecipesClient();
         try {
-            const response = await client.apiRecipesPost({ postRecipeRequest: request });
+            const response = await client.apiRecipesPost({ recipePostRequest: request });
             return Recipe.fromResponse(response);
         } catch {
             console.log("an error occurred");

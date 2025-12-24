@@ -21,7 +21,7 @@ async function postFoodItem() {
     const client = getFoodItemsClient();
 
     try {
-        const response = await client.apiFoodItemsPost({ postFoodItemRequest: formModel });
+        const response = await client.apiFoodItemsPost({ foodItemPostRequest: formModel });
         const foodItem = FoodItem.fromResponse(response);
         foodItemStore.collection.push(foodItem);
         await router.push("/food-items");
