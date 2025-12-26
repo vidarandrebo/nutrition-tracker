@@ -110,6 +110,8 @@ export const useMealStore = defineStore("meals", () => {
 
     return {
         addMeal,
+        addFoodItemEntry,
+        addRecipeEntry,
         clear,
         collection,
         getMeal,

@@ -4,12 +4,12 @@ import type { MealFoodItemEntryPostRequest, MealFoodItemEntryResponse } from "..
 
 export class MealFoodItemEntry {
     id: number;
-    foodItemId: number | null;
+    foodItemId: number;
     amount: number;
 
     constructor() {
         this.id = 0;
-        this.foodItemId = null;
+        this.foodItemId = 0;
         this.amount = 0;
     }
 

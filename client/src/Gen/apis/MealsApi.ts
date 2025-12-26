@@ -70,9 +70,19 @@ export interface ApiMealsIdRecipeEntriesPostRequest {
     mealRecipeEntryPostRequest?: MealRecipeEntryPostRequest;
 }
 
-export interface ApiMealsMealIdEntriesEntryIdDeleteRequest {
+export interface ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest {
     mealId: number;
-    entryId: number;
+    foodItemEntryId: number;
+}
+
+export interface ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest {
+    mealId: number;
+    macronutrientEntryId: number;
+}
+
+export interface ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest {
+    mealId: number;
+    recipeEntryId: number;
 }
 
 export interface ApiMealsPostRequest {
@@ -208,20 +218,60 @@ export interface MealsApiInterface {
     /**
      *
      * @param {number} mealId
-     * @param {number} entryId
+     * @param {number} foodItemEntryId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MealsApiInterface
      */
-    apiMealsMealIdEntriesEntryIdDeleteRaw(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    apiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    apiMealsMealIdEntriesEntryIdDelete(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
+     * @param {number} mealId
+     * @param {number} macronutrientEntryId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
+     * @param {number} mealId
+     * @param {number} recipeEntryId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    apiMealsMealIdRecipeEntriesRecipeEntryIdDelete(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void>;
 
@@ -519,21 +569,21 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
 
     /**
      */
-    async apiMealsMealIdEntriesEntryIdDeleteRaw(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    async apiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>> {
         if (requestParameters["mealId"] == null) {
             throw new runtime.RequiredError(
                 "mealId",
-                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdEntriesEntryIdDelete().',
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete().',
             );
         }
 
-        if (requestParameters["entryId"] == null) {
+        if (requestParameters["foodItemEntryId"] == null) {
             throw new runtime.RequiredError(
-                "entryId",
-                'Required parameter "entryId" was null or undefined when calling apiMealsMealIdEntriesEntryIdDelete().',
+                "foodItemEntryId",
+                'Required parameter "foodItemEntryId" was null or undefined when calling apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete().',
             );
         }
 
@@ -541,9 +591,12 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        let urlPath = `/api/meals/{mealId}/entries/{entryId}`;
-        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
-        urlPath = urlPath.replace(`{${"entryId"}}`, encodeURIComponent(String(requestParameters["entryId"])));
+        let urlPath = `/api/meals/{meal-id}/food-item-entries/{food-item-entry-id}`;
+        urlPath = urlPath.replace(`{${"meal-id"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+        urlPath = urlPath.replace(
+            `{${"food-item-entry-id"}}`,
+            encodeURIComponent(String(requestParameters["foodItemEntryId"])),
+        );
 
         const response = await this.request(
             {
@@ -560,11 +613,117 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
 
     /**
      */
-    async apiMealsMealIdEntriesEntryIdDelete(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    async apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void> {
-        await this.apiMealsMealIdEntriesEntryIdDeleteRaw(requestParameters, initOverrides);
+        await this.apiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete().',
+            );
+        }
+
+        if (requestParameters["macronutrientEntryId"] == null) {
+            throw new runtime.RequiredError(
+                "macronutrientEntryId",
+                'Required parameter "macronutrientEntryId" was null or undefined when calling apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        let urlPath = `/api/meals/{meal-id}/macronutrient-entries/{macronutrient-entry-id}`;
+        urlPath = urlPath.replace(`{${"meal-id"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+        urlPath = urlPath.replace(
+            `{${"macronutrient-entry-id"}}`,
+            encodeURIComponent(String(requestParameters["macronutrientEntryId"])),
+        );
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "DELETE",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdRecipeEntriesRecipeEntryIdDelete().',
+            );
+        }
+
+        if (requestParameters["recipeEntryId"] == null) {
+            throw new runtime.RequiredError(
+                "recipeEntryId",
+                'Required parameter "recipeEntryId" was null or undefined when calling apiMealsMealIdRecipeEntriesRecipeEntryIdDelete().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        let urlPath = `/api/meals/{mealId}/recipe-entries/{recipe-entry-id}`;
+        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+        urlPath = urlPath.replace(
+            `{${"recipe-entry-id"}}`,
+            encodeURIComponent(String(requestParameters["recipeEntryId"])),
+        );
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "DELETE",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiMealsMealIdRecipeEntriesRecipeEntryIdDelete(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.apiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**

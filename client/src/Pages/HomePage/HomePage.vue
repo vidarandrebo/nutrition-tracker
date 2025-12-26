@@ -19,7 +19,7 @@ const foodItemStore = useFoodItemStore();
 const mealViewStore = useMealViewStore();
 
 const foodItemIds = computed(() => [
-    ...new Set(mealStore.mealsForDay.flatMap((m) => m.entries).map((f) => f.foodItemId)),
+    ...new Set(mealStore.mealsForDay.flatMap((m) => m.foodItemEntries).map((f) => f.foodItemId)),
 ]);
 onMounted(async () => {
     await mealStore.loadMealsForDay();

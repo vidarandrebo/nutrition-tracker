@@ -387,8 +387,14 @@ type ClientInterface interface {
 
 	PostApiMealsIdRecipeEntries(ctx context.Context, id int64, body PostApiMealsIdRecipeEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*http.Response, error)
 
-	// DeleteApiMealsMealIdEntriesEntryId request
-	DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+	// DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId request
+	DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(ctx context.Context, mealId int64, foodItemEntryId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId request
+	DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(ctx context.Context, mealId int64, macronutrientEntryId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
+
+	// DeleteApiMealsMealIdRecipeEntriesRecipeEntryId request
+	DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(ctx context.Context, mealId int64, recipeEntryId int64, reqEditors ...RequestEditorFn) (*http.Response, error)
 
 	// GetApiRecipes request
 	GetApiRecipes(ctx context.Context, reqEditors ...RequestEditorFn) (*http.Response, error)
@@ -671,8 +677,32 @@ func (c *Client) PostApiMealsIdRecipeEntries(ctx context.Context, id int64, body
 	return c.Client.Do(req)
 }
 
-func (c *Client) DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
-	req, err := NewDeleteApiMealsMealIdEntriesEntryIdRequest(c.Server, mealId, entryId)
+func (c *Client) DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(ctx context.Context, mealId int64, foodItemEntryId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequest(c.Server, mealId, foodItemEntryId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(ctx context.Context, mealId int64, macronutrientEntryId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequest(c.Server, mealId, macronutrientEntryId)
+	if err != nil {
+		return nil, err
+	}
+	req = req.WithContext(ctx)
+	if err := c.applyEditors(ctx, req, reqEditors); err != nil {
+		return nil, err
+	}
+	return c.Client.Do(req)
+}
+
+func (c *Client) DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(ctx context.Context, mealId int64, recipeEntryId int64, reqEditors ...RequestEditorFn) (*http.Response, error) {
+	req, err := NewDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequest(c.Server, mealId, recipeEntryId)
 	if err != nil {
 		return nil, err
 	}
@@ -1334,8 +1364,90 @@ func NewPostApiMealsIdRecipeEntriesRequestWithBody(server string, id int64, cont
 	return req, nil
 }
 
-// NewDeleteApiMealsMealIdEntriesEntryIdRequest generates requests for DeleteApiMealsMealIdEntriesEntryId
-func NewDeleteApiMealsMealIdEntriesEntryIdRequest(server string, mealId int64, entryId int64) (*http.Request, error) {
+// NewDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequest generates requests for DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId
+func NewDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequest(server string, mealId int64, foodItemEntryId int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "meal-id", runtime.ParamLocationPath, mealId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "food-item-entry-id", runtime.ParamLocationPath, foodItemEntryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals/%s/food-item-entries/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequest generates requests for DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId
+func NewDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequest(server string, mealId int64, macronutrientEntryId int64) (*http.Request, error) {
+	var err error
+
+	var pathParam0 string
+
+	pathParam0, err = runtime.StyleParamWithLocation("simple", false, "meal-id", runtime.ParamLocationPath, mealId)
+	if err != nil {
+		return nil, err
+	}
+
+	var pathParam1 string
+
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "macronutrient-entry-id", runtime.ParamLocationPath, macronutrientEntryId)
+	if err != nil {
+		return nil, err
+	}
+
+	serverURL, err := url.Parse(server)
+	if err != nil {
+		return nil, err
+	}
+
+	operationPath := fmt.Sprintf("/api/meals/%s/macronutrient-entries/%s", pathParam0, pathParam1)
+	if operationPath[0] == '/' {
+		operationPath = "." + operationPath
+	}
+
+	queryURL, err := serverURL.Parse(operationPath)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequest("DELETE", queryURL.String(), nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return req, nil
+}
+
+// NewDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequest generates requests for DeleteApiMealsMealIdRecipeEntriesRecipeEntryId
+func NewDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequest(server string, mealId int64, recipeEntryId int64) (*http.Request, error) {
 	var err error
 
 	var pathParam0 string
@@ -1347,7 +1459,7 @@ func NewDeleteApiMealsMealIdEntriesEntryIdRequest(server string, mealId int64, e
 
 	var pathParam1 string
 
-	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "entryId", runtime.ParamLocationPath, entryId)
+	pathParam1, err = runtime.StyleParamWithLocation("simple", false, "recipe-entry-id", runtime.ParamLocationPath, recipeEntryId)
 	if err != nil {
 		return nil, err
 	}
@@ -1357,7 +1469,7 @@ func NewDeleteApiMealsMealIdEntriesEntryIdRequest(server string, mealId int64, e
 		return nil, err
 	}
 
-	operationPath := fmt.Sprintf("/api/meals/%s/entries/%s", pathParam0, pathParam1)
+	operationPath := fmt.Sprintf("/api/meals/%s/recipe-entries/%s", pathParam0, pathParam1)
 	if operationPath[0] == '/' {
 		operationPath = "." + operationPath
 	}
@@ -1617,8 +1729,14 @@ type ClientWithResponsesInterface interface {
 
 	PostApiMealsIdRecipeEntriesWithResponse(ctx context.Context, id int64, body PostApiMealsIdRecipeEntriesJSONRequestBody, reqEditors ...RequestEditorFn) (*PostApiMealsIdRecipeEntriesResponse, error)
 
-	// DeleteApiMealsMealIdEntriesEntryIdWithResponse request
-	DeleteApiMealsMealIdEntriesEntryIdWithResponse(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdEntriesEntryIdResponse, error)
+	// DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdWithResponse request
+	DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdWithResponse(ctx context.Context, mealId int64, foodItemEntryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse, error)
+
+	// DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdWithResponse request
+	DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdWithResponse(ctx context.Context, mealId int64, macronutrientEntryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse, error)
+
+	// DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdWithResponse request
+	DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdWithResponse(ctx context.Context, mealId int64, recipeEntryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse, error)
 
 	// GetApiRecipesWithResponse request
 	GetApiRecipesWithResponse(ctx context.Context, reqEditors ...RequestEditorFn) (*GetApiRecipesResponse, error)
@@ -1943,13 +2061,13 @@ func (r PostApiMealsIdRecipeEntriesResponse) StatusCode() int {
 	return 0
 }
 
-type DeleteApiMealsMealIdEntriesEntryIdResponse struct {
+type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 }
 
 // Status returns HTTPResponse.Status
-func (r DeleteApiMealsMealIdEntriesEntryIdResponse) Status() string {
+func (r DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse) Status() string {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.Status
 	}
@@ -1957,7 +2075,49 @@ func (r DeleteApiMealsMealIdEntriesEntryIdResponse) Status() string {
 }
 
 // StatusCode returns HTTPResponse.StatusCode
-func (r DeleteApiMealsMealIdEntriesEntryIdResponse) StatusCode() int {
+func (r DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse) StatusCode() int {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.StatusCode
+	}
+	return 0
+}
+
+type DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse struct {
+	Body         []byte
+	HTTPResponse *http.Response
+}
+
+// Status returns HTTPResponse.Status
+func (r DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse) Status() string {
+	if r.HTTPResponse != nil {
+		return r.HTTPResponse.Status
+	}
+	return http.StatusText(0)
+}
+
+// StatusCode returns HTTPResponse.StatusCode
+func (r DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse) StatusCode() int {
 	if r.HTTPResponse != nil {
 		return r.HTTPResponse.StatusCode
 	}
@@ -2240,13 +2400,31 @@ func (c *ClientWithResponses) PostApiMealsIdRecipeEntriesWithResponse(ctx contex
 	return ParsePostApiMealsIdRecipeEntriesResponse(rsp)
 }
 
-// DeleteApiMealsMealIdEntriesEntryIdWithResponse request returning *DeleteApiMealsMealIdEntriesEntryIdResponse
-func (c *ClientWithResponses) DeleteApiMealsMealIdEntriesEntryIdWithResponse(ctx context.Context, mealId int64, entryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdEntriesEntryIdResponse, error) {
-	rsp, err := c.DeleteApiMealsMealIdEntriesEntryId(ctx, mealId, entryId, reqEditors...)
+// DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdWithResponse request returning *DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse
+func (c *ClientWithResponses) DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdWithResponse(ctx context.Context, mealId int64, foodItemEntryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse, error) {
+	rsp, err := c.DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(ctx, mealId, foodItemEntryId, reqEditors...)
 	if err != nil {
 		return nil, err
 	}
-	return ParseDeleteApiMealsMealIdEntriesEntryIdResponse(rsp)
+	return ParseDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(rsp)
+}
+
+// DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdWithResponse request returning *DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse
+func (c *ClientWithResponses) DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdWithResponse(ctx context.Context, mealId int64, macronutrientEntryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse, error) {
+	rsp, err := c.DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(ctx, mealId, macronutrientEntryId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(rsp)
+}
+
+// DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdWithResponse request returning *DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse
+func (c *ClientWithResponses) DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdWithResponse(ctx context.Context, mealId int64, recipeEntryId int64, reqEditors ...RequestEditorFn) (*DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse, error) {
+	rsp, err := c.DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(ctx, mealId, recipeEntryId, reqEditors...)
+	if err != nil {
+		return nil, err
+	}
+	return ParseDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(rsp)
 }
 
 // GetApiRecipesWithResponse request returning *GetApiRecipesResponse
@@ -2633,15 +2811,47 @@ func ParsePostApiMealsIdRecipeEntriesResponse(rsp *http.Response) (*PostApiMeals
 	return response, nil
 }
 
-// ParseDeleteApiMealsMealIdEntriesEntryIdResponse parses an HTTP response from a DeleteApiMealsMealIdEntriesEntryIdWithResponse call
-func ParseDeleteApiMealsMealIdEntriesEntryIdResponse(rsp *http.Response) (*DeleteApiMealsMealIdEntriesEntryIdResponse, error) {
+// ParseDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse parses an HTTP response from a DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdWithResponse call
+func ParseDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(rsp *http.Response) (*DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse, error) {
 	bodyBytes, err := io.ReadAll(rsp.Body)
 	defer func() { _ = rsp.Body.Close() }()
 	if err != nil {
 		return nil, err
 	}
 
-	response := &DeleteApiMealsMealIdEntriesEntryIdResponse{
+	response := &DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse parses an HTTP response from a DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdWithResponse call
+func ParseDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(rsp *http.Response) (*DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse{
+		Body:         bodyBytes,
+		HTTPResponse: rsp,
+	}
+
+	return response, nil
+}
+
+// ParseDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse parses an HTTP response from a DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdWithResponse call
+func ParseDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(rsp *http.Response) (*DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse, error) {
+	bodyBytes, err := io.ReadAll(rsp.Body)
+	defer func() { _ = rsp.Body.Close() }()
+	if err != nil {
+		return nil, err
+	}
+
+	response := &DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
 	}
@@ -2775,8 +2985,14 @@ type ServerInterface interface {
 	// (POST /api/meals/{id}/recipe-entries)
 	PostApiMealsIdRecipeEntries(w http.ResponseWriter, r *http.Request, id int64)
 
-	// (DELETE /api/meals/{mealId}/entries/{entryId})
-	DeleteApiMealsMealIdEntriesEntryId(w http.ResponseWriter, r *http.Request, mealId int64, entryId int64)
+	// (DELETE /api/meals/{meal-id}/food-item-entries/{food-item-entry-id})
+	DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(w http.ResponseWriter, r *http.Request, mealId int64, foodItemEntryId int64)
+
+	// (DELETE /api/meals/{meal-id}/macronutrient-entries/{macronutrient-entry-id})
+	DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(w http.ResponseWriter, r *http.Request, mealId int64, macronutrientEntryId int64)
+
+	// (DELETE /api/meals/{mealId}/recipe-entries/{recipe-entry-id})
+	DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(w http.ResponseWriter, r *http.Request, mealId int64, recipeEntryId int64)
 
 	// (GET /api/recipes)
 	GetApiRecipes(w http.ResponseWriter, r *http.Request)
@@ -3102,8 +3318,74 @@ func (siw *ServerInterfaceWrapper) PostApiMealsIdRecipeEntries(w http.ResponseWr
 	handler.ServeHTTP(w, r)
 }
 
-// DeleteApiMealsMealIdEntriesEntryId operation middleware
-func (siw *ServerInterfaceWrapper) DeleteApiMealsMealIdEntriesEntryId(w http.ResponseWriter, r *http.Request) {
+// DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId operation middleware
+func (siw *ServerInterfaceWrapper) DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	// ------------- Path parameter "meal-id" -------------
+	var mealId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "meal-id", r.PathValue("meal-id"), &mealId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "meal-id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "food-item-entry-id" -------------
+	var foodItemEntryId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "food-item-entry-id", r.PathValue("food-item-entry-id"), &foodItemEntryId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "food-item-entry-id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(w, r, mealId, foodItemEntryId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId operation middleware
+func (siw *ServerInterfaceWrapper) DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(w http.ResponseWriter, r *http.Request) {
+	var err error
+
+	// ------------- Path parameter "meal-id" -------------
+	var mealId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "meal-id", r.PathValue("meal-id"), &mealId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "meal-id", Err: err})
+		return
+	}
+
+	// ------------- Path parameter "macronutrient-entry-id" -------------
+	var macronutrientEntryId int64
+
+	err = runtime.BindStyledParameterWithOptions("simple", "macronutrient-entry-id", r.PathValue("macronutrient-entry-id"), &macronutrientEntryId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	if err != nil {
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "macronutrient-entry-id", Err: err})
+		return
+	}
+
+	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		siw.Handler.DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(w, r, mealId, macronutrientEntryId)
+	}))
+
+	for _, middleware := range siw.HandlerMiddlewares {
+		handler = middleware(handler)
+	}
+
+	handler.ServeHTTP(w, r)
+}
+
+// DeleteApiMealsMealIdRecipeEntriesRecipeEntryId operation middleware
+func (siw *ServerInterfaceWrapper) DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	// ------------- Path parameter "mealId" -------------
@@ -3115,17 +3397,17 @@ func (siw *ServerInterfaceWrapper) DeleteApiMealsMealIdEntriesEntryId(w http.Res
 		return
 	}
 
-	// ------------- Path parameter "entryId" -------------
-	var entryId int64
+	// ------------- Path parameter "recipe-entry-id" -------------
+	var recipeEntryId int64
 
-	err = runtime.BindStyledParameterWithOptions("simple", "entryId", r.PathValue("entryId"), &entryId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
+	err = runtime.BindStyledParameterWithOptions("simple", "recipe-entry-id", r.PathValue("recipe-entry-id"), &recipeEntryId, runtime.BindStyledParameterOptions{ParamLocation: runtime.ParamLocationPath, Explode: false, Required: true})
 	if err != nil {
-		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "entryId", Err: err})
+		siw.ErrorHandlerFunc(w, r, &InvalidParamFormatError{ParamName: "recipe-entry-id", Err: err})
 		return
 	}
 
 	handler := http.Handler(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		siw.Handler.DeleteApiMealsMealIdEntriesEntryId(w, r, mealId, entryId)
+		siw.Handler.DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(w, r, mealId, recipeEntryId)
 	}))
 
 	for _, middleware := range siw.HandlerMiddlewares {
@@ -3332,7 +3614,9 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	m.HandleFunc("POST "+options.BaseURL+"/api/meals/{id}/food-item-entries", wrapper.PostApiMealsIdFoodItemEntries)
 	m.HandleFunc("POST "+options.BaseURL+"/api/meals/{id}/macronutrient-entries", wrapper.PostApiMealsIdMacronutrientEntries)
 	m.HandleFunc("POST "+options.BaseURL+"/api/meals/{id}/recipe-entries", wrapper.PostApiMealsIdRecipeEntries)
-	m.HandleFunc("DELETE "+options.BaseURL+"/api/meals/{mealId}/entries/{entryId}", wrapper.DeleteApiMealsMealIdEntriesEntryId)
+	m.HandleFunc("DELETE "+options.BaseURL+"/api/meals/{meal-id}/food-item-entries/{food-item-entry-id}", wrapper.DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId)
+	m.HandleFunc("DELETE "+options.BaseURL+"/api/meals/{meal-id}/macronutrient-entries/{macronutrient-entry-id}", wrapper.DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId)
+	m.HandleFunc("DELETE "+options.BaseURL+"/api/meals/{mealId}/recipe-entries/{recipe-entry-id}", wrapper.DeleteApiMealsMealIdRecipeEntriesRecipeEntryId)
 	m.HandleFunc("GET "+options.BaseURL+"/api/recipes", wrapper.GetApiRecipes)
 	m.HandleFunc("POST "+options.BaseURL+"/api/recipes", wrapper.PostApiRecipes)
 	m.HandleFunc("DELETE "+options.BaseURL+"/api/recipes/{id}", wrapper.DeleteApiRecipesId)
@@ -3599,18 +3883,50 @@ func (response PostApiMealsIdRecipeEntries201JSONResponse) VisitPostApiMealsIdRe
 	return json.NewEncoder(w).Encode(response)
 }
 
-type DeleteApiMealsMealIdEntriesEntryIdRequestObject struct {
-	MealId  int64 `json:"mealId"`
-	EntryId int64 `json:"entryId"`
+type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequestObject struct {
+	MealId          int64 `json:"meal-id"`
+	FoodItemEntryId int64 `json:"food-item-entry-id"`
 }
 
-type DeleteApiMealsMealIdEntriesEntryIdResponseObject interface {
-	VisitDeleteApiMealsMealIdEntriesEntryIdResponse(w http.ResponseWriter) error
+type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponseObject interface {
+	VisitDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(w http.ResponseWriter) error
 }
 
-type DeleteApiMealsMealIdEntriesEntryId204Response struct{}
+type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId204Response struct{}
 
-func (response DeleteApiMealsMealIdEntriesEntryId204Response) VisitDeleteApiMealsMealIdEntriesEntryIdResponse(w http.ResponseWriter) error {
+func (response DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId204Response) VisitDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequestObject struct {
+	MealId               int64 `json:"meal-id"`
+	MacronutrientEntryId int64 `json:"macronutrient-entry-id"`
+}
+
+type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponseObject interface {
+	VisitDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(w http.ResponseWriter) error
+}
+
+type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId204Response struct{}
+
+func (response DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId204Response) VisitDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(w http.ResponseWriter) error {
+	w.WriteHeader(204)
+	return nil
+}
+
+type DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequestObject struct {
+	MealId        int64 `json:"mealId"`
+	RecipeEntryId int64 `json:"recipe-entry-id"`
+}
+
+type DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponseObject interface {
+	VisitDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(w http.ResponseWriter) error
+}
+
+type DeleteApiMealsMealIdRecipeEntriesRecipeEntryId204Response struct{}
+
+func (response DeleteApiMealsMealIdRecipeEntriesRecipeEntryId204Response) VisitDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
 }
@@ -3728,8 +4044,14 @@ type StrictServerInterface interface {
 	// (POST /api/meals/{id}/recipe-entries)
 	PostApiMealsIdRecipeEntries(ctx context.Context, request PostApiMealsIdRecipeEntriesRequestObject) (PostApiMealsIdRecipeEntriesResponseObject, error)
 
-	// (DELETE /api/meals/{mealId}/entries/{entryId})
-	DeleteApiMealsMealIdEntriesEntryId(ctx context.Context, request DeleteApiMealsMealIdEntriesEntryIdRequestObject) (DeleteApiMealsMealIdEntriesEntryIdResponseObject, error)
+	// (DELETE /api/meals/{meal-id}/food-item-entries/{food-item-entry-id})
+	DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(ctx context.Context, request DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequestObject) (DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponseObject, error)
+
+	// (DELETE /api/meals/{meal-id}/macronutrient-entries/{macronutrient-entry-id})
+	DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(ctx context.Context, request DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequestObject) (DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponseObject, error)
+
+	// (DELETE /api/meals/{mealId}/recipe-entries/{recipe-entry-id})
+	DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(ctx context.Context, request DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequestObject) (DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponseObject, error)
 
 	// (GET /api/recipes)
 	GetApiRecipes(ctx context.Context, request GetApiRecipesRequestObject) (GetApiRecipesResponseObject, error)
@@ -4187,26 +4509,80 @@ func (sh *strictHandler) PostApiMealsIdRecipeEntries(w http.ResponseWriter, r *h
 	}
 }
 
-// DeleteApiMealsMealIdEntriesEntryId operation middleware
-func (sh *strictHandler) DeleteApiMealsMealIdEntriesEntryId(w http.ResponseWriter, r *http.Request, mealId int64, entryId int64) {
-	var request DeleteApiMealsMealIdEntriesEntryIdRequestObject
+// DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId operation middleware
+func (sh *strictHandler) DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(w http.ResponseWriter, r *http.Request, mealId int64, foodItemEntryId int64) {
+	var request DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequestObject
 
 	request.MealId = mealId
-	request.EntryId = entryId
+	request.FoodItemEntryId = foodItemEntryId
 
 	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
-		return sh.ssi.DeleteApiMealsMealIdEntriesEntryId(ctx, request.(DeleteApiMealsMealIdEntriesEntryIdRequestObject))
+		return sh.ssi.DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(ctx, request.(DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequestObject))
 	}
 	for _, middleware := range sh.middlewares {
-		handler = middleware(handler, "DeleteApiMealsMealIdEntriesEntryId")
+		handler = middleware(handler, "DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId")
 	}
 
 	response, err := handler(r.Context(), w, r, request)
 
 	if err != nil {
 		sh.options.ResponseErrorHandlerFunc(w, r, err)
-	} else if validResponse, ok := response.(DeleteApiMealsMealIdEntriesEntryIdResponseObject); ok {
-		if err := validResponse.VisitDeleteApiMealsMealIdEntriesEntryIdResponse(w); err != nil {
+	} else if validResponse, ok := response.(DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponseObject); ok {
+		if err := validResponse.VisitDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId operation middleware
+func (sh *strictHandler) DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(w http.ResponseWriter, r *http.Request, mealId int64, macronutrientEntryId int64) {
+	var request DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequestObject
+
+	request.MealId = mealId
+	request.MacronutrientEntryId = macronutrientEntryId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(ctx, request.(DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponseObject); ok {
+		if err := validResponse.VisitDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(w); err != nil {
+			sh.options.ResponseErrorHandlerFunc(w, r, err)
+		}
+	} else if response != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, fmt.Errorf("unexpected response type: %T", response))
+	}
+}
+
+// DeleteApiMealsMealIdRecipeEntriesRecipeEntryId operation middleware
+func (sh *strictHandler) DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(w http.ResponseWriter, r *http.Request, mealId int64, recipeEntryId int64) {
+	var request DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequestObject
+
+	request.MealId = mealId
+	request.RecipeEntryId = recipeEntryId
+
+	handler := func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (interface{}, error) {
+		return sh.ssi.DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(ctx, request.(DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequestObject))
+	}
+	for _, middleware := range sh.middlewares {
+		handler = middleware(handler, "DeleteApiMealsMealIdRecipeEntriesRecipeEntryId")
+	}
+
+	response, err := handler(r.Context(), w, r, request)
+
+	if err != nil {
+		sh.options.ResponseErrorHandlerFunc(w, r, err)
+	} else if validResponse, ok := response.(DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponseObject); ok {
+		if err := validResponse.VisitDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(w); err != nil {
 			sh.options.ResponseErrorHandlerFunc(w, r, err)
 		}
 	} else if response != nil {

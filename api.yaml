@@ -292,7 +292,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealFoodItemEntryResponse"
           description: Meals entry that was added
-  /api/meals/{mealId}/entries/{entryId}:
+
+  /api/meals/{mealId}/recipe-entries/{recipe-entry-id}:
     delete:
       tags:
         - Meals
@@ -303,7 +304,49 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: entryId
+        - name: recipe-entry-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Meals entry is deleted
+
+  /api/meals/{meal-id}/food-item-entries/{food-item-entry-id}:
+    delete:
+      tags:
+        - Meals
+      parameters:
+        - name: meal-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: food-item-entry-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        204:
+          description: Meals entry is deleted
+
+  /api/meals/{meal-id}/macronutrient-entries/{macronutrient-entry-id}:
+    delete:
+      tags:
+        - Meals
+      parameters:
+        - name: meal-id
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: macronutrient-entry-id
           in: path
           required: true
           schema:
@@ -517,7 +560,7 @@ components:
         - $ref: "#/components/schemas/WithId"
         - $ref: "#/components/schemas/WithEnergy"
         - $ref: "#/components/schemas/WithSequenceNumber"
-        - properties: {}
+        - properties: { }
 
     MealResponse:
       type: object

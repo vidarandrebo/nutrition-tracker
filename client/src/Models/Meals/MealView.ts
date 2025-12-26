@@ -15,6 +15,7 @@ export class MealView {
 export enum EntryType {
     FoodItem,
     Recipe,
+    Macronutrient,
 }
 
 export class MealEntryView extends EnergyView {
