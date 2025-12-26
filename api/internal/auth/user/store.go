@@ -29,7 +29,9 @@ func NewRepository(db *sql.DB, log *slog.Logger) *Repository {
 func (s *Repository) Add(item TableUser) (TableUser, error) {
 	scanErr := s.db.QueryRow(`
 		INSERT INTO users(name, email, password_hash) 
-		VALUES ($1, $2, $3)`,
+		VALUES ($1, $2, $3)
+		RETURNING id
+		`,
 		item.Name, item.Email, item.PasswordHash,
 	).Scan(&item.ID)
 

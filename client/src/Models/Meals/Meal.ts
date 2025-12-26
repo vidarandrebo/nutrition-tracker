@@ -1,21 +1,23 @@
-import { MealEntry } from "./MealEntry.ts";
+import { MealRecipeEntry } from "./MealRecipeEntry.ts";
 import { addDays, isToday, startOfDay } from "../../Utilities/Date.ts";
-import type { PostMealRequest } from "./Requests.ts";
-import type { MealResponse } from "../../Gen";
 import { getMealsClient } from "../Api.ts";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
+import { MealFoodItemEntry } from "./MealFoodItemEntry.ts";
+import type { MealPostRequest, MealResponse } from "../../Gen";
 
 export class Meal {
     id: number;
     timestamp: Date;
     sequenceNumber: number;
-    entries: MealEntry[];
+    foodItemEntries: MealFoodItemEntry[];
+    recipeEntries: MealRecipeEntry[];
 
     constructor() {
         this.id = 0;
         this.timestamp = new Date();
         this.sequenceNumber = 0;
-        this.entries = [];
+        this.foodItemEntries = [];
+        this.recipeEntries = [];
     }
 
     static mealTimeStamp(day: Date): Date {
@@ -27,7 +29,7 @@ export class Meal {
     }
 
     static async add(day: Date): Promise<Meal | null> {
-        const request: PostMealRequest = {
+        const request: MealPostRequest = {
             timestamp: this.mealTimeStamp(day),
         };
 
@@ -79,7 +81,8 @@ export class Meal {
         m.id = res.id;
         m.timestamp = new Date(res.timestamp);
         m.sequenceNumber = res.sequenceNumber;
-        m.entries = MealEntry.fromResponses(res.foodItemEntries ?? []);
+        m.recipeEntries = MealRecipeEntry.fromResponses(res.recipeEntries ?? []);
+        m.foodItemEntries = MealFoodItemEntry.fromResponses(res.foodItemEntries ?? []);
         return m;
     }
 

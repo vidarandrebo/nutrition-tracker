@@ -58,7 +58,9 @@ func (r *Repository) Add(item TableFoodItem) (TableFoodItem, error) {
 func (r *Repository) AddMicronutrient(item TableFoodItemMacronutrient) (TableFoodItemMacronutrient, error) {
 	err := r.db.QueryRow(`
 			INSERT INTO food_item_micronutrients (name, amount, food_item_id) 
-			VALUES ($1, $2, $3)`,
+			VALUES ($1, $2, $3)
+			RETURNING id
+		`,
 		item.Name,
 		item.Amount,
 		item.FoodItemID,
@@ -75,6 +77,7 @@ func (r *Repository) AddPortionSize(item TableFoodItemPortionSize) (TableFoodIte
 	err := r.db.QueryRow(`
 			INSERT INTO food_item_portion_sizes (name, amount, food_item_id) 
 			VALUES ($1, $2,$3)
+			RETURNING id
     	`, item.Name, item.Amount, item.ID,
 	).Scan(&item.ID)
 	if err != nil {

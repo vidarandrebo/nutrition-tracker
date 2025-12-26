@@ -9,7 +9,7 @@ import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import { FoodItem } from "../../Models/FoodItems/FoodItem.ts";
 import { useMealViewStore } from "../../Stores/MealViewStore.ts";
 import { addDays } from "../../Utilities/Date.ts";
-import { MealEntry } from "../../Models/Meals/MealEntry.ts";
+import { MealRecipeEntry } from "../../Models/Meals/MealRecipeEntry.ts";
 import { Meal } from "../../Models/Meals/Meal.ts";
 import MealView from "./MealView.vue";
 
@@ -42,7 +42,7 @@ function bumpDay(n: number) {
 }
 
 async function onDeleteEntry(entryId: number, mealId: number) {
-    const { error } = await MealEntry.delete(entryId, mealId);
+    const { error } = await MealRecipeEntry.delete(entryId, mealId);
     if (error) {
         console.log("failed to delete meal entry");
         return;

@@ -2,9 +2,10 @@ import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import { Meal } from "../Models/Meals/Meal.ts";
 import { addDays, startOfDay } from "../Utilities/Date.ts";
-import type { PostMealEntryRequest } from "../Models/Meals/Requests.ts";
-import { MealEntry } from "../Models/Meals/MealEntry.ts";
+import { MealRecipeEntry } from "../Models/Meals/MealRecipeEntry.ts";
 import { Failure, type Result, Success } from "../Utilities/tryCatch.ts";
+import type { MealFoodItemEntryPostRequest, MealRecipeEntryPostRequest } from "../Gen";
+import { MealFoodItemEntry } from "../Models/Meals/MealFoodItemEntry.ts";
 
 export const useMealStore = defineStore("meals", () => {
     const selectedDay = ref<Date>(new Date());
@@ -55,18 +56,27 @@ export const useMealStore = defineStore("meals", () => {
         }
     }
 
-    async function addMealEntry(entry: PostMealEntryRequest, mealID: number) {
-        const newEntry = await MealEntry.add(entry, mealID);
+    async function addFoodItemEntry(entry: MealFoodItemEntryPostRequest, mealID: number) {
+        const newEntry = await MealFoodItemEntry.add(entry, mealID);
         if (newEntry) {
             const meal = collection.value.find((m) => m.id === mealID);
             if (meal) {
-                meal.entries.push(newEntry);
+                meal.foodItemEntries.push(newEntry);
+            }
+        }
+    }
+    async function addRecipeEntry(entry: MealRecipeEntryPostRequest, mealID: number) {
+        const newEntry = await MealRecipeEntry.add(entry, mealID);
+        if (newEntry) {
+            const meal = collection.value.find((m) => m.id === mealID);
+            if (meal) {
+                meal.recipeEntries.push(newEntry);
             }
         }
     }
 
-    function removeMealEntry(entryId: number, mealId: number): Result<void> {
-        const entries = collection.value.find((x) => (x.id = mealId))?.entries;
+    function removeMealRecipeEntry(entryId: number, mealId: number): Result<void> {
+        const entries = collection.value.find((x) => (x.id = mealId))?.recipeEntries;
         if (entries) {
             const idx = entries.findIndex((x) => x.id === entryId);
             if (idx !== -1) {
@@ -74,7 +84,19 @@ export const useMealStore = defineStore("meals", () => {
                 return Success.empty();
             }
         }
-        return Failure.new(new Error("failed to remove meal entry"));
+        return Failure.new(new Error("failed to remove recipe entry"));
+    }
+
+    function removeMealFoodItemEntry(entryId: number, mealId: number): Result<void> {
+        const entries = collection.value.find((x) => (x.id = mealId))?.foodItemEntries;
+        if (entries) {
+            const idx = entries.findIndex((x) => x.id === entryId);
+            if (idx !== -1) {
+                entries?.splice(idx, 1);
+                return Success.empty();
+            }
+        }
+        return Failure.new(new Error("failed to remove food item entry"));
     }
 
     function removeMeal(mealId: number): Result<void> {
@@ -88,7 +110,6 @@ export const useMealStore = defineStore("meals", () => {
 
     return {
         addMeal,
-        addMealEntry,
         clear,
         collection,
         getMeal,
@@ -96,7 +117,8 @@ export const useMealStore = defineStore("meals", () => {
         loadMealsForDay,
         mealsForDay,
         removeMeal,
-        removeMealEntry,
+        removeMealRecipeEntry,
+        removeMealFoodItemEntry,
         selectedDay,
     };
 });

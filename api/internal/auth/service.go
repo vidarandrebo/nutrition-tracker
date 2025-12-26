@@ -21,8 +21,8 @@ func NewAuthService(userRepository user.IRepository, hs IHashingService, jwtServ
 }
 
 func (s *Service) RegisterUser(rr Register) error {
-	_, err := s.userRepository.GetByEmail(rr.Email)
-	if err == nil {
+	_, byEmailErr := s.userRepository.GetByEmail(rr.Email)
+	if byEmailErr == nil {
 		return errors.New("user already exists")
 	}
 
@@ -35,7 +35,7 @@ func (s *Service) RegisterUser(rr Register) error {
 		PasswordHash: hash,
 	}
 
-	_, err = s.userRepository.Add(u)
+	_, err := s.userRepository.Add(u)
 
 	return err
 }

@@ -1,30 +1,27 @@
-import type { PostMealEntryRequest } from "./Requests.ts";
 import { getMealsClient } from "../Api.ts";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
-import type { MealFoodItemEntryResponse } from "../../Gen";
+import type { MealRecipeEntryPostRequest, MealRecipeEntryResponse } from "../../Gen";
 
-export class MealEntry {
+export class MealRecipeEntry {
     id: number;
-    foodItemId: number | null;
     recipeId: number | null;
     amount: number;
 
     constructor() {
         this.id = 0;
-        this.foodItemId = null;
         this.recipeId = null;
         this.amount = 0;
     }
 
-    static async add(entry: PostMealEntryRequest, mealId: number): Promise<MealEntry | null> {
+    static async add(entry: MealRecipeEntryPostRequest, mealId: number): Promise<MealRecipeEntry | null> {
         const client = getMealsClient();
 
         try {
-            const response = await client.apiMealsIdFoodItemEntriesPost({
+            const response = await client.apiMealsIdRecipeEntriesPost({
                 id: mealId,
-                mealFoodItemEntryPostRequest: entry,
+                mealRecipeEntryPostRequest: entry,
             });
-            return MealEntry.fromResponse(response);
+            return MealRecipeEntry.fromResponse(response);
         } catch {
             console.log("failed to add entry to meal");
         }
@@ -41,15 +38,15 @@ export class MealEntry {
         );
     }
 
-    static fromResponses(res: MealFoodItemEntryResponse[]): MealEntry[] {
+    static fromResponses(res: MealRecipeEntryResponse[]): MealRecipeEntry[] {
         return res.map((v) => this.fromResponse(v));
     }
 
-    static fromResponse(res: MealFoodItemEntryResponse): MealEntry {
-        const me = new MealEntry();
+    static fromResponse(res: MealRecipeEntryResponse): MealRecipeEntry {
+        const me = new MealRecipeEntry();
         me.id = res.id;
         me.amount = res.amount;
-        me.foodItemId = res.foodItemId;
+        me.recipeId = res.recipeId;
         return me;
     }
 }

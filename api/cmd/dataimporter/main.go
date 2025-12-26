@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"os"
 	"sync"
@@ -56,6 +57,9 @@ func main() {
 		Email:    matvareTabellenCredentials.Email,
 		Password: matvareTabellenCredentials.Password,
 	})
+	if err != nil {
+		slog.Error("failed to login", slog.Any("err", err))
+	}
 	bearer := response.JSON200.Token
 
 	reqEdit := func(ctx context.Context, req *http.Request) error {
@@ -75,7 +79,7 @@ func main() {
 				foodItem.OwnerID = matvareTabellenUser.ID
 				fmt.Println(foodItem.Product, "Protein:", foodItem.Protein, "Carbo:", foodItem.Carbohydrate, "Fat:", foodItem.Fat)
 
-				r, err := c.PostApiFoodItemsWithResponse(context.Background(), api.PostFoodItemRequest{
+				r, err := c.PostApiFoodItemsWithResponse(context.Background(), api.FoodItemPostRequest{
 					Carbohydrate: foodItem.Carbohydrate,
 					Fat:          foodItem.Fat,
 					IsPublic:     foodItem.Public,
@@ -87,7 +91,7 @@ func main() {
 
 				if err == nil {
 					for _, mn := range foodItem.Micronutrients {
-						c.PostApiFoodItemsIdMicronutrients(context.Background(), r.JSON201.Id, api.PostFoodItemMicronutrient{
+						c.PostApiFoodItemsIdMicronutrients(context.Background(), r.JSON201.Id, api.FoodItemMicronutrientPostRequest{
 							Amount: mn.Amount,
 							Name:   mn.Name,
 						}, reqEdit)
