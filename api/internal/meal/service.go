@@ -17,13 +17,16 @@ type IService interface {
 	GetRecipeEntries(mealID int64, ownerID int64) ([]*RecipeEntry, error)
 	GetMacronutrientEntries(mealID int64, ownerID int64) ([]*MacronutrientEntry, error)
 	Delete(id int64, ownerID int64) error
+	DeleteFoodItemEntry(id int64, mealID int64, ownerID int64) error
+	DeleteRecipeEntry(id int64, mealID int64, ownerID int64) error
+	DeleteMacronutrientEntry(id int64, mealID, ownerID int64) error
 }
 type Service struct {
 	logger     *slog.Logger
 	repository IRepository
 }
 
-func (s Service) GetById(id int64, ownerID int64) (*Meal, error) {
+func (s *Service) GetById(id int64, ownerID int64) (*Meal, error) {
 	if err := s.repository.CheckOwnership(id, ownerID); err != nil {
 		return nil, err
 	}
@@ -39,21 +42,21 @@ func (s Service) GetById(id int64, ownerID int64) (*Meal, error) {
 	return meal, nil
 }
 
-func (s Service) Delete(id int64, ownerID int64) error {
+func (s *Service) Delete(id int64, ownerID int64) error {
 	if err := s.repository.CheckOwnership(id, ownerID); err != nil {
 		return err
 	}
 	return s.repository.Delete(id)
 }
 
-func (s Service) AddFoodItemEntry(entry *FoodItemEntry, mealID int64, ownerID int64) (*FoodItemEntry, error) {
+func (s *Service) AddFoodItemEntry(entry *FoodItemEntry, mealID int64, ownerID int64) (*FoodItemEntry, error) {
 	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
 		return nil, err
 	}
 	return s.addFoodItemEntry(entry, mealID)
 }
 
-func (s Service) addFoodItemEntry(entry *FoodItemEntry, mealID int64) (*FoodItemEntry, error) {
+func (s *Service) addFoodItemEntry(entry *FoodItemEntry, mealID int64) (*FoodItemEntry, error) {
 	item, fieErr := s.repository.AddFoodItemEntry(entry.ToTable(mealID))
 	if fieErr != nil {
 		return nil, fieErr
@@ -62,14 +65,14 @@ func (s Service) addFoodItemEntry(entry *FoodItemEntry, mealID int64) (*FoodItem
 	return entry, nil
 }
 
-func (s Service) AddMacroEntry(entry *MacronutrientEntry, mealID int64, ownerID int64) (*MacronutrientEntry, error) {
+func (s *Service) AddMacroEntry(entry *MacronutrientEntry, mealID int64, ownerID int64) (*MacronutrientEntry, error) {
 	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
 		return nil, err
 	}
 	return s.addMacroEntry(entry, mealID)
 }
 
-func (s Service) addMacroEntry(entry *MacronutrientEntry, mealID int64) (*MacronutrientEntry, error) {
+func (s *Service) addMacroEntry(entry *MacronutrientEntry, mealID int64) (*MacronutrientEntry, error) {
 	item, fieErr := s.repository.AddMacronutrientEntry(entry.ToTable(mealID))
 	if fieErr != nil {
 		return nil, fieErr
@@ -78,14 +81,14 @@ func (s Service) addMacroEntry(entry *MacronutrientEntry, mealID int64) (*Macron
 	return entry, nil
 }
 
-func (s Service) AddRecipeEntry(entry *RecipeEntry, mealID int64, ownerID int64) (*RecipeEntry, error) {
+func (s *Service) AddRecipeEntry(entry *RecipeEntry, mealID int64, ownerID int64) (*RecipeEntry, error) {
 	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
 		return nil, err
 	}
 	return s.addRecipeEntry(entry, mealID)
 }
 
-func (s Service) addRecipeEntry(entry *RecipeEntry, mealID int64) (*RecipeEntry, error) {
+func (s *Service) addRecipeEntry(entry *RecipeEntry, mealID int64) (*RecipeEntry, error) {
 	item, fieErr := s.repository.AddRecipeEntry(entry.ToTable(mealID))
 	if fieErr != nil {
 		return nil, fieErr
@@ -94,7 +97,7 @@ func (s Service) addRecipeEntry(entry *RecipeEntry, mealID int64) (*RecipeEntry,
 	return entry, nil
 }
 
-func (s Service) Add(item *Meal) (*Meal, error) {
+func (s *Service) Add(item *Meal) (*Meal, error) {
 	meal, err := s.repository.Add(item.ToTable())
 	if err != nil {
 		return nil, err
@@ -126,7 +129,7 @@ func (s Service) Add(item *Meal) (*Meal, error) {
 	return item, nil
 }
 
-func (s Service) GetByDate(from time.Time, to time.Time, ownerID int64) ([]*Meal, error) {
+func (s *Service) GetByDate(from time.Time, to time.Time, ownerID int64) ([]*Meal, error) {
 	items, err := s.repository.GetByDate(from, to, ownerID)
 	if err != nil {
 		return nil, err
@@ -144,7 +147,7 @@ func (s Service) GetByDate(from time.Time, to time.Time, ownerID int64) ([]*Meal
 	return meals, nil
 }
 
-func (s Service) loadEntries(meal *Meal) error {
+func (s *Service) loadEntries(meal *Meal) error {
 	foodItemEntries, err := s.getFoodItemEntries(meal.ID)
 	if err != nil {
 		return err
@@ -166,14 +169,14 @@ func (s Service) loadEntries(meal *Meal) error {
 	return nil
 }
 
-func (s Service) GetFoodItemEntries(mealID int64, ownerID int64) ([]*FoodItemEntry, error) {
+func (s *Service) GetFoodItemEntries(mealID int64, ownerID int64) ([]*FoodItemEntry, error) {
 	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
 		return nil, err
 	}
 	return s.getFoodItemEntries(mealID)
 }
 
-func (s Service) getFoodItemEntries(mealID int64) ([]*FoodItemEntry, error) {
+func (s *Service) getFoodItemEntries(mealID int64) ([]*FoodItemEntry, error) {
 	items, err := s.repository.GetFoodItemEntries(mealID)
 	if err != nil {
 		return nil, err
@@ -185,14 +188,14 @@ func (s Service) getFoodItemEntries(mealID int64) ([]*FoodItemEntry, error) {
 	return entries, nil
 }
 
-func (s Service) GetRecipeEntries(mealID int64, ownerID int64) ([]*RecipeEntry, error) {
+func (s *Service) GetRecipeEntries(mealID int64, ownerID int64) ([]*RecipeEntry, error) {
 	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
 		return nil, err
 	}
 	return s.getRecipeEntries(mealID)
 }
 
-func (s Service) getRecipeEntries(mealID int64) ([]*RecipeEntry, error) {
+func (s *Service) getRecipeEntries(mealID int64) ([]*RecipeEntry, error) {
 	items, err := s.repository.GetRecipeEntries(mealID)
 	if err != nil {
 		return nil, err
@@ -204,14 +207,14 @@ func (s Service) getRecipeEntries(mealID int64) ([]*RecipeEntry, error) {
 	return entries, nil
 }
 
-func (s Service) GetMacronutrientEntries(mealID int64, ownerID int64) ([]*MacronutrientEntry, error) {
+func (s *Service) GetMacronutrientEntries(mealID int64, ownerID int64) ([]*MacronutrientEntry, error) {
 	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
 		return nil, err
 	}
 	return s.getMacronutrientEntries(mealID)
 }
 
-func (s Service) getMacronutrientEntries(mealID int64) ([]*MacronutrientEntry, error) {
+func (s *Service) getMacronutrientEntries(mealID int64) ([]*MacronutrientEntry, error) {
 	items, err := s.repository.GetMacronutrientEntries(mealID)
 	if err != nil {
 		return nil, err
@@ -221,6 +224,27 @@ func (s Service) getMacronutrientEntries(mealID int64) ([]*MacronutrientEntry, e
 		entries = append(entries, NewMacronutrientEntry().FromTable(item))
 	}
 	return entries, nil
+}
+
+func (s *Service) DeleteFoodItemEntry(id int64, mealID int64, ownerID int64) error {
+	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
+		return err
+	}
+	return s.repository.DeleteFoodItemEntry(id, mealID)
+}
+
+func (s *Service) DeleteRecipeEntry(id int64, mealID int64, ownerID int64) error {
+	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
+		return err
+	}
+	return s.repository.DeleteRecipeEntry(id, mealID)
+}
+
+func (s *Service) DeleteMacronutrientEntry(id int64, mealID int64, ownerID int64) error {
+	if err := s.repository.CheckOwnership(mealID, ownerID); err != nil {
+		return err
+	}
+	return s.repository.DeleteMacronutrientEntry(id, mealID)
 }
 
 func NewService(repository IRepository, logger *slog.Logger) *Service {
