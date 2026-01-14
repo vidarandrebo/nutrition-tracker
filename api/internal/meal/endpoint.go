@@ -15,35 +15,35 @@ type Endpoint struct {
 	last    int64
 }
 
-func (e *Endpoint) PostApiMealsIdFoodItemEntries(ctx context.Context, request api.PostApiMealsIdFoodItemEntriesRequestObject) (api.PostApiMealsIdFoodItemEntriesResponseObject, error) {
+func (e *Endpoint) PostApiMealsMealIdFoodItemEntries(ctx context.Context, request api.PostApiMealsMealIdFoodItemEntriesRequestObject) (api.PostApiMealsMealIdFoodItemEntriesResponseObject, error) {
 	userID, err := auth.UserIDFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	entry, err := e.service.AddFoodItemEntry(FIMEFromRequest(*request.Body), request.Id, userID)
+	entry, err := e.service.AddFoodItemEntry(FIMEFromRequest(*request.Body), request.MealId, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	return api.PostApiMealsIdFoodItemEntries201JSONResponse(entry.ToResponse()), nil
+	return api.PostApiMealsMealIdFoodItemEntries201JSONResponse(entry.ToResponse()), nil
 }
 
-func (e *Endpoint) PostApiMealsIdMacronutrientEntries(ctx context.Context, request api.PostApiMealsIdMacronutrientEntriesRequestObject) (api.PostApiMealsIdMacronutrientEntriesResponseObject, error) {
+func (e *Endpoint) PostApiMealsMealIdMacronutrientEntries(ctx context.Context, request api.PostApiMealsMealIdMacronutrientEntriesRequestObject) (api.PostApiMealsMealIdMacronutrientEntriesResponseObject, error) {
 	userID, err := auth.UserIDFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	entry, err := e.service.AddMacroEntry(MNEFromRequest(*request.Body), request.Id, userID)
+	entry, err := e.service.AddMacroEntry(MNEFromRequest(*request.Body), request.MealId, userID)
 	if err != nil {
 		return nil, err
 	}
 
-	return api.PostApiMealsIdMacronutrientEntries201JSONResponse(entry.ToResponse()), nil
+	return api.PostApiMealsMealIdMacronutrientEntries201JSONResponse(entry.ToResponse()), nil
 }
 
-func (e *Endpoint) PostApiMealsIdRecipeEntries(ctx context.Context, request api.PostApiMealsIdRecipeEntriesRequestObject) (api.PostApiMealsIdRecipeEntriesResponseObject, error) {
+func (e *Endpoint) PostApiMealsMealIdRecipeEntries(ctx context.Context, request api.PostApiMealsMealIdRecipeEntriesRequestObject) (api.PostApiMealsMealIdRecipeEntriesResponseObject, error) {
 	// TODO implement me
 	panic("implement me")
 }

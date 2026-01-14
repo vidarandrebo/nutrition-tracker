@@ -17,8 +17,8 @@ export class MealRecipeEntry {
         const client = getMealsClient();
 
         try {
-            const response = await client.apiMealsIdRecipeEntriesPost({
-                id: mealId,
+            const response = await client.apiMealsMealIdRecipeEntriesPost({
+                mealId: mealId,
                 mealRecipeEntryPostRequest: entry,
             });
             return MealRecipeEntry.fromResponse(response);
@@ -31,8 +31,8 @@ export class MealRecipeEntry {
         const client = getMealsClient();
 
         return await tryCatch(
-            client.apiMealsMealIdEntriesEntryIdDelete({
-                entryId: id,
+            client.apiMealsMealIdRecipeEntriesRecipeEntryIdDelete({
+                recipeEntryId: id,
                 mealId: mealId,
             }),
         );

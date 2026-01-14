@@ -17,8 +17,8 @@ export class MealFoodItemEntry {
         const client = getMealsClient();
 
         try {
-            const response = await client.apiMealsIdFoodItemEntriesPost({
-                id: mealId,
+            const response = await client.apiMealsMealIdFoodItemEntriesPost({
+                mealId: mealId,
                 mealFoodItemEntryPostRequest: entry,
             });
             return MealFoodItemEntry.fromResponse(response);
@@ -32,8 +32,8 @@ export class MealFoodItemEntry {
         const client = getMealsClient();
 
         return await tryCatch(
-            client.apiMealsMealIdEntriesEntryIdDelete({
-                entryId: id,
+            client.apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete({
+                foodItemEntryId: id,
                 mealId: mealId,
             }),
         );

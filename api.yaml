@@ -220,12 +220,12 @@ paths:
         204:
           description: Meal with id is deleted
 
-  /api/meals/{id}/recipe-entries:
+  /api/meals/{mealId}/recipe-entries:
     post:
       tags:
         - Meals
       parameters:
-        - name: id
+        - name: mealId
           in: path
           required: true
           schema:
@@ -244,13 +244,13 @@ paths:
                 $ref: "#/components/schemas/MealRecipeEntryResponse"
           description: Meals entry that was added
 
-  /api/meals/{id}/macronutrient-entries:
+  /api/meals/{mealId}/macronutrient-entries:
     post:
       description: Adds macronutrients as a meal entry
       tags:
         - Meals
       parameters:
-        - name: id
+        - name: mealId
           in: path
           required: true
           schema:
@@ -269,12 +269,12 @@ paths:
                 $ref: "#/components/schemas/MealMacronutrientEntryResponse"
           description: Meals entry that was added
 
-  /api/meals/{id}/food-item-entries:
+  /api/meals/{mealId}/food-item-entries:
     post:
       tags:
         - Meals
       parameters:
-        - name: id
+        - name: mealId
           in: path
           required: true
           schema:
@@ -293,7 +293,7 @@ paths:
                 $ref: "#/components/schemas/MealFoodItemEntryResponse"
           description: Meals entry that was added
 
-  /api/meals/{mealId}/recipe-entries/{recipe-entry-id}:
+  /api/meals/{mealId}/recipe-entries/{recipeEntryId}:
     delete:
       tags:
         - Meals
@@ -304,7 +304,7 @@ paths:
           schema:
             type: integer
             format: int64
-        - name: recipe-entry-id
+        - name: recipeEntryId
           in: path
           required: true
           schema:
@@ -314,18 +314,18 @@ paths:
         204:
           description: Meals entry is deleted
 
-  /api/meals/{meal-id}/food-item-entries/{food-item-entry-id}:
+  /api/meals/{mealId}/food-item-entries/{foodItemEntryId}:
     delete:
       tags:
         - Meals
       parameters:
-        - name: meal-id
+        - name: mealId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: food-item-entry-id
+        - name: foodItemEntryId
           in: path
           required: true
           schema:
@@ -335,18 +335,18 @@ paths:
         204:
           description: Meals entry is deleted
 
-  /api/meals/{meal-id}/macronutrient-entries/{macronutrient-entry-id}:
+  /api/meals/{mealId}/macronutrient-entries/{macronutrientEntryId}:
     delete:
       tags:
         - Meals
       parameters:
-        - name: meal-id
+        - name: mealId
           in: path
           required: true
           schema:
             type: integer
             format: int64
-        - name: macronutrient-entry-id
+        - name: macronutrientEntryId
           in: path
           required: true
           schema:

@@ -21,8 +21,8 @@ export class MealMacronutrientEntry {
         const client = getMealsClient();
 
         try {
-            const response = await client.apiMealsIdMacronutrientEntriesPost({
-                id: mealId,
+            const response = await client.apiMealsMealIdMacronutrientEntriesPost({
+                mealId: mealId,
                 mealMacronutrientEntryPostRequest: entry,
             });
             return MealMacronutrientEntry.fromResponse(response);
@@ -36,8 +36,8 @@ export class MealMacronutrientEntry {
         const client = getMealsClient();
 
         return await tryCatch(
-            client.apiMealsMealIdEntriesEntryIdDelete({
-                entryId: id,
+            client.apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete({
+                macronutrientEntryId: id,
                 mealId: mealId,
             }),
         );
