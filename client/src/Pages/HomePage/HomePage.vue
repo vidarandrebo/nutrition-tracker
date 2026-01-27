@@ -12,6 +12,8 @@ import { addDays } from "../../Utilities/Date.ts";
 import { MealRecipeEntry } from "../../Models/Meals/MealRecipeEntry.ts";
 import { Meal } from "../../Models/Meals/Meal.ts";
 import MealView from "./MealView.vue";
+import { MealFoodItemEntry } from "../../Models/Meals/MealFoodItemEntry.ts";
+import { MealMacronutrientEntry } from "../../Models/Meals/MealMacronutrientEntry.ts";
 
 const userStore = useUserStore();
 const mealStore = useMealStore();
@@ -41,15 +43,39 @@ function bumpDay(n: number) {
     mealStore.selectedDay = addDays(mealStore.selectedDay, n);
 }
 
-async function onDeleteEntry(entryId: number, mealId: number) {
-    const { error } = await MealRecipeEntry.delete(entryId, mealId);
+async function onDeleteFoodItemEntry(entryId: number, mealId: number) {
+    const { error } = await MealFoodItemEntry.delete(entryId, mealId);
     if (error) {
-        console.log("failed to delete meal entry");
+        console.warn("failed to delete meal food item entry");
         return;
     }
-    const { error: rmEntryErr } = mealStore.removeMealEntry(entryId, mealId);
+    const { error: rmEntryErr } = mealStore.removeMealFoodItemEntry(entryId, mealId);
     if (rmEntryErr) {
-        console.log(rmEntryErr.message);
+        console.warn(rmEntryErr.message);
+    }
+}
+
+async function onDeleteRecipeEntry(entryId: number, mealId: number) {
+    const { error } = await MealRecipeEntry.delete(entryId, mealId);
+    if (error) {
+        console.warn("failed to delete meal recipe entry");
+        return;
+    }
+    const { error: rmEntryErr } = mealStore.removeMealRecipeEntry(entryId, mealId);
+    if (rmEntryErr) {
+        console.warn(rmEntryErr.message);
+    }
+}
+
+async function onDeleteMacronutrientEntry(entryId: number, mealId: number) {
+    const { error } = await MealMacronutrientEntry.delete(entryId, mealId);
+    if (error) {
+        console.warn("failed to delete meal recipe entry");
+        return;
+    }
+    const { error: rmEntryErr } = mealStore.removeMealMacronutrientEntry(entryId, mealId);
+    if (rmEntryErr) {
+        console.warn(rmEntryErr.message);
     }
 }
 
@@ -97,7 +123,13 @@ async function onDeleteMeal(mealId: number) {
         </div>
         <ul class="">
             <li v-for="item in mealViewStore.mealsView" :key="item.id" class="box">
-                <MealView :item="item" @delete-meal="onDeleteMeal" @delete-meal-entry="onDeleteEntry"></MealView>
+                <MealView
+                    :item="item"
+                    @delete-meal="onDeleteMeal"
+                    @delete-meal-food-item-entry="onDeleteFoodItemEntry"
+                    @delete-meal-macronutrient-entry="onDeleteMacronutrientEntry"
+                    @delete-meal-recipe-entry="onDeleteRecipeEntry"
+                ></MealView>
             </li>
         </ul>
     </section>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { MealView } from "../../Models/Meals/MealView.ts";
+import { EntryType, type MealView } from "../../Models/Meals/MealView.ts";
 import { ref } from "vue";
 import { OnClickOutside } from "@vueuse/components";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
@@ -10,13 +10,33 @@ const props = defineProps<{
 }>();
 const emit = defineEmits<{
     deleteMeal: [id: number];
-    deleteMealEntry: [entryId: number, mealId: number];
+    deleteMealFoodItemEntry: [entryId: number, mealId: number];
+    deleteMealRecipeEntry: [entryId: number, mealId: number];
+    deleteMealMacronutrientEntry: [entryId: number, mealId: number];
 }>();
 
 const kebabOpen = ref<boolean>(false);
 
 function onClickOutsideHandler() {
     kebabOpen.value = false;
+}
+function onDeleteMealEntry(entryId: number, mealId: number, entryType: EntryType) {
+    switch (entryType) {
+        case EntryType.FoodItem:
+            console.debug("deleting food item entry from meal", entryId, mealId);
+            emit("deleteMealFoodItemEntry", entryId, mealId);
+            break;
+        case EntryType.Macronutrient:
+            console.debug("deleting macronutrient entry from meal", entryId, mealId);
+            emit("deleteMealMacronutrientEntry", entryId, mealId);
+            break;
+        case EntryType.Recipe:
+            console.debug("deleting recipe entry from meal", entryId, mealId);
+            emit("deleteMealRecipeEntry", entryId, mealId);
+            break;
+        default:
+            break;
+    }
 }
 </script>
 
@@ -58,7 +78,7 @@ function onClickOutsideHandler() {
         <li v-for="entry in props.item.entries" :key="entry.id" class="box">
             <MealEntryView
                 :entry="entry"
-                @delete-meal-entry="(entryId) => emit('deleteMealEntry', entryId, props.item.id)"
+                @delete-meal-entry="() => onDeleteMealEntry(entry.id, props.item.id, entry.entryType)"
             ></MealEntryView>
         </li>
     </ul>

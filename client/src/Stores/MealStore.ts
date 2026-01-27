@@ -4,8 +4,13 @@ import { Meal } from "../Models/Meals/Meal.ts";
 import { addDays, startOfDay } from "../Utilities/Date.ts";
 import { MealRecipeEntry } from "../Models/Meals/MealRecipeEntry.ts";
 import { Failure, type Result, Success } from "../Utilities/tryCatch.ts";
-import type { MealFoodItemEntryPostRequest, MealRecipeEntryPostRequest } from "../Gen";
+import type {
+    MealFoodItemEntryPostRequest,
+    MealMacronutrientEntryPostRequest,
+    MealRecipeEntryPostRequest,
+} from "../Gen";
 import { MealFoodItemEntry } from "../Models/Meals/MealFoodItemEntry.ts";
+import { MealMacronutrientEntry } from "../Models/Meals/MealMacronutrientEntry.ts";
 
 export const useMealStore = defineStore("meals", () => {
     const selectedDay = ref<Date>(new Date());
@@ -75,6 +80,16 @@ export const useMealStore = defineStore("meals", () => {
         }
     }
 
+    async function addMacronutrientEntry(entry: MealMacronutrientEntryPostRequest, mealID: number) {
+        const newEntry = await MealMacronutrientEntry.add(entry, mealID);
+        if (newEntry) {
+            const meal = collection.value.find((m) => m.id === mealID);
+            if (meal) {
+                meal.macronutrientEntries.push(newEntry);
+            }
+        }
+    }
+
     function removeMealRecipeEntry(entryId: number, mealId: number): Result<void> {
         const entries = collection.value.find((x) => (x.id = mealId))?.recipeEntries;
         if (entries) {
@@ -99,6 +114,18 @@ export const useMealStore = defineStore("meals", () => {
         return Failure.new(new Error("failed to remove food item entry"));
     }
 
+    function removeMealMacronutrientEntry(entryId: number, mealId: number): Result<void> {
+        const entries = collection.value.find((x) => (x.id = mealId))?.macronutrientEntries;
+        if (entries) {
+            const idx = entries.findIndex((x) => x.id === entryId);
+            if (idx !== -1) {
+                entries?.splice(idx, 1);
+                return Success.empty();
+            }
+        }
+        return Failure.new(new Error("failed to remove macronutrient entry"));
+    }
+
     function removeMeal(mealId: number): Result<void> {
         const idx = collection.value.findIndex((m) => m.id === mealId);
         if (idx !== -1) {
@@ -112,6 +139,7 @@ export const useMealStore = defineStore("meals", () => {
         addMeal,
         addFoodItemEntry,
         addRecipeEntry,
+        addMacronutrientEntry,
         clear,
         collection,
         getMeal,
@@ -121,6 +149,7 @@ export const useMealStore = defineStore("meals", () => {
         removeMeal,
         removeMealRecipeEntry,
         removeMealFoodItemEntry,
+        removeMealMacronutrientEntry,
         selectedDay,
     };
 });
