@@ -2,6 +2,7 @@
 format:
 	find . -type f -name "*.go" | xargs gofumpt -w
 
-.PHONY: openapi
-openapi:
+.PHONY: generate
+generate:
 	go generate ./...
+	find . -type f -name "*.go" | xargs gofumpt -w
