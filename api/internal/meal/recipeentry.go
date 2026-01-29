@@ -22,6 +22,13 @@ func RMEFromRequest(r api.MealRecipeEntryPostRequest) *RecipeEntry {
 	}
 }
 
+func (rme *RecipeEntry) FromRequest(r *api.MealRecipeEntryPostRequest) *RecipeEntry {
+	rme.Amount = r.Amount
+	rme.RecipeID = r.RecipeId
+
+	return rme
+}
+
 func (rme *RecipeEntry) ToTable(mealID int64) TableMealRecipeEntry {
 	return TableMealRecipeEntry{
 		ID:             rme.ID,

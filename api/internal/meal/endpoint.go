@@ -44,8 +44,17 @@ func (e *Endpoint) PostApiMealsMealIdMacronutrientEntries(ctx context.Context, r
 }
 
 func (e *Endpoint) PostApiMealsMealIdRecipeEntries(ctx context.Context, request api.PostApiMealsMealIdRecipeEntriesRequestObject) (api.PostApiMealsMealIdRecipeEntriesResponseObject, error) {
-	// TODO implement me
-	panic("implement me")
+	userID, err := auth.UserIDFromCtx(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	entry, err := e.service.AddRecipeEntry(NewRecipeEntry().FromRequest(request.Body), request.MealId, userID)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.PostApiMealsMealIdRecipeEntries201JSONResponse(entry.ToResponse()), nil
 }
 
 func NewEndpoint(service IService, logger *slog.Logger) *Endpoint {
