@@ -16,44 +16,47 @@ import { mapValues } from "../runtime";
 /**
  *
  * @export
- * @interface MicronutrientResponse
+ * @interface FoodItemPortionSizeResponse
  */
-export interface MicronutrientResponse {
+export interface FoodItemPortionSizeResponse {
     /**
      *
      * @type {number}
-     * @memberof MicronutrientResponse
+     * @memberof FoodItemPortionSizeResponse
      */
     id: number;
     /**
      *
      * @type {number}
-     * @memberof MicronutrientResponse
+     * @memberof FoodItemPortionSizeResponse
      */
     amount: number;
     /**
      *
      * @type {string}
-     * @memberof MicronutrientResponse
+     * @memberof FoodItemPortionSizeResponse
      */
     name: string;
 }
 
 /**
- * Check if a given object implements the MicronutrientResponse interface.
+ * Check if a given object implements the FoodItemPortionSizeResponse interface.
  */
-export function instanceOfMicronutrientResponse(value: object): value is MicronutrientResponse {
+export function instanceOfFoodItemPortionSizeResponse(value: object): value is FoodItemPortionSizeResponse {
     if (!("id" in value) || value["id"] === undefined) return false;
     if (!("amount" in value) || value["amount"] === undefined) return false;
     if (!("name" in value) || value["name"] === undefined) return false;
     return true;
 }
 
-export function MicronutrientResponseFromJSON(json: any): MicronutrientResponse {
-    return MicronutrientResponseFromJSONTyped(json, false);
+export function FoodItemPortionSizeResponseFromJSON(json: any): FoodItemPortionSizeResponse {
+    return FoodItemPortionSizeResponseFromJSONTyped(json, false);
 }
 
-export function MicronutrientResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): MicronutrientResponse {
+export function FoodItemPortionSizeResponseFromJSONTyped(
+    json: any,
+    ignoreDiscriminator: boolean,
+): FoodItemPortionSizeResponse {
     if (json == null) {
         return json;
     }
@@ -64,12 +67,12 @@ export function MicronutrientResponseFromJSONTyped(json: any, ignoreDiscriminato
     };
 }
 
-export function MicronutrientResponseToJSON(json: any): MicronutrientResponse {
-    return MicronutrientResponseToJSONTyped(json, false);
+export function FoodItemPortionSizeResponseToJSON(json: any): FoodItemPortionSizeResponse {
+    return FoodItemPortionSizeResponseToJSONTyped(json, false);
 }
 
-export function MicronutrientResponseToJSONTyped(
-    value?: MicronutrientResponse | null,
+export function FoodItemPortionSizeResponseToJSONTyped(
+    value?: FoodItemPortionSizeResponse | null,
     ignoreDiscriminator: boolean = false,
 ): any {
     if (value == null) {

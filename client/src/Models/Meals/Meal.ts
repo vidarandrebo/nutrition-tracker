@@ -1,21 +1,26 @@
-import { MealEntry } from "./MealEntry.ts";
+import { MealRecipeEntry } from "./MealRecipeEntry.ts";
 import { addDays, isToday, startOfDay } from "../../Utilities/Date.ts";
-import type { PostMealRequest } from "./Requests.ts";
-import type { MealResponse } from "../../Gen";
 import { getMealsClient } from "../Api.ts";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
+import { MealFoodItemEntry } from "./MealFoodItemEntry.ts";
+import type { MealPostRequest, MealResponse } from "../../Gen";
+import type { MealMacronutrientEntry } from "./MealMacronutrientEntry.ts";
 
 export class Meal {
     id: number;
     timestamp: Date;
     sequenceNumber: number;
-    entries: MealEntry[];
+    foodItemEntries: MealFoodItemEntry[];
+    recipeEntries: MealRecipeEntry[];
+    macronutrientEntries: MealMacronutrientEntry[];
 
     constructor() {
         this.id = 0;
         this.timestamp = new Date();
         this.sequenceNumber = 0;
-        this.entries = [];
+        this.foodItemEntries = [];
+        this.recipeEntries = [];
+        this.macronutrientEntries = [];
     }
 
     static mealTimeStamp(day: Date): Date {
@@ -27,13 +32,13 @@ export class Meal {
     }
 
     static async add(day: Date): Promise<Meal | null> {
-        const request: PostMealRequest = {
+        const request: MealPostRequest = {
             timestamp: this.mealTimeStamp(day),
         };
 
         const client = getMealsClient();
         try {
-            const response = await client.apiMealsPost({ postMealRequest: request });
+            const response = await client.apiMealsPost({ mealPostRequest: request });
             return Meal.fromResponse(response);
         } catch {
             console.log("oi, ya goofed up");
@@ -79,7 +84,8 @@ export class Meal {
         m.id = res.id;
         m.timestamp = new Date(res.timestamp);
         m.sequenceNumber = res.sequenceNumber;
-        m.entries = MealEntry.fromResponses(res.entries);
+        m.recipeEntries = MealRecipeEntry.fromResponses(res.recipeEntries ?? []);
+        m.foodItemEntries = MealFoodItemEntry.fromResponses(res.foodItemEntries ?? []);
         return m;
     }
 

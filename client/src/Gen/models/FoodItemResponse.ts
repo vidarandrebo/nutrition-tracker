@@ -13,20 +13,20 @@
  */
 
 import { mapValues } from "../runtime";
-import type { PortionSizeResponse } from "./PortionSizeResponse";
+import type { FoodItemPortionSizeResponse } from "./FoodItemPortionSizeResponse";
 import {
-    PortionSizeResponseFromJSON,
-    PortionSizeResponseFromJSONTyped,
-    PortionSizeResponseToJSON,
-    PortionSizeResponseToJSONTyped,
-} from "./PortionSizeResponse";
-import type { MicronutrientResponse } from "./MicronutrientResponse";
+    FoodItemPortionSizeResponseFromJSON,
+    FoodItemPortionSizeResponseFromJSONTyped,
+    FoodItemPortionSizeResponseToJSON,
+    FoodItemPortionSizeResponseToJSONTyped,
+} from "./FoodItemPortionSizeResponse";
+import type { FoodItemMicronutrientResponse } from "./FoodItemMicronutrientResponse";
 import {
-    MicronutrientResponseFromJSON,
-    MicronutrientResponseFromJSONTyped,
-    MicronutrientResponseToJSON,
-    MicronutrientResponseToJSONTyped,
-} from "./MicronutrientResponse";
+    FoodItemMicronutrientResponseFromJSON,
+    FoodItemMicronutrientResponseFromJSONTyped,
+    FoodItemMicronutrientResponseToJSON,
+    FoodItemMicronutrientResponseToJSONTyped,
+} from "./FoodItemMicronutrientResponse";
 
 /**
  *
@@ -96,16 +96,16 @@ export interface FoodItemResponse {
     source: string;
     /**
      *
-     * @type {Array<PortionSizeResponse>}
+     * @type {Array<FoodItemPortionSizeResponse>}
      * @memberof FoodItemResponse
      */
-    portionSizes?: Array<PortionSizeResponse>;
+    portionSizes?: Array<FoodItemPortionSizeResponse>;
     /**
      *
-     * @type {Array<MicronutrientResponse>}
+     * @type {Array<FoodItemMicronutrientResponse>}
      * @memberof FoodItemResponse
      */
-    micronutrients?: Array<MicronutrientResponse>;
+    micronutrients?: Array<FoodItemMicronutrientResponse>;
 }
 
 /**
@@ -147,11 +147,11 @@ export function FoodItemResponseFromJSONTyped(json: any, ignoreDiscriminator: bo
         portionSizes:
             json["portionSizes"] == null
                 ? undefined
-                : (json["portionSizes"] as Array<any>).map(PortionSizeResponseFromJSON),
+                : (json["portionSizes"] as Array<any>).map(FoodItemPortionSizeResponseFromJSON),
         micronutrients:
             json["micronutrients"] == null
                 ? undefined
-                : (json["micronutrients"] as Array<any>).map(MicronutrientResponseFromJSON),
+                : (json["micronutrients"] as Array<any>).map(FoodItemMicronutrientResponseFromJSON),
     };
 }
 
@@ -181,10 +181,10 @@ export function FoodItemResponseToJSONTyped(
         portionSizes:
             value["portionSizes"] == null
                 ? undefined
-                : (value["portionSizes"] as Array<any>).map(PortionSizeResponseToJSON),
+                : (value["portionSizes"] as Array<any>).map(FoodItemPortionSizeResponseToJSON),
         micronutrients:
             value["micronutrients"] == null
                 ? undefined
-                : (value["micronutrients"] as Array<any>).map(MicronutrientResponseToJSON),
+                : (value["micronutrients"] as Array<any>).map(FoodItemMicronutrientResponseToJSON),
     };
 }

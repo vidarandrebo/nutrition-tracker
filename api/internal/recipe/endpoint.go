@@ -7,16 +7,17 @@ import (
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Endpoint struct {
-	logger *slog.Logger
-	store  *Store
+	logger  *slog.Logger
+	service IService
 }
 
-func NewEndpoint(store *Store, logger *slog.Logger) *Endpoint {
+func NewEndpoint(service IService, logger *slog.Logger) *Endpoint {
 	e := Endpoint{
-		store: store,
+		service: service,
 	}
 	e.logger = logger.With(slog.Any("module", reflect.TypeOf(e)))
 	return &e
@@ -25,12 +26,14 @@ func NewEndpoint(store *Store, logger *slog.Logger) *Endpoint {
 func (e Endpoint) GetApiRecipes(ctx context.Context, request api.GetApiRecipesRequestObject) (api.GetApiRecipesResponseObject, error) {
 	userID, err := auth.UserIDFromCtx(ctx)
 	if err != nil {
-		return nil, err
+		return nil, utils.ErrUnauthorized
 	}
-	recipes, err := e.store.Get(userID)
+
+	recipes, err := e.service.Get(userID)
 	if err != nil {
 		return nil, err
 	}
+
 	responses := make([]api.RecipeResponse, 0, len(recipes))
 	for _, recipe := range recipes {
 		responses = append(responses, recipe.ToResponse())
@@ -44,18 +47,16 @@ func (e Endpoint) PostApiRecipes(ctx context.Context, request api.PostApiRecipes
 	if err != nil {
 		return nil, err
 	}
-	entries := make([]Entry, 0, len(request.Body.Entries))
-	for _, e := range request.Body.Entries {
-		entries = append(entries, Entry{
-			Amount:     e.Amount,
-			FoodItemID: e.FoodItemId,
-		})
-	}
-	recipe, err := e.store.Add(Recipe{Name: request.Body.Name, Entries: entries, OwnerID: userID})
+
+	item := NewRecipe().FromPost(request.Body)
+	item.OwnerID = userID
+
+	newItem, err := e.service.Add(item)
 	if err != nil {
 		return nil, err
 	}
-	return api.PostApiRecipes201JSONResponse(recipe.ToResponse()), nil
+
+	return api.PostApiRecipes201JSONResponse(newItem.ToResponse()), nil
 }
 
 func (e Endpoint) DeleteApiRecipesId(ctx context.Context, request api.DeleteApiRecipesIdRequestObject) (api.DeleteApiRecipesIdResponseObject, error) {
@@ -63,9 +64,11 @@ func (e Endpoint) DeleteApiRecipesId(ctx context.Context, request api.DeleteApiR
 	if err != nil {
 		return nil, err
 	}
-	err = e.store.Delete(request.Id, userID)
+
+	err = e.service.Delete(request.Id, userID)
 	if err != nil {
 		return api.DeleteApiRecipesId409Response{}, nil
 	}
+
 	return api.DeleteApiRecipesId204Response{}, nil
 }

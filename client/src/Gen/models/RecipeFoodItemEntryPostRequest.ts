@@ -16,37 +16,40 @@ import { mapValues } from "../runtime";
 /**
  *
  * @export
- * @interface PostRecipeEntryRequest
+ * @interface RecipeFoodItemEntryPostRequest
  */
-export interface PostRecipeEntryRequest {
+export interface RecipeFoodItemEntryPostRequest {
     /**
      *
      * @type {number}
-     * @memberof PostRecipeEntryRequest
+     * @memberof RecipeFoodItemEntryPostRequest
      */
     amount: number;
     /**
      *
      * @type {number}
-     * @memberof PostRecipeEntryRequest
+     * @memberof RecipeFoodItemEntryPostRequest
      */
     foodItemId: number;
 }
 
 /**
- * Check if a given object implements the PostRecipeEntryRequest interface.
+ * Check if a given object implements the RecipeFoodItemEntryPostRequest interface.
  */
-export function instanceOfPostRecipeEntryRequest(value: object): value is PostRecipeEntryRequest {
+export function instanceOfRecipeFoodItemEntryPostRequest(value: object): value is RecipeFoodItemEntryPostRequest {
     if (!("amount" in value) || value["amount"] === undefined) return false;
     if (!("foodItemId" in value) || value["foodItemId"] === undefined) return false;
     return true;
 }
 
-export function PostRecipeEntryRequestFromJSON(json: any): PostRecipeEntryRequest {
-    return PostRecipeEntryRequestFromJSONTyped(json, false);
+export function RecipeFoodItemEntryPostRequestFromJSON(json: any): RecipeFoodItemEntryPostRequest {
+    return RecipeFoodItemEntryPostRequestFromJSONTyped(json, false);
 }
 
-export function PostRecipeEntryRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): PostRecipeEntryRequest {
+export function RecipeFoodItemEntryPostRequestFromJSONTyped(
+    json: any,
+    ignoreDiscriminator: boolean,
+): RecipeFoodItemEntryPostRequest {
     if (json == null) {
         return json;
     }
@@ -56,12 +59,12 @@ export function PostRecipeEntryRequestFromJSONTyped(json: any, ignoreDiscriminat
     };
 }
 
-export function PostRecipeEntryRequestToJSON(json: any): PostRecipeEntryRequest {
-    return PostRecipeEntryRequestToJSONTyped(json, false);
+export function RecipeFoodItemEntryPostRequestToJSON(json: any): RecipeFoodItemEntryPostRequest {
+    return RecipeFoodItemEntryPostRequestToJSONTyped(json, false);
 }
 
-export function PostRecipeEntryRequestToJSONTyped(
-    value?: PostRecipeEntryRequest | null,
+export function RecipeFoodItemEntryPostRequestToJSONTyped(
+    value?: RecipeFoodItemEntryPostRequest | null,
     ignoreDiscriminator: boolean = false,
 ): any {
     if (value == null) {

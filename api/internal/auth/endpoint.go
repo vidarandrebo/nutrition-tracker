@@ -7,6 +7,7 @@ import (
 	"reflect"
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type Endpoint struct {
@@ -32,19 +33,18 @@ func (e Endpoint) PostApiLogin(ctx context.Context, request api.PostApiLoginRequ
 }
 
 func (e Endpoint) PostApiRegister(ctx context.Context, request api.PostApiRegisterRequestObject) (api.PostApiRegisterResponseObject, error) {
-	e.Logger.Info("credentials", slog.Any("c", request.Body))
 	regRequest := Register{
 		Email:    request.Body.Email,
 		Password: request.Body.Password,
 	}
-	e.Logger.Info("credentials", slog.Any("c", regRequest))
 	if !regRequest.Validate() {
 		return nil, errors.New("invalid model")
 	}
 
 	err := e.AuthService.RegisterUser(regRequest)
 	if err != nil {
-		return nil, err
+		e.Logger.Error("failed to register user", slog.Any("err", err))
+		return nil, utils.ErrUnknown
 	}
 	return api.PostApiRegister201Response{}, nil
 }

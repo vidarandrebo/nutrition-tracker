@@ -13,13 +13,13 @@
  */
 
 import { mapValues } from "../runtime";
-import type { RecipeEntryResponse } from "./RecipeEntryResponse";
+import type { RecipeFoodItemEntryEntryResponse } from "./RecipeFoodItemEntryEntryResponse";
 import {
-    RecipeEntryResponseFromJSON,
-    RecipeEntryResponseFromJSONTyped,
-    RecipeEntryResponseToJSON,
-    RecipeEntryResponseToJSONTyped,
-} from "./RecipeEntryResponse";
+    RecipeFoodItemEntryEntryResponseFromJSON,
+    RecipeFoodItemEntryEntryResponseFromJSONTyped,
+    RecipeFoodItemEntryEntryResponseToJSON,
+    RecipeFoodItemEntryEntryResponseToJSONTyped,
+} from "./RecipeFoodItemEntryEntryResponse";
 
 /**
  *
@@ -41,10 +41,10 @@ export interface RecipeResponse {
     name: string;
     /**
      *
-     * @type {Array<RecipeEntryResponse>}
+     * @type {Array<RecipeFoodItemEntryEntryResponse>}
      * @memberof RecipeResponse
      */
-    entries: Array<RecipeEntryResponse>;
+    foodItemEntries: Array<RecipeFoodItemEntryEntryResponse>;
 }
 
 /**
@@ -53,7 +53,7 @@ export interface RecipeResponse {
 export function instanceOfRecipeResponse(value: object): value is RecipeResponse {
     if (!("id" in value) || value["id"] === undefined) return false;
     if (!("name" in value) || value["name"] === undefined) return false;
-    if (!("entries" in value) || value["entries"] === undefined) return false;
+    if (!("foodItemEntries" in value) || value["foodItemEntries"] === undefined) return false;
     return true;
 }
 
@@ -68,7 +68,7 @@ export function RecipeResponseFromJSONTyped(json: any, ignoreDiscriminator: bool
     return {
         id: json["id"],
         name: json["name"],
-        entries: (json["entries"] as Array<any>).map(RecipeEntryResponseFromJSON),
+        foodItemEntries: (json["food-item-entries"] as Array<any>).map(RecipeFoodItemEntryEntryResponseFromJSON),
     };
 }
 
@@ -84,6 +84,6 @@ export function RecipeResponseToJSONTyped(value?: RecipeResponse | null, ignoreD
     return {
         id: value["id"],
         name: value["name"],
-        entries: (value["entries"] as Array<any>).map(RecipeEntryResponseToJSON),
+        "food-item-entries": (value["foodItemEntries"] as Array<any>).map(RecipeFoodItemEntryEntryResponseToJSON),
     };
 }

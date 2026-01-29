@@ -13,16 +13,33 @@
  */
 
 import * as runtime from "../runtime";
-import type { MealEntryResponse, MealResponse, PostMealEntryRequest, PostMealRequest } from "../models/index";
+import type {
+    MealFoodItemEntryPostRequest,
+    MealFoodItemEntryResponse,
+    MealMacronutrientEntryPostRequest,
+    MealMacronutrientEntryResponse,
+    MealPostRequest,
+    MealRecipeEntryPostRequest,
+    MealRecipeEntryResponse,
+    MealResponse,
+} from "../models/index";
 import {
-    MealEntryResponseFromJSON,
-    MealEntryResponseToJSON,
+    MealFoodItemEntryPostRequestFromJSON,
+    MealFoodItemEntryPostRequestToJSON,
+    MealFoodItemEntryResponseFromJSON,
+    MealFoodItemEntryResponseToJSON,
+    MealMacronutrientEntryPostRequestFromJSON,
+    MealMacronutrientEntryPostRequestToJSON,
+    MealMacronutrientEntryResponseFromJSON,
+    MealMacronutrientEntryResponseToJSON,
+    MealPostRequestFromJSON,
+    MealPostRequestToJSON,
+    MealRecipeEntryPostRequestFromJSON,
+    MealRecipeEntryPostRequestToJSON,
+    MealRecipeEntryResponseFromJSON,
+    MealRecipeEntryResponseToJSON,
     MealResponseFromJSON,
     MealResponseToJSON,
-    PostMealEntryRequestFromJSON,
-    PostMealEntryRequestToJSON,
-    PostMealRequestFromJSON,
-    PostMealRequestToJSON,
 } from "../models/index";
 
 export interface ApiMealsGetRequest {
@@ -34,22 +51,42 @@ export interface ApiMealsIdDeleteRequest {
     id: number;
 }
 
-export interface ApiMealsIdEntriesPostRequest {
-    id: number;
-    postMealEntryRequest?: PostMealEntryRequest;
-}
-
 export interface ApiMealsIdGetRequest {
     id: number;
 }
 
-export interface ApiMealsMealIdEntriesEntryIdDeleteRequest {
+export interface ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest {
     mealId: number;
-    entryId: number;
+    foodItemEntryId: number;
+}
+
+export interface ApiMealsMealIdFoodItemEntriesPostRequest {
+    mealId: number;
+    mealFoodItemEntryPostRequest?: MealFoodItemEntryPostRequest;
+}
+
+export interface ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest {
+    mealId: number;
+    macronutrientEntryId: number;
+}
+
+export interface ApiMealsMealIdMacronutrientEntriesPostRequest {
+    mealId: number;
+    mealMacronutrientEntryPostRequest?: MealMacronutrientEntryPostRequest;
+}
+
+export interface ApiMealsMealIdRecipeEntriesPostRequest {
+    mealId: number;
+    mealRecipeEntryPostRequest?: MealRecipeEntryPostRequest;
+}
+
+export interface ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest {
+    mealId: number;
+    recipeEntryId: number;
 }
 
 export interface ApiMealsPostRequest {
-    postMealRequest?: PostMealRequest;
+    mealPostRequest?: MealPostRequest;
 }
 
 /**
@@ -101,26 +138,6 @@ export interface MealsApiInterface {
     /**
      *
      * @param {number} id
-     * @param {PostMealEntryRequest} [postMealEntryRequest]
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof MealsApiInterface
-     */
-    apiMealsIdEntriesPostRaw(
-        requestParameters: ApiMealsIdEntriesPostRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<MealEntryResponse>>;
-
-    /**
-     */
-    apiMealsIdEntriesPost(
-        requestParameters: ApiMealsIdEntriesPostRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<MealEntryResponse>;
-
-    /**
-     *
-     * @param {number} id
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MealsApiInterface
@@ -140,26 +157,127 @@ export interface MealsApiInterface {
     /**
      *
      * @param {number} mealId
-     * @param {number} entryId
+     * @param {number} foodItemEntryId
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MealsApiInterface
      */
-    apiMealsMealIdEntriesEntryIdDeleteRaw(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    apiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>>;
 
     /**
      */
-    apiMealsMealIdEntriesEntryIdDelete(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void>;
 
     /**
      *
-     * @param {PostMealRequest} [postMealRequest]
+     * @param {number} mealId
+     * @param {MealFoodItemEntryPostRequest} [mealFoodItemEntryPostRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdFoodItemEntriesPostRaw(
+        requestParameters: ApiMealsMealIdFoodItemEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MealFoodItemEntryResponse>>;
+
+    /**
+     */
+    apiMealsMealIdFoodItemEntriesPost(
+        requestParameters: ApiMealsMealIdFoodItemEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MealFoodItemEntryResponse>;
+
+    /**
+     *
+     * @param {number} mealId
+     * @param {number} macronutrientEntryId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     * Adds macronutrients as a meal entry
+     * @param {number} mealId
+     * @param {MealMacronutrientEntryPostRequest} [mealMacronutrientEntryPostRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdMacronutrientEntriesPostRaw(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MealMacronutrientEntryResponse>>;
+
+    /**
+     * Adds macronutrients as a meal entry
+     */
+    apiMealsMealIdMacronutrientEntriesPost(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MealMacronutrientEntryResponse>;
+
+    /**
+     *
+     * @param {number} mealId
+     * @param {MealRecipeEntryPostRequest} [mealRecipeEntryPostRequest]
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdRecipeEntriesPostRaw(
+        requestParameters: ApiMealsMealIdRecipeEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MealRecipeEntryResponse>>;
+
+    /**
+     */
+    apiMealsMealIdRecipeEntriesPost(
+        requestParameters: ApiMealsMealIdRecipeEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MealRecipeEntryResponse>;
+
+    /**
+     *
+     * @param {number} mealId
+     * @param {number} recipeEntryId
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof MealsApiInterface
+     */
+    apiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>>;
+
+    /**
+     */
+    apiMealsMealIdRecipeEntriesRecipeEntryIdDelete(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void>;
+
+    /**
+     *
+     * @param {MealPostRequest} [mealPostRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof MealsApiInterface
@@ -268,52 +386,6 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
 
     /**
      */
-    async apiMealsIdEntriesPostRaw(
-        requestParameters: ApiMealsIdEntriesPostRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<MealEntryResponse>> {
-        if (requestParameters["id"] == null) {
-            throw new runtime.RequiredError(
-                "id",
-                'Required parameter "id" was null or undefined when calling apiMealsIdEntriesPost().',
-            );
-        }
-
-        const queryParameters: any = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        headerParameters["Content-Type"] = "application/json";
-
-        let urlPath = `/api/meals/{id}/entries`;
-        urlPath = urlPath.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters["id"])));
-
-        const response = await this.request(
-            {
-                path: urlPath,
-                method: "POST",
-                headers: headerParameters,
-                query: queryParameters,
-                body: PostMealEntryRequestToJSON(requestParameters["postMealEntryRequest"]),
-            },
-            initOverrides,
-        );
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => MealEntryResponseFromJSON(jsonValue));
-    }
-
-    /**
-     */
-    async apiMealsIdEntriesPost(
-        requestParameters: ApiMealsIdEntriesPostRequest,
-        initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<MealEntryResponse> {
-        const response = await this.apiMealsIdEntriesPostRaw(requestParameters, initOverrides);
-        return await response.value();
-    }
-
-    /**
-     */
     async apiMealsIdGetRaw(
         requestParameters: ApiMealsIdGetRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
@@ -357,21 +429,21 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
 
     /**
      */
-    async apiMealsMealIdEntriesEntryIdDeleteRaw(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    async apiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<runtime.ApiResponse<void>> {
         if (requestParameters["mealId"] == null) {
             throw new runtime.RequiredError(
                 "mealId",
-                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdEntriesEntryIdDelete().',
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete().',
             );
         }
 
-        if (requestParameters["entryId"] == null) {
+        if (requestParameters["foodItemEntryId"] == null) {
             throw new runtime.RequiredError(
-                "entryId",
-                'Required parameter "entryId" was null or undefined when calling apiMealsMealIdEntriesEntryIdDelete().',
+                "foodItemEntryId",
+                'Required parameter "foodItemEntryId" was null or undefined when calling apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete().',
             );
         }
 
@@ -379,9 +451,12 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
 
         const headerParameters: runtime.HTTPHeaders = {};
 
-        let urlPath = `/api/meals/{mealId}/entries/{entryId}`;
+        let urlPath = `/api/meals/{mealId}/food-item-entries/{foodItemEntryId}`;
         urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
-        urlPath = urlPath.replace(`{${"entryId"}}`, encodeURIComponent(String(requestParameters["entryId"])));
+        urlPath = urlPath.replace(
+            `{${"foodItemEntryId"}}`,
+            encodeURIComponent(String(requestParameters["foodItemEntryId"])),
+        );
 
         const response = await this.request(
             {
@@ -398,11 +473,257 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
 
     /**
      */
-    async apiMealsMealIdEntriesEntryIdDelete(
-        requestParameters: ApiMealsMealIdEntriesEntryIdDeleteRequest,
+    async apiMealsMealIdFoodItemEntriesFoodItemEntryIdDelete(
+        requestParameters: ApiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
     ): Promise<void> {
-        await this.apiMealsMealIdEntriesEntryIdDeleteRaw(requestParameters, initOverrides);
+        await this.apiMealsMealIdFoodItemEntriesFoodItemEntryIdDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     */
+    async apiMealsMealIdFoodItemEntriesPostRaw(
+        requestParameters: ApiMealsMealIdFoodItemEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MealFoodItemEntryResponse>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdFoodItemEntriesPost().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        let urlPath = `/api/meals/{mealId}/food-item-entries`;
+        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: MealFoodItemEntryPostRequestToJSON(requestParameters["mealFoodItemEntryPostRequest"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MealFoodItemEntryResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiMealsMealIdFoodItemEntriesPost(
+        requestParameters: ApiMealsMealIdFoodItemEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MealFoodItemEntryResponse> {
+        const response = await this.apiMealsMealIdFoodItemEntriesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete().',
+            );
+        }
+
+        if (requestParameters["macronutrientEntryId"] == null) {
+            throw new runtime.RequiredError(
+                "macronutrientEntryId",
+                'Required parameter "macronutrientEntryId" was null or undefined when calling apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        let urlPath = `/api/meals/{mealId}/macronutrient-entries/{macronutrientEntryId}`;
+        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+        urlPath = urlPath.replace(
+            `{${"macronutrientEntryId"}}`,
+            encodeURIComponent(String(requestParameters["macronutrientEntryId"])),
+        );
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "DELETE",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDelete(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.apiMealsMealIdMacronutrientEntriesMacronutrientEntryIdDeleteRaw(requestParameters, initOverrides);
+    }
+
+    /**
+     * Adds macronutrients as a meal entry
+     */
+    async apiMealsMealIdMacronutrientEntriesPostRaw(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MealMacronutrientEntryResponse>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdMacronutrientEntriesPost().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        let urlPath = `/api/meals/{mealId}/macronutrient-entries`;
+        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: MealMacronutrientEntryPostRequestToJSON(requestParameters["mealMacronutrientEntryPostRequest"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MealMacronutrientEntryResponseFromJSON(jsonValue));
+    }
+
+    /**
+     * Adds macronutrients as a meal entry
+     */
+    async apiMealsMealIdMacronutrientEntriesPost(
+        requestParameters: ApiMealsMealIdMacronutrientEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MealMacronutrientEntryResponse> {
+        const response = await this.apiMealsMealIdMacronutrientEntriesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiMealsMealIdRecipeEntriesPostRaw(
+        requestParameters: ApiMealsMealIdRecipeEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<MealRecipeEntryResponse>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdRecipeEntriesPost().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters["Content-Type"] = "application/json";
+
+        let urlPath = `/api/meals/{mealId}/recipe-entries`;
+        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "POST",
+                headers: headerParameters,
+                query: queryParameters,
+                body: MealRecipeEntryPostRequestToJSON(requestParameters["mealRecipeEntryPostRequest"]),
+            },
+            initOverrides,
+        );
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => MealRecipeEntryResponseFromJSON(jsonValue));
+    }
+
+    /**
+     */
+    async apiMealsMealIdRecipeEntriesPost(
+        requestParameters: ApiMealsMealIdRecipeEntriesPostRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<MealRecipeEntryResponse> {
+        const response = await this.apiMealsMealIdRecipeEntriesPostRaw(requestParameters, initOverrides);
+        return await response.value();
+    }
+
+    /**
+     */
+    async apiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRaw(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<runtime.ApiResponse<void>> {
+        if (requestParameters["mealId"] == null) {
+            throw new runtime.RequiredError(
+                "mealId",
+                'Required parameter "mealId" was null or undefined when calling apiMealsMealIdRecipeEntriesRecipeEntryIdDelete().',
+            );
+        }
+
+        if (requestParameters["recipeEntryId"] == null) {
+            throw new runtime.RequiredError(
+                "recipeEntryId",
+                'Required parameter "recipeEntryId" was null or undefined when calling apiMealsMealIdRecipeEntriesRecipeEntryIdDelete().',
+            );
+        }
+
+        const queryParameters: any = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        let urlPath = `/api/meals/{mealId}/recipe-entries/{recipeEntryId}`;
+        urlPath = urlPath.replace(`{${"mealId"}}`, encodeURIComponent(String(requestParameters["mealId"])));
+        urlPath = urlPath.replace(
+            `{${"recipeEntryId"}}`,
+            encodeURIComponent(String(requestParameters["recipeEntryId"])),
+        );
+
+        const response = await this.request(
+            {
+                path: urlPath,
+                method: "DELETE",
+                headers: headerParameters,
+                query: queryParameters,
+            },
+            initOverrides,
+        );
+
+        return new runtime.VoidApiResponse(response);
+    }
+
+    /**
+     */
+    async apiMealsMealIdRecipeEntriesRecipeEntryIdDelete(
+        requestParameters: ApiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRequest,
+        initOverrides?: RequestInit | runtime.InitOverrideFunction,
+    ): Promise<void> {
+        await this.apiMealsMealIdRecipeEntriesRecipeEntryIdDeleteRaw(requestParameters, initOverrides);
     }
 
     /**
@@ -425,7 +746,7 @@ export class MealsApi extends runtime.BaseAPI implements MealsApiInterface {
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: PostMealRequestToJSON(requestParameters["postMealRequest"]),
+                body: MealPostRequestToJSON(requestParameters["mealPostRequest"]),
             },
             initOverrides,
         );

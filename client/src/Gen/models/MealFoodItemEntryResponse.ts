@@ -16,60 +16,71 @@ import { mapValues } from "../runtime";
 /**
  *
  * @export
- * @interface RecipeEntryResponse
+ * @interface MealFoodItemEntryResponse
  */
-export interface RecipeEntryResponse {
+export interface MealFoodItemEntryResponse {
     /**
      *
      * @type {number}
-     * @memberof RecipeEntryResponse
+     * @memberof MealFoodItemEntryResponse
      */
     id: number;
     /**
      *
      * @type {number}
-     * @memberof RecipeEntryResponse
+     * @memberof MealFoodItemEntryResponse
      */
     amount: number;
     /**
      *
      * @type {number}
-     * @memberof RecipeEntryResponse
+     * @memberof MealFoodItemEntryResponse
+     */
+    sequenceNumber: number;
+    /**
+     *
+     * @type {number}
+     * @memberof MealFoodItemEntryResponse
      */
     foodItemId: number;
 }
 
 /**
- * Check if a given object implements the RecipeEntryResponse interface.
+ * Check if a given object implements the MealFoodItemEntryResponse interface.
  */
-export function instanceOfRecipeEntryResponse(value: object): value is RecipeEntryResponse {
+export function instanceOfMealFoodItemEntryResponse(value: object): value is MealFoodItemEntryResponse {
     if (!("id" in value) || value["id"] === undefined) return false;
     if (!("amount" in value) || value["amount"] === undefined) return false;
+    if (!("sequenceNumber" in value) || value["sequenceNumber"] === undefined) return false;
     if (!("foodItemId" in value) || value["foodItemId"] === undefined) return false;
     return true;
 }
 
-export function RecipeEntryResponseFromJSON(json: any): RecipeEntryResponse {
-    return RecipeEntryResponseFromJSONTyped(json, false);
+export function MealFoodItemEntryResponseFromJSON(json: any): MealFoodItemEntryResponse {
+    return MealFoodItemEntryResponseFromJSONTyped(json, false);
 }
 
-export function RecipeEntryResponseFromJSONTyped(json: any, ignoreDiscriminator: boolean): RecipeEntryResponse {
+export function MealFoodItemEntryResponseFromJSONTyped(
+    json: any,
+    ignoreDiscriminator: boolean,
+): MealFoodItemEntryResponse {
     if (json == null) {
         return json;
     }
     return {
         id: json["id"],
         amount: json["amount"],
+        sequenceNumber: json["sequenceNumber"],
         foodItemId: json["foodItemId"],
     };
 }
 
-export function RecipeEntryResponseToJSON(json: any): RecipeEntryResponse {
-    return RecipeEntryResponseToJSONTyped(json, false);
+export function MealFoodItemEntryResponseToJSON(json: any): MealFoodItemEntryResponse {
+    return MealFoodItemEntryResponseToJSONTyped(json, false);
 }
 
-export function RecipeEntryResponseToJSONTyped(
-    value?: RecipeEntryResponse | null,
+export function MealFoodItemEntryResponseToJSONTyped(
+    value?: MealFoodItemEntryResponse | null,
     ignoreDiscriminator: boolean = false,
 ): any {
     if (value == null) {
@@ -79,6 +90,7 @@ export function RecipeEntryResponseToJSONTyped(
     return {
         id: value["id"],
         amount: value["amount"],
+        sequenceNumber: value["sequenceNumber"],
         foodItemId: value["foodItemId"],
     };
 }

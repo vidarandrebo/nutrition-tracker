@@ -17,39 +17,61 @@ export const useMealViewStore = defineStore("mealViewStore", () => {
 
     const mealsView = computed((): MealView[] => {
         return mealStore.mealsForDay.map((m) => {
-            return new MealView(
-                m.id,
-                m.timestamp,
-                m.entries.map((me) => {
-                    if (me.foodItemId) {
-                        const fi = foodItemStore.getFoodItem(me.foodItemId);
+            const entries: MealEntryView[] = [];
+            const foodItemEntries = m.foodItemEntries
+                .map((me) => {
+                    const fi = foodItemStore.getFoodItem(me.foodItemId);
+                    if (fi) {
                         return new MealEntryView(
                             me.id,
-                            fi?.name ?? "",
+                            fi.name,
                             me.amount,
-                            EntryType.Recipe,
-                            fi ? (fi.protein * me.amount) / 100 : 0.0,
-                            fi ? (fi.carbohydrate * me.amount) / 100 : 0.0,
-                            fi ? (fi.fat * me.amount) / 100 : 0.0,
-                            fi ? (fi.kCal * me.amount) / 100 : 0.0,
+                            EntryType.FoodItem,
+                            (fi.protein * me.amount) / 100,
+                            (fi.carbohydrate * me.amount) / 100,
+                            (fi.fat * me.amount) / 100,
+                            (fi.kCal * me.amount) / 100,
                         );
-                    } else if (me.recipeId) {
-                        const r = recipeStore.getRecipe(me.recipeId);
-                        return new MealEntryView(
-                            me.id,
-                            r?.name ?? "",
-                            me.amount,
-                            EntryType.Recipe,
-                            r ? r.protein * me.amount : 0.0,
-                            r ? r.carbohydrate * me.amount : 0.0,
-                            r ? r.fat * me.amount : 0.0,
-                            r ? r.kCal * me.amount : 0.0,
-                        );
-                    } else {
-                        throw new Error("neither food item or recipe found on meal entry");
                     }
-                }),
-            );
+                })
+                .filter((item): item is MealEntryView => !!item);
+            const recipeEntries = m.recipeEntries
+                .map((me) => {
+                    const r = recipeStore.getRecipe(me.recipeId);
+                    if (r) {
+                        return new MealEntryView(
+                            me.id,
+                            r.name,
+                            me.amount,
+                            EntryType.Recipe,
+                            r.protein * me.amount,
+                            r.carbohydrate * me.amount,
+                            r.fat * me.amount,
+                            r.kCal * me.amount,
+                        );
+                    }
+                })
+                .filter((item): item is MealEntryView => !!item);
+            const macroEntries = m.macronutrientEntries
+                .map((me) => {
+                    if (me) {
+                        return new MealEntryView(
+                            me.id,
+                            "Macros",
+                            1,
+                            EntryType.Macronutrient,
+                            me.protein,
+                            me.carbohydrate,
+                            me.fat,
+                            me.kCal,
+                        );
+                    }
+                })
+                .filter((item): item is MealEntryView => !!item);
+            entries.push(...recipeEntries);
+            entries.push(...foodItemEntries);
+            entries.push(...macroEntries);
+            return new MealView(m.id, m.timestamp, entries);
         });
     });
 

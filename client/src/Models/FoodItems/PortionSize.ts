@@ -1,6 +1,6 @@
-import type { PortionSizeResponse } from "../../Gen";
 import { getFoodItemsClient } from "../Api.ts";
 import { type Result, tryCatch } from "../../Utilities/tryCatch.ts";
+import type { FoodItemPortionSizeResponse } from "../../Gen";
 
 export class PortionSize {
     id: number;
@@ -11,22 +11,22 @@ export class PortionSize {
         this.amount = 0;
         this.name = "";
     }
-    static fromResponse(res: PortionSizeResponse): PortionSize {
+    static fromResponse(res: FoodItemPortionSizeResponse): PortionSize {
         const p = new PortionSize();
         p.id = res.id;
         p.amount = res.amount;
         p.name = res.name;
         return p;
     }
-    static fromResponses(res: PortionSizeResponse[]): PortionSize[] {
+    static fromResponses(res: FoodItemPortionSizeResponse[]): PortionSize[] {
         return res.map((r) => this.fromResponse(r));
     }
-    static async add(ps: PortionSizeForm, foodItemId: number): Promise<Result<PortionSizeResponse>> {
+    static async add(ps: PortionSizeForm, foodItemId: number): Promise<Result<FoodItemPortionSizeResponse>> {
         const client = getFoodItemsClient();
         return await tryCatch(
             client.apiFoodItemsIdPortionsPost({
                 id: foodItemId,
-                postFoodItemPortion: {
+                foodItemPortionPostRequest: {
                     name: ps.name,
                     amount: ps.amount,
                 },

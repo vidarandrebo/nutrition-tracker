@@ -16,40 +16,40 @@ import { mapValues } from "../runtime";
 /**
  *
  * @export
- * @interface PostFoodItemMicronutrient
+ * @interface FoodItemPortionPostRequest
  */
-export interface PostFoodItemMicronutrient {
+export interface FoodItemPortionPostRequest {
     /**
      *
      * @type {number}
-     * @memberof PostFoodItemMicronutrient
+     * @memberof FoodItemPortionPostRequest
      */
     amount: number;
     /**
      *
      * @type {string}
-     * @memberof PostFoodItemMicronutrient
+     * @memberof FoodItemPortionPostRequest
      */
     name: string;
 }
 
 /**
- * Check if a given object implements the PostFoodItemMicronutrient interface.
+ * Check if a given object implements the FoodItemPortionPostRequest interface.
  */
-export function instanceOfPostFoodItemMicronutrient(value: object): value is PostFoodItemMicronutrient {
+export function instanceOfFoodItemPortionPostRequest(value: object): value is FoodItemPortionPostRequest {
     if (!("amount" in value) || value["amount"] === undefined) return false;
     if (!("name" in value) || value["name"] === undefined) return false;
     return true;
 }
 
-export function PostFoodItemMicronutrientFromJSON(json: any): PostFoodItemMicronutrient {
-    return PostFoodItemMicronutrientFromJSONTyped(json, false);
+export function FoodItemPortionPostRequestFromJSON(json: any): FoodItemPortionPostRequest {
+    return FoodItemPortionPostRequestFromJSONTyped(json, false);
 }
 
-export function PostFoodItemMicronutrientFromJSONTyped(
+export function FoodItemPortionPostRequestFromJSONTyped(
     json: any,
     ignoreDiscriminator: boolean,
-): PostFoodItemMicronutrient {
+): FoodItemPortionPostRequest {
     if (json == null) {
         return json;
     }
@@ -59,12 +59,12 @@ export function PostFoodItemMicronutrientFromJSONTyped(
     };
 }
 
-export function PostFoodItemMicronutrientToJSON(json: any): PostFoodItemMicronutrient {
-    return PostFoodItemMicronutrientToJSONTyped(json, false);
+export function FoodItemPortionPostRequestToJSON(json: any): FoodItemPortionPostRequest {
+    return FoodItemPortionPostRequestToJSONTyped(json, false);
 }
 
-export function PostFoodItemMicronutrientToJSONTyped(
-    value?: PostFoodItemMicronutrient | null,
+export function FoodItemPortionPostRequestToJSONTyped(
+    value?: FoodItemPortionPostRequest | null,
     ignoreDiscriminator: boolean = false,
 ): any {
     if (value == null) {

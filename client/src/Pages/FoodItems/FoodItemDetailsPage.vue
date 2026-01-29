@@ -8,8 +8,8 @@ import ButtonPrimary from "../../Components/Buttons/ButtonPrimary.vue";
 import LevelPrimary from "../../Components/LevelPrimary.vue";
 import HeaderH2 from "../../Components/Headings/HeaderH2.vue";
 import ButtonDanger from "../../Components/Buttons/ButtonDanger.vue";
-import { type PostFoodItemPortion } from "../../Gen";
 import AddFoodItemPortion from "./AddFoodItemPortion.vue";
+import type { FoodItemPortionPostRequest } from "../../Gen";
 
 const route = useRoute();
 let foodItemId = 0;
@@ -34,7 +34,7 @@ onMounted(async () => {
     foodItem.value = localFi;
 });
 const addPortionModalOpen = ref<boolean>(false);
-async function addFoodItemPortion(ps: PostFoodItemPortion) {
+async function addFoodItemPortion(ps: FoodItemPortionPostRequest) {
     if (foodItem.value) {
         await foodItemStore.addPortionSize(foodItem.value.id, ps);
         addPortionModalOpen.value = false;

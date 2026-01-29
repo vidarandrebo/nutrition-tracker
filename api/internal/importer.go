@@ -19,7 +19,7 @@ type Importer struct {
 	Options  *configuration.Options
 	Logger   *slog.Logger
 	Services *Services
-	Stores   *Stores
+	Stores   *Repositories
 }
 
 func (a *Importer) CloseDB() {
@@ -64,13 +64,13 @@ func (a *Importer) configureServices() {
 	a.Services = &Services{}
 	a.Services.JwtService = auth.NewJwtService(a.Options)
 	a.Services.HashingService = auth.NewHashingService()
-	a.Services.AuthService = auth.NewAuthService(a.Stores.UserStore, a.Services.HashingService, a.Services.JwtService)
+	a.Services.AuthService = auth.NewAuthService(a.Stores.UserRepository, a.Services.HashingService, a.Services.JwtService)
 }
 
 func (a *Importer) configureStores() {
-	a.Stores = &Stores{}
-	a.Stores.FoodItemStore = fooditem.NewStore(a.DB, a.Logger)
-	a.Stores.UserStore = user.NewStore(a.DB, a.Logger)
+	a.Stores = &Repositories{}
+	a.Stores.FoodItemRepository = fooditem.NewRepository(a.DB, a.Logger)
+	a.Stores.UserRepository = user.NewRepository(a.DB, a.Logger)
 }
 
 func (a *Importer) Setup() {

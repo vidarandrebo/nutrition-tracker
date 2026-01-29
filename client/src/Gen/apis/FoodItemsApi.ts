@@ -14,26 +14,26 @@
 
 import * as runtime from "../runtime";
 import type {
+    FoodItemMicronutrientPostRequest,
+    FoodItemMicronutrientResponse,
+    FoodItemPortionPostRequest,
+    FoodItemPortionSizeResponse,
+    FoodItemPostRequest,
     FoodItemResponse,
-    MicronutrientResponse,
-    PortionSizeResponse,
-    PostFoodItemMicronutrient,
-    PostFoodItemPortion,
-    PostFoodItemRequest,
 } from "../models/index";
 import {
+    FoodItemMicronutrientPostRequestFromJSON,
+    FoodItemMicronutrientPostRequestToJSON,
+    FoodItemMicronutrientResponseFromJSON,
+    FoodItemMicronutrientResponseToJSON,
+    FoodItemPortionPostRequestFromJSON,
+    FoodItemPortionPostRequestToJSON,
+    FoodItemPortionSizeResponseFromJSON,
+    FoodItemPortionSizeResponseToJSON,
+    FoodItemPostRequestFromJSON,
+    FoodItemPostRequestToJSON,
     FoodItemResponseFromJSON,
     FoodItemResponseToJSON,
-    MicronutrientResponseFromJSON,
-    MicronutrientResponseToJSON,
-    PortionSizeResponseFromJSON,
-    PortionSizeResponseToJSON,
-    PostFoodItemMicronutrientFromJSON,
-    PostFoodItemMicronutrientToJSON,
-    PostFoodItemPortionFromJSON,
-    PostFoodItemPortionToJSON,
-    PostFoodItemRequestFromJSON,
-    PostFoodItemRequestToJSON,
 } from "../models/index";
 
 export interface ApiFoodItemsIdDeleteRequest {
@@ -46,16 +46,16 @@ export interface ApiFoodItemsIdGetRequest {
 
 export interface ApiFoodItemsIdMicronutrientsPostRequest {
     id: number;
-    postFoodItemMicronutrient?: PostFoodItemMicronutrient;
+    foodItemMicronutrientPostRequest?: FoodItemMicronutrientPostRequest;
 }
 
 export interface ApiFoodItemsIdPortionsPostRequest {
     id: number;
-    postFoodItemPortion?: PostFoodItemPortion;
+    foodItemPortionPostRequest?: FoodItemPortionPostRequest;
 }
 
 export interface ApiFoodItemsPostRequest {
-    postFoodItemRequest?: PostFoodItemRequest;
+    foodItemPostRequest?: FoodItemPostRequest;
 }
 
 /**
@@ -120,7 +120,7 @@ export interface FoodItemsApiInterface {
     /**
      *
      * @param {number} id
-     * @param {PostFoodItemMicronutrient} [postFoodItemMicronutrient]
+     * @param {FoodItemMicronutrientPostRequest} [foodItemMicronutrientPostRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FoodItemsApiInterface
@@ -128,19 +128,19 @@ export interface FoodItemsApiInterface {
     apiFoodItemsIdMicronutrientsPostRaw(
         requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<MicronutrientResponse>>;
+    ): Promise<runtime.ApiResponse<FoodItemMicronutrientResponse>>;
 
     /**
      */
     apiFoodItemsIdMicronutrientsPost(
         requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<MicronutrientResponse>;
+    ): Promise<FoodItemMicronutrientResponse>;
 
     /**
      *
      * @param {number} id
-     * @param {PostFoodItemPortion} [postFoodItemPortion]
+     * @param {FoodItemPortionPostRequest} [foodItemPortionPostRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FoodItemsApiInterface
@@ -148,18 +148,18 @@ export interface FoodItemsApiInterface {
     apiFoodItemsIdPortionsPostRaw(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<PortionSizeResponse>>;
+    ): Promise<runtime.ApiResponse<FoodItemPortionSizeResponse>>;
 
     /**
      */
     apiFoodItemsIdPortionsPost(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<PortionSizeResponse>;
+    ): Promise<FoodItemPortionSizeResponse>;
 
     /**
      *
-     * @param {PostFoodItemRequest} [postFoodItemRequest]
+     * @param {FoodItemPostRequest} [foodItemPostRequest]
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof FoodItemsApiInterface
@@ -304,7 +304,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
     async apiFoodItemsIdMicronutrientsPostRaw(
         requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<MicronutrientResponse>> {
+    ): Promise<runtime.ApiResponse<FoodItemMicronutrientResponse>> {
         if (requestParameters["id"] == null) {
             throw new runtime.RequiredError(
                 "id",
@@ -327,12 +327,12 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: PostFoodItemMicronutrientToJSON(requestParameters["postFoodItemMicronutrient"]),
+                body: FoodItemMicronutrientPostRequestToJSON(requestParameters["foodItemMicronutrientPostRequest"]),
             },
             initOverrides,
         );
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => MicronutrientResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => FoodItemMicronutrientResponseFromJSON(jsonValue));
     }
 
     /**
@@ -340,7 +340,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
     async apiFoodItemsIdMicronutrientsPost(
         requestParameters: ApiFoodItemsIdMicronutrientsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<MicronutrientResponse> {
+    ): Promise<FoodItemMicronutrientResponse> {
         const response = await this.apiFoodItemsIdMicronutrientsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -350,7 +350,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
     async apiFoodItemsIdPortionsPostRaw(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<runtime.ApiResponse<PortionSizeResponse>> {
+    ): Promise<runtime.ApiResponse<FoodItemPortionSizeResponse>> {
         if (requestParameters["id"] == null) {
             throw new runtime.RequiredError(
                 "id",
@@ -373,12 +373,12 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: PostFoodItemPortionToJSON(requestParameters["postFoodItemPortion"]),
+                body: FoodItemPortionPostRequestToJSON(requestParameters["foodItemPortionPostRequest"]),
             },
             initOverrides,
         );
 
-        return new runtime.JSONApiResponse(response, (jsonValue) => PortionSizeResponseFromJSON(jsonValue));
+        return new runtime.JSONApiResponse(response, (jsonValue) => FoodItemPortionSizeResponseFromJSON(jsonValue));
     }
 
     /**
@@ -386,7 +386,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
     async apiFoodItemsIdPortionsPost(
         requestParameters: ApiFoodItemsIdPortionsPostRequest,
         initOverrides?: RequestInit | runtime.InitOverrideFunction,
-    ): Promise<PortionSizeResponse> {
+    ): Promise<FoodItemPortionSizeResponse> {
         const response = await this.apiFoodItemsIdPortionsPostRaw(requestParameters, initOverrides);
         return await response.value();
     }
@@ -411,7 +411,7 @@ export class FoodItemsApi extends runtime.BaseAPI implements FoodItemsApiInterfa
                 method: "POST",
                 headers: headerParameters,
                 query: queryParameters,
-                body: PostFoodItemRequestToJSON(requestParameters["postFoodItemRequest"]),
+                body: FoodItemPostRequestToJSON(requestParameters["foodItemPostRequest"]),
             },
             initOverrides,
         );

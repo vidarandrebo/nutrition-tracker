@@ -16,30 +16,30 @@ import { mapValues } from "../runtime";
 /**
  *
  * @export
- * @interface PostMealRequest
+ * @interface MealPostRequest
  */
-export interface PostMealRequest {
+export interface MealPostRequest {
     /**
      *
      * @type {Date}
-     * @memberof PostMealRequest
+     * @memberof MealPostRequest
      */
     timestamp: Date;
 }
 
 /**
- * Check if a given object implements the PostMealRequest interface.
+ * Check if a given object implements the MealPostRequest interface.
  */
-export function instanceOfPostMealRequest(value: object): value is PostMealRequest {
+export function instanceOfMealPostRequest(value: object): value is MealPostRequest {
     if (!("timestamp" in value) || value["timestamp"] === undefined) return false;
     return true;
 }
 
-export function PostMealRequestFromJSON(json: any): PostMealRequest {
-    return PostMealRequestFromJSONTyped(json, false);
+export function MealPostRequestFromJSON(json: any): MealPostRequest {
+    return MealPostRequestFromJSONTyped(json, false);
 }
 
-export function PostMealRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): PostMealRequest {
+export function MealPostRequestFromJSONTyped(json: any, ignoreDiscriminator: boolean): MealPostRequest {
     if (json == null) {
         return json;
     }
@@ -48,11 +48,11 @@ export function PostMealRequestFromJSONTyped(json: any, ignoreDiscriminator: boo
     };
 }
 
-export function PostMealRequestToJSON(json: any): PostMealRequest {
-    return PostMealRequestToJSONTyped(json, false);
+export function MealPostRequestToJSON(json: any): MealPostRequest {
+    return MealPostRequestToJSONTyped(json, false);
 }
 
-export function PostMealRequestToJSONTyped(value?: PostMealRequest | null, ignoreDiscriminator: boolean = false): any {
+export function MealPostRequestToJSONTyped(value?: MealPostRequest | null, ignoreDiscriminator: boolean = false): any {
     if (value == null) {
         return value;
     }

@@ -12,12 +12,12 @@ import (
 )
 
 type Endpoint struct {
-	store  *Store
-	logger *slog.Logger
+	service IService
+	logger  *slog.Logger
 }
 
-func NewEndpoint(store *Store, logger *slog.Logger) *Endpoint {
-	e := Endpoint{store: store}
+func NewEndpoint(service IService, logger *slog.Logger) *Endpoint {
+	e := Endpoint{service: service}
 	e.logger = logger.With("module", reflect.TypeOf(e))
 	return &e
 }
@@ -27,11 +27,11 @@ func (e Endpoint) GetApiFoodItems(ctx context.Context, request api.GetApiFoodIte
 	if err != nil {
 		return nil, err
 	}
-	items := e.store.Get(userID)
+	items, err := e.service.Get(userID)
 	responses := make([]api.FoodItemResponse, 0)
 
 	for _, item := range items {
-		responses = append(responses, item.ToFoodItemResponse())
+		responses = append(responses, item.ToResponse())
 	}
 	return api.GetApiFoodItems200JSONResponse(responses), nil
 }
@@ -42,24 +42,15 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 		return nil, err
 	}
 
-	r := PostFoodItemRequest{
-		Manufacturer: request.Body.Manufacturer,
-		Product:      request.Body.Product,
-		Protein:      request.Body.Protein,
-		Carbohydrate: request.Body.Carbohydrate,
-		Fat:          request.Body.Fat,
-		Public:       request.Body.IsPublic,
-	}
-	e.logger.Info("new foodItem", slog.Bool("isPublic", r.Public))
-	if request.Body.KCal == nil {
-		r.KCal = 0.0
-	} else {
-		r.KCal = *request.Body.KCal
-	}
-	item := r.ToFoodItem()
+	e.logger.Info("new foodItem", slog.Bool("isPublic", request.Body.IsPublic))
+	item := NewFoodItem().FromRequest(request.Body)
 	item.OwnerID = userID
-	newItem := e.store.Add(item)
-	return api.PostApiFoodItems201JSONResponse(newItem.ToFoodItemResponse()), nil
+	newItem, err := e.service.Add(item)
+	if err != nil {
+		return nil, err
+	}
+
+	return api.PostApiFoodItems201JSONResponse(newItem.ToResponse()), nil
 }
 
 func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodItemsIdRequestObject) (api.GetApiFoodItemsIdResponseObject, error) {
@@ -67,13 +58,13 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 	if err != nil {
 		return nil, err
 	}
-	item, err := e.store.GetByID(request.Id)
+	item, err := e.service.GetByID(request.Id)
 	if err != nil || !item.HasAccess(userID) {
 		e.logger.Info("fooditem not found", slog.Any("err", err))
 		return nil, err
 	}
 
-	return api.GetApiFoodItemsId200JSONResponse(item.ToFoodItemResponse()), nil
+	return api.GetApiFoodItemsId200JSONResponse(item.ToResponse()), nil
 }
 
 func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteApiFoodItemsIdRequestObject) (api.DeleteApiFoodItemsIdResponseObject, error) {
@@ -81,7 +72,7 @@ func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteAp
 	if err != nil {
 		return nil, err
 	}
-	err = e.store.Delete(request.Id, userID)
+	err = e.service.Delete(request.Id, userID)
 	if err != nil {
 		return api.DeleteApiFoodItemsId409Response{}, nil
 	}
@@ -93,11 +84,8 @@ func (e Endpoint) PostApiFoodItemsIdPortions(ctx context.Context, request api.Po
 	if err != nil {
 		return nil, utils.ErrUnauthorized
 	}
-	portionSize := PortionSize{
-		Amount: request.Body.Amount,
-		Name:   request.Body.Name,
-	}
-	ps, err := e.store.AddPortionSize(request.Id, portionSize, userID)
+	ps, err := e.service.AddPortionSize(FromPortionSizePost(request.Body), request.Id, userID)
+
 	if errors.Is(err, utils.ErrEntityNotFound) {
 		return api.PostApiFoodItemsIdPortions404Response{}, nil
 	} else if errors.Is(err, utils.ErrEntityNotOwned) {
@@ -113,11 +101,10 @@ func (e Endpoint) PostApiFoodItemsIdMicronutrients(ctx context.Context, request 
 	if err != nil {
 		return nil, utils.ErrUnauthorized
 	}
-	micronutrient := Micronutrient{
-		Amount: request.Body.Amount,
-		Name:   request.Body.Name,
-	}
-	ps, err := e.store.AddMicronutrient(request.Id, micronutrient, userID)
+
+	micronutrient := FromMicronutrientPost(request.Body)
+
+	ps, err := e.service.AddMicronutrient(micronutrient, request.Id, userID)
 	if errors.Is(err, utils.ErrEntityNotFound) {
 		return api.PostApiFoodItemsIdMicronutrients404Response{}, nil
 	} else if errors.Is(err, utils.ErrEntityNotOwned) {

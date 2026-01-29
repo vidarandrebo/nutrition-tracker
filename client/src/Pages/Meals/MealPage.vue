@@ -5,18 +5,23 @@ import { useMealStore } from "../../Stores/MealStore.ts";
 import { onMounted, ref } from "vue";
 import type { Meal } from "../../Models/Meals/Meal.ts";
 import TabMenu from "../../Components/TabMenu.vue";
-import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import { useFoodItemStore } from "../../Stores/FoodItemStore.ts";
 import FoodItemTab from "./FoodItemTab.vue";
 import RecipeTab from "./RecipeTab.vue";
+import type { MealFoodItemEntryPostRequest, MealRecipeEntryPostRequest } from "../../Gen";
 
 const activeTab = ref<string>("Food Items");
 const mealStore = useMealStore();
 const foodItemStore = useFoodItemStore();
 
-async function addToMeal(foodItemForm: PostMealEntryRequest) {
+async function addRecipeToMeal(form: MealRecipeEntryPostRequest) {
     if (meal.value) {
-        await mealStore.addMealEntry(foodItemForm, meal.value.id);
+        await mealStore.addRecipeEntry(form, meal.value.id);
+    }
+}
+async function addFoodItemToMeal(form: MealFoodItemEntryPostRequest) {
+    if (meal.value) {
+        await mealStore.addFoodItemEntry(form, meal.value.id);
     }
 }
 
@@ -55,10 +60,10 @@ onMounted(async () => {
             @selected="(value) => (activeTab = value)"
         ></TabMenu>
         <template v-if="activeTab === 'Food Items'">
-            <FoodItemTab @add-entry="addToMeal"></FoodItemTab>
+            <FoodItemTab @add-entry="addFoodItemToMeal"></FoodItemTab>
         </template>
         <template v-if="activeTab === 'Recipes'">
-            <RecipeTab @add-entry="addToMeal"></RecipeTab>
+            <RecipeTab @add-entry="addRecipeToMeal"></RecipeTab>
         </template>
     </section>
 </template>

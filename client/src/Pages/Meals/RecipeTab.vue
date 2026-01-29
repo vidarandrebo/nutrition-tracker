@@ -5,22 +5,21 @@ import ModalPrimary from "../../Components/ModalPrimary.vue";
 import LabelPrimary from "../../Components/Forms/LabelPrimary.vue";
 import { computed, ref } from "vue";
 import type { Energy } from "../../Models/Common/Energy.ts";
-import type { PostMealEntryRequest } from "../../Models/Meals/Requests.ts";
 import RecipeSelector from "../Recipes/RecipeSelector.vue";
 import { useRecipeViewStore } from "../../Stores/RecipeViewStore.ts";
 import type { RecipeView } from "../../Models/Recipes/RecipeView.ts";
+import type { MealRecipeEntryPostRequest } from "../../Gen";
 
 const recipeStore = useRecipeViewStore();
 const selectedRecipe = ref<RecipeView | undefined>(undefined);
 const modalActive = ref<boolean>(false);
-const recipeForm = ref<PostMealEntryRequest>({
+const recipeForm = ref<MealRecipeEntryPostRequest>({
     recipeId: 0,
-    foodItemId: 0,
     amount: 0,
 });
 
 const emit = defineEmits<{
-    addEntry: [entry: PostMealEntryRequest];
+    addEntry: [entry: MealRecipeEntryPostRequest];
 }>();
 
 function showItemDialog(itemId: number) {
