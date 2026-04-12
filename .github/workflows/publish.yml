@@ -33,13 +33,13 @@ jobs:
         user: ${{secrets.SSH_USERNAME}}
 
     - name: Vue artifact
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         name: "client"
         path: "./static"
 
     - name: Go artifact
-      uses: actions/download-artifact@v7
+      uses: actions/download-artifact@v8
       with:
         name: "api"
         path: "./bin"
