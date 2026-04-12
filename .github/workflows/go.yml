@@ -33,7 +33,7 @@ jobs:
 
     - name: Store artifact
       if: inputs.upload-artifact
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v7
       with:
         name: "api"
         path: "./api/bin"
