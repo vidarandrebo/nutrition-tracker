@@ -12,3 +12,8 @@ updates:
       interval: "weekly"
     cooldown:
       default-days: 7
+    # Group ALL GitHub Actions updates together
+    groups:
+      github-actions:
+        patterns:
+          - "*"
