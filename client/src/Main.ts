@@ -40,6 +40,7 @@ library.add(
 );
 
 const app = createApp(App);
+// @ts-expect-error too complex union type
 app.component("VueFontAwesome", FontAwesomeIcon);
 app.use(router);
 app.use(pinia);
