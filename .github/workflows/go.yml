@@ -27,7 +27,7 @@ jobs:
         go-version-file: api/go.mod
 
     - name: Go
-      uses: "./.github/actions/go-build"
+      uses: "$/.github/actions/go-build"
       with: 
         working-directory: "./api"
 
