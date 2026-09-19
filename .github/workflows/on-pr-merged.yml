@@ -1,13 +1,17 @@
 name: "On PR Merged"
 
-on: 
+on:
   pull_request:
     types:
       - closed
     branches:
       - main
 
-permissions: {}
+permissions: { }
+
+concurrency:
+  group: publish
+  queue: max
 
 jobs:
   go:
@@ -24,7 +28,7 @@ jobs:
 
 
   publish:
-    needs: [go, vue]
+    needs: [ go, vue ]
     name: "Publish"
     uses: "./.github/workflows/publish.yml"
     secrets:
