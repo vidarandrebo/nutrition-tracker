@@ -10,12 +10,12 @@ permissions: {}
 jobs:
   zizmor:
     name: "zizmor"
-    uses: "./.github/workflows/zizmor.yml"
+    uses: "$/.github/workflows/zizmor.yml"
 
   go:
     name: "Go"
-    uses: "./.github/workflows/go.yml"
+    uses: "$/.github/workflows/go.yml"
 
   vue:
     name: "Vue"
-    uses: "./.github/workflows/vue.yml"
+    uses: "$/.github/workflows/vue.yml"

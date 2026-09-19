@@ -25,7 +25,7 @@ jobs:
         persist-credentials: false
     
     - name: Setup SSH
-      uses: "./.github/actions/ssh"
+      uses: "$/.github/actions/ssh"
       with:
         known-hosts: ${{secrets.KNOWN_HOSTS}}
         ssh-key: ${{secrets.SSH_KEY}}
