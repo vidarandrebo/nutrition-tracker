@@ -38,7 +38,7 @@ func main() {
 
 	commands := flag.Args()
 
-	db, err := sql.Open("pgx", opt.DBConnectionString)
+	db, err := sql.Open("pgx", opt.Database.ConnectionString)
 	if err != nil {
 		panic(err)
 	}

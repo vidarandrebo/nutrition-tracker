@@ -29,5 +29,3 @@ logs/
 /*.log
 /*.env
 /static/
-
-appsettings.json

@@ -20,7 +20,7 @@ type JwtService struct {
 func NewJwtService(opt *configuration.Options) *JwtService {
 	return &JwtService{
 		opt: opt,
-		key: []byte(opt.JwtSecret),
+		key: []byte(opt.Jwt.Secret),
 	}
 }
 
@@ -37,9 +37,9 @@ func (js *JwtService) NewJwtClaims(userID int64) *JwtClaims {
 	now := time.Now()
 	return &JwtClaims{
 		Subject:        userID,
-		Issuer:         js.opt.JwtIssuer,
-		Audience:       []string{js.opt.JwtAudience},
-		ExpirationTime: jwt.NewNumericDate(now.Add(time.Duration(js.opt.JwtExpirationTime) * time.Second)),
+		Issuer:         js.opt.Jwt.Issuer,
+		Audience:       []string{js.opt.Jwt.Audience},
+		ExpirationTime: jwt.NewNumericDate(now.Add(time.Duration(js.opt.Jwt.ExpirationTime) * time.Second)),
 		IssuedAt:       jwt.NewNumericDate(now),
 		NotBefore:      jwt.NewNumericDate(now.Add(-5 * time.Minute)),
 	}
@@ -57,11 +57,11 @@ func (jc *JwtClaims) ToClaimsMap() jwt.MapClaims {
 }
 
 func (jc *JwtService) validateIssuer(claims JwtClaims) bool {
-	return claims.Issuer == jc.opt.JwtIssuer
+	return claims.Issuer == jc.opt.Jwt.Issuer
 }
 
 func (js *JwtService) validateAudience(claims JwtClaims) bool {
-	return slices.Contains(claims.Audience, js.opt.JwtAudience)
+	return slices.Contains(claims.Audience, js.opt.Jwt.Audience)
 }
 
 func (jc *JwtClaims) validateExpirationTime() bool {
