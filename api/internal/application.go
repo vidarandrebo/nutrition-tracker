@@ -87,7 +87,7 @@ func (a *Application) addLogger() {
 }
 
 func (a *Application) addDB() {
-	db, err := sql.Open("pgx", a.Options.DBConnectionString)
+	db, err := sql.Open("pgx", a.Options.Database.ConnectionString)
 	if err != nil {
 		panic(err)
 	}

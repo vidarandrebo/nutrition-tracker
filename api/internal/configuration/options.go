@@ -13,12 +13,16 @@ type JwtOptions struct {
 	ExpirationTime int64  `mapstructure:"ExpirationTime"`
 }
 
+type DbOptions struct {
+	ConnectionString string `mapstructure:"ConnectionString"`
+}
+
 type Options struct {
 	Jwt                  JwtOptions                       `mapstructure:"Jwt"`
 	ListenAddress        string                           `mapstructure:"ListenAddress"`
 	StaticFilesDirectory string                           `mapstructure:"StaticFilesDirectory"`
 	LogFile              string                           `mapstructure:"LogFile"`
-	DBConnectionString   string                           `mapstructure:"DBConnectionString"`
+	Database             DbOptions                        `mapstructure:"Database"`
 	SystemUsers          map[string]SystemUserCredentials `mapstructure:"SystemUsers"`
 	DataImporterTarget   string                           `mapstructure:"DataImporterTarget"`
 }

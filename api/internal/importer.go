@@ -45,7 +45,7 @@ func (a *Importer) configureLogger() {
 }
 
 func (a *Importer) configureDB() {
-	db, err := sql.Open("pgx", a.Options.DBConnectionString)
+	db, err := sql.Open("pgx", a.Options.Database.ConnectionString)
 	if err != nil {
 		panic(err)
 	}
