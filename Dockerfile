@@ -6,7 +6,7 @@ ENV CI="TRUE"
 
 COPY ./client/ /data/
 
-RUN corepack enable
+RUN apk add --no-cache pnpm
 
 RUN pnpm install --frozen-lockfile
 
