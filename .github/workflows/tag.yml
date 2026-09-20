@@ -1,0 +1,41 @@
+name: Tag
+
+on:
+  workflow_call:
+
+permissions:
+  contents: write
+
+jobs:
+  tag-api:
+    name: "Tag"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: true
+
+      - name: Get version
+        id: version
+        uses: "$/.github/actions/git-tag-version"
+        with:
+          package-json-file: "./client/package.json"
+
+      - name: Print version
+        run: echo ${STEPS_VERSION_OUTPUTS_VERSION_TAG}
+        env:
+          STEPS_VERSION_OUTPUTS_VERSION_TAG: ${{steps.version.outputs.version-tag }}
+
+      - name: Configure Git
+        shell: bash
+        run: |
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+
+      - name: Create and push tag
+        shell: bash
+        run: |
+          git tag ${STEPS_VERSION_OUTPUTS_VERSION_TAG} -m "Nutrition Tracker version ${STEPS_VERSION_OUTPUTS_VERSION_TAG}"
+          git push origin ${STEPS_VERSION_OUTPUTS_VERSION_TAG}
+        env:
+          STEPS_VERSION_OUTPUTS_VERSION_TAG: ${{ steps.version.outputs.version-tag }}
