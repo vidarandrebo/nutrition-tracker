@@ -19,3 +19,9 @@ jobs:
   vue:
     name: "Vue"
     uses: "$/.github/workflows/vue.yml"
+
+  docker:
+    name: "Docker"
+    uses: "$/.github/workflows/docker.yml"
+    with:
+      push: false

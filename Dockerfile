@@ -1,4 +1,4 @@
-FROM node:24.11.1-alpine3.23 AS node-build-env
+FROM node:26.8.2-alpine3.23 AS node-build-env
 LABEL authors="Vidar André Bø"
 
 WORKDIR /data/
@@ -6,7 +6,7 @@ ENV CI="TRUE"
 
 COPY ./client/ /data/
 
-RUN corepack enable
+RUN apk add --no-cache pnpm
 
 RUN pnpm install --frozen-lockfile
 
