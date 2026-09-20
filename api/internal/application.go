@@ -54,6 +54,7 @@ type Endpoints struct {
 	RecipeEndpoint   *recipeEndpoint
 	AuthEndpoint     *authEndpoint
 	MealEndpoint     *mealEndpoint
+	HealthEndpoint   http.Handler
 }
 
 type Middlewares struct {
@@ -131,6 +132,7 @@ func (a *Application) addEndpoints() {
 		RecipeEndpoint:   recipe.NewEndpoint(a.Services.RecipeService, a.Logger),
 		AuthEndpoint:     auth.NewEndpoint(a.Services.AuthService, a.Logger),
 		MealEndpoint:     meal.NewEndpoint(a.Services.MealService, a.Logger),
+		HealthEndpoint:   NewHealthEndpoint(a.DB, a.Logger),
 	}
 }
 
@@ -175,6 +177,7 @@ func (a *Application) rootMux() *http.ServeMux {
 			EnableOpenMetrics: true,
 		},
 	))
+	mux.Handle("/healthz", a.Endpoints.HealthEndpoint)
 
 	return mux
 }
