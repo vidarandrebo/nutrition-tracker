@@ -19,3 +19,16 @@ jobs:
   vue:
     name: "Vue"
     uses: "$/.github/workflows/vue.yml"
+
+  tag:
+    permissions:
+      contents: write
+    name: "Tag"
+    uses: "$/.github/workflows/tag.yml"
+
+  docker:
+    permissions:
+      contents: write
+      packages: write
+    name: "Docker"
+    uses: "$/.github/workflows/docker.yml"
