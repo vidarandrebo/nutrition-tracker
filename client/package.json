@@ -1,5 +1,5 @@
 {
-    "name": "client",
+    "name": "nutrition-tracker-client",
     "private": true,
     "version": "1.0.0",
     "type": "module",
@@ -45,5 +45,6 @@
         "vue": "^3.5.42",
         "vue-router": "^5.3.1",
         "vue-tsc": "^3.3.11"
-    }
+    },
+    "packageManager": "pnpm@11.10.0"
 }
