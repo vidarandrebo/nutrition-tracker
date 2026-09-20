@@ -36,9 +36,11 @@ jobs:
       packages: write
     name: "Docker"
     uses: "$/.github/workflows/docker.yml"
+    with:
+      push: true
 
   publish:
-    needs: [ go, vue ]
+    needs: [ go, vue, docker ]
     name: "Publish"
     uses: "$/.github/workflows/publish.yml"
     secrets:
