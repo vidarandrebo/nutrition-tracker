@@ -1,0 +1,41 @@
+name: Get docker tag
+description: Get docker version tag for project
+
+inputs:
+  package-json-file:
+    required: true
+    description: "Location of package.json file"
+
+outputs:
+  version-tag:
+    description: "The semver version + timestamp"
+    value: ${{ steps.three.outputs.version-tag }}
+
+runs:
+  using: composite
+  steps:
+    - name: Extract Version from file
+      id: one
+      shell: bash
+      run: |
+        VERSION=$(jq -r .version "${INPUTS_PACKAGE_JSON_FILE}")
+        # Optional: Print it to verify
+        echo "Extracted version: $VERSION"
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+      env:
+        INPUTS_PACKAGE_JSON_FILE: ${{ inputs.package-json-file }}
+
+    - name: Generate timestamp
+      shell: bash
+      id: two
+      run: |
+        TIMESTAMP=$(date +%Y%m%d%H%M%S)
+        echo "timestamp=$TIMESTAMP" >> $GITHUB_OUTPUT
+
+    - name: Output
+      shell: bash
+      id: three
+      run: echo "version-tag=${STEPS_ONE_OUTPUTS_VERSION}-${STEPS_TWO_OUTPUTS_TIMESTAMP}" >> $GITHUB_OUTPUT
+      env:
+        STEPS_ONE_OUTPUTS_VERSION: ${{ steps.one.outputs.version }}
+        STEPS_TWO_OUTPUTS_TIMESTAMP: ${{ steps.two.outputs.timestamp }}
