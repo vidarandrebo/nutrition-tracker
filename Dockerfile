@@ -1,15 +1,18 @@
-FROM node:25-alpine AS node-build-env
+FROM node:24-alpine AS node-build-env
 LABEL authors="Vidar André Bø"
 
 WORKDIR /data/
+ENV CI="TRUE"
 
 COPY ./client/ /data/
 
-RUN npm ci
+RUN corepack enable
 
-RUN npm run build
+RUN pnpm install --frozen-lockfile
 
-FROM golang:1.25-alpine AS go-build-env
+RUN pnpm build
+
+FROM golang:1.26-alpine AS go-build-env
 
 WORKDIR /data/
 
