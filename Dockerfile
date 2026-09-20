@@ -1,4 +1,4 @@
-FROM node:24-alpine AS node-build-env
+FROM node:24.11.1-alpine3.23 AS node-build-env
 LABEL authors="Vidar André Bø"
 
 WORKDIR /data/
@@ -12,7 +12,7 @@ RUN pnpm install --frozen-lockfile
 
 RUN pnpm build
 
-FROM golang:1.26-alpine AS go-build-env
+FROM golang:1.27.1-alpine3.24 AS go-build-env
 
 WORKDIR /data/
 
@@ -20,7 +20,7 @@ COPY ./api/ /data/
 
 RUN go build cmd/api/main.go
 
-FROM alpine:3
+FROM alpine:3.24.2
 
 WORKDIR /data/
 
