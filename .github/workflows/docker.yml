@@ -39,9 +39,9 @@ jobs:
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ steps.version.outputs.version-tag }}
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:latest
           labels: |
-            org.opencontainers.image.url=https://github.com/vidarandrebo/bikeservice
-            org.opencontainers.image.title=bikeservice
+            org.opencontainers.image.url=https://github.com/vidarandrebo/nutrition-tracker
+            org.opencontainers.image.title=nutrition-tracker
             org.opencontainers.image.licenses=MIT
             org.opencontainers.image.version=${{ steps.version.outputs.version-tag }}
-            org.opencontainers.image.description=Bike service history web-app written with .NET and Vue
-            org.opencontainers.image.source=https://github.com/vidarandrebo/bikeservice
+            org.opencontainers.image.description=Nutrition Tracker web-app written with Golang and Vue
+            org.opencontainers.image.source=https://github.com/vidarandrebo/nutrition-tracker
