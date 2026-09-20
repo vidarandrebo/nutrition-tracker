@@ -35,7 +35,7 @@ func main() {
 	app := NewImporter()
 	app.Setup()
 
-	matvareTabellenCredentials, ok := app.Options.SystemUsers["Matvaretabellen"]
+	matvareTabellenCredentials, ok := app.Options.SystemUsers["matvaretabellen"]
 	if !ok {
 		panic("no systemuser config registered for matvaretabellen")
 	}
