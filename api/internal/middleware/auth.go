@@ -30,9 +30,8 @@ func (a *Auth) TokenToContext(next nethttp.StrictHTTPHandlerFunc, operationID st
 			// keep ctx as is if no valid token is found
 			a.log.Warn("authentication failure", slog.Any("error", err))
 			return next(ctx, w, r, request)
-		} else {
-			newCtx := context.WithValue(ctx, "user", claims)
-			return next(newCtx, w, r, request)
 		}
+		newCtx := context.WithValue(ctx, "user", claims)
+		return next(newCtx, w, r, request)
 	}
 }

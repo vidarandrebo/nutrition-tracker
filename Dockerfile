@@ -26,5 +26,6 @@ WORKDIR /data/
 
 COPY --from=node-build-env /data/dist/ ./static
 COPY --from=go-build-env /data/main .
+COPY --from=go-build-env /data/appsettings.json .
 
 ENTRYPOINT ["/data/main"]

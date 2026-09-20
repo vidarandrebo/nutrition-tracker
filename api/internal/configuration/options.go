@@ -1,9 +1,9 @@
 package configuration
 
 import (
-	"os"
+	"strings"
 
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
+	"github.com/spf13/viper"
 )
 
 type JwtOptions struct {
@@ -27,13 +27,20 @@ type Options struct {
 	DataImporterTarget   string                           `mapstructure:"DataImporterTarget"`
 }
 
-func ParseOptions(fileName string) (*Options, error) {
-	file, err := os.Open(fileName)
-	defer file.Close()
+func ParseOptions() (*Options, error) {
+	viper.SetConfigName("appsettings")
+	viper.AddConfigPath(".")
+	err := viper.ReadInConfig()
 	if err != nil {
 		return nil, err
 	}
-	options, err := utils.ParseJson[Options](file)
+	options := Options{}
+	viper.SetConfigType("json")
+	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "__"))
+	viper.SetEnvPrefix("NT_")
+	viper.AutomaticEnv()
+
+	err = viper.Unmarshal(&options)
 	if err != nil {
 		return nil, err
 	}

@@ -56,8 +56,8 @@ func (jc *JwtClaims) ToClaimsMap() jwt.MapClaims {
 	}
 }
 
-func (jc *JwtService) validateIssuer(claims JwtClaims) bool {
-	return claims.Issuer == jc.opt.Jwt.Issuer
+func (js *JwtService) validateIssuer(claims JwtClaims) bool {
+	return claims.Issuer == js.opt.Jwt.Issuer
 }
 
 func (js *JwtService) validateAudience(claims JwtClaims) bool {
@@ -137,7 +137,7 @@ func (js *JwtService) CreateToken(userID int64) (string, error) {
 }
 
 func (js *JwtService) ValidateToken(tokenString string) (*JwtClaims, error) {
-	extractedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	extractedToken, err := jwt.Parse(tokenString, func(token *jwt.Token) (any, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf("unexpected signing method: %v", token.Header["alg"])
 		}
