@@ -1,4 +1,3 @@
-/api/appsettings.json
 /api/*.log
 /api/static/*
 **.env

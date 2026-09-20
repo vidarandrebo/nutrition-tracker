@@ -22,10 +22,6 @@ type Importer struct {
 	Stores   *Repositories
 }
 
-func (a *Importer) CloseDB() {
-	a.DB.Close()
-}
-
 func NewImporter() *Importer {
 	return &Importer{}
 }
@@ -53,7 +49,7 @@ func (a *Importer) configureDB() {
 }
 
 func (a *Importer) readConfiguration() {
-	opt, err := configuration.ParseOptions("appsettings.json")
+	opt, err := configuration.ParseOptions()
 	if err != nil {
 		panic("read of config failed")
 	}

@@ -14,7 +14,7 @@ type (
 	authEndpoint     = auth.Endpoint
 )
 
-// StrictServerInterface
+// Server StrictServerInterface
 type Server struct {
 	*recipeEndpoint
 	*mealEndpoint

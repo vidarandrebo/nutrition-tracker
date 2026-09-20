@@ -18,7 +18,7 @@ type Flags struct {
 }
 
 func main() {
-	opt, err := configuration.ParseOptions("appsettings.json")
+	opt, err := configuration.ParseOptions()
 	if err != nil {
 		panic("read of config failed")
 	}

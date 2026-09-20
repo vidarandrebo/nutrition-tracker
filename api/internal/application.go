@@ -7,13 +7,11 @@ import (
 	"net/http"
 	"os"
 	"regexp"
-	"strings"
 
 	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
-	"github.com/spf13/viper"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
@@ -95,23 +93,11 @@ func (a *Application) addDB() {
 }
 
 func (a *Application) readConfiguration() {
-	viper.SetConfigName("appsettings")
-	viper.AddConfigPath(".")
-	err := viper.ReadInConfig()
+	options, err := configuration.ParseOptions()
 	if err != nil {
-		panic("read config failed")
+		panic(err)
 	}
-	options := configuration.Options{}
-	viper.SetConfigType("json")
-	viper.SetEnvKeyReplacer(strings.NewReplacer(".", "__"))
-	viper.SetEnvPrefix("NT_")
-	viper.AutomaticEnv()
-
-	err = viper.Unmarshal(&options)
-	if err != nil {
-		panic("unmarshalling config failed")
-	}
-	a.Options = &options
+	a.Options = options
 }
 
 func (a *Application) addServices() {
