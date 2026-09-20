@@ -18,14 +18,14 @@ WORKDIR /data/
 
 COPY ./api/ /data/
 
-RUN go build cmd/api/main.go
+RUN go build -o nutrition-tracker cmd/api/main.go
 
 FROM alpine:3.24.2
 
 WORKDIR /data/
 
 COPY --from=node-build-env /data/dist/ ./static
-COPY --from=go-build-env /data/main .
+COPY --from=go-build-env /data/nutrition-tracker .
 COPY --from=go-build-env /data/appsettings.json .
 
-ENTRYPOINT ["/data/main"]
+ENTRYPOINT ["/data/nutrition-tracker"]
