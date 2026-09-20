@@ -36,6 +36,7 @@ func (s *Repository) Add(item TableUser) (TableUser, error) {
 	).Scan(&item.ID)
 
 	if scanErr != nil {
+		s.log.Error("failed to add user", slog.String("email", item.Email), slog.Any("error", scanErr))
 		return TableUser{}, utils.ErrUnknown
 	}
 
