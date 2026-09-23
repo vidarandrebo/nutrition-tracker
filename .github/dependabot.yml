@@ -10,6 +10,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "friday"
+      time: "12:00"
     cooldown:
       default-days: 7
     # Group ALL GitHub Actions updates together
@@ -23,6 +25,8 @@ updates:
     directory: "/api"
     schedule:
       interval: "weekly"
+      day: "friday"
+      time: "12:00"
     cooldown:
       default-days: 7
     groups:
@@ -35,6 +39,8 @@ updates:
     directory: "/client"
     schedule:
       interval: "weekly"
+      day: "friday"
+      time: "12:00"
     cooldown:
       default-days: 7
     groups:
@@ -47,6 +53,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "friday"
+      time: "12:00"
     cooldown:
       default-days: 7
     groups:
