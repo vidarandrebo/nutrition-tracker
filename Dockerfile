@@ -1,4 +1,4 @@
-FROM node:26.8.2-alpine3.23 AS node-build-env
+FROM node:26.9.0-alpine3.23 AS node-build-env
 LABEL authors="Vidar André Bø"
 
 WORKDIR /data/
