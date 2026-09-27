@@ -52,6 +52,16 @@ func (s *Service) LoginUser(lr Login) (LoginResult, error) {
 	return LoginResult{token, u.ID}, err
 }
 
+func (s *Service) GetUserByID(id int64) (*user.User, error) {
+	u, err := s.userRepository.GetByID(id)
+	if err != nil {
+		return nil, err
+	}
+	user := user.NewUser()
+	user.FromTable(u)
+	return user, nil
+}
+
 type LoginResult struct {
 	Token  string
 	UserID int64

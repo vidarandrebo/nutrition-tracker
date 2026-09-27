@@ -1,5 +1,6 @@
 /* tslint:disable */
 
+export * from "./ErrorResponse";
 export * from "./FoodItemMicronutrientPostRequest";
 export * from "./FoodItemMicronutrientResponse";
 export * from "./FoodItemPortionPostRequest";

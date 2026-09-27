@@ -122,7 +122,7 @@ func (a *Application) addStores() {
 func (a *Application) addMiddlewares() {
 	a.Middlewares = &Middlewares{}
 	a.Middlewares.RequestMetadata = middleware.NewRequestMetadata(a.Logger)
-	a.Middlewares.Auth = middleware.NewAuth(a.Logger, a.Services.JwtService)
+	a.Middlewares.Auth = middleware.NewAuth(a.Logger, a.Services.JwtService, a.Services.AuthService)
 	a.Middlewares.Instrumentation = middleware.NewInstrumentation(a.Logger)
 }
 

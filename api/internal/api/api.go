@@ -20,6 +20,11 @@ import (
 	strictnethttp "github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 )
 
+// ErrorResponse defines model for ErrorResponse.
+type ErrorResponse struct {
+	Message *string `json:"message,omitempty"`
+}
+
 // FoodItemMicronutrientPostRequest defines model for FoodItemMicronutrientPostRequest.
 type FoodItemMicronutrientPostRequest struct {
 	Amount float64 `json:"amount"`
@@ -210,6 +215,15 @@ type WithSequenceNumber struct {
 type WithTimestamp struct {
 	Timestamp time.Time `json:"timestamp"`
 }
+
+// Forbidden defines model for Forbidden.
+type Forbidden = ErrorResponse
+
+// NotFound defines model for NotFound.
+type NotFound = ErrorResponse
+
+// Unauthorized defines model for Unauthorized.
+type Unauthorized = ErrorResponse
 
 // PostApiFoodItemsJSONBody defines parameters for PostApiFoodItems.
 type PostApiFoodItemsJSONBody = FoodItemPostRequest
@@ -1759,6 +1773,9 @@ type GetApiFoodItemsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]FoodItemResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1781,6 +1798,9 @@ type PostApiFoodItemsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *FoodItemResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1802,6 +1822,9 @@ func (r PostApiFoodItemsResponse) StatusCode() int {
 type DeleteApiFoodItemsIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1824,6 +1847,9 @@ type GetApiFoodItemsIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *FoodItemResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1846,6 +1872,9 @@ type PostApiFoodItemsIdMicronutrientsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *FoodItemMicronutrientResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1868,6 +1897,9 @@ type PostApiFoodItemsIdPortionsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *FoodItemPortionSizeResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1890,6 +1922,9 @@ type PostApiLoginResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *LoginResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1912,6 +1947,9 @@ type GetApiMealsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]MealResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1934,6 +1972,9 @@ type PostApiMealsResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *MealResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1955,6 +1996,9 @@ func (r PostApiMealsResponse) StatusCode() int {
 type DeleteApiMealsIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1977,6 +2021,9 @@ type GetApiMealsIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *MealResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -1999,6 +2046,9 @@ type PostApiMealsMealIdFoodItemEntriesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *MealFoodItemEntryResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2020,6 +2070,9 @@ func (r PostApiMealsMealIdFoodItemEntriesResponse) StatusCode() int {
 type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2042,6 +2095,9 @@ type PostApiMealsMealIdMacronutrientEntriesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *MealMacronutrientEntryResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2063,6 +2119,9 @@ func (r PostApiMealsMealIdMacronutrientEntriesResponse) StatusCode() int {
 type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2085,6 +2144,9 @@ type PostApiMealsMealIdRecipeEntriesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *MealRecipeEntryResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2106,6 +2168,9 @@ func (r PostApiMealsMealIdRecipeEntriesResponse) StatusCode() int {
 type DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2128,6 +2193,9 @@ type GetApiRecipesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON200      *[]RecipeResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2150,6 +2218,9 @@ type PostApiRecipesResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
 	JSON201      *RecipeResponse
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2171,6 +2242,9 @@ func (r PostApiRecipesResponse) StatusCode() int {
 type DeleteApiRecipesIdResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2192,6 +2266,9 @@ func (r DeleteApiRecipesIdResponse) StatusCode() int {
 type PostApiRegisterResponse struct {
 	Body         []byte
 	HTTPResponse *http.Response
+	JSON401      *Unauthorized
+	JSON403      *Forbidden
+	JSON404      *NotFound
 }
 
 // Status returns HTTPResponse.Status
@@ -2499,6 +2576,28 @@ func ParseGetApiFoodItemsResponse(rsp *http.Response) (*GetApiFoodItemsResponse,
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2524,6 +2623,28 @@ func ParsePostApiFoodItemsResponse(rsp *http.Response) (*PostApiFoodItemsRespons
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2540,6 +2661,30 @@ func ParseDeleteApiFoodItemsIdResponse(rsp *http.Response) (*DeleteApiFoodItemsI
 	response := &DeleteApiFoodItemsIdResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2565,6 +2710,28 @@ func ParseGetApiFoodItemsIdResponse(rsp *http.Response) (*GetApiFoodItemsIdRespo
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2590,6 +2757,28 @@ func ParsePostApiFoodItemsIdMicronutrientsResponse(rsp *http.Response) (*PostApi
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2615,6 +2804,28 @@ func ParsePostApiFoodItemsIdPortionsResponse(rsp *http.Response) (*PostApiFoodIt
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2640,6 +2851,28 @@ func ParsePostApiLoginResponse(rsp *http.Response) (*PostApiLoginResponse, error
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2665,6 +2898,28 @@ func ParseGetApiMealsResponse(rsp *http.Response) (*GetApiMealsResponse, error) 
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2690,6 +2945,28 @@ func ParsePostApiMealsResponse(rsp *http.Response) (*PostApiMealsResponse, error
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2706,6 +2983,30 @@ func ParseDeleteApiMealsIdResponse(rsp *http.Response) (*DeleteApiMealsIdRespons
 	response := &DeleteApiMealsIdResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2731,6 +3032,28 @@ func ParseGetApiMealsIdResponse(rsp *http.Response) (*GetApiMealsIdResponse, err
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2756,6 +3079,28 @@ func ParsePostApiMealsMealIdFoodItemEntriesResponse(rsp *http.Response) (*PostAp
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2772,6 +3117,30 @@ func ParseDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(rsp *http.R
 	response := &DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2797,6 +3166,28 @@ func ParsePostApiMealsMealIdMacronutrientEntriesResponse(rsp *http.Response) (*P
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2813,6 +3204,30 @@ func ParseDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(r
 	response := &DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2838,6 +3253,28 @@ func ParsePostApiMealsMealIdRecipeEntriesResponse(rsp *http.Response) (*PostApiM
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2854,6 +3291,30 @@ func ParseDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(rsp *http.Respo
 	response := &DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2879,6 +3340,28 @@ func ParseGetApiRecipesResponse(rsp *http.Response) (*GetApiRecipesResponse, err
 			return nil, err
 		}
 		response.JSON200 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2904,6 +3387,28 @@ func ParsePostApiRecipesResponse(rsp *http.Response) (*PostApiRecipesResponse, e
 			return nil, err
 		}
 		response.JSON201 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -2922,6 +3427,30 @@ func ParseDeleteApiRecipesIdResponse(rsp *http.Response) (*DeleteApiRecipesIdRes
 		HTTPResponse: rsp,
 	}
 
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
+	}
+
 	return response, nil
 }
 
@@ -2936,6 +3465,30 @@ func ParsePostApiRegisterResponse(rsp *http.Response) (*PostApiRegisterResponse,
 	response := &PostApiRegisterResponse{
 		Body:         bodyBytes,
 		HTTPResponse: rsp,
+	}
+
+	switch {
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 401:
+		var dest Unauthorized
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON401 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 403:
+		var dest Forbidden
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON403 = &dest
+
+	case strings.Contains(rsp.Header.Get("Content-Type"), "json") && rsp.StatusCode == 404:
+		var dest NotFound
+		if err := json.Unmarshal(bodyBytes, &dest); err != nil {
+			return nil, err
+		}
+		response.JSON404 = &dest
+
 	}
 
 	return response, nil
@@ -3625,6 +4178,12 @@ func HandlerWithOptions(si ServerInterface, options StdHTTPServerOptions) http.H
 	return m
 }
 
+type ForbiddenJSONResponse ErrorResponse
+
+type NotFoundJSONResponse ErrorResponse
+
+type UnauthorizedJSONResponse ErrorResponse
+
 type GetApiFoodItemsRequestObject struct{}
 
 type GetApiFoodItemsResponseObject interface {
@@ -3636,6 +4195,33 @@ type GetApiFoodItems200JSONResponse []FoodItemResponse
 func (response GetApiFoodItems200JSONResponse) VisitGetApiFoodItemsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiFoodItems401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetApiFoodItems401JSONResponse) VisitGetApiFoodItemsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiFoodItems403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetApiFoodItems403JSONResponse) VisitGetApiFoodItemsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiFoodItems404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetApiFoodItems404JSONResponse) VisitGetApiFoodItemsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -3657,6 +4243,33 @@ func (response PostApiFoodItems201JSONResponse) VisitPostApiFoodItemsResponse(w 
 	return json.NewEncoder(w).Encode(response)
 }
 
+type PostApiFoodItems401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiFoodItems401JSONResponse) VisitPostApiFoodItemsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItems403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiFoodItems403JSONResponse) VisitPostApiFoodItemsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItems404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiFoodItems404JSONResponse) VisitPostApiFoodItemsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type DeleteApiFoodItemsIdRequestObject struct {
 	Id int64 `json:"id"`
 }
@@ -3670,6 +4283,33 @@ type DeleteApiFoodItemsId204Response struct{}
 func (response DeleteApiFoodItemsId204Response) VisitDeleteApiFoodItemsIdResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
+}
+
+type DeleteApiFoodItemsId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteApiFoodItemsId401JSONResponse) VisitDeleteApiFoodItemsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiFoodItemsId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteApiFoodItemsId403JSONResponse) VisitDeleteApiFoodItemsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiFoodItemsId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteApiFoodItemsId404JSONResponse) VisitDeleteApiFoodItemsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 type DeleteApiFoodItemsId409Response struct{}
@@ -3696,6 +4336,33 @@ func (response GetApiFoodItemsId200JSONResponse) VisitGetApiFoodItemsIdResponse(
 	return json.NewEncoder(w).Encode(response)
 }
 
+type GetApiFoodItemsId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetApiFoodItemsId401JSONResponse) VisitGetApiFoodItemsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiFoodItemsId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetApiFoodItemsId403JSONResponse) VisitGetApiFoodItemsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiFoodItemsId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetApiFoodItemsId404JSONResponse) VisitGetApiFoodItemsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type PostApiFoodItemsIdMicronutrientsRequestObject struct {
 	Id   int64 `json:"id"`
 	Body *PostApiFoodItemsIdMicronutrientsJSONRequestBody
@@ -3714,11 +4381,31 @@ func (response PostApiFoodItemsIdMicronutrients201JSONResponse) VisitPostApiFood
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostApiFoodItemsIdMicronutrients404Response struct{}
+type PostApiFoodItemsIdMicronutrients401JSONResponse struct{ UnauthorizedJSONResponse }
 
-func (response PostApiFoodItemsIdMicronutrients404Response) VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error {
+func (response PostApiFoodItemsIdMicronutrients401JSONResponse) VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItemsIdMicronutrients403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiFoodItemsIdMicronutrients403JSONResponse) VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItemsIdMicronutrients404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiFoodItemsIdMicronutrients404JSONResponse) VisitPostApiFoodItemsIdMicronutrientsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(404)
-	return nil
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 type PostApiFoodItemsIdPortionsRequestObject struct {
@@ -3739,11 +4426,31 @@ func (response PostApiFoodItemsIdPortions201JSONResponse) VisitPostApiFoodItemsI
 	return json.NewEncoder(w).Encode(response)
 }
 
-type PostApiFoodItemsIdPortions404Response struct{}
+type PostApiFoodItemsIdPortions401JSONResponse struct{ UnauthorizedJSONResponse }
 
-func (response PostApiFoodItemsIdPortions404Response) VisitPostApiFoodItemsIdPortionsResponse(w http.ResponseWriter) error {
+func (response PostApiFoodItemsIdPortions401JSONResponse) VisitPostApiFoodItemsIdPortionsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItemsIdPortions403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiFoodItemsIdPortions403JSONResponse) VisitPostApiFoodItemsIdPortionsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiFoodItemsIdPortions404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiFoodItemsIdPortions404JSONResponse) VisitPostApiFoodItemsIdPortionsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(404)
-	return nil
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 type PostApiLoginRequestObject struct {
@@ -3759,6 +4466,33 @@ type PostApiLogin200JSONResponse LoginResponse
 func (response PostApiLogin200JSONResponse) VisitPostApiLoginResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiLogin401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiLogin401JSONResponse) VisitPostApiLoginResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiLogin403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiLogin403JSONResponse) VisitPostApiLoginResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiLogin404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiLogin404JSONResponse) VisitPostApiLoginResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -3780,6 +4514,33 @@ func (response GetApiMeals200JSONResponse) VisitGetApiMealsResponse(w http.Respo
 	return json.NewEncoder(w).Encode(response)
 }
 
+type GetApiMeals401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetApiMeals401JSONResponse) VisitGetApiMealsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiMeals403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetApiMeals403JSONResponse) VisitGetApiMealsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiMeals404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetApiMeals404JSONResponse) VisitGetApiMealsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type PostApiMealsRequestObject struct {
 	Body *PostApiMealsJSONRequestBody
 }
@@ -3793,6 +4554,33 @@ type PostApiMeals201JSONResponse MealResponse
 func (response PostApiMeals201JSONResponse) VisitPostApiMealsResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(201)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMeals401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiMeals401JSONResponse) VisitPostApiMealsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMeals403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiMeals403JSONResponse) VisitPostApiMealsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMeals404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiMeals404JSONResponse) VisitPostApiMealsResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -3812,6 +4600,33 @@ func (response DeleteApiMealsId204Response) VisitDeleteApiMealsIdResponse(w http
 	return nil
 }
 
+type DeleteApiMealsId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteApiMealsId401JSONResponse) VisitDeleteApiMealsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteApiMealsId403JSONResponse) VisitDeleteApiMealsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteApiMealsId404JSONResponse) VisitDeleteApiMealsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type GetApiMealsIdRequestObject struct {
 	Id int64 `json:"id"`
 }
@@ -3825,6 +4640,33 @@ type GetApiMealsId200JSONResponse MealResponse
 func (response GetApiMealsId200JSONResponse) VisitGetApiMealsIdResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiMealsId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetApiMealsId401JSONResponse) VisitGetApiMealsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiMealsId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetApiMealsId403JSONResponse) VisitGetApiMealsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiMealsId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetApiMealsId404JSONResponse) VisitGetApiMealsIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -3847,6 +4689,33 @@ func (response PostApiMealsMealIdFoodItemEntries201JSONResponse) VisitPostApiMea
 	return json.NewEncoder(w).Encode(response)
 }
 
+type PostApiMealsMealIdFoodItemEntries401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiMealsMealIdFoodItemEntries401JSONResponse) VisitPostApiMealsMealIdFoodItemEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMealsMealIdFoodItemEntries403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiMealsMealIdFoodItemEntries403JSONResponse) VisitPostApiMealsMealIdFoodItemEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMealsMealIdFoodItemEntries404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiMealsMealIdFoodItemEntries404JSONResponse) VisitPostApiMealsMealIdFoodItemEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequestObject struct {
 	MealId          int64 `json:"mealId"`
 	FoodItemEntryId int64 `json:"foodItemEntryId"`
@@ -3861,6 +4730,33 @@ type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId204Response struct{}
 func (response DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId204Response) VisitDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
+}
+
+type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId401JSONResponse) VisitDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId403JSONResponse) VisitDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId404JSONResponse) VisitDeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 type PostApiMealsMealIdMacronutrientEntriesRequestObject struct {
@@ -3881,6 +4777,33 @@ func (response PostApiMealsMealIdMacronutrientEntries201JSONResponse) VisitPostA
 	return json.NewEncoder(w).Encode(response)
 }
 
+type PostApiMealsMealIdMacronutrientEntries401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiMealsMealIdMacronutrientEntries401JSONResponse) VisitPostApiMealsMealIdMacronutrientEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMealsMealIdMacronutrientEntries403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiMealsMealIdMacronutrientEntries403JSONResponse) VisitPostApiMealsMealIdMacronutrientEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMealsMealIdMacronutrientEntries404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiMealsMealIdMacronutrientEntries404JSONResponse) VisitPostApiMealsMealIdMacronutrientEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequestObject struct {
 	MealId               int64 `json:"mealId"`
 	MacronutrientEntryId int64 `json:"macronutrientEntryId"`
@@ -3895,6 +4818,33 @@ type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId204Response str
 func (response DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId204Response) VisitDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
+}
+
+type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId401JSONResponse) VisitDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId403JSONResponse) VisitDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId404JSONResponse) VisitDeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 type PostApiMealsMealIdRecipeEntriesRequestObject struct {
@@ -3915,6 +4865,33 @@ func (response PostApiMealsMealIdRecipeEntries201JSONResponse) VisitPostApiMeals
 	return json.NewEncoder(w).Encode(response)
 }
 
+type PostApiMealsMealIdRecipeEntries401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiMealsMealIdRecipeEntries401JSONResponse) VisitPostApiMealsMealIdRecipeEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMealsMealIdRecipeEntries403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiMealsMealIdRecipeEntries403JSONResponse) VisitPostApiMealsMealIdRecipeEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiMealsMealIdRecipeEntries404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiMealsMealIdRecipeEntries404JSONResponse) VisitPostApiMealsMealIdRecipeEntriesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequestObject struct {
 	MealId        int64 `json:"mealId"`
 	RecipeEntryId int64 `json:"recipeEntryId"`
@@ -3931,6 +4908,33 @@ func (response DeleteApiMealsMealIdRecipeEntriesRecipeEntryId204Response) VisitD
 	return nil
 }
 
+type DeleteApiMealsMealIdRecipeEntriesRecipeEntryId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteApiMealsMealIdRecipeEntriesRecipeEntryId401JSONResponse) VisitDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsMealIdRecipeEntriesRecipeEntryId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteApiMealsMealIdRecipeEntriesRecipeEntryId403JSONResponse) VisitDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiMealsMealIdRecipeEntriesRecipeEntryId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteApiMealsMealIdRecipeEntriesRecipeEntryId404JSONResponse) VisitDeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type GetApiRecipesRequestObject struct{}
 
 type GetApiRecipesResponseObject interface {
@@ -3942,6 +4946,33 @@ type GetApiRecipes200JSONResponse []RecipeResponse
 func (response GetApiRecipes200JSONResponse) VisitGetApiRecipesResponse(w http.ResponseWriter) error {
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(200)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiRecipes401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response GetApiRecipes401JSONResponse) VisitGetApiRecipesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiRecipes403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response GetApiRecipes403JSONResponse) VisitGetApiRecipesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type GetApiRecipes404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response GetApiRecipes404JSONResponse) VisitGetApiRecipesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
 
 	return json.NewEncoder(w).Encode(response)
 }
@@ -3963,6 +4994,33 @@ func (response PostApiRecipes201JSONResponse) VisitPostApiRecipesResponse(w http
 	return json.NewEncoder(w).Encode(response)
 }
 
+type PostApiRecipes401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiRecipes401JSONResponse) VisitPostApiRecipesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiRecipes403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiRecipes403JSONResponse) VisitPostApiRecipesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiRecipes404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiRecipes404JSONResponse) VisitPostApiRecipesResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
 type DeleteApiRecipesIdRequestObject struct {
 	Id int64 `json:"id"`
 }
@@ -3976,6 +5034,33 @@ type DeleteApiRecipesId204Response struct{}
 func (response DeleteApiRecipesId204Response) VisitDeleteApiRecipesIdResponse(w http.ResponseWriter) error {
 	w.WriteHeader(204)
 	return nil
+}
+
+type DeleteApiRecipesId401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response DeleteApiRecipesId401JSONResponse) VisitDeleteApiRecipesIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiRecipesId403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response DeleteApiRecipesId403JSONResponse) VisitDeleteApiRecipesIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type DeleteApiRecipesId404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response DeleteApiRecipesId404JSONResponse) VisitDeleteApiRecipesIdResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 type DeleteApiRecipesId409Response struct{}
@@ -3998,6 +5083,33 @@ type PostApiRegister201Response struct{}
 func (response PostApiRegister201Response) VisitPostApiRegisterResponse(w http.ResponseWriter) error {
 	w.WriteHeader(201)
 	return nil
+}
+
+type PostApiRegister401JSONResponse struct{ UnauthorizedJSONResponse }
+
+func (response PostApiRegister401JSONResponse) VisitPostApiRegisterResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(401)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiRegister403JSONResponse struct{ ForbiddenJSONResponse }
+
+func (response PostApiRegister403JSONResponse) VisitPostApiRegisterResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(403)
+
+	return json.NewEncoder(w).Encode(response)
+}
+
+type PostApiRegister404JSONResponse struct{ NotFoundJSONResponse }
+
+func (response PostApiRegister404JSONResponse) VisitPostApiRegisterResponse(w http.ResponseWriter) error {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(404)
+
+	return json.NewEncoder(w).Encode(response)
 }
 
 // StrictServerInterface represents all server handlers.

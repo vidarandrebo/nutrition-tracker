@@ -5,7 +5,7 @@ openapi: 3.1.0
 info:
   title: Nutrition Tracker API
   description: API Specification for Nutrition Tracker
-  version: 0.0.1
+  version: 1.0.1
 
 # optional servers for public APIs
 
@@ -37,6 +37,13 @@ paths:
                 type: "array"
                 items:
                   $ref: '#/components/schemas/FoodItemResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
     post:
       tags:
         - Food Items
@@ -55,6 +62,12 @@ paths:
                 allOf:
                   - $ref: "#/components/schemas/FoodItemResponse"
           description:
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/food-items/{id}:
     get:
@@ -74,6 +87,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/FoodItemResponse"
           description: FoodItem with the provided id
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
     delete:
       tags:
         - Food Items
@@ -90,6 +109,12 @@ paths:
           description: Food Item with id is deleted
         409:
           description: The food item is referenced by a meal entry or a recipe, and cannot be deleted
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/food-items/{id}/portions:
     post:
@@ -115,8 +140,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/FoodItemPortionSizeResponse"
           description: FoodItem portion added
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
         404:
-          description: FoodItem not found
+          $ref: '#/components/responses/NotFound'
 
   /api/food-items/{id}/micronutrients:
     post:
@@ -142,8 +171,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/FoodItemMicronutrientResponse"
           description: Micronutrient added
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
         404:
-          description: FoodItem not found
+          $ref: '#/components/responses/NotFound'
 
 
   /api/meals:
@@ -171,6 +204,12 @@ paths:
                 items:
                   $ref: "#/components/schemas/MealResponse"
           description: Meals in between the dates provided
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
     post:
       tags:
         - Meals
@@ -186,6 +225,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealResponse"
           description:
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/meals/{id}:
     get:
@@ -205,6 +250,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealResponse"
           description: Meals with the provided id
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
     delete:
       tags:
         - Meals
@@ -219,6 +270,12 @@ paths:
       responses:
         204:
           description: Meal with id is deleted
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/meals/{mealId}/recipe-entries:
     post:
@@ -243,6 +300,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealRecipeEntryResponse"
           description: Meals entry that was added
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/meals/{mealId}/macronutrient-entries:
     post:
@@ -268,6 +331,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealMacronutrientEntryResponse"
           description: Meals entry that was added
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/meals/{mealId}/food-item-entries:
     post:
@@ -292,6 +361,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/MealFoodItemEntryResponse"
           description: Meals entry that was added
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/meals/{mealId}/recipe-entries/{recipeEntryId}:
     delete:
@@ -313,6 +388,12 @@ paths:
       responses:
         204:
           description: Meals entry is deleted
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/meals/{mealId}/food-item-entries/{foodItemEntryId}:
     delete:
@@ -334,6 +415,12 @@ paths:
       responses:
         204:
           description: Meals entry is deleted
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/meals/{mealId}/macronutrient-entries/{macronutrientEntryId}:
     delete:
@@ -355,6 +442,12 @@ paths:
       responses:
         204:
           description: Meals entry is deleted
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
 
   /api/recipes:
@@ -370,6 +463,12 @@ paths:
                 items:
                   $ref: '#/components/schemas/RecipeResponse'
           description: All recipes owned by user
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
     post:
       tags:
         - Recipes
@@ -385,6 +484,12 @@ paths:
               schema:
                 $ref: "#/components/schemas/RecipeResponse"
           description: Recipe created
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/recipes/{id}:
     delete:
@@ -403,6 +508,12 @@ paths:
           description: Recipe with id is deleted
         409:
           description: The recipe is referenced by a meal entry and cannot be deleted
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
   /api/login:
     post:
@@ -420,6 +531,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/LoginResponse'
           description: Log in the user
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
 
   /api/register:
@@ -434,12 +551,44 @@ paths:
       responses:
         201:
           description: Register the user
+        401:
+          $ref: '#/components/responses/Unauthorized'
+        403:
+          $ref: '#/components/responses/Forbidden'
+        404:
+          $ref: '#/components/responses/NotFound'
 
 
 
 # reusable objects such as schemas, error types, request bodies
 components:
+  responses:
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
   schemas:
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
     FoodItemResponse:
       type: object
       allOf:

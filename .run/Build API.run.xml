@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Build API" type="GoApplicationRunConfiguration" factoryName="Go Application">
+    <module name="nutrition-tracker" />
+    <working_directory value="$PROJECT_DIR$/api" />
+    <kind value="PACKAGE" />
+    <package value="github.com/vidarandrebo/nutrition-tracker/api/cmd/api" />
+    <directory value="$PROJECT_DIR$" />
+    <option name="run" value="false" />
+    <auto_managed_config_id value="$PROJECT_DIR$/api/cmd/api" />
+    <method v="2" />
+  </configuration>
+</component>
