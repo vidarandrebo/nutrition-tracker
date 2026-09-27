@@ -11,6 +11,7 @@ import (
 type IRepository interface {
 	Add(item TableUser) (TableUser, error)
 	GetByEmail(email string) (TableUser, error)
+	GetByID(id int64) (TableUser, error)
 }
 
 type Repository struct {
@@ -59,6 +60,28 @@ func (s *Repository) GetByEmail(email string) (TableUser, error) {
 
 	if scanErr != nil {
 		s.log.Error("no user matching the credentials", slog.String("email", email))
+		return TableUser{}, utils.ErrEntityNotFound
+	}
+
+	return user, nil
+}
+
+func (s *Repository) GetByID(id int64) (TableUser, error) {
+	user := TableUser{}
+	scanErr := s.db.QueryRow(`
+		SELECT id, name, email, password_hash 
+		FROM users AS u 
+		WHERE u.id=$1`,
+		id,
+	).Scan(
+		&user.ID,
+		&user.Name,
+		&user.Email,
+		&user.PasswordHash,
+	)
+
+	if scanErr != nil {
+		s.log.Error("no user matching the id", slog.Int64("id", id))
 		return TableUser{}, utils.ErrEntityNotFound
 	}
 
