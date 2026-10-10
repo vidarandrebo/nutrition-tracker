@@ -8,7 +8,6 @@ import (
 	"os"
 	"regexp"
 
-	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
@@ -63,8 +62,8 @@ type Middlewares struct {
 	Instrumentation *middleware.Instrumentation
 }
 
-func (a *Application) GetMiddlewares() []nethttp.StrictHTTPMiddlewareFunc {
-	return []nethttp.StrictHTTPMiddlewareFunc{a.Middlewares.Auth.TokenToContext, a.Middlewares.RequestMetadata.Time, a.Middlewares.Instrumentation.Instrument}
+func (a *Application) GetMiddlewares() []api.StrictMiddlewareFunc {
+	return []api.StrictMiddlewareFunc{a.Middlewares.Auth.TokenToContext, a.Middlewares.RequestMetadata.Time, a.Middlewares.Instrumentation.Instrument}
 }
 
 func NewApplication() *Application {

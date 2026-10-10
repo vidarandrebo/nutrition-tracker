@@ -7,7 +7,7 @@ import (
 	"reflect"
 	"strings"
 
-	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth"
 )
 
@@ -23,7 +23,7 @@ func NewAuth(log *slog.Logger, js *auth.JwtService, authService *auth.Service) *
 	return &Auth{log: log.With(slog.String("module", "middleware.Auth")), js: js, authService: authService}
 }
 
-func (a *Auth) TokenToContext(next nethttp.StrictHTTPHandlerFunc, operationID string) nethttp.StrictHTTPHandlerFunc {
+func (a *Auth) TokenToContext(next api.StrictHandlerFunc, operationID string) api.StrictHandlerFunc {
 	return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request any) (response any, err error) {
 		authHeader := r.Header.Get("Authorization")
 		token := strings.TrimPrefix(authHeader, "Bearer")

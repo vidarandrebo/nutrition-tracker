@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"reflect"
 
-	"github.com/oapi-codegen/runtime/strictmiddleware/nethttp"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/api"
 )
 
 // Prometheus metrics
@@ -47,7 +47,7 @@ func NewInstrumentation(logger *slog.Logger) *Instrumentation {
 	return i
 }
 
-func (i *Instrumentation) Instrument(next nethttp.StrictHTTPHandlerFunc, operationID string) nethttp.StrictHTTPHandlerFunc {
+func (i *Instrumentation) Instrument(next api.StrictHandlerFunc, operationID string) api.StrictHandlerFunc {
 	return func(ctx context.Context, w http.ResponseWriter, r *http.Request, request interface{}) (response interface{}, err error) {
 		path := r.URL.Path
 		method := r.Method
