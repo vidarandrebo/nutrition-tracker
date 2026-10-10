@@ -71,6 +71,8 @@ func (s *Service) LoginUser(lr Login) (LoginResult, error) {
 	return LoginResult{token, u.ID}, nil
 }
 
+// GetUserByID returns utils.ErrNotFound when the user does not exist or
+// utils.ErrUnknown when the repository lookup fails for another reason.
 func (s *Service) GetUserByID(id int64) (*user.User, error) {
 	u, err := s.userRepository.GetByID(id)
 	if err != nil {

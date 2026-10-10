@@ -27,7 +27,10 @@ func (e Endpoint) GetApiFoodItems(ctx context.Context, request api.GetApiFoodIte
 	if err != nil {
 		return api.GetApiFoodItems401JSONResponse{}, nil
 	}
-	items, err := e.service.Get(user.ID)
+items, err := e.service.Get(user.ID)
+	if err != nil {
+		return nil, err
+	}
 	responses := make([]api.FoodItemResponse, 0)
 
 	for _, item := range items {

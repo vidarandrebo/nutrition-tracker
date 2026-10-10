@@ -104,6 +104,8 @@ func (s *Service) Get(ownerID int64) ([]*FoodItem, error) {
 	return foodItems, nil
 }
 
+// CheckOwnership returns utils.ErrNotFound for a missing food item,
+// utils.ErrUnknown for lookup failures, or utils.ErrForbidden for another owner.
 func (s *Service) CheckOwnership(id int64, ownerID int64) error {
 	item, err := s.repository.GetByID(id)
 	if err != nil {
