@@ -2,10 +2,9 @@ package recipe
 
 import (
 	"database/sql"
+	"errors"
 	"log/slog"
 	"reflect"
-
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type IRepository interface {
@@ -15,7 +14,6 @@ type IRepository interface {
 	Get(ownerID int64) ([]TableRecipe, error)
 	GetByID(id int64) (TableRecipe, error)
 	GetEntries(id int64) ([]TableRecipeFoodItemEntry, error)
-	CheckOwnership(id int64, ownerID int64) error
 }
 
 type Repository struct {
@@ -29,6 +27,8 @@ func NewRepository(db *sql.DB, logger *slog.Logger) *Repository {
 	return &r
 }
 
+// Add returns the database or scan error if inserting the recipe fails,
+// including sql.ErrNoRows when the insert returns no row.
 func (r *Repository) Add(item TableRecipe) (TableRecipe, error) {
 	scanErr := r.db.QueryRow(`
 		INSERT INTO recipes AS r (name, owner_id)
@@ -39,8 +39,7 @@ func (r *Repository) Add(item TableRecipe) (TableRecipe, error) {
 	).Scan(&item.ID)
 
 	if scanErr != nil {
-		r.logger.Error("failed to add recipe", slog.Any("err", scanErr), slog.Int64("userID", item.OwnerID))
-		return TableRecipe{}, utils.ErrUnknown
+		return TableRecipe{}, scanErr
 	}
 
 	r.logger.Info("added new recipe", slog.Any("recipe", item))
@@ -48,6 +47,8 @@ func (r *Repository) Add(item TableRecipe) (TableRecipe, error) {
 	return item, nil
 }
 
+// AddEntry returns the database or scan error if inserting the entry fails,
+// including sql.ErrNoRows when the insert returns no row.
 func (r *Repository) AddEntry(item TableRecipeFoodItemEntry) (TableRecipeFoodItemEntry, error) {
 	scanErr := r.db.QueryRow(`
 		INSERT INTO recipe_food_item_entries (amount, food_item_id, recipe_id)
@@ -59,8 +60,7 @@ func (r *Repository) AddEntry(item TableRecipeFoodItemEntry) (TableRecipeFoodIte
 	).Scan(&item.ID)
 
 	if scanErr != nil {
-		r.logger.Error("failed to add recipe entry", slog.Any("err", scanErr), slog.Int64("recipeID", item.RecipeID))
-		return TableRecipeFoodItemEntry{}, utils.ErrUnknown
+		return TableRecipeFoodItemEntry{}, scanErr
 	}
 
 	r.logger.Info("added new recipe entry", slog.Any("recipeEntry", item))
@@ -68,21 +68,25 @@ func (r *Repository) AddEntry(item TableRecipeFoodItemEntry) (TableRecipeFoodIte
 	return item, nil
 }
 
+// Delete returns the database error if deleting the recipe fails.
+// It returns no error if the recipe does not exist.
 func (r *Repository) Delete(id int64) error {
 	r.logger.Info("deleting recipe", slog.Int64("id", id))
-	_, err := r.db.Query(`
+	_, err := r.db.Exec(`
 		DELETE FROM recipes
 		WHERE id = $1
 	`, id,
 	)
 	if err != nil {
-		r.logger.Error("failed to delete recipe", slog.Int64("recipeID", id))
 		return err
 	}
 	return nil
 }
 
-func (r *Repository) Get(ownerID int64) ([]TableRecipe, error) {
+// Get returns database, scan, iteration, or close errors without partial
+// results. Concurrent errors during iteration and closing are joined.
+// It returns an empty slice and no error when no recipes match.
+func (r *Repository) Get(ownerID int64) (recipes []TableRecipe, err error) {
 	rows, queryErr := r.db.Query(`
 		WITH owners_recipes AS (
 		    SELECT id, name, owner_id 
@@ -94,10 +98,14 @@ func (r *Repository) Get(ownerID int64) ([]TableRecipe, error) {
 		ownerID,
 	)
 	if queryErr != nil {
-		r.logger.Error("failed to query rows of recipes", slog.Any("err", queryErr))
-		return nil, utils.ErrUnknown
+		return nil, queryErr
 	}
-	recipes := make([]TableRecipe, 0)
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			recipes, err = nil, errors.Join(err, closeErr)
+		}
+	}()
+	recipes = make([]TableRecipe, 0)
 	for rows.Next() {
 		recipe := TableRecipe{}
 		scanErr := rows.Scan(
@@ -106,14 +114,18 @@ func (r *Repository) Get(ownerID int64) ([]TableRecipe, error) {
 			&recipe.OwnerID,
 		)
 		if scanErr != nil {
-			r.logger.Error("failed to scan rows of recipes", slog.Any("err", scanErr))
-			return nil, utils.ErrUnknown
+			return nil, scanErr
 		}
 		recipes = append(recipes, recipe)
+	}
+	if rowsErr := rows.Err(); rowsErr != nil {
+		return nil, rowsErr
 	}
 	return recipes, nil
 }
 
+// GetByID returns sql.ErrNoRows if the recipe does not exist, or the database
+// or scan error if querying or scanning it fails.
 func (r *Repository) GetByID(id int64) (TableRecipe, error) {
 	recipe := TableRecipe{}
 	scanErr := r.db.QueryRow(`
@@ -126,13 +138,16 @@ func (r *Repository) GetByID(id int64) (TableRecipe, error) {
 		&recipe.OwnerID,
 	)
 	if scanErr != nil {
-		return TableRecipe{}, utils.ErrEntityNotFound
+		return TableRecipe{}, scanErr
 	}
 
 	return recipe, nil
 }
 
-func (r *Repository) GetEntries(id int64) ([]TableRecipeFoodItemEntry, error) {
+// GetEntries returns database, scan, iteration, or close errors without partial
+// results. Concurrent errors during iteration and closing are joined.
+// It returns an empty slice and no error when no entries match.
+func (r *Repository) GetEntries(id int64) (entries []TableRecipeFoodItemEntry, err error) {
 	rows, queryErr := r.db.Query(`
 		SELECT id, amount, food_item_id, recipe_id
 		FROM recipe_food_item_entries r
@@ -140,10 +155,14 @@ func (r *Repository) GetEntries(id int64) ([]TableRecipeFoodItemEntry, error) {
 		id,
 	)
 	if queryErr != nil {
-		r.logger.Error("failed to query rows of recipe entries", slog.Any("err", queryErr))
-		return nil, utils.ErrUnknown
+		return nil, queryErr
 	}
-	entries := make([]TableRecipeFoodItemEntry, 0)
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			entries, err = nil, errors.Join(err, closeErr)
+		}
+	}()
+	entries = make([]TableRecipeFoodItemEntry, 0)
 	for rows.Next() {
 		entry := TableRecipeFoodItemEntry{}
 		scanErr := rows.Scan(
@@ -153,33 +172,14 @@ func (r *Repository) GetEntries(id int64) ([]TableRecipeFoodItemEntry, error) {
 			&entry.RecipeID,
 		)
 		if scanErr != nil {
-			r.logger.Error("failed to scan rows of recipe entries", slog.Any("err", scanErr))
-			return nil, utils.ErrUnknown
+			return nil, scanErr
 		}
 
 		entries = append(entries, entry)
 	}
+	if rowsErr := rows.Err(); rowsErr != nil {
+		return nil, rowsErr
+	}
 
 	return entries, nil
-}
-
-func (r *Repository) CheckOwnership(id int64, ownerID int64) error {
-	recipe := TableRecipe{}
-	err := r.db.QueryRow(`
-		SELECT id, owner_id 
-		FROM recipes 
-		WHERE id = $1
-	`, id).Scan(
-		&recipe.ID,
-		&recipe.OwnerID,
-	)
-	if err != nil {
-		return utils.ErrEntityNotFound
-	}
-
-	if recipe.OwnerID == ownerID {
-		return nil
-	}
-
-	return utils.ErrEntityNotOwned
 }

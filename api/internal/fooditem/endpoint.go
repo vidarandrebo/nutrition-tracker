@@ -89,9 +89,9 @@ func (e Endpoint) PostApiFoodItemsIdPortions(ctx context.Context, request api.Po
 	}
 	ps, err := e.service.AddPortionSize(FromPortionSizePost(request.Body), request.Id, userID)
 
-	if errors.Is(err, utils.ErrEntityNotFound) {
+	if errors.Is(err, utils.ErrNotFound) {
 		return api.PostApiFoodItemsIdPortions404JSONResponse{}, nil
-	} else if errors.Is(err, utils.ErrEntityNotOwned) {
+	} else if errors.Is(err, utils.ErrForbidden) {
 		return api.PostApiFoodItemsIdPortions403JSONResponse{}, nil
 	} else if err != nil {
 		return nil, utils.ErrUnknown
@@ -108,9 +108,9 @@ func (e Endpoint) PostApiFoodItemsIdMicronutrients(ctx context.Context, request 
 	micronutrient := FromMicronutrientPost(request.Body)
 
 	ps, err := e.service.AddMicronutrient(micronutrient, request.Id, userID)
-	if errors.Is(err, utils.ErrEntityNotFound) {
+	if errors.Is(err, utils.ErrNotFound) {
 		return api.PostApiFoodItemsIdMicronutrients404JSONResponse{}, nil
-	} else if errors.Is(err, utils.ErrEntityNotOwned) {
+	} else if errors.Is(err, utils.ErrForbidden) {
 		return api.PostApiFoodItemsIdMicronutrients403JSONResponse{}, nil
 	} else if err != nil {
 		return nil, utils.ErrUnknown

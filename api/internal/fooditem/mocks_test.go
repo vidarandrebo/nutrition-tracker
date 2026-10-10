@@ -16,10 +16,19 @@ func NewMockIRepository(t interface {
 	Cleanup(func())
 },
 ) *MockIRepository {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockIRepository{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -70,7 +79,7 @@ type MockIRepository_Add_Call struct {
 
 // Add is a helper method to define mock.On call
 //   - item fooditem.TableFoodItem
-func (_e *MockIRepository_Expecter) Add(item interface{}) *MockIRepository_Add_Call {
+func (_e *MockIRepository_Expecter) Add(item any) *MockIRepository_Add_Call {
 	return &MockIRepository_Add_Call{Call: _e.mock.On("Add", item)}
 }
 
@@ -130,7 +139,7 @@ type MockIRepository_AddMicronutrient_Call struct {
 
 // AddMicronutrient is a helper method to define mock.On call
 //   - item fooditem.TableFoodItemMacronutrient
-func (_e *MockIRepository_Expecter) AddMicronutrient(item interface{}) *MockIRepository_AddMicronutrient_Call {
+func (_e *MockIRepository_Expecter) AddMicronutrient(item any) *MockIRepository_AddMicronutrient_Call {
 	return &MockIRepository_AddMicronutrient_Call{Call: _e.mock.On("AddMicronutrient", item)}
 }
 
@@ -190,7 +199,7 @@ type MockIRepository_AddPortionSize_Call struct {
 
 // AddPortionSize is a helper method to define mock.On call
 //   - item fooditem.TableFoodItemPortionSize
-func (_e *MockIRepository_Expecter) AddPortionSize(item interface{}) *MockIRepository_AddPortionSize_Call {
+func (_e *MockIRepository_Expecter) AddPortionSize(item any) *MockIRepository_AddPortionSize_Call {
 	return &MockIRepository_AddPortionSize_Call{Call: _e.mock.On("AddPortionSize", item)}
 }
 
@@ -213,63 +222,6 @@ func (_c *MockIRepository_AddPortionSize_Call) Return(tableFoodItemPortionSize f
 }
 
 func (_c *MockIRepository_AddPortionSize_Call) RunAndReturn(run func(item fooditem.TableFoodItemPortionSize) (fooditem.TableFoodItemPortionSize, error)) *MockIRepository_AddPortionSize_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// CheckOwnership provides a mock function for the type MockIRepository
-func (_mock *MockIRepository) CheckOwnership(id int64, ownerID int64) error {
-	ret := _mock.Called(id, ownerID)
-
-	if len(ret) == 0 {
-		panic("no return value specified for CheckOwnership")
-	}
-
-	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(int64, int64) error); ok {
-		r0 = returnFunc(id, ownerID)
-	} else {
-		r0 = ret.Error(0)
-	}
-	return r0
-}
-
-// MockIRepository_CheckOwnership_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CheckOwnership'
-type MockIRepository_CheckOwnership_Call struct {
-	*mock.Call
-}
-
-// CheckOwnership is a helper method to define mock.On call
-//   - id int64
-//   - ownerID int64
-func (_e *MockIRepository_Expecter) CheckOwnership(id interface{}, ownerID interface{}) *MockIRepository_CheckOwnership_Call {
-	return &MockIRepository_CheckOwnership_Call{Call: _e.mock.On("CheckOwnership", id, ownerID)}
-}
-
-func (_c *MockIRepository_CheckOwnership_Call) Run(run func(id int64, ownerID int64)) *MockIRepository_CheckOwnership_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 int64
-		if args[0] != nil {
-			arg0 = args[0].(int64)
-		}
-		var arg1 int64
-		if args[1] != nil {
-			arg1 = args[1].(int64)
-		}
-		run(
-			arg0,
-			arg1,
-		)
-	})
-	return _c
-}
-
-func (_c *MockIRepository_CheckOwnership_Call) Return(err error) *MockIRepository_CheckOwnership_Call {
-	_c.Call.Return(err)
-	return _c
-}
-
-func (_c *MockIRepository_CheckOwnership_Call) RunAndReturn(run func(id int64, ownerID int64) error) *MockIRepository_CheckOwnership_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -298,7 +250,7 @@ type MockIRepository_Delete_Call struct {
 
 // Delete is a helper method to define mock.On call
 //   - id int64
-func (_e *MockIRepository_Expecter) Delete(id interface{}) *MockIRepository_Delete_Call {
+func (_e *MockIRepository_Expecter) Delete(id any) *MockIRepository_Delete_Call {
 	return &MockIRepository_Delete_Call{Call: _e.mock.On("Delete", id)}
 }
 
@@ -360,7 +312,7 @@ type MockIRepository_Get_Call struct {
 
 // Get is a helper method to define mock.On call
 //   - ownerID int64
-func (_e *MockIRepository_Expecter) Get(ownerID interface{}) *MockIRepository_Get_Call {
+func (_e *MockIRepository_Expecter) Get(ownerID any) *MockIRepository_Get_Call {
 	return &MockIRepository_Get_Call{Call: _e.mock.On("Get", ownerID)}
 }
 
@@ -420,7 +372,7 @@ type MockIRepository_GetByID_Call struct {
 
 // GetByID is a helper method to define mock.On call
 //   - id int64
-func (_e *MockIRepository_Expecter) GetByID(id interface{}) *MockIRepository_GetByID_Call {
+func (_e *MockIRepository_Expecter) GetByID(id any) *MockIRepository_GetByID_Call {
 	return &MockIRepository_GetByID_Call{Call: _e.mock.On("GetByID", id)}
 }
 
@@ -482,7 +434,7 @@ type MockIRepository_GetMicronutrients_Call struct {
 
 // GetMicronutrients is a helper method to define mock.On call
 //   - foodItemID int64
-func (_e *MockIRepository_Expecter) GetMicronutrients(foodItemID interface{}) *MockIRepository_GetMicronutrients_Call {
+func (_e *MockIRepository_Expecter) GetMicronutrients(foodItemID any) *MockIRepository_GetMicronutrients_Call {
 	return &MockIRepository_GetMicronutrients_Call{Call: _e.mock.On("GetMicronutrients", foodItemID)}
 }
 
@@ -544,7 +496,7 @@ type MockIRepository_GetPortionSizes_Call struct {
 
 // GetPortionSizes is a helper method to define mock.On call
 //   - foodItemID int64
-func (_e *MockIRepository_Expecter) GetPortionSizes(foodItemID interface{}) *MockIRepository_GetPortionSizes_Call {
+func (_e *MockIRepository_Expecter) GetPortionSizes(foodItemID any) *MockIRepository_GetPortionSizes_Call {
 	return &MockIRepository_GetPortionSizes_Call{Call: _e.mock.On("GetPortionSizes", foodItemID)}
 }
 
@@ -578,10 +530,19 @@ func NewMockIService(t interface {
 	Cleanup(func())
 },
 ) *MockIService {
+	if helper, ok := t.(interface{ Helper() }); ok {
+		helper.Helper()
+	}
+
 	mock := &MockIService{}
 	mock.Mock.Test(t)
 
-	t.Cleanup(func() { mock.AssertExpectations(t) })
+	t.Cleanup(func() {
+		if helper, ok := t.(interface{ Helper() }); ok {
+			helper.Helper()
+		}
+		mock.AssertExpectations(t)
+	})
 
 	return mock
 }
@@ -634,7 +595,7 @@ type MockIService_Add_Call struct {
 
 // Add is a helper method to define mock.On call
 //   - item *fooditem.FoodItem
-func (_e *MockIService_Expecter) Add(item interface{}) *MockIService_Add_Call {
+func (_e *MockIService_Expecter) Add(item any) *MockIService_Add_Call {
 	return &MockIService_Add_Call{Call: _e.mock.On("Add", item)}
 }
 
@@ -698,7 +659,7 @@ type MockIService_AddMicronutrient_Call struct {
 //   - item *fooditem.Micronutrient
 //   - foodItemID int64
 //   - ownerID int64
-func (_e *MockIService_Expecter) AddMicronutrient(item interface{}, foodItemID interface{}, ownerID interface{}) *MockIService_AddMicronutrient_Call {
+func (_e *MockIService_Expecter) AddMicronutrient(item any, foodItemID any, ownerID any) *MockIService_AddMicronutrient_Call {
 	return &MockIService_AddMicronutrient_Call{Call: _e.mock.On("AddMicronutrient", item, foodItemID, ownerID)}
 }
 
@@ -772,7 +733,7 @@ type MockIService_AddPortionSize_Call struct {
 //   - item *fooditem.PortionSize
 //   - foodItemID int64
 //   - ownerID int64
-func (_e *MockIService_Expecter) AddPortionSize(item interface{}, foodItemID interface{}, ownerID interface{}) *MockIService_AddPortionSize_Call {
+func (_e *MockIService_Expecter) AddPortionSize(item any, foodItemID any, ownerID any) *MockIService_AddPortionSize_Call {
 	return &MockIService_AddPortionSize_Call{Call: _e.mock.On("AddPortionSize", item, foodItemID, ownerID)}
 }
 
@@ -809,6 +770,63 @@ func (_c *MockIService_AddPortionSize_Call) RunAndReturn(run func(item *fooditem
 	return _c
 }
 
+// CheckOwnership provides a mock function for the type MockIService
+func (_mock *MockIService) CheckOwnership(id int64, ownerID int64) error {
+	ret := _mock.Called(id, ownerID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for CheckOwnership")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(int64, int64) error); ok {
+		r0 = returnFunc(id, ownerID)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// MockIService_CheckOwnership_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CheckOwnership'
+type MockIService_CheckOwnership_Call struct {
+	*mock.Call
+}
+
+// CheckOwnership is a helper method to define mock.On call
+//   - id int64
+//   - ownerID int64
+func (_e *MockIService_Expecter) CheckOwnership(id any, ownerID any) *MockIService_CheckOwnership_Call {
+	return &MockIService_CheckOwnership_Call{Call: _e.mock.On("CheckOwnership", id, ownerID)}
+}
+
+func (_c *MockIService_CheckOwnership_Call) Run(run func(id int64, ownerID int64)) *MockIService_CheckOwnership_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 int64
+		if args[0] != nil {
+			arg0 = args[0].(int64)
+		}
+		var arg1 int64
+		if args[1] != nil {
+			arg1 = args[1].(int64)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockIService_CheckOwnership_Call) Return(err error) *MockIService_CheckOwnership_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *MockIService_CheckOwnership_Call) RunAndReturn(run func(id int64, ownerID int64) error) *MockIService_CheckOwnership_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Delete provides a mock function for the type MockIService
 func (_mock *MockIService) Delete(id int64, ownerID int64) error {
 	ret := _mock.Called(id, ownerID)
@@ -834,7 +852,7 @@ type MockIService_Delete_Call struct {
 // Delete is a helper method to define mock.On call
 //   - id int64
 //   - ownerID int64
-func (_e *MockIService_Expecter) Delete(id interface{}, ownerID interface{}) *MockIService_Delete_Call {
+func (_e *MockIService_Expecter) Delete(id any, ownerID any) *MockIService_Delete_Call {
 	return &MockIService_Delete_Call{Call: _e.mock.On("Delete", id, ownerID)}
 }
 
@@ -901,7 +919,7 @@ type MockIService_Get_Call struct {
 
 // Get is a helper method to define mock.On call
 //   - ownerID int64
-func (_e *MockIService_Expecter) Get(ownerID interface{}) *MockIService_Get_Call {
+func (_e *MockIService_Expecter) Get(ownerID any) *MockIService_Get_Call {
 	return &MockIService_Get_Call{Call: _e.mock.On("Get", ownerID)}
 }
 
@@ -963,7 +981,7 @@ type MockIService_GetByID_Call struct {
 
 // GetByID is a helper method to define mock.On call
 //   - id int64
-func (_e *MockIService_Expecter) GetByID(id interface{}) *MockIService_GetByID_Call {
+func (_e *MockIService_Expecter) GetByID(id any) *MockIService_GetByID_Call {
 	return &MockIService_GetByID_Call{Call: _e.mock.On("GetByID", id)}
 }
 

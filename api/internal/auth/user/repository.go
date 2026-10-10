@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"log/slog"
 	"reflect"
-
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type IRepository interface {
@@ -27,6 +25,8 @@ func NewRepository(db *sql.DB, log *slog.Logger) *Repository {
 	return &r
 }
 
+// Add returns sql.ErrNoRows if the insert returns no row, or the database error
+// if inserting or scanning the user fails.
 func (s *Repository) Add(item TableUser) (TableUser, error) {
 	scanErr := s.db.QueryRow(`
 		INSERT INTO users(name, email, password_hash) 
@@ -38,12 +38,14 @@ func (s *Repository) Add(item TableUser) (TableUser, error) {
 
 	if scanErr != nil {
 		s.log.Error("failed to add user", slog.String("email", item.Email), slog.Any("error", scanErr))
-		return TableUser{}, utils.ErrUnknown
+		return TableUser{}, scanErr
 	}
 
 	return item, nil
 }
 
+// GetByEmail returns sql.ErrNoRows if the user does not exist, or the database
+// error if querying or scanning it fails.
 func (s *Repository) GetByEmail(email string) (TableUser, error) {
 	user := TableUser{}
 	scanErr := s.db.QueryRow(`
@@ -59,13 +61,15 @@ func (s *Repository) GetByEmail(email string) (TableUser, error) {
 	)
 
 	if scanErr != nil {
-		s.log.Error("no user matching the credentials", slog.String("email", email))
-		return TableUser{}, utils.ErrEntityNotFound
+		s.log.Error("failed to get user by email", slog.String("email", email), slog.Any("err", scanErr))
+		return TableUser{}, scanErr
 	}
 
 	return user, nil
 }
 
+// GetByID returns sql.ErrNoRows if the user does not exist, or the database
+// error if querying or scanning it fails.
 func (s *Repository) GetByID(id int64) (TableUser, error) {
 	user := TableUser{}
 	scanErr := s.db.QueryRow(`
@@ -81,8 +85,8 @@ func (s *Repository) GetByID(id int64) (TableUser, error) {
 	)
 
 	if scanErr != nil {
-		s.log.Error("no user matching the id", slog.Int64("id", id))
-		return TableUser{}, utils.ErrEntityNotFound
+		s.log.Error("failed to get user by id", slog.Int64("id", id), slog.Any("err", scanErr))
+		return TableUser{}, scanErr
 	}
 
 	return user, nil

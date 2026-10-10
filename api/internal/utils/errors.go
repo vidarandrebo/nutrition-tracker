@@ -3,9 +3,16 @@ package utils
 import "errors"
 
 var (
-	ErrEntityNotFound     = errors.New("entity not found")
-	ErrEntityNotOwned     = errors.New("entity not owned")
-	ErrEntityInaccessible = errors.New("entity not accessible")
-	ErrUnauthorized       = errors.New("unauthorized")
-	ErrUnknown            = errors.New("an unknown error occurred")
+
+	// ErrNotFound represents an error indicating that the requested resource was not found in the system.
+	ErrNotFound = errors.New("not found")
+
+	// ErrForbidden represents an error indicating that access to the requested resource is forbidden due to insufficient permissions.
+	ErrForbidden = errors.New("forbidden")
+
+	// ErrUnauthorized represents an error indicating that valid authentication credentials are required.
+	ErrUnauthorized = errors.New("unauthorized")
+
+	// ErrUnknown represents an error indicating that an unknown error occurred.
+	ErrUnknown = errors.New("unknown error")
 )
