@@ -24,8 +24,8 @@ export const useFoodItemStore = defineStore("foodItems", () => {
                 collection.value = [];
             } else {
                 collection.value = items;
+                initialized.value = true;
             }
-            initialized.value = true;
         }
     }
 

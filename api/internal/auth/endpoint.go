@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"errors"
 	"log/slog"
 	"reflect"
 
@@ -38,7 +37,7 @@ func (e Endpoint) PostApiRegister(ctx context.Context, request api.PostApiRegist
 		Password: request.Body.Password,
 	}
 	if !regRequest.Validate() {
-		return nil, errors.New("invalid model")
+		return api.PostApiRegister422JSONResponse{}, nil
 	}
 
 	err := e.AuthService.RegisterUser(regRequest)

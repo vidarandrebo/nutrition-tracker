@@ -4,8 +4,6 @@ import (
 	"database/sql"
 	"log/slog"
 	"reflect"
-
-	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type IRepository interface {
@@ -17,7 +15,6 @@ type IRepository interface {
 	GetPortionSizes(foodItemID int64) ([]TableFoodItemPortionSize, error)
 	GetMicronutrients(foodItemID int64) ([]TableFoodItemMacronutrient, error)
 	Delete(id int64) error
-	CheckOwnership(id int64, ownerID int64) error
 }
 
 type Repository struct {
@@ -31,6 +28,8 @@ func NewRepository(db *sql.DB, logger *slog.Logger) *Repository {
 	return &r
 }
 
+// Add returns sql.ErrNoRows if the insert returns no row, or the database error
+// if inserting or scanning the new food item fails.
 func (r *Repository) Add(item TableFoodItem) (TableFoodItem, error) {
 	err := r.db.QueryRow(`
 		INSERT INTO food_items AS fi (manufacturer, product, protein, carbohydrate, fat, kcal, public, source, owner_id) 
@@ -55,6 +54,8 @@ func (r *Repository) Add(item TableFoodItem) (TableFoodItem, error) {
 	return item, nil
 }
 
+// AddMicronutrient returns sql.ErrNoRows if the insert returns no row, or the
+// database error if inserting or scanning the new micronutrient fails.
 func (r *Repository) AddMicronutrient(item TableFoodItemMacronutrient) (TableFoodItemMacronutrient, error) {
 	err := r.db.QueryRow(`
 			INSERT INTO food_item_micronutrients (name, amount, food_item_id) 
@@ -73,6 +74,8 @@ func (r *Repository) AddMicronutrient(item TableFoodItemMacronutrient) (TableFoo
 	return item, nil
 }
 
+// AddPortionSize returns sql.ErrNoRows if the insert returns no row, or the
+// database error if inserting or scanning the new portion size fails.
 func (r *Repository) AddPortionSize(item TableFoodItemPortionSize) (TableFoodItemPortionSize, error) {
 	err := r.db.QueryRow(`
 			INSERT INTO food_item_portion_sizes (name, amount, food_item_id) 
@@ -87,8 +90,10 @@ func (r *Repository) AddPortionSize(item TableFoodItemPortionSize) (TableFoodIte
 	return item, nil
 }
 
-func (r *Repository) Get(ownerID int64) ([]TableFoodItem, error) {
-	items := make([]TableFoodItem, 0)
+// Get returns the database error if querying, scanning, iterating or closing food items fails.
+// It returns an empty slice and no error when no food items match.
+func (r *Repository) Get(ownerID int64) (items []TableFoodItem, err error) {
+	items = make([]TableFoodItem, 0)
 	rows, err := r.db.Query(`
 		WITH owned_fi AS (
 		    SELECT *
@@ -102,9 +107,15 @@ func (r *Repository) Get(ownerID int64) ([]TableFoodItem, error) {
 		ownerID,
 	)
 	if err != nil {
-		r.logger.Error("failed to query rows of food items", slog.Any("err", err))
+		r.logger.Error("failed to query rows of food items", slog.Int64("ownerID", ownerID), slog.Any("err", err))
 		return nil, err
 	}
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			r.logger.Error("failed to close food item rows", slog.Int64("ownerID", ownerID), slog.Any("err", closeErr))
+			items, err = nil, closeErr
+		}
+	}()
 	for rows.Next() {
 		item := TableFoodItem{}
 		err = rows.Scan(
@@ -120,14 +131,20 @@ func (r *Repository) Get(ownerID int64) ([]TableFoodItem, error) {
 			&item.OwnerID,
 		)
 		if err != nil {
-			r.logger.Error("failed to scan rows of food items", slog.Any("err", err))
+			r.logger.Error("failed to scan rows of food items", slog.Int64("ownerID", ownerID), slog.Any("err", err))
 			return nil, err
 		}
 		items = append(items, item)
 	}
+	if err := rows.Err(); err != nil {
+		r.logger.Error("failed to iterate food items", slog.Int64("ownerID", ownerID), slog.Any("err", err))
+		return nil, err
+	}
 	return items, nil
 }
 
+// GetByID returns sql.ErrNoRows if the food item does not exist, or the
+// database error if querying or scanning it fails for another reason.
 func (r *Repository) GetByID(id int64) (TableFoodItem, error) {
 	item := TableFoodItem{}
 	err := r.db.QueryRow(`
@@ -138,14 +155,16 @@ func (r *Repository) GetByID(id int64) (TableFoodItem, error) {
 		id,
 	).Scan(&item.ID, &item.Manufacturer, &item.Product, &item.Protein, &item.Carbohydrate, &item.Fat, &item.KCal, &item.Public, &item.Source, &item.OwnerID)
 	if err != nil {
-		r.logger.Error("failed to query rows of food items", slog.Any("err", err))
-		return TableFoodItem{}, utils.ErrEntityNotFound
+		r.logger.Error("failed to query food item", slog.Int64("foodItemID", id), slog.Any("err", err))
+		return TableFoodItem{}, err
 	}
 	return item, nil
 }
 
-func (r *Repository) GetPortionSizes(foodItemID int64) ([]TableFoodItemPortionSize, error) {
-	items := make([]TableFoodItemPortionSize, 0)
+// GetPortionSizes returns the database error if querying, scanning, iterating or closing portion sizes fails.
+// It returns an empty slice and no error when no portion sizes match.
+func (r *Repository) GetPortionSizes(foodItemID int64) (items []TableFoodItemPortionSize, err error) {
+	items = make([]TableFoodItemPortionSize, 0)
 	rows, err := r.db.Query(`
 		WITH fi_portions AS (
 		    SELECT *
@@ -158,9 +177,15 @@ func (r *Repository) GetPortionSizes(foodItemID int64) ([]TableFoodItemPortionSi
 		foodItemID,
 	)
 	if err != nil {
-		r.logger.Error("failed to query rows of portion sizes", slog.Any("err", err))
+		r.logger.Error("failed to query rows of portion sizes", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
 		return nil, err
 	}
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			r.logger.Error("failed to close portion size rows", slog.Int64("foodItemID", foodItemID), slog.Any("err", closeErr))
+			items, err = nil, closeErr
+		}
+	}()
 	for rows.Next() {
 		item := TableFoodItemPortionSize{}
 		err = rows.Scan(
@@ -170,16 +195,22 @@ func (r *Repository) GetPortionSizes(foodItemID int64) ([]TableFoodItemPortionSi
 			&item.FoodItemID,
 		)
 		if err != nil {
-			r.logger.Error("failed to scan rows of portion sizes items", slog.Any("err", err))
+			r.logger.Error("failed to scan rows of portion sizes items", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
 			return nil, err
 		}
 		items = append(items, item)
 	}
+	if err := rows.Err(); err != nil {
+		r.logger.Error("failed to iterate portion sizes", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
+		return nil, err
+	}
 	return items, nil
 }
 
-func (r *Repository) GetMicronutrients(foodItemID int64) ([]TableFoodItemMacronutrient, error) {
-	items := make([]TableFoodItemMacronutrient, 0)
+// GetMicronutrients returns the database error if querying, scanning, iterating or closing micronutrients fails.
+// It returns an empty slice and no error when no micronutrients match.
+func (r *Repository) GetMicronutrients(foodItemID int64) (items []TableFoodItemMacronutrient, err error) {
+	items = make([]TableFoodItemMacronutrient, 0)
 	rows, err := r.db.Query(`
 		WITH fi_micronutrients AS (
 		    SELECT *
@@ -192,9 +223,15 @@ func (r *Repository) GetMicronutrients(foodItemID int64) ([]TableFoodItemMacronu
 		foodItemID,
 	)
 	if err != nil {
-		r.logger.Error("failed to query rows of micronutrients", slog.Any("err", err))
+		r.logger.Error("failed to query rows of micronutrients", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
 		return nil, err
 	}
+	defer func() {
+		if closeErr := rows.Close(); closeErr != nil {
+			r.logger.Error("failed to close micronutrient rows", slog.Int64("foodItemID", foodItemID), slog.Any("err", closeErr))
+			items, err = nil, closeErr
+		}
+	}()
 	for rows.Next() {
 		item := TableFoodItemMacronutrient{}
 		err = rows.Scan(
@@ -204,44 +241,29 @@ func (r *Repository) GetMicronutrients(foodItemID int64) ([]TableFoodItemMacronu
 			&item.FoodItemID,
 		)
 		if err != nil {
-			r.logger.Error("failed to scan rows of micronutrient items", slog.Any("err", err))
+			r.logger.Error("failed to scan rows of micronutrient items", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
 			return nil, err
 		}
 		items = append(items, item)
 	}
+	if err := rows.Err(); err != nil {
+		r.logger.Error("failed to iterate micronutrients", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
+		return nil, err
+	}
 	return items, nil
 }
 
+// Delete returns the database error if deleting the food item fails.
+// It returns no error when the food item does not exist.
 func (r *Repository) Delete(id int64) error {
-	_, err := r.db.Query(`
+	_, err := r.db.Exec(`
 		DELETE FROM food_items
 		WHERE id = $1
 	`, id,
 	)
 	if err != nil {
-		r.logger.Error("failed to delete foodItem", slog.Int64("foodItemId", id))
+		r.logger.Error("failed to delete food item", slog.Int64("foodItemID", id), slog.Any("err", err))
 		return err
 	}
 	return nil
-}
-
-func (r *Repository) CheckOwnership(id int64, ownerID int64) error {
-	foodItem := TableFoodItem{}
-	err := r.db.QueryRow(`
-		SELECT id, owner_id 
-		FROM food_items 
-		WHERE id = $1
-	`, id).Scan(
-		&foodItem.ID,
-		&foodItem.OwnerID,
-	)
-	if err != nil {
-		return utils.ErrEntityNotFound
-	}
-
-	if foodItem.OwnerID == ownerID {
-		return nil
-	}
-
-	return utils.ErrEntityNotOwned
 }

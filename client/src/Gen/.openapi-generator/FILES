@@ -4,6 +4,7 @@ apis/MealsApi.ts
 apis/RecipesApi.ts
 apis/index.ts
 index.ts
+models/ErrorResponse.ts
 models/FoodItemMicronutrientPostRequest.ts
 models/FoodItemMicronutrientResponse.ts
 models/FoodItemPortionPostRequest.ts
