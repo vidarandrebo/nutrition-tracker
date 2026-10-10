@@ -27,7 +27,7 @@ func (e Endpoint) GetApiFoodItems(ctx context.Context, request api.GetApiFoodIte
 	if err != nil {
 		return api.GetApiFoodItems401JSONResponse{}, nil
 	}
-items, err := e.service.Get(user.ID)
+	items, err := e.service.Get(user.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -63,7 +63,10 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 	}
 	item, err := e.service.GetByID(request.Id)
 	if err != nil {
-		return api.GetApiFoodItemsId404JSONResponse{}, nil
+		if errors.Is(err, utils.ErrNotFound) {
+			return api.GetApiFoodItemsId404JSONResponse{}, nil
+		}
+		return nil, utils.ErrUnknown
 	}
 	if !item.HasAccess(userID.ID) {
 		return api.GetApiFoodItemsId403JSONResponse{}, nil
