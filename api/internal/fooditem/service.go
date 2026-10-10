@@ -30,22 +30,13 @@ func NewService(repository IRepository, logger *slog.Logger) *Service {
 	return &s
 }
 
-// repositoryError returns utils.ErrNotFound for sql.ErrNoRows or utils.ErrUnknown
-// for other repository failures, logging the original error before translation.
-func (s *Service) repositoryError(operation string, id int64, err error) error {
-	if errors.Is(err, sql.ErrNoRows) {
-		s.logger.Debug("food item not found", slog.String("operation", operation), slog.Int64("foodItemID", id), slog.Any("err", err))
-		return utils.ErrNotFound
-	}
-	s.logger.Error("food item repository failure", slog.String("operation", operation), slog.Int64("foodItemID", id), slog.Any("err", err))
-	return utils.ErrUnknown
-}
-
+// Add returns utils.ErrUnknown for any food item, micronutrient, or portion size insert failure.
 func (s *Service) Add(item *FoodItem) (*FoodItem, error) {
 	foodItem, fiErr := s.repository.Add(item.ToTable())
 
 	if fiErr != nil {
-		return nil, s.repositoryError("add", item.OwnerID, fiErr)
+		s.logger.Error("failed to add food item", slog.Int64("ownerID", item.OwnerID), slog.Any("err", fiErr))
+		return nil, utils.ErrUnknown
 	}
 
 	item.ID = foodItem.ID
@@ -53,29 +44,39 @@ func (s *Service) Add(item *FoodItem) (*FoodItem, error) {
 	for _, mn := range item.Micronutrients {
 		micronutrient, mnErr := s.repository.AddMicronutrient(mn.ToTable(foodItem.ID))
 		if mnErr != nil {
-			return nil, s.repositoryError("add micronutrient", foodItem.ID, mnErr)
+			s.logger.Error("failed to add micronutrient", slog.Int64("foodItemID", foodItem.ID), slog.Any("err", mnErr))
+			return nil, utils.ErrUnknown
 		}
 		mn.ID = micronutrient.ID
 	}
 	for _, ps := range item.PortionSizes {
 		portionSize, psErr := s.repository.AddPortionSize(ps.ToTable(item.ID))
 		if psErr != nil {
-			return nil, s.repositoryError("add portion size", foodItem.ID, psErr)
+			s.logger.Error("failed to add portion size", slog.Int64("foodItemID", foodItem.ID), slog.Any("err", psErr))
+			return nil, utils.ErrUnknown
 		}
 		ps.ID = portionSize.ID
 	}
 	return item, nil
 }
 
+// GetByID returns utils.ErrNotFound if the food item is missing, or utils.ErrUnknown
+// for other food item lookup or portion size list failures.
 func (s *Service) GetByID(id int64) (*FoodItem, error) {
 	item, err := s.repository.GetByID(id)
 	if err != nil {
-		return nil, s.repositoryError("get by ID", id, err)
+		if errors.Is(err, sql.ErrNoRows) {
+			s.logger.Debug("food item not found", slog.Int64("foodItemID", id), slog.Any("err", err))
+			return nil, utils.ErrNotFound
+		}
+		s.logger.Error("failed to get food item", slog.Int64("foodItemID", id), slog.Any("err", err))
+		return nil, utils.ErrUnknown
 	}
 	foodItem := NewFoodItem().FromTable(item)
 	portionSizes, err := s.repository.GetPortionSizes(id)
 	if err != nil {
-		return nil, s.repositoryError("get portion sizes", id, err)
+		s.logger.Error("failed to get portion sizes", slog.Int64("foodItemID", id), slog.Any("err", err))
+		return nil, utils.ErrUnknown
 	}
 	for _, ps := range portionSizes {
 		foodItem.PortionSizes = append(foodItem.PortionSizes, FromPortionSizeTable(ps))
@@ -83,17 +84,21 @@ func (s *Service) GetByID(id int64) (*FoodItem, error) {
 	return foodItem, nil
 }
 
+// Get returns utils.ErrUnknown for food item or portion size list failures.
+// An owner with no food items receives an empty result without error.
 func (s *Service) Get(ownerID int64) ([]*FoodItem, error) {
 	items, err := s.repository.Get(ownerID)
 	if err != nil {
-		return nil, s.repositoryError("list", ownerID, err)
+		s.logger.Error("failed to list food items", slog.Int64("ownerID", ownerID), slog.Any("err", err))
+		return nil, utils.ErrUnknown
 	}
 	foodItems := make([]*FoodItem, 0, len(items))
 	for _, item := range items {
 		foodItem := NewFoodItem().FromTable(item)
 		portionSizes, err := s.repository.GetPortionSizes(item.ID)
 		if err != nil {
-			return nil, s.repositoryError("get portion sizes", item.ID, err)
+			s.logger.Error("failed to get portion sizes", slog.Int64("foodItemID", item.ID), slog.Any("err", err))
+			return nil, utils.ErrUnknown
 		}
 		for _, ps := range portionSizes {
 			foodItem.PortionSizes = append(foodItem.PortionSizes, FromPortionSizeTable(ps))
@@ -109,7 +114,12 @@ func (s *Service) Get(ownerID int64) ([]*FoodItem, error) {
 func (s *Service) CheckOwnership(id int64, ownerID int64) error {
 	item, err := s.repository.GetByID(id)
 	if err != nil {
-		return s.repositoryError("check ownership", id, err)
+		if errors.Is(err, sql.ErrNoRows) {
+			s.logger.Debug("food item not found", slog.Int64("foodItemID", id), slog.Any("err", err))
+			return utils.ErrNotFound
+		}
+		s.logger.Error("failed to check food item ownership", slog.Int64("foodItemID", id), slog.Any("err", err))
+		return utils.ErrUnknown
 	}
 	if item.OwnerID != ownerID {
 		return utils.ErrForbidden
@@ -117,6 +127,8 @@ func (s *Service) CheckOwnership(id int64, ownerID int64) error {
 	return nil
 }
 
+// AddPortionSize returns utils.ErrNotFound for a missing food item,
+// utils.ErrForbidden for another owner, or utils.ErrUnknown for lookup or insert failures.
 func (s *Service) AddPortionSize(portionSize *PortionSize, foodItemID int64, ownerID int64) (*PortionSize, error) {
 	if err := s.CheckOwnership(foodItemID, ownerID); err != nil {
 		return nil, err
@@ -124,12 +136,15 @@ func (s *Service) AddPortionSize(portionSize *PortionSize, foodItemID int64, own
 
 	item, err := s.repository.AddPortionSize(portionSize.ToTable(foodItemID))
 	if err != nil {
-		return nil, s.repositoryError("add portion size", foodItemID, err)
+		s.logger.Error("failed to add portion size", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
+		return nil, utils.ErrUnknown
 	}
 	portionSize.ID = item.ID
 	return portionSize, nil
 }
 
+// AddMicronutrient returns utils.ErrNotFound for a missing food item,
+// utils.ErrForbidden for another owner, or utils.ErrUnknown for lookup or insert failures.
 func (s *Service) AddMicronutrient(micronutrient *Micronutrient, foodItemID int64, ownerID int64) (*Micronutrient, error) {
 	if err := s.CheckOwnership(foodItemID, ownerID); err != nil {
 		return nil, err
@@ -137,18 +152,22 @@ func (s *Service) AddMicronutrient(micronutrient *Micronutrient, foodItemID int6
 
 	item, err := s.repository.AddMicronutrient(micronutrient.ToTable(foodItemID))
 	if err != nil {
-		return nil, s.repositoryError("add micronutrient", foodItemID, err)
+		s.logger.Error("failed to add micronutrient", slog.Int64("foodItemID", foodItemID), slog.Any("err", err))
+		return nil, utils.ErrUnknown
 	}
 	micronutrient.ID = item.ID
 	return micronutrient, nil
 }
 
+// Delete returns utils.ErrNotFound for a missing food item,
+// utils.ErrForbidden for another owner, or utils.ErrUnknown for lookup or delete failures.
 func (s *Service) Delete(id int64, ownerID int64) error {
 	if err := s.CheckOwnership(id, ownerID); err != nil {
 		return err
 	}
 	if err := s.repository.Delete(id); err != nil {
-		return s.repositoryError("delete", id, err)
+		s.logger.Error("failed to delete food item", slog.Int64("foodItemID", id), slog.Any("err", err))
+		return utils.ErrUnknown
 	}
 	return nil
 }

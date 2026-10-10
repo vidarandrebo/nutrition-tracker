@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql"
 	"errors"
+	"fmt"
 	"log/slog"
 	"strings"
 	"testing"
@@ -58,4 +59,64 @@ func TestService_CheckOwnership(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestService_InsertNoRowsIsUnknown(t *testing.T) {
+	for _, name := range []string{"food item", "nested micronutrient", "nested portion size", "micronutrient", "portion size"} {
+		t.Run(name, func(t *testing.T) {
+			repo := NewMockIRepository(t)
+			insertErr := fmt.Errorf("insert returned nothing: %w", sql.ErrNoRows)
+			owned := fooditem.TableFoodItem{ID: 1, OwnerID: 2}
+			item := &fooditem.FoodItem{OwnerID: 2}
+			switch name {
+			case "food item":
+				repo.EXPECT().Add(mock.Anything).Return(fooditem.TableFoodItem{}, insertErr)
+			case "nested micronutrient":
+				item.Micronutrients = []*fooditem.Micronutrient{{}}
+				repo.EXPECT().Add(mock.Anything).Return(owned, nil)
+				repo.EXPECT().AddMicronutrient(mock.Anything).Return(fooditem.TableFoodItemMacronutrient{}, insertErr)
+			case "nested portion size":
+				item.PortionSizes = []*fooditem.PortionSize{{}}
+				repo.EXPECT().Add(mock.Anything).Return(owned, nil)
+				repo.EXPECT().AddPortionSize(mock.Anything).Return(fooditem.TableFoodItemPortionSize{}, insertErr)
+			case "micronutrient":
+				repo.EXPECT().GetByID(int64(1)).Return(owned, nil)
+				repo.EXPECT().AddMicronutrient(mock.Anything).Return(fooditem.TableFoodItemMacronutrient{}, insertErr)
+			case "portion size":
+				repo.EXPECT().GetByID(int64(1)).Return(owned, nil)
+				repo.EXPECT().AddPortionSize(mock.Anything).Return(fooditem.TableFoodItemPortionSize{}, insertErr)
+			}
+
+			var logs bytes.Buffer
+			service := fooditem.NewService(repo, slog.New(slog.NewTextHandler(&logs, nil)))
+			var err error
+			switch name {
+			case "food item", "nested micronutrient", "nested portion size":
+				_, err = service.Add(item)
+			case "micronutrient":
+				_, err = service.AddMicronutrient(&fooditem.Micronutrient{}, 1, 2)
+			case "portion size":
+				_, err = service.AddPortionSize(&fooditem.PortionSize{}, 1, 2)
+			}
+			assert.ErrorIs(t, err, utils.ErrUnknown)
+			assert.NotErrorIs(t, err, utils.ErrNotFound)
+			assert.Contains(t, logs.String(), sql.ErrNoRows.Error())
+		})
+	}
+}
+
+func TestService_GetByIDNoRowsIsNotFound(t *testing.T) {
+	repo := NewMockIRepository(t)
+	repo.EXPECT().GetByID(int64(1)).Return(fooditem.TableFoodItem{}, fmt.Errorf("lookup: %w", sql.ErrNoRows))
+	service := fooditem.NewService(repo, slog.Default())
+	_, err := service.GetByID(1)
+	assert.ErrorIs(t, err, utils.ErrNotFound)
+}
+
+func TestService_ListNoRowsIsUnknown(t *testing.T) {
+	repo := NewMockIRepository(t)
+	repo.EXPECT().Get(int64(2)).Return(nil, sql.ErrNoRows)
+	service := fooditem.NewService(repo, slog.Default())
+	_, err := service.Get(2)
+	assert.ErrorIs(t, err, utils.ErrUnknown)
 }
