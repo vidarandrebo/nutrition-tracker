@@ -151,6 +151,7 @@ func (js *JwtService) ValidateToken(tokenString string) (*JwtClaims, error) {
 	return ParseClaims(extractedToken.Claims)
 }
 
+// UserFromCtx returns the user from the context. Returns [nil, utils.ErrUnauthorized] if the user is not found.
 func UserFromCtx(ctx context.Context) (*user.User, error) {
 	claims, ok := ctx.Value("user").(*user.User)
 	if !ok {
