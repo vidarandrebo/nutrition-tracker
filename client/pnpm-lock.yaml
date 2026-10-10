@@ -51,13 +51,13 @@ importers:
         specifier: ^0.28.2
         version: 0.28.2
       eslint:
-        specifier: ^10.10.0
+        specifier: ^10.11.0
         version: 10.11.0
       eslint-config-prettier:
         specifier: ^10.1.8
         version: 10.1.8(eslint@10.11.0)
       eslint-plugin-vue:
-        specifier: ^10.11.0
+        specifier: ^10.11.1
         version: 10.11.1(@typescript-eslint/parser@8.70.1(eslint@10.11.0)(typescript@6.0.3))(eslint@10.11.0)(vue-eslint-parser@10.4.1(eslint@10.11.0))
       globals:
         specifier: ^17.12.0
@@ -69,25 +69,25 @@ importers:
         specifier: ^4.0.3
         version: 4.0.3(@vue/devtools-api@8.2.1)(typescript@6.0.3)(vue@3.5.43(typescript@6.0.3))
       prettier:
-        specifier: ^3.9.6
+        specifier: ^3.9.9
         version: 3.9.9
       sass:
-        specifier: ^1.104.1
+        specifier: ^1.105.0
         version: 1.105.0
       typescript:
         specifier: ~6.0.3
         version: 6.0.3
       typescript-eslint:
-        specifier: ^8.70.0
+        specifier: ^8.70.1
         version: 8.70.1(eslint@10.11.0)(typescript@6.0.3)
       uuid:
         specifier: ^14.0.2
         version: 14.0.2
       vite:
-        specifier: ^8.3.0
+        specifier: ^8.3.1
         version: 8.3.1(esbuild@0.28.2)(sass@1.105.0)
       vitest:
-        specifier: ^5.0.0
+        specifier: ^5.0.2
         version: 5.0.2(vite@8.3.1(esbuild@0.28.2)(sass@1.105.0))
       vue:
         specifier: ^3.5.42
