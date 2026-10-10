@@ -16,12 +16,12 @@ type Endpoint struct {
 }
 
 func (e *Endpoint) PostApiMealsMealIdFoodItemEntries(ctx context.Context, request api.PostApiMealsMealIdFoodItemEntriesRequestObject) (api.PostApiMealsMealIdFoodItemEntriesResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	entry, err := e.service.AddFoodItemEntry(FIMEFromRequest(*request.Body), request.MealId, userID)
+	entry, err := e.service.AddFoodItemEntry(FIMEFromRequest(*request.Body), request.MealId, userID.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -30,12 +30,12 @@ func (e *Endpoint) PostApiMealsMealIdFoodItemEntries(ctx context.Context, reques
 }
 
 func (e *Endpoint) PostApiMealsMealIdMacronutrientEntries(ctx context.Context, request api.PostApiMealsMealIdMacronutrientEntriesRequestObject) (api.PostApiMealsMealIdMacronutrientEntriesResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	entry, err := e.service.AddMacroEntry(MNEFromRequest(*request.Body), request.MealId, userID)
+	entry, err := e.service.AddMacroEntry(MNEFromRequest(*request.Body), request.MealId, userID.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -44,12 +44,12 @@ func (e *Endpoint) PostApiMealsMealIdMacronutrientEntries(ctx context.Context, r
 }
 
 func (e *Endpoint) PostApiMealsMealIdRecipeEntries(ctx context.Context, request api.PostApiMealsMealIdRecipeEntriesRequestObject) (api.PostApiMealsMealIdRecipeEntriesResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	entry, err := e.service.AddRecipeEntry(NewRecipeEntry().FromRequest(request.Body), request.MealId, userID)
+	entry, err := e.service.AddRecipeEntry(NewRecipeEntry().FromRequest(request.Body), request.MealId, userID.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -64,12 +64,12 @@ func NewEndpoint(service IService, logger *slog.Logger) *Endpoint {
 }
 
 func (e *Endpoint) GetApiMeals(ctx context.Context, request api.GetApiMealsRequestObject) (api.GetApiMealsResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	meals, err := e.service.GetByDate(*request.Params.DateFrom, *request.Params.DateTo, userID)
+	meals, err := e.service.GetByDate(*request.Params.DateFrom, *request.Params.DateTo, userID.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func (e *Endpoint) GetApiMeals(ctx context.Context, request api.GetApiMealsReque
 }
 
 func (e *Endpoint) PostApiMeals(ctx context.Context, request api.PostApiMealsRequestObject) (api.PostApiMealsResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -91,7 +91,7 @@ func (e *Endpoint) PostApiMeals(ctx context.Context, request api.PostApiMealsReq
 	meal, err := e.service.Add(&Meal{
 		SequenceNumber: 0,
 		Timestamp:      request.Body.Timestamp,
-		OwnerID:        userID,
+		OwnerID:        userID.ID,
 	})
 	e.last++
 	if err != nil {
@@ -102,11 +102,11 @@ func (e *Endpoint) PostApiMeals(ctx context.Context, request api.PostApiMealsReq
 }
 
 func (e *Endpoint) GetApiMealsId(ctx context.Context, request api.GetApiMealsIdRequestObject) (api.GetApiMealsIdResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
-	meal, err := e.service.GetById(request.Id, userID)
+	meal, err := e.service.GetById(request.Id, userID.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -115,12 +115,12 @@ func (e *Endpoint) GetApiMealsId(ctx context.Context, request api.GetApiMealsIdR
 }
 
 func (e *Endpoint) DeleteApiMealsId(ctx context.Context, request api.DeleteApiMealsIdRequestObject) (api.DeleteApiMealsIdResponseObject, error) {
-	userId, err := auth.UserIDFromCtx(ctx)
+	userId, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	err = e.service.Delete(request.Id, userId)
+	err = e.service.Delete(request.Id, userId.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -128,11 +128,11 @@ func (e *Endpoint) DeleteApiMealsId(ctx context.Context, request api.DeleteApiMe
 }
 
 func (e *Endpoint) DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(ctx context.Context, request api.DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdRequestObject) (api.DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryIdResponseObject, error) {
-	userId, err := auth.UserIDFromCtx(ctx)
+	userId, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
-	err = e.service.DeleteFoodItemEntry(request.FoodItemEntryId, request.MealId, userId)
+	err = e.service.DeleteFoodItemEntry(request.FoodItemEntryId, request.MealId, userId.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -140,11 +140,11 @@ func (e *Endpoint) DeleteApiMealsMealIdFoodItemEntriesFoodItemEntryId(ctx contex
 }
 
 func (e *Endpoint) DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(ctx context.Context, request api.DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdRequestObject) (api.DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryIdResponseObject, error) {
-	userId, err := auth.UserIDFromCtx(ctx)
+	userId, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
-	err = e.service.DeleteMacronutrientEntry(request.MacronutrientEntryId, request.MealId, userId)
+	err = e.service.DeleteMacronutrientEntry(request.MacronutrientEntryId, request.MealId, userId.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -152,11 +152,11 @@ func (e *Endpoint) DeleteApiMealsMealIdMacronutrientEntriesMacronutrientEntryId(
 }
 
 func (e *Endpoint) DeleteApiMealsMealIdRecipeEntriesRecipeEntryId(ctx context.Context, request api.DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdRequestObject) (api.DeleteApiMealsMealIdRecipeEntriesRecipeEntryIdResponseObject, error) {
-	userId, err := auth.UserIDFromCtx(ctx)
+	userId, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
-	err = e.service.DeleteRecipeEntry(request.RecipeEntryId, request.MealId, userId)
+	err = e.service.DeleteRecipeEntry(request.RecipeEntryId, request.MealId, userId.ID)
 	if err != nil {
 		return nil, err
 	}

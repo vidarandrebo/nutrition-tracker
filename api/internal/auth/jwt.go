@@ -11,6 +11,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/auth/user"
 	"github.com/vidarandrebo/nutrition-tracker/api/internal/configuration"
+	"github.com/vidarandrebo/nutrition-tracker/api/internal/utils"
 )
 
 type JwtService struct {
@@ -150,18 +151,10 @@ func (js *JwtService) ValidateToken(tokenString string) (*JwtClaims, error) {
 	return ParseClaims(extractedToken.Claims)
 }
 
-func UserIDFromCtx(ctx context.Context) (int64, error) {
-	claims, ok := ctx.Value("userId").(*JwtClaims)
-	if !ok {
-		return 0, errors.New("no userID in context")
-	}
-	return claims.Subject, nil
-}
-
 func UserFromCtx(ctx context.Context) (*user.User, error) {
 	claims, ok := ctx.Value("user").(*user.User)
 	if !ok {
-		return nil, errors.New("no userID in context")
+		return nil, utils.ErrUnauthorized
 	}
 	return claims, nil
 }

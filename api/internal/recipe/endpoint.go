@@ -24,12 +24,12 @@ func NewEndpoint(service IService, logger *slog.Logger) *Endpoint {
 }
 
 func (e Endpoint) GetApiRecipes(ctx context.Context, request api.GetApiRecipesRequestObject) (api.GetApiRecipesResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, utils.ErrUnauthorized
 	}
 
-	recipes, err := e.service.Get(userID)
+	recipes, err := e.service.Get(userID.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -43,13 +43,13 @@ func (e Endpoint) GetApiRecipes(ctx context.Context, request api.GetApiRecipesRe
 }
 
 func (e Endpoint) PostApiRecipes(ctx context.Context, request api.PostApiRecipesRequestObject) (api.PostApiRecipesResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
 	item := NewRecipe().FromPost(request.Body)
-	item.OwnerID = userID
+	item.OwnerID = userID.ID
 
 	newItem, err := e.service.Add(item)
 	if err != nil {
@@ -60,12 +60,12 @@ func (e Endpoint) PostApiRecipes(ctx context.Context, request api.PostApiRecipes
 }
 
 func (e Endpoint) DeleteApiRecipesId(ctx context.Context, request api.DeleteApiRecipesIdRequestObject) (api.DeleteApiRecipesIdResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	err = e.service.Delete(request.Id, userID)
+	err = e.service.Delete(request.Id, userID.ID)
 	if err != nil {
 		return api.DeleteApiRecipesId409Response{}, nil
 	}

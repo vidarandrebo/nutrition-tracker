@@ -37,14 +37,14 @@ func (e Endpoint) GetApiFoodItems(ctx context.Context, request api.GetApiFoodIte
 }
 
 func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodItemsRequestObject) (api.PostApiFoodItemsResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return api.PostApiFoodItems401JSONResponse{}, nil
 	}
 
 	e.logger.Info("new foodItem", slog.Bool("isPublic", request.Body.IsPublic))
 	item := NewFoodItem().FromRequest(request.Body)
-	item.OwnerID = userID
+	item.OwnerID = userID.ID
 	newItem, err := e.service.Add(item)
 	if err != nil {
 		return nil, utils.ErrUnknown
@@ -54,7 +54,7 @@ func (e Endpoint) PostApiFoodItems(ctx context.Context, request api.PostApiFoodI
 }
 
 func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodItemsIdRequestObject) (api.GetApiFoodItemsIdResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return api.GetApiFoodItemsId401JSONResponse{}, nil
 	}
@@ -62,7 +62,7 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 	if err != nil {
 		return api.GetApiFoodItemsId404JSONResponse{}, nil
 	}
-	if !item.HasAccess(userID) {
+	if !item.HasAccess(userID.ID) {
 		return api.GetApiFoodItemsId403JSONResponse{}, nil
 	}
 
@@ -70,12 +70,12 @@ func (e Endpoint) GetApiFoodItemsId(ctx context.Context, request api.GetApiFoodI
 }
 
 func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteApiFoodItemsIdRequestObject) (api.DeleteApiFoodItemsIdResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return api.DeleteApiFoodItemsId401JSONResponse{}, nil
 	}
 
-	err = e.service.Delete(request.Id, userID)
+	err = e.service.Delete(request.Id, userID.ID)
 	if err != nil {
 		return api.DeleteApiFoodItemsId409Response{}, nil
 	}
@@ -83,11 +83,11 @@ func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteAp
 }
 
 func (e Endpoint) PostApiFoodItemsIdPortions(ctx context.Context, request api.PostApiFoodItemsIdPortionsRequestObject) (api.PostApiFoodItemsIdPortionsResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return api.PostApiFoodItemsIdPortions401JSONResponse{}, nil
 	}
-	ps, err := e.service.AddPortionSize(FromPortionSizePost(request.Body), request.Id, userID)
+	ps, err := e.service.AddPortionSize(FromPortionSizePost(request.Body), request.Id, userID.ID)
 
 	if errors.Is(err, utils.ErrNotFound) {
 		return api.PostApiFoodItemsIdPortions404JSONResponse{}, nil
@@ -100,14 +100,14 @@ func (e Endpoint) PostApiFoodItemsIdPortions(ctx context.Context, request api.Po
 }
 
 func (e Endpoint) PostApiFoodItemsIdMicronutrients(ctx context.Context, request api.PostApiFoodItemsIdMicronutrientsRequestObject) (api.PostApiFoodItemsIdMicronutrientsResponseObject, error) {
-	userID, err := auth.UserIDFromCtx(ctx)
+	userID, err := auth.UserFromCtx(ctx)
 	if err != nil {
 		return api.PostApiFoodItemsIdMicronutrients401JSONResponse{}, nil
 	}
 
 	micronutrient := FromMicronutrientPost(request.Body)
 
-	ps, err := e.service.AddMicronutrient(micronutrient, request.Id, userID)
+	ps, err := e.service.AddMicronutrient(micronutrient, request.Id, userID.ID)
 	if errors.Is(err, utils.ErrNotFound) {
 		return api.PostApiFoodItemsIdMicronutrients404JSONResponse{}, nil
 	} else if errors.Is(err, utils.ErrForbidden) {
