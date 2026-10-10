@@ -83,7 +83,13 @@ func (e Endpoint) DeleteApiFoodItemsId(ctx context.Context, request api.DeleteAp
 
 	err = e.service.Delete(request.Id, userID.ID)
 	if err != nil {
-		return api.DeleteApiFoodItemsId409Response{}, nil
+		if errors.Is(err, utils.ErrForbidden) {
+			return api.DeleteApiFoodItemsId403JSONResponse{}, nil
+		}
+		if errors.Is(err, utils.ErrNotFound) {
+			return api.DeleteApiFoodItemsId404JSONResponse{}, nil
+		}
+		return nil, utils.ErrUnknown
 	}
 	return api.DeleteApiFoodItemsId204Response{}, nil
 }
